@@ -2254,13 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.BPTN,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: BodyPart.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Parts);
                 }
                 default:

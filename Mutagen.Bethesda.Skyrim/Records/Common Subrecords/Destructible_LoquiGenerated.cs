@@ -2050,13 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DestructionStage listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DestructionStage>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: DestructionStage.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
                 }
                 default:

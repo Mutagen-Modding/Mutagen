@@ -236,9 +236,10 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: "return ",
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             translationAccessor: "dictTranslMask",
-                                            asyncMode: AsyncMode.Direct,
+                                            asyncMode: AsyncMode.Off,
                                             errorMaskAccessor: null,
-                                            converterAccessor: null);
+                                            converterAccessor: null,
+                                            inline: true);
                                     }
                                 }
                                 gen.AppendLine("default:");
@@ -254,23 +255,20 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r{(isAsync ? null : $", out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem")}) =>");
-                        using (new BraceWrapper(gen))
-                        {
-                            LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                            subGen.GenerateCopyInRet(
-                                fg: gen,
-                                objGen: objGen,
-                                targetGen: dict.ValueTypeGen,
-                                typeGen: targetLoqui,
-                                readerAccessor: "r",
-                                retAccessor: "return ",
-                                outItemAccessor: new Accessor("dictSubItem"),
-                                translationAccessor: "dictTranslMask",
-                                asyncMode: AsyncMode.Direct,
-                                errorMaskAccessor: null,
-                                converterAccessor: null);
-                        }
+                        LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
+                        subGen.GenerateCopyInRet(
+                            fg: gen,
+                            objGen: objGen,
+                            targetGen: dict.ValueTypeGen,
+                            typeGen: targetLoqui,
+                            readerAccessor: "r",
+                            retAccessor: "transl: ",
+                            outItemAccessor: new Accessor("dictSubItem"),
+                            translationAccessor: "dictTranslMask",
+                            asyncMode: AsyncMode.Off,
+                            errorMaskAccessor: null,
+                            converterAccessor: null,
+                            inline: true);
                     });
                 }
             }
@@ -287,7 +285,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }

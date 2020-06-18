@@ -2263,13 +2263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: QuestLogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out QuestLogEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<QuestLogEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: QuestLogEntry.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
                 }
                 default:

@@ -2038,13 +2038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out BodyPart listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<BodyPart>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: BodyPart.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
                 }
                 default:

@@ -2329,13 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out TintPreset listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<TintPreset>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: TintPreset.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
                 }
                 default:

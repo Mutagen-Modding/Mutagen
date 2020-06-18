@@ -5463,13 +5463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RankPlacement.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
                 }
                 case RecordTypeInts.INAM:
@@ -5513,13 +5507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ItemEntry.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
                 case RecordTypeInts.AIDT:

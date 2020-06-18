@@ -50,8 +50,10 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
+            if (inline) throw new NotImplementedException();
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)

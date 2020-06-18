@@ -2079,13 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.DATA,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DebrisModel listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DebrisModel>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: DebrisModel.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
                 }
                 default:

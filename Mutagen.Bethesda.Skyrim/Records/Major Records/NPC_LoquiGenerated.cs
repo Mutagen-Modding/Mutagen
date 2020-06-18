@@ -8056,13 +8056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RankPlacement.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
                 }
                 case RecordTypeInts.INAM:
@@ -8152,13 +8146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Attack listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Attack>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: Attack.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Attacks);
                 }
                 case RecordTypeInts.SPOR:
@@ -8203,13 +8191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: RecordTypes.PRKZ,
                             triggeringRecord: RecordTypes.PRKR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out PerkPlacement listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<PerkPlacement>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            })
+                            transl: PerkPlacement.TryCreateFromBinary)
                         .ToExtendedList<PerkPlacement>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Perks);
                 }
@@ -8223,13 +8205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ContainerEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ContainerEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            })
+                            transl: ContainerEntry.TryCreateFromBinary)
                         .ToExtendedList<ContainerEntry>();
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }
@@ -8439,13 +8415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: TintLayer_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out TintLayer listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<TintLayer>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: TintLayer.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.TintLayers);
                 }
                 default:

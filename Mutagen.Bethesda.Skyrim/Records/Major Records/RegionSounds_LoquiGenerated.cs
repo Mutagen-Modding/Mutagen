@@ -1996,12 +1996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sounds = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionSound listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<RegionSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: RegionSound.TryCreateFromBinary)
                         .ToExtendedList<RegionSound>();
                     return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
                 }

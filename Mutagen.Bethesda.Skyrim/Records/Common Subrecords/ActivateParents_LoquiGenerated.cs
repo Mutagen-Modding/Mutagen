@@ -1982,13 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XAPR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ActivateParent listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ActivateParent>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ActivateParent.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Parents);
                 }
                 default:

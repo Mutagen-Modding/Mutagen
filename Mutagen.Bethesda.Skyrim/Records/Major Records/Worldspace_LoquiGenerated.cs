@@ -5736,13 +5736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.RNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out WorldspaceGridReference listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: WorldspaceGridReference.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Worldspace_FieldIndex.LargeReferences);
                 }
                 case RecordTypeInts.MHDT:

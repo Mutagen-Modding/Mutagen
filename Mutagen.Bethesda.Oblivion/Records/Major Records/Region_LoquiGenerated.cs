@@ -3147,13 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RegionArea listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RegionArea>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RegionArea.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Region_FieldIndex.Areas);
                 }
                 case RecordTypeInts.RDAT:

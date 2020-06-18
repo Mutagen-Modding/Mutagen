@@ -238,26 +238,26 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
-            var targetLoquiGen = targetGen as LoquiType;
-            var loquiGen = typeGen as LoquiType;
-            var data = loquiGen.GetFieldData();
-            asyncMode = this.IsAsync(typeGen, read: true) ? asyncMode : AsyncMode.Off;
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}LoquiBinary{(asyncMode == AsyncMode.Off ? null : "Async")}Translation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes(getter: false)}>.Instance.Parse",
-                suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
+            LoquiType loqui = typeGen as LoquiType;
+            if (inline)
             {
-                args.Add($"frame: {readerAccessor}");
-                if (asyncMode == AsyncMode.Off)
+                if (loqui.GenericDef != null)
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}!");
+                    fg.AppendLine($"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}LoquiBinary{(asyncMode == AsyncMode.Off ? null : "Async")}Translation<{loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}>.Instance.Parse");
                 }
-                if (converterAccessor != null
-                    && loquiGen.NeedMasters())
+                else
                 {
-                    args.Add($"recordTypeConverter: {converterAccessor}");
+                    fg.AppendLine($"{retAccessor}{loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}.TryCreateFromBinary");
                 }
+            }
+            else
+            {
+                fg.AppendLine($"var ret = {loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}.TryCreateFromBinary({readerAccessor}, out var tmp{outItemAccessor}, {converterAccessor});");
+                fg.AppendLine($"{outItemAccessor} = tmp{outItemAccessor};");
+                fg.AppendLine("return ret;");
             }
         }
 

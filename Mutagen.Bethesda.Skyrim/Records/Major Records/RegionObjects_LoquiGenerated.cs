@@ -1885,12 +1885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Objects = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionObject>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionObject listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<RegionObject>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: RegionObject.TryCreateFromBinary)
                         .ToExtendedList<RegionObject>();
                     return TryGet<int?>.Succeed((int)RegionObjects_FieldIndex.Objects);
                 }

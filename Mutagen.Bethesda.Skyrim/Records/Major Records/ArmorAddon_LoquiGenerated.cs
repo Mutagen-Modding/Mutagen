@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
-                        transl: LoquiBinaryTranslation<Model>.Instance.Parse);
+                        transl: Model.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
                 }
                 case RecordTypeInts.MOD4:
@@ -3868,7 +3868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
-                        transl: LoquiBinaryTranslation<Model>.Instance.Parse);
+                        transl: Model.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
                 }
                 case RecordTypeInts.NAM0:

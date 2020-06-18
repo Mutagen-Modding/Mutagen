@@ -2823,13 +2823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.MAST,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out MasterReference listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<MasterReference>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: MasterReference.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
                 }
                 case RecordTypeInts.DATA:

@@ -3308,32 +3308,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out NavmeshTriangle listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshTriangle>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: NavmeshTriangle.TryCreateFromBinary));
             item.EdgeLinks.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<EdgeLink>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out EdgeLink listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<EdgeLink>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: EdgeLink.TryCreateFromBinary));
             item.DoorTriangles.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out DoorTriangle listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<DoorTriangle>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: DoorTriangle.TryCreateFromBinary));
             ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustom(
                 frame: frame,
                 item: item);

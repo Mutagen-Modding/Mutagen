@@ -748,9 +748,6 @@
     <Compile Include="Records\Major Records\ScriptObjectReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ScriptReference_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ScriptVariableReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -911,6 +908,9 @@
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Warmup.cs" />
+    <Compile Include="Records\Major Records\AScriptReference_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.13" />

@@ -2807,13 +2807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ContainerItem listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ContainerItem>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ContainerItem.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Container_FieldIndex.Items);
                 }
                 case RecordTypeInts.DATA:

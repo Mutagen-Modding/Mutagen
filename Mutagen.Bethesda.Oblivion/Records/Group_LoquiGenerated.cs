@@ -1904,12 +1904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
-                            transl: (MutagenFrame r, out T dictSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<T>.Instance.Parse(
-                                    frame: r,
-                                    item: out dictSubItem!);
-                            });
+                            transl: LoquiBinaryTranslation<T>.Instance.Parse);
                         return TryGet<int?>.Failure;
                     }
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;

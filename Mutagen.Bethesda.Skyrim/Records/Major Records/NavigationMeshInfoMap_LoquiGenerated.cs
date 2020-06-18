@@ -2459,13 +2459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.NVMI,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out NavigationMapInfo listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<NavigationMapInfo>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: NavigationMapInfo.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
                 }
                 case RecordTypeInts.NVPP:

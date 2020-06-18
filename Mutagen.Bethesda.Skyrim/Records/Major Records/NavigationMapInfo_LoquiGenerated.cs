@@ -3233,12 +3233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out LinkedDoor listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<LinkedDoor>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: LinkedDoor.TryCreateFromBinary));
             if (frame.Complete) return;
             NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustom(
                 frame: frame,

@@ -2299,13 +2299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.LNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LoadScreenLocation listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LoadScreenLocation>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: LoadScreenLocation.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
                 }
                 default:

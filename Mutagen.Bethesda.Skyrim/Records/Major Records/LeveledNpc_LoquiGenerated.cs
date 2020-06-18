@@ -2697,13 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: RecordTypes.LLCT,
                             triggeringRecord: LeveledNpcEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LeveledNpcEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LeveledNpcEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            })
+                            transl: LeveledNpcEntry.TryCreateFromBinary)
                         .ToExtendedList<LeveledNpcEntry>();
                     return TryGet<int?>.Succeed((int)LeveledNpc_FieldIndex.Entries);
                 }

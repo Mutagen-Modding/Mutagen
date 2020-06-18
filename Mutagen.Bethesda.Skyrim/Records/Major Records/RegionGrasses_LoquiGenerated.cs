@@ -1885,12 +1885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Grasses = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionGrass>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out RegionGrass listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<RegionGrass>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: RegionGrass.TryCreateFromBinary)
                         .ToExtendedList<RegionGrass>();
                     return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
                 }

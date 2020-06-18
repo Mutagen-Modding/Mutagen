@@ -4067,13 +4067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Relation listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Relation>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: Relation.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
                 }
                 case RecordTypeInts.DATA:
@@ -4145,13 +4139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Rank listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Rank>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: Rank.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
                 }
                 case RecordTypeInts.VEND:

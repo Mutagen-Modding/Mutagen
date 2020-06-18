@@ -2440,13 +2440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.GRUP,
                             thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out WorldspaceSubBlock listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<WorldspaceSubBlock>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: WorldspaceSubBlock.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
                 }
                 default:

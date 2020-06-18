@@ -4545,13 +4545,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RaceRelation listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RaceRelation>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RaceRelation.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Relations);
                 }
                 case RecordTypeInts.DATA:
@@ -4598,7 +4592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RaceStats = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<RaceStats>(
                         frame: frame,
-                        transl: LoquiBinaryTranslation<RaceStats>.Instance.Parse);
+                        transl: RaceStats.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.RaceStats);
                 }
                 case RecordTypeInts.NAM0:
@@ -4609,13 +4603,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out FacePart listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<FacePart>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: FacePart.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.FaceData);
                 }
                 case RecordTypeInts.NAM1:
@@ -4625,7 +4613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: LoquiBinaryTranslation<BodyData>.Instance.Parse);
+                        transl: BodyData.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case RecordTypeInts.HNAM:

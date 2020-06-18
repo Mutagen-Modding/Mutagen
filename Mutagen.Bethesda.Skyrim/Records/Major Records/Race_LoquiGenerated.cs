@@ -10921,7 +10921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         recordTypeConverter: Race_Registration.SkeletalModelConverter,
-                        transl: LoquiBinaryTranslation<SimpleModel>.Instance.Parse);
+                        transl: SimpleModel.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.SkeletalModel);
                 }
                 case RecordTypeInts.MTNM:
@@ -10997,13 +10997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Attack listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Attack>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: Attack.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.Attacks);
                 }
                 case RecordTypeInts.NAM1:
@@ -11013,7 +11007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: LoquiBinaryTranslation<BodyData>.Instance.Parse);
+                        transl: BodyData.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BodyData);
                 }
                 case RecordTypeInts.HNAM:
@@ -11053,7 +11047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
-                        transl: LoquiBinaryTranslation<Model>.Instance.Parse);
+                        transl: Model.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.BehaviorGraph);
                 }
                 case RecordTypeInts.NAM4:
@@ -11111,13 +11105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RaceMovementType listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RaceMovementType>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RaceMovementType.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.MovementTypes);
                 }
                 case RecordTypeInts.VNAM:
@@ -11214,7 +11202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleMarker: RecordTypes.FNAM,
                         marker: RecordTypes.NAM0,
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter,
-                        transl: LoquiBinaryTranslation<HeadData>.Instance.Parse);
+                        transl: HeadData.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.HeadData);
                 }
                 default:

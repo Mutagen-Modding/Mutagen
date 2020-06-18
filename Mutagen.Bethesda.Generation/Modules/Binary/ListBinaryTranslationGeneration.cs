@@ -393,10 +393,12 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add((gen) =>
                         {
-                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
-                            using (new BraceWrapper(gen))
+                            if (subGenTypes.Count <= 1)
                             {
-                                if (subGenTypes.Count <= 1)
+                                if (subGen.CanInline(
+                                    objGen: objGen,
+                                    targetGen: list.SubTypeGeneration,
+                                    typeGen: list.SubTypeGeneration))
                                 {
                                     subGen.GenerateCopyInRet(
                                         fg: gen,
@@ -405,13 +407,38 @@ namespace Mutagen.Bethesda.Generation
                                         typeGen: list.SubTypeGeneration,
                                         readerAccessor: "r",
                                         translationAccessor: "listTranslMask",
-                                        retAccessor: "return ",
+                                        retAccessor: "transl: ",
                                         outItemAccessor: new Accessor("listSubItem"),
                                         asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
                                         errorMaskAccessor: "listErrMask",
-                                        converterAccessor: "conv");
+                                        converterAccessor: "conv",
+                                        inline: true);
                                 }
                                 else
+                                {
+                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                    using (new BraceWrapper(gen))
+                                    {
+                                        subGen.GenerateCopyInRet(
+                                            fg: gen,
+                                            objGen: objGen,
+                                            targetGen: list.SubTypeGeneration,
+                                            typeGen: list.SubTypeGeneration,
+                                            readerAccessor: "r",
+                                            translationAccessor: "listTranslMask",
+                                            retAccessor: "return ",
+                                            outItemAccessor: new Accessor("listSubItem"),
+                                            asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
+                                            errorMaskAccessor: "listErrMask",
+                                            converterAccessor: "conv",
+                                            inline: false);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                using (new BraceWrapper(gen))
                                 {
                                     gen.AppendLine("switch (header.TypeInt)");
                                     using (new BraceWrapper(gen))
@@ -424,7 +451,7 @@ namespace Mutagen.Bethesda.Generation
                                             }
                                             LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
                                             LoquiType specificLoqui = item.Value as LoquiType;
-                                            using (new DepthWrapper(gen))
+                                            using (new BraceWrapper(gen))
                                             {
                                                 subGen.GenerateCopyInRet(
                                                     fg: gen,
@@ -437,7 +464,8 @@ namespace Mutagen.Bethesda.Generation
                                                     outItemAccessor: new Accessor("listSubItem"),
                                                     asyncMode: AsyncMode.Async,
                                                     errorMaskAccessor: $"listErrMask",
-                                                    converterAccessor: "conv");
+                                                    converterAccessor: "conv",
+                                                    inline: false);
                                             }
                                         }
                                         gen.AppendLine("default:");
@@ -465,7 +493,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }
@@ -513,7 +542,7 @@ namespace Mutagen.Bethesda.Generation
                 var typeName = this.Module.BinaryOverlayClassName(loqui);
                 switch (listBinaryType)
                 {
-                    case ListBinaryType.PrependCount 
+                    case ListBinaryType.PrependCount
                     when !data.HasTrigger && expLen.HasValue:
                         fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;

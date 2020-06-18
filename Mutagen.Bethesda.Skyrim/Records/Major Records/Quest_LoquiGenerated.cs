@@ -4488,13 +4488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out QuestStage listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<QuestStage>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: QuestStage.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
                 }
                 case RecordTypeInts.QOBJ:
@@ -4504,13 +4498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.QOBJ,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out QuestObjective listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<QuestObjective>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: QuestObjective.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Objectives);
                 }
                 case RecordTypeInts.ANAM:
@@ -4528,13 +4516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: QuestAlias_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out QuestAlias listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<QuestAlias>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: QuestAlias.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Quest_FieldIndex.Aliases);
                 }
                 case RecordTypeInts.NNAM:

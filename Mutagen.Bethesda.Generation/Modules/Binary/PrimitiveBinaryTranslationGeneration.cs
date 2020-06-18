@@ -159,30 +159,42 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             if (typeGen.TryGetFieldData(out var data)
                 && data.RecordType.HasValue)
             {
+                if (inline)
+                {
+                    throw new NotImplementedException();
+                }
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+            if (inline)
             {
-                args.Add(nodeAccessor.DirectAccess);
-                if (this.DoErrorMasks)
+                throw new NotImplementedException();
+            }
+            else
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
-                    args.Add($"errorMask: {errorMaskAccessor}");
-                }
-                args.Add($"translationMask: {translationMaskAccessor}");
-                foreach (var writeParam in this.AdditionalCopyInRetParams)
-                {
-                    var get = writeParam(
-                        objGen: objGen,
-                        typeGen: typeGen);
-                    if (get.Failed) continue;
-                    args.Add(get.Value);
+                    args.Add(nodeAccessor.DirectAccess);
+                    if (this.DoErrorMasks)
+                    {
+                        args.Add($"errorMask: {errorMaskAccessor}");
+                    }
+                    args.Add($"translationMask: {translationMaskAccessor}");
+                    foreach (var writeParam in this.AdditionalCopyInRetParams)
+                    {
+                        var get = writeParam(
+                            objGen: objGen,
+                            typeGen: typeGen);
+                        if (get.Failed) continue;
+                        args.Add(get.Value);
+                    }
                 }
             }
         }

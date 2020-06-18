@@ -1965,12 +1965,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out WorldspaceReference listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<WorldspaceReference>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: WorldspaceReference.TryCreateFromBinary));
         }
 
     }

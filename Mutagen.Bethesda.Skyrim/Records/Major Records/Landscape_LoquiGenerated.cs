@@ -2810,15 +2810,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 switch (header.TypeInt)
                                 {
                                     case 0x54585442: // BTXT
-                                        return LoquiBinaryTranslation<BaseLayer>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
+                                    {
+                                        var ret = BaseLayer.TryCreateFromBinary(r, out var tmplistSubItem, conv);
+                                        listSubItem = tmplistSubItem;
+                                        return ret;
+                                    }
                                     case 0x54585441: // ATXT
-                                        return LoquiBinaryTranslation<AlphaLayer>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
+                                    {
+                                        var ret = AlphaLayer.TryCreateFromBinary(r, out var tmplistSubItem, conv);
+                                        listSubItem = tmplistSubItem;
+                                        return ret;
+                                    }
                                     default:
                                         throw new NotImplementedException();
                                 }

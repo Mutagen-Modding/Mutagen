@@ -2194,13 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out QuestObjectiveTarget listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<QuestObjectiveTarget>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: QuestObjectiveTarget.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Targets);
                 }
                 default:

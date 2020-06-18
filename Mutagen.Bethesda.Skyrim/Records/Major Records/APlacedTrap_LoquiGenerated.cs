@@ -4586,13 +4586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XPWR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out WaterReflection listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<WaterReflection>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: WaterReflection.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.Reflections);
                 }
                 case RecordTypeInts.XLKR:
@@ -4602,13 +4596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XLKR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LinkedReferences listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LinkedReferences>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: LinkedReferences.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)APlacedTrap_FieldIndex.LinkedReferences);
                 }
                 case RecordTypeInts.XAPD:

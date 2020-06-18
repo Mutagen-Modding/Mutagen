@@ -89,15 +89,14 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
                 }
-                if (loqui != null
-                    && !loqui.CanStronglyType)
+                if (loqui != null)
                 {
-                    args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
+                    args.Add($"transl: {loqui.ObjectTypeName}{loqui.GenericTypes(getter: false)}.TryCreateFromBinary");
                 }
                 else
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(gender.SubTypeGeneration, getter: false)}.Parse");
-                    if (gender.ItemHasBeenSet && loqui == null)
+                    if (gender.ItemHasBeenSet)
                     {
                         args.Add($"skipMarker: false");
                     }
@@ -120,7 +119,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor, 
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }

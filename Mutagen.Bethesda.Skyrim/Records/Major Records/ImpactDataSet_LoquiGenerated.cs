@@ -2090,13 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ImpactData listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ImpactData>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ImpactData.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)ImpactDataSet_FieldIndex.Impacts);
                 }
                 default:

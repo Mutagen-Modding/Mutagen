@@ -4109,13 +4109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.TRDT,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DialogResponse listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DialogResponse>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: DialogResponse.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.Responses);
                 }
                 case RecordTypeInts.CTDA:
@@ -4134,13 +4128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: DialogResponsesUnknownData_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out DialogResponsesUnknownData listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<DialogResponsesUnknownData>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: DialogResponsesUnknownData.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)DialogResponses_FieldIndex.UnknownData);
                 }
                 case RecordTypeInts.RNAM:

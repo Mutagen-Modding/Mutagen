@@ -1852,13 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: NpcSoundType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out NpcSoundType listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<NpcSoundType>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: NpcSoundType.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)NpcSoundTypes_FieldIndex.Types);
                 }
                 default:

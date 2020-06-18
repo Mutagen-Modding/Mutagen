@@ -5404,13 +5404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ContainerEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ContainerEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            })
+                            transl: ContainerEntry.TryCreateFromBinary)
                         .ToExtendedList<ContainerEntry>();
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Items);
                 }

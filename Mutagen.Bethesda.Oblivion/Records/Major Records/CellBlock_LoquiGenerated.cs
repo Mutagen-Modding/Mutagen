@@ -2266,13 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.GRUP,
                             thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out CellSubBlock listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<CellSubBlock>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: CellSubBlock.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)CellBlock_FieldIndex.SubBlocks);
                 }
                 default:

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class ScriptObjectReference :
-        ScriptReference,
+        AScriptReference,
         IScriptObjectReference,
         ILoquiObjectSetter<ScriptObjectReference>,
         IEquatable<ScriptObjectReference>,
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mask
         public new class Mask<TItem> :
-            ScriptReference.Mask<TItem>,
+            AScriptReference.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
             where TItem : notnull
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ScriptReference.ErrorMask,
+            AScriptReference.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ScriptReference.TranslationMask,
+            AScriptReference.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -541,14 +541,14 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public partial interface IScriptObjectReference :
         IScriptObjectReferenceGetter,
-        IScriptReference,
+        IAScriptReference,
         ILoquiObjectSetter<IScriptObjectReference>
     {
         new FormLink<OblivionMajorRecord> Reference { get; set; }
     }
 
     public partial interface IScriptObjectReferenceGetter :
-        IScriptReferenceGetter,
+        IAScriptReferenceGetter,
         ILoquiObject<IScriptObjectReferenceGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return false;
                 default:
-                    return ScriptReference_Registration.GetNthIsEnumerable(index);
+                    return AScriptReference_Registration.GetNthIsEnumerable(index);
             }
         }
 
@@ -927,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return false;
                 default:
-                    return ScriptReference_Registration.GetNthIsLoqui(index);
+                    return AScriptReference_Registration.GetNthIsLoqui(index);
             }
         }
 
@@ -939,7 +939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return false;
                 default:
-                    return ScriptReference_Registration.GetNthIsSingleton(index);
+                    return AScriptReference_Registration.GetNthIsSingleton(index);
             }
         }
 
@@ -951,7 +951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return "Reference";
                 default:
-                    return ScriptReference_Registration.GetNthName(index);
+                    return AScriptReference_Registration.GetNthName(index);
             }
         }
 
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return false;
                 default:
-                    return ScriptReference_Registration.IsNthDerivative(index);
+                    return AScriptReference_Registration.IsNthDerivative(index);
             }
         }
 
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return false;
                 default:
-                    return ScriptReference_Registration.IsProtected(index);
+                    return AScriptReference_Registration.IsProtected(index);
             }
         }
 
@@ -987,7 +987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptObjectReference_FieldIndex.Reference:
                     return typeof(FormLink<OblivionMajorRecord>);
                 default:
-                    return ScriptReference_Registration.GetNthType(index);
+                    return AScriptReference_Registration.GetNthType(index);
             }
         }
 
@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ScriptObjectReferenceSetterCommon : ScriptReferenceSetterCommon
+    public partial class ScriptObjectReferenceSetterCommon : AScriptReferenceSetterCommon
     {
         public new static readonly ScriptObjectReferenceSetterCommon Instance = new ScriptObjectReferenceSetterCommon();
 
@@ -1039,7 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             base.Clear(item);
         }
         
-        public override void Clear(IScriptReference item)
+        public override void Clear(IAScriptReference item)
         {
             Clear(item: (IScriptObjectReference)item);
         }
@@ -1071,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromXml(
-            IScriptReference item,
+            IAScriptReference item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override void CopyInFromBinary(
-            IScriptReference item,
+            IAScriptReference item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptObjectReferenceCommon : ScriptReferenceCommon
+    public partial class ScriptObjectReferenceCommon : AScriptReferenceCommon
     {
         public new static readonly ScriptObjectReferenceCommon Instance = new ScriptObjectReferenceCommon();
 
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             ScriptObjectReference.Mask<bool>? printMask = null)
         {
-            ScriptReferenceCommon.ToStringFields(
+            AScriptReferenceCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 mask: mask);
         }
         
-        public static ScriptObjectReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)
+        public static ScriptObjectReference_FieldIndex ConvertFieldIndex(AScriptReference_FieldIndex index)
         {
             switch (index)
             {
@@ -1237,8 +1237,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override bool Equals(
-            IScriptReferenceGetter? lhs,
-            IScriptReferenceGetter? rhs)
+            IAScriptReferenceGetter? lhs,
+            IAScriptReferenceGetter? rhs)
         {
             return Equals(
                 lhs: (IScriptObjectReferenceGetter?)lhs,
@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IScriptReferenceGetter item)
+        public override int GetHashCode(IAScriptReferenceGetter item)
         {
             return GetHashCode(item: (IScriptObjectReferenceGetter)item);
         }
@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ScriptObjectReferenceSetterTranslationCommon : ScriptReferenceSetterTranslationCommon
+    public partial class ScriptObjectReferenceSetterTranslationCommon : AScriptReferenceSetterTranslationCommon
     {
         public new static readonly ScriptObjectReferenceSetterTranslationCommon Instance = new ScriptObjectReferenceSetterTranslationCommon();
 
@@ -1293,8 +1293,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (IScriptReference)item,
-                (IScriptReferenceGetter)rhs,
+                (IAScriptReference)item,
+                (IAScriptReferenceGetter)rhs,
                 errorMask,
                 copyMask);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
@@ -1305,8 +1305,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         
         public override void DeepCopyIn(
-            IScriptReference item,
-            IScriptReferenceGetter rhs,
+            IAScriptReference item,
+            IAScriptReferenceGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1389,7 +1389,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptObjectReferenceXmlWriteTranslation :
-        ScriptReferenceXmlWriteTranslation,
+        AScriptReferenceXmlWriteTranslation,
         IXmlWriteTranslator
     {
         public new readonly static ScriptObjectReferenceXmlWriteTranslation Instance = new ScriptObjectReferenceXmlWriteTranslation();
@@ -1400,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ScriptReferenceXmlWriteTranslation.WriteToNodeXml(
+            AScriptReferenceXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             XElement node,
-            IScriptReferenceGetter item,
+            IAScriptReferenceGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptObjectReferenceXmlCreateTranslation : ScriptReferenceXmlCreateTranslation
+    public partial class ScriptObjectReferenceXmlCreateTranslation : AScriptReferenceXmlCreateTranslation
     {
         public new readonly static ScriptObjectReferenceXmlCreateTranslation Instance = new ScriptObjectReferenceXmlCreateTranslation();
 
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     break;
                 default:
-                    ScriptReferenceXmlCreateTranslation.FillPublicElementXml(
+                    AScriptReferenceXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1605,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptObjectReferenceBinaryWriteTranslation :
-        ScriptReferenceBinaryWriteTranslation,
+        AScriptReferenceBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static ScriptObjectReferenceBinaryWriteTranslation Instance = new ScriptObjectReferenceBinaryWriteTranslation();
@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IScriptReferenceGetter item,
+            IAScriptReferenceGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ScriptObjectReferenceBinaryCreateTranslation : ScriptReferenceBinaryCreateTranslation
+    public partial class ScriptObjectReferenceBinaryCreateTranslation : AScriptReferenceBinaryCreateTranslation
     {
         public new readonly static ScriptObjectReferenceBinaryCreateTranslation Instance = new ScriptObjectReferenceBinaryCreateTranslation();
 
@@ -1707,7 +1707,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptObjectReferenceBinaryOverlay :
-        ScriptReferenceBinaryOverlay,
+        AScriptReferenceBinaryOverlay,
         IScriptObjectReferenceGetter
     {
         #region Common Routing

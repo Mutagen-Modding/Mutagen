@@ -4714,7 +4714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         femaleRecordConverter: Armor_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: Armor_Registration.WorldModelMaleConverter,
-                        transl: LoquiBinaryTranslation<ArmorModel>.Instance.Parse);
+                        transl: ArmorModel.TryCreateFromBinary);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.WorldModel);
                 }
                 case RecordTypeInts.BODT:

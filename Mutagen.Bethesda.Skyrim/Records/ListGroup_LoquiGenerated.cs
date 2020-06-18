@@ -1972,13 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: frame.MetaData.Parallel,
                                 recordTypeConverter: recordTypeConverter,
-                                transl: (MutagenFrame r, out T listSubItem, RecordTypeConverter? conv) =>
-                                {
-                                    return LoquiBinaryTranslation<T>.Instance.Parse(
-                                        frame: r,
-                                        item: out listSubItem!,
-                                        recordTypeConverter: conv);
-                                }));
+                                transl: LoquiBinaryTranslation<T>.Instance.Parse));
                         return TryGet<int?>.Failure;
                     }
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;

@@ -2684,13 +2684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ActorValuePerkNode listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ActorValuePerkNode>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ActorValuePerkNode.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.PerkTree);
                 }
                 default:

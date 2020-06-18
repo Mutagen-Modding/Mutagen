@@ -137,8 +137,10 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
+            if (inline) throw new NotImplementedException();
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
@@ -157,6 +159,11 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
+        }
+
+        public override bool CanInline(ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen)
+        {
+            return false;
         }
 
         public override async Task GenerateWrapperFields(

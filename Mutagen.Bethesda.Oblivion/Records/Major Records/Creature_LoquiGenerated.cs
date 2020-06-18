@@ -5546,13 +5546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out ItemEntry listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<ItemEntry>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: ItemEntry.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Items);
                 }
                 case RecordTypeInts.SPLO:
@@ -5599,13 +5593,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out RankPlacement listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<RankPlacement>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: RankPlacement.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Factions);
                 }
                 case RecordTypeInts.INAM:
@@ -5725,13 +5713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out CreatureSound listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<CreatureSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: CreatureSound.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)Creature_FieldIndex.Sounds);
                 }
                 default:

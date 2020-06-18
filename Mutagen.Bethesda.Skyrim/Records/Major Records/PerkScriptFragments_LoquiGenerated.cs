@@ -2030,12 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
                     frame: frame,
-                    transl: (MutagenFrame r, out IndexedScriptFragment listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: IndexedScriptFragment.TryCreateFromBinary));
         }
 
     }

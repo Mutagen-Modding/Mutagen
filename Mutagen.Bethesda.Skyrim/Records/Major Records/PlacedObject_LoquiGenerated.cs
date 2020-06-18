@@ -9523,12 +9523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Portals = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Portal>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out Portal listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<Portal>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: Portal.TryCreateFromBinary)
                         .ToExtendedList<Portal>();
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
                 }
@@ -9575,13 +9570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XPWR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out WaterReflection listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<WaterReflection>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: WaterReflection.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
                 }
                 case RecordTypeInts.XLTW:
@@ -9801,13 +9790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.XLKR,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LinkedReferences listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LinkedReferences>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: LinkedReferences.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
                 }
                 case RecordTypeInts.XPRD:

@@ -8,6 +8,7 @@ using System.Text;
 using Noggog;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Internals;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -110,23 +111,33 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             var eType = typeGen as EnumType;
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
+            if (inline)
             {
-                args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
-                if (asyncMode == AsyncMode.Off)
+                throw new NotImplementedException();
+            }
+            else
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}");
-                }
-                if (this.DoErrorMasks)
-                {
-                    args.Add($"errorMask: {errorMaskAccessor}");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
+                    if (asyncMode == AsyncMode.Off)
+                    {
+                        args.Add($"item: out {outItemAccessor.DirectAccess}");
+                    }
+                    if (this.DoErrorMasks)
+                    {
+                        args.Add($"errorMask: {errorMaskAccessor}");
+                    }
                 }
             }
         }
+
+        public override bool CanInline(ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen) => false;
 
         public override async Task GenerateWrapperFields(
             FileGeneration fg,

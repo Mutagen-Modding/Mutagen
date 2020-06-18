@@ -2442,13 +2442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out Cell listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<Cell>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: Cell.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)WorldspaceSubBlock_FieldIndex.Items);
                 }
                 default:

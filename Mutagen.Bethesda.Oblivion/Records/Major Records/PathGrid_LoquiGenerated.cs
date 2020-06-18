@@ -2715,12 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.InterCellConnections = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out InterCellPoint listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<InterCellPoint>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: InterCellPoint.TryCreateFromBinary)
                         .ToExtendedList<InterCellPoint>();
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
                 }
@@ -2731,13 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.PGRL,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out PointToReferenceMapping listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: PointToReferenceMapping.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
                 }
                 default:

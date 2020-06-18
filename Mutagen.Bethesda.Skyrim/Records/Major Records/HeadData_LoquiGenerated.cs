@@ -3466,13 +3466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out HeadPartReference listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<HeadPartReference>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: HeadPartReference.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.HeadParts);
                 }
                 case RecordTypeInts.MPAI:
@@ -3537,13 +3531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out TintAssets listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<TintAssets>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: TintAssets.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)HeadData_FieldIndex.TintMasks);
                 }
                 case RecordTypeInts.MODL:

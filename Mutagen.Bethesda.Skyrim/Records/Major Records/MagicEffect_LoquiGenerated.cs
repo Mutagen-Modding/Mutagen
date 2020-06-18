@@ -6887,12 +6887,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sounds = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MagicEffectSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
-                            transl: (MutagenFrame r, out MagicEffectSound listSubItem) =>
-                            {
-                                return LoquiBinaryTranslation<MagicEffectSound>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!);
-                            })
+                            transl: MagicEffectSound.TryCreateFromBinary)
                         .ToExtendedList<MagicEffectSound>();
                     return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
                 }

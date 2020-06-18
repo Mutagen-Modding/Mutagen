@@ -75,15 +75,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptReference> _References = new ExtendedList<ScriptReference>();
-        public ExtendedList<ScriptReference> References
+        private ExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
+        public ExtendedList<AScriptReference> References
         {
             get => this._References;
             protected set => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptReferenceGetter> IScriptFieldsGetter.References => _References;
+        IReadOnlyList<IAScriptReferenceGetter> IScriptFieldsGetter.References => _References;
         #endregion
 
         #endregion
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CompiledScript = initialValue;
                 this.SourceCode = initialValue;
                 this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CompiledScript = CompiledScript;
                 this.SourceCode = SourceCode;
                 this.LocalVariables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>(LocalVariables, Enumerable.Empty<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>());
-                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>?>(References, Enumerable.Empty<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>());
+                this.References = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>(References, Enumerable.Empty<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem CompiledScript;
             public TItem SourceCode;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocalVariable.Mask<TItem>?>>?>? LocalVariables;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptReference.Mask<TItem>?>>?>? References;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, AScriptReference.Mask<TItem>?>>?>? References;
             #endregion
 
             #region Equals
@@ -430,14 +430,14 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 if (References != null)
                 {
-                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptReference.Mask<R>?>>?>(eval(this.References.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptReference.Mask<R>?>>());
+                    obj.References = new MaskItem<R, IEnumerable<MaskItemIndexed<R, AScriptReference.Mask<R>?>>?>(eval(this.References.Overall), Enumerable.Empty<MaskItemIndexed<R, AScriptReference.Mask<R>?>>());
                     if (References.Specific != null)
                     {
-                        var l = new List<MaskItemIndexed<R, ScriptReference.Mask<R>?>>();
+                        var l = new List<MaskItemIndexed<R, AScriptReference.Mask<R>?>>();
                         obj.References.Specific = l;
                         foreach (var item in References.Specific.WithIndex())
                         {
-                            MaskItemIndexed<R, ScriptReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            MaskItemIndexed<R, AScriptReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, AScriptReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
                             if (mask == null) continue;
                             l.Add(mask);
                         }
@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? CompiledScript;
             public Exception? SourceCode;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>? LocalVariables;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptReference.ErrorMask?>>?>? References;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>? References;
             #endregion
 
             #region IErrorMask
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(ex, null);
                         break;
                     case ScriptFields_FieldIndex.References:
-                        this.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptReference.ErrorMask?>>?>(ex, null);
+                        this.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -619,7 +619,7 @@ namespace Mutagen.Bethesda.Oblivion
                         this.LocalVariables = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>)obj;
                         break;
                     case ScriptFields_FieldIndex.References:
-                        this.References = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptReference.ErrorMask?>>?>)obj;
+                        this.References = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
                 ret.SourceCode = this.SourceCode.Combine(rhs.SourceCode);
                 ret.LocalVariables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocalVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.LocalVariables?.Overall, rhs.LocalVariables?.Overall), ExceptionExt.Combine(this.LocalVariables?.Specific, rhs.LocalVariables?.Specific));
-                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptReference.ErrorMask?>>?>(ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
+                ret.References = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, AScriptReference.ErrorMask?>>?>(ExceptionExt.Combine(this.References?.Overall, rhs.References?.Overall), ExceptionExt.Combine(this.References?.Specific, rhs.References?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             public bool CompiledScript;
             public bool SourceCode;
             public MaskItem<bool, LocalVariable.TranslationMask?> LocalVariables;
-            public MaskItem<bool, ScriptReference.TranslationMask?> References;
+            public MaskItem<bool, AScriptReference.TranslationMask?> References;
             #endregion
 
             #region Ctors
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
                 this.CompiledScript = defaultOn;
                 this.SourceCode = defaultOn;
                 this.LocalVariables = new MaskItem<bool, LocalVariable.TranslationMask?>(defaultOn, null);
-                this.References = new MaskItem<bool, ScriptReference.TranslationMask?>(defaultOn, null);
+                this.References = new MaskItem<bool, AScriptReference.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
         new ExtendedList<LocalVariable> LocalVariables { get; }
-        new ExtendedList<ScriptReference> References { get; }
+        new ExtendedList<AScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter :
@@ -892,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? CompiledScript { get; }
         String? SourceCode { get; }
         IReadOnlyList<ILocalVariableGetter> LocalVariables { get; }
-        IReadOnlyList<IScriptReferenceGetter> References { get; }
+        IReadOnlyList<IAScriptReferenceGetter> References { get; }
 
     }
 
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.LocalVariables:
                     return typeof(ExtendedList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(ExtendedList<ScriptReference>);
+                    return typeof(ExtendedList<AScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var LocalVariablesItem = item.LocalVariables;
             mask.LocalVariables = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocalVariable.Mask<bool>?>>?>(true, LocalVariablesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocalVariable.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var ReferencesItem = item.References;
-            mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptReference.Mask<bool>?>>?>(true, ReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.References = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, AScriptReference.Mask<bool>?>>?>(true, ReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, AScriptReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
         
         #region Equals and Hash
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IScriptFieldsGetter obj)
         {
-            foreach (var item in obj.References.WhereCastable<IScriptReferenceGetter, ILinkedFormKeyContainer> ()
+            foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, ILinkedFormKeyContainer> ()
                 .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
@@ -1995,17 +1995,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((translationMask?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
             {
-                ListXmlTranslation<IScriptReferenceGetter>.Instance.Write(
+                ListXmlTranslation<IAScriptReferenceGetter>.Instance.Write(
                     node: node,
                     name: nameof(item.References),
                     item: item.References,
                     fieldIndex: (int)ScriptFields_FieldIndex.References,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)ScriptFields_FieldIndex.References),
-                    transl: (XElement subNode, IScriptReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    transl: (XElement subNode, IAScriptReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
                     {
                         var Item = subItem;
-                        ((ScriptReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                        ((AScriptReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
                             item: Item,
                             node: subNode,
                             name: null,
@@ -2187,10 +2187,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PushIndex((int)ScriptFields_FieldIndex.References);
                     try
                     {
-                        if (ListXmlTranslation<ScriptReference>.Instance.Parse(
+                        if (ListXmlTranslation<AScriptReference>.Instance.Parse(
                             node: node,
                             enumer: out var ReferencesItem,
-                            transl: LoquiXmlTranslation<ScriptReference>.Instance.Parse,
+                            transl: LoquiXmlTranslation<AScriptReference>.Instance.Parse,
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
@@ -2428,13 +2428,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.References,
-                transl: (MutagenWriter subWriter, IScriptReferenceGetter subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
-                    ((ScriptReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                    ((AScriptReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
                         item: Item,
                         writer: subWriter,
                         recordTypeConverter: conv);
@@ -2524,37 +2524,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LocalVariable listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LocalVariable>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: LocalVariable.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)ScriptFields_FieldIndex.LocalVariables);
                 }
                 case RecordTypeInts.SCRV:
                 case RecordTypeInts.SCRO:
                 {
                     item.References.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AScriptReference>.Instance.Parse(
                             frame: frame,
-                            triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
+                            triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, RecordType header, out ScriptReference listSubItem, RecordTypeConverter? conv) =>
+                            transl: (MutagenFrame r, RecordType header, out AScriptReference listSubItem, RecordTypeConverter? conv) =>
                             {
                                 switch (header.TypeInt)
                                 {
                                     case 0x56524353: // SCRV
-                                        return LoquiBinaryTranslation<ScriptVariableReference>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
+                                    {
+                                        var ret = ScriptVariableReference.TryCreateFromBinary(r, out var tmplistSubItem, conv);
+                                        listSubItem = tmplistSubItem;
+                                        return ret;
+                                    }
                                     case 0x4F524353: // SCRO
-                                        return LoquiBinaryTranslation<ScriptObjectReference>.Instance.Parse(
-                                            frame: r,
-                                            item: out listSubItem!,
-                                            recordTypeConverter: conv);
+                                    {
+                                        var ret = ScriptObjectReference.TryCreateFromBinary(r, out var tmplistSubItem, conv);
+                                        listSubItem = tmplistSubItem;
+                                        return ret;
+                                    }
                                     default:
                                         throw new NotImplementedException();
                                 }
@@ -2676,7 +2672,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? SourceCode => _SourceCodeLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SourceCodeLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = ListExt.Empty<LocalVariableBinaryOverlay>();
-        public IReadOnlyList<IScriptReferenceGetter> References { get; private set; } = ListExt.Empty<ScriptReferenceBinaryOverlay>();
+        public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = ListExt.Empty<AScriptReferenceBinaryOverlay>();
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -2770,10 +2766,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRV:
                 case RecordTypeInts.SCRO:
                 {
-                    this.References = this.ParseRepeatedTypelessSubrecord<ScriptReferenceBinaryOverlay>(
+                    this.References = this.ParseRepeatedTypelessSubrecord<AScriptReferenceBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
-                        trigger: ScriptReference_Registration.TriggeringRecordTypes,
+                        trigger: AScriptReference_Registration.TriggeringRecordTypes,
                         factory: (s, r, p, recConv) =>
                         {
                             switch (r.TypeInt)

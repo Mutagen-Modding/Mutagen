@@ -21,8 +21,8 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffect = 0x100
         }
 
-        public IEnumerable<ScriptObjectReference>? ObjectReferences => this.References?.WhereCastable<ScriptReference, ScriptObjectReference>();
-        public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<ScriptReference, ScriptVariableReference>();
+        public IEnumerable<ScriptObjectReference>? ObjectReferences => this.References?.WhereCastable<AScriptReference, ScriptObjectReference>();
+        public IEnumerable<ScriptVariableReference>? VariableReferences => this.References?.WhereCastable<AScriptReference, ScriptVariableReference>();
 
         #region CompiledScript
         protected MemorySlice<byte>? _CompiledScript;

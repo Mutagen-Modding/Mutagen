@@ -12,7 +12,7 @@
       <ByteArray name="CompiledScript" recordType="SCDA" generateClassMembers="false" />
       <String name="SourceCode" recordType="SCTX" binaryType="Plain" />
       <RefList name="LocalVariables" refName="LocalVariable" />
-      <RefList name="References" refName="ScriptReference" />
+      <RefList name="References" refName="AScriptReference" />
     </Fields>
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
@@ -38,16 +38,13 @@
       <Int32 name="Unknown2" />
     </Fields>
   </Object>
-  <Object name="ScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50">
-    <Fields>
-    </Fields>
-  </Object>
-  <Object name="ScriptVariableReference" baseClass="ScriptReference" objType="Subrecord" GUID="fb87f678-c078-4acb-b943-fe3d2142a7be" ID="60">
+  <Object name="AScriptReference" abstract="true" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50" />
+  <Object name="ScriptVariableReference" baseClass="AScriptReference" objType="Subrecord" GUID="fb87f678-c078-4acb-b943-fe3d2142a7be" ID="60">
     <Fields>
       <Int32 name="VariableIndex" recordType="SCRV" hasBeenSet="False" />
     </Fields>
   </Object>
-  <Object name="ScriptObjectReference" baseClass="ScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
+  <Object name="ScriptObjectReference" baseClass="AScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
     <Fields>
       <FormLink name="Reference" recordType="SCRO" refName="OblivionMajorRecord" hasBeenSet="False" />
     </Fields>

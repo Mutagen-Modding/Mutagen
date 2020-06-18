@@ -2121,22 +2121,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out NavmeshSet listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshSet>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: NavmeshSet.TryCreateFromBinary));
             item.NavmeshTree.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
-                    transl: (MutagenFrame r, out NavmeshNode listSubItem) =>
-                    {
-                        return LoquiBinaryTranslation<NavmeshNode>.Instance.Parse(
-                            frame: r,
-                            item: out listSubItem!);
-                    }));
+                    transl: NavmeshNode.TryCreateFromBinary));
         }
 
     }

@@ -2003,13 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out SoundItem listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<SoundItem>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: SoundItem.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
                 }
                 default:

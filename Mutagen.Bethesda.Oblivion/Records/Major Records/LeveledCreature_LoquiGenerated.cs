@@ -2610,13 +2610,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
-                            transl: (MutagenFrame r, out LeveledEntry<ANpcSpawn> listSubItem, RecordTypeConverter? conv) =>
-                            {
-                                return LoquiBinaryTranslation<LeveledEntry<ANpcSpawn>>.Instance.Parse(
-                                    frame: r,
-                                    item: out listSubItem!,
-                                    recordTypeConverter: conv);
-                            }));
+                            transl: LeveledEntry<ANpcSpawn>.TryCreateFromBinary));
                     return TryGet<int?>.Succeed((int)LeveledCreature_FieldIndex.Entries);
                 }
                 case RecordTypeInts.SCRI:
