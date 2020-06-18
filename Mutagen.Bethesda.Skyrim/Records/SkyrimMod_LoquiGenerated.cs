@@ -123,6 +123,7 @@ namespace Mutagen.Bethesda.Skyrim
             _MaterialTypes_Object = new Group<MaterialType>(this);
             _Impacts_Object = new Group<Impact>(this);
             _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Group<ArmorAddon>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -695,6 +696,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IImpactDataSetGetter> ISkyrimModGetter.ImpactDataSets => _ImpactDataSets_Object;
         #endregion
+        #region ArmorAddons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ArmorAddon> _ArmorAddons_Object;
+        public Group<ArmorAddon> ArmorAddons => _ArmorAddons_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IArmorAddonGetter> ISkyrimModGetter.ArmorAddons => _ArmorAddons_Object;
+        #endregion
 
         #region To String
 
@@ -946,6 +954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1029,7 +1038,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem VoiceTypes,
                 TItem MaterialTypes,
                 TItem Impacts,
-                TItem ImpactDataSets)
+                TItem ImpactDataSets,
+                TItem ArmorAddons)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1112,6 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaterialTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MaterialTypes, new Group.Mask<TItem>(MaterialTypes));
                 this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(Impacts, new Group.Mask<TItem>(Impacts));
                 this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(ImpactDataSets, new Group.Mask<TItem>(ImpactDataSets));
+                this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(ArmorAddons, new Group.Mask<TItem>(ArmorAddons));
             }
 
             #pragma warning disable CS8618
@@ -1204,6 +1215,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? MaterialTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Impacts { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ImpactDataSets { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ArmorAddons { get; set; }
             #endregion
 
             #region Equals
@@ -1297,6 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MaterialTypes, rhs.MaterialTypes)) return false;
                 if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
                 if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
+                if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1383,6 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MaterialTypes);
                 hash.Add(this.Impacts);
                 hash.Add(this.ImpactDataSets);
+                hash.Add(this.ArmorAddons);
                 return hash.ToHashCode();
             }
 
@@ -1796,6 +1810,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.ImpactDataSets.Overall)) return false;
                     if (this.ImpactDataSets.Specific != null && !this.ImpactDataSets.Specific.All(eval)) return false;
                 }
+                if (ArmorAddons != null)
+                {
+                    if (!eval(this.ArmorAddons.Overall)) return false;
+                    if (this.ArmorAddons.Specific != null && !this.ArmorAddons.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2208,6 +2227,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.ImpactDataSets.Overall)) return true;
                     if (this.ImpactDataSets.Specific != null && this.ImpactDataSets.Specific.Any(eval)) return true;
                 }
+                if (ArmorAddons != null)
+                {
+                    if (eval(this.ArmorAddons.Overall)) return true;
+                    if (this.ArmorAddons.Specific != null && this.ArmorAddons.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2303,6 +2327,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MaterialTypes = this.MaterialTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MaterialTypes.Overall), this.MaterialTypes.Specific?.Translate(eval));
                 obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
                 obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
+                obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2649,6 +2674,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ImpactDataSets?.ToString(fg);
                     }
+                    if (printMask?.ArmorAddons?.Overall ?? true)
+                    {
+                        ArmorAddons?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2755,6 +2784,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<MaterialType.ErrorMask>?>? MaterialTypes;
             public MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
             public MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
+            public MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
             #endregion
 
             #region IErrorMask
@@ -2925,6 +2955,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Impacts;
                     case SkyrimMod_FieldIndex.ImpactDataSets:
                         return ImpactDataSets;
+                    case SkyrimMod_FieldIndex.ArmorAddons:
+                        return ArmorAddons;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3177,6 +3209,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.ImpactDataSets:
                         this.ImpactDataSets = new MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = new MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3431,6 +3466,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.ImpactDataSets:
                         this.ImpactDataSets = (MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.ArmorAddons:
+                        this.ArmorAddons = (MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3520,6 +3558,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MaterialTypes != null) return true;
                 if (Impacts != null) return true;
                 if (ImpactDataSets != null) return true;
+                if (ArmorAddons != null) return true;
                 return false;
             }
             #endregion
@@ -3635,6 +3674,7 @@ namespace Mutagen.Bethesda.Skyrim
                 MaterialTypes?.ToString(fg);
                 Impacts?.ToString(fg);
                 ImpactDataSets?.ToString(fg);
+                ArmorAddons?.ToString(fg);
             }
             #endregion
 
@@ -3724,6 +3764,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MaterialTypes = this.MaterialTypes.Combine(rhs.MaterialTypes, (l, r) => l.Combine(r));
                 ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
                 ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
+                ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3826,6 +3867,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<MaterialType.TranslationMask>?> MaterialTypes;
             public MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?> Impacts;
             public MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?> ImpactDataSets;
+            public MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?> ArmorAddons;
             #endregion
 
             #region Ctors
@@ -3912,6 +3954,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MaterialTypes = new MaskItem<bool, Group.TranslationMask<MaterialType.TranslationMask>?>(defaultOn, null);
                 this.Impacts = new MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?>(defaultOn, null);
                 this.ImpactDataSets = new MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?>(defaultOn, null);
+                this.ArmorAddons = new MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4008,6 +4051,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MaterialTypes?.Overall ?? true, MaterialTypes?.Specific?.GetCrystal()));
                 ret.Add((Impacts?.Overall ?? true, Impacts?.Specific?.GetCrystal()));
                 ret.Add((ImpactDataSets?.Overall ?? true, ImpactDataSets?.Specific?.GetCrystal()));
+                ret.Add((ArmorAddons?.Overall ?? true, ArmorAddons?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4102,6 +4146,7 @@ namespace Mutagen.Bethesda.Skyrim
             _MaterialTypes_Object = new Group<MaterialType>(this);
             _Impacts_Object = new Group<Impact>(this);
             _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
+            _ArmorAddons_Object = new Group<ArmorAddon>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -4429,6 +4474,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.ImpactDataSets ?? true)
             {
                 this.ImpactDataSets.RecordCache.Set(rhsMod.ImpactDataSets.RecordCache.Items);
+            }
+            if (mask?.ArmorAddons ?? true)
+            {
+                this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
             }
         }
 
@@ -4997,6 +5046,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<ImpactDataSet>());
             }
+            if (mask?.ArmorAddons ?? true)
+            {
+                this.ArmorAddons.RecordCache.Set(
+                    rhs.ArmorAddons.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ArmorAddon>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5096,6 +5152,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += MaterialTypes.RecordCache.Count > 0 ? 1 : 0;
             count += Impacts.RecordCache.Count > 0 ? 1 : 0;
             count += ImpactDataSets.RecordCache.Count > 0 ? 1 : 0;
+            count += ArmorAddons.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5395,6 +5452,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<MaterialType> MaterialTypes { get; }
         new Group<Impact> Impacts { get; }
         new Group<ImpactDataSet> ImpactDataSets { get; }
+        new Group<ArmorAddon> ArmorAddons { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -5493,6 +5551,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IMaterialTypeGetter> MaterialTypes { get; }
         IGroupGetter<IImpactGetter> Impacts { get; }
         IGroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
+        IGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
 
     }
 
@@ -6029,6 +6088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MaterialTypes = 78,
         Impacts = 79,
         ImpactDataSets = 80,
+        ArmorAddons = 81,
     }
     #endregion
 
@@ -6046,9 +6106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 81;
+        public const ushort AdditionalFieldCount = 82;
 
-        public const ushort FieldCount = 81;
+        public const ushort FieldCount = 82;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -6240,6 +6300,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Impacts;
                 case "IMPACTDATASETS":
                     return (ushort)SkyrimMod_FieldIndex.ImpactDataSets;
+                case "ARMORADDONS":
+                    return (ushort)SkyrimMod_FieldIndex.ArmorAddons;
                 default:
                     return null;
             }
@@ -6331,6 +6393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MaterialTypes:
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
+                case SkyrimMod_FieldIndex.ArmorAddons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6423,6 +6486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MaterialTypes:
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
+                case SkyrimMod_FieldIndex.ArmorAddons:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6515,6 +6579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MaterialTypes:
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
+                case SkyrimMod_FieldIndex.ArmorAddons:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6688,6 +6753,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Impacts";
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                     return "ImpactDataSets";
+                case SkyrimMod_FieldIndex.ArmorAddons:
+                    return "ArmorAddons";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6779,6 +6846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MaterialTypes:
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
+                case SkyrimMod_FieldIndex.ArmorAddons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6872,6 +6940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MaterialTypes:
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
+                case SkyrimMod_FieldIndex.ArmorAddons:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7045,6 +7114,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Impact>);
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                     return typeof(Group<ImpactDataSet>);
+                case SkyrimMod_FieldIndex.ArmorAddons:
+                    return typeof(Group<ArmorAddon>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7173,6 +7244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MaterialTypes.Clear();
             item.Impacts.Clear();
             item.ImpactDataSets.Clear();
+            item.ArmorAddons.Clear();
         }
         
         #region Xml Translation
@@ -7408,6 +7480,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MaterialTypes = MaskItemExt.Factory(item.MaterialTypes.GetEqualsMask(rhs.MaterialTypes, include), include);
             ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
             ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
+            ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
         }
         
         public string ToString(
@@ -7778,6 +7851,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ImpactDataSets?.ToString(fg, "ImpactDataSets");
             }
+            if (printMask?.ArmorAddons?.Overall ?? true)
+            {
+                item.ArmorAddons?.ToString(fg, "ArmorAddons");
+            }
         }
         
         public bool HasBeenSet(
@@ -7872,6 +7949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MaterialTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MaterialTypes?.GetHasBeenSetMask());
             mask.Impacts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Impacts?.GetHasBeenSetMask());
             mask.ImpactDataSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImpactDataSets?.GetHasBeenSetMask());
+            mask.ArmorAddons = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArmorAddons?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -7962,6 +8040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.MaterialTypes, rhs.MaterialTypes)) return false;
             if (!object.Equals(lhs.Impacts, rhs.Impacts)) return false;
             if (!object.Equals(lhs.ImpactDataSets, rhs.ImpactDataSets)) return false;
+            if (!object.Equals(lhs.ArmorAddons, rhs.ArmorAddons)) return false;
             return true;
         }
         
@@ -8049,6 +8128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.MaterialTypes);
             hash.Add(item.Impacts);
             hash.Add(item.ImpactDataSets);
+            hash.Add(item.ArmorAddons);
             return hash.ToHashCode();
         }
         
@@ -8465,6 +8545,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
                     return obj.ImpactDataSets.RecordCache;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    return obj.ArmorAddons.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -8484,7 +8569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[80];
+            Stream[] outputStreams = new Stream[81];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -8566,6 +8651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9176,6 +9262,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.ArmorAddons is ILinkedFormKeyContainer ArmorAddonslinkCont)
+            {
+                foreach (var item in ArmorAddonslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -9499,6 +9592,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ArmorAddons.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10235,6 +10332,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
                     foreach (var item in obj.ImpactDataSets.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ArmorAddon":
+                case "IArmorAddonGetter":
+                case "IArmorAddon":
+                case "IArmorAddonInternal":
+                    foreach (var item in obj.ArmorAddons.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -11878,6 +11984,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArmorAddons) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ArmorAddons);
+                try
+                {
+                    item.ArmorAddons.DeepCopyIn(
+                        rhs: rhs.ArmorAddons,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ArmorAddons));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -12857,6 +12983,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.ImpactDataSets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ImpactDataSets));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArmorAddons) ?? true))
+            {
+                var ArmorAddonsItem = item.ArmorAddons;
+                ((GroupXmlWriteTranslation)((IXmlItem)ArmorAddonsItem).XmlWriteTranslator).Write<IArmorAddonGetter>(
+                    item: ArmorAddonsItem,
+                    node: node,
+                    name: nameof(item.ArmorAddons),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ArmorAddons,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ArmorAddons));
             }
         }
 
@@ -14465,6 +14602,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "ArmorAddons":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ArmorAddons);
+                    try
+                    {
+                        item.ArmorAddons.CopyInFromXml<ArmorAddon>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -14714,6 +14870,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool MaterialTypes;
         public bool Impacts;
         public bool ImpactDataSets;
+        public bool ArmorAddons;
         public GroupMask()
         {
         }
@@ -14799,6 +14956,7 @@ namespace Mutagen.Bethesda.Skyrim
             MaterialTypes = defaultValue;
             Impacts = defaultValue;
             ImpactDataSets = defaultValue;
+            ArmorAddons = defaultValue;
         }
     }
 
@@ -15703,6 +15861,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ImpactDataSetsItem).BinaryWriteTranslator).Write<IImpactDataSetGetter>(
                         item: ImpactDataSetsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ArmorAddons ?? true)
+            {
+                var ArmorAddonsItem = item.ArmorAddons;
+                if (ArmorAddonsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
+                        item: ArmorAddonsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -16896,6 +17065,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
                 }
+                case RecordTypeInts.ARMA:
+                {
+                    if (importMask?.ArmorAddons ?? true)
+                    {
+                        item.ArmorAddons.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -17467,6 +17650,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IImpactDataSetGetter>? _ImpactDataSets => _ImpactDataSetsLocation.HasValue ? GroupBinaryOverlay<IImpactDataSetGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ImpactDataSetsLocation!.Value.Min, _ImpactDataSetsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IImpactDataSetGetter> ImpactDataSets => _ImpactDataSets ?? new Group<ImpactDataSet>(this);
         #endregion
+        #region ArmorAddons
+        private RangeInt64? _ArmorAddonsLocation;
+        private IGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocation.HasValue ? GroupBinaryOverlay<IArmorAddonGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorAddonsLocation!.Value.Min, _ArmorAddonsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Group<ArmorAddon>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -17961,6 +18149,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                }
+                case RecordTypeInts.ARMA:
+                {
+                    _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

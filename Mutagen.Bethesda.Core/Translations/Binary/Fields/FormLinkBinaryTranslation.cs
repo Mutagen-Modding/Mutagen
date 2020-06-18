@@ -78,6 +78,20 @@ namespace Mutagen.Bethesda.Binary
             return false;
         }
 
+        public bool Parse<T>(
+            MutagenFrame frame,
+            [MaybeNullWhen(false)] out IFormLinkNullable<T> item)
+            where T : class, IMajorRecordCommonGetter
+        {
+            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            {
+                item = new FormLinkNullable<T>(id);
+                return true;
+            }
+            item = new FormLinkNullable<T>();
+            return false;
+        }
+
         public void Write<T>(
             MutagenWriter writer,
             IFormLink<T> item,

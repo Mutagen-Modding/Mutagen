@@ -12,22 +12,25 @@ namespace Mutagen.Bethesda.Binary
     {
         private int? _male;
         private int? _female;
+        private T _fallback;
         private Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> _creator;
 
-        public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : default!;
-        public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : default!;
+        public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : _fallback;
+        public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : _fallback;
 
         public GenderedItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package,
             int? male,
             int? female,
-            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
             : base(bytes, package)
         {
             this._male = male;
             this._female = female;
             this._creator = creator;
+            this._fallback = fallback;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -80,7 +83,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType male,
             RecordType female,
             int offset,
-            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
         {
             var initialPos = stream.Position;
             int? maleLoc = null, femaleLoc = null;
@@ -113,7 +117,8 @@ namespace Mutagen.Bethesda.Binary
                 package,
                 maleLoc,
                 femaleLoc,
-                creator);
+                creator,
+                fallback);
         }
 
         public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
@@ -206,12 +211,43 @@ namespace Mutagen.Bethesda.Binary
             return new GenderedItem<T?>(maleObj, femaleObj);
         }
 
-        public static GenderedItemBinaryOverlay<T> Factory<T>(
+        public static GenderedItemBinaryOverlay<T?> Factory<T>(
             BinaryMemoryReadStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            where T : class
+        {
+            int? maleLoc = null, femaleLoc = null;
+            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
+            if (find[0] != null)
+            {
+                maleLoc = find[0];
+            }
+            if (find[1] != null)
+            {
+                femaleLoc = find[1];
+            }
+            var ret = new GenderedItemBinaryOverlay<T?>(
+                stream.RemainingMemory.Slice(0, lenParsed),
+                package,
+                maleLoc,
+                femaleLoc,
+                creator,
+                default);
+            stream.Position += lenParsed;
+            return ret;
+        }
+
+        public static GenderedItemBinaryOverlay<T> Factory<T>(
+            BinaryMemoryReadStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordType male,
+            RecordType female,
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
+            where T : notnull
         {
             int? maleLoc = null, femaleLoc = null;
             var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
@@ -228,7 +264,8 @@ namespace Mutagen.Bethesda.Binary
                 package,
                 maleLoc,
                 femaleLoc,
-                creator);
+                creator,
+                fallback);
             stream.Position += lenParsed;
             return ret;
         }

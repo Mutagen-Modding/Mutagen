@@ -87,6 +87,7 @@
       <Group name="MaterialTypes" refName="MaterialType" />
       <Group name="Impacts" refName="Impact" />
       <Group name="ImpactDataSets" refName="ImpactDataSet" />
+      <Group name="ArmorAddons" refName="ArmorAddon" />
     </Fields>
   </Object>
 </Loqui>

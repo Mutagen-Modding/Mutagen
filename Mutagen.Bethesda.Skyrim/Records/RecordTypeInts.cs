@@ -146,6 +146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int FLTV = 0x56544C46;
         public const int FNAM = 0x4D414E46;
         public const int FNPR = 0x52504E46;
+        public const int FSTS = 0x53545346;
         public const int FTSM = 0x4D535446;
         public const int FTST = 0x54535446;
         public const int FULL = 0x4C4C5546;
@@ -245,6 +246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int MOD2 = 0x32444F4D;
         public const int MOD3 = 0x33444F4D;
         public const int MOD4 = 0x34444F4D;
+        public const int MOD5 = 0x35444F4D;
         public const int MODL = 0x4C444F4D;
         public const int MODS = 0x53444F4D;
         public const int MODT = 0x54444F4D;

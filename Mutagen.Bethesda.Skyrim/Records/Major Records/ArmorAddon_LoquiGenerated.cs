@@ -49,6 +49,85 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region BodyTemplate
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private BodyTemplate? _BodyTemplate;
+        public BodyTemplate? BodyTemplate
+        {
+            get => _BodyTemplate;
+            set => _BodyTemplate = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IBodyTemplateGetter? IArmorAddonGetter.BodyTemplate => this.BodyTemplate;
+        #endregion
+        #region Race
+        public FormLinkNullable<Race> Race { get; set; } = new FormLinkNullable<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IRaceGetter> IArmorAddonGetter.Race => this.Race;
+        #endregion
+        #region Priority
+        public GenderedItem<Byte> Priority { get; set; } = new GenderedItem<Byte>(default, default);
+        IGenderedItemGetter<Byte> IArmorAddonGetter.Priority => this.Priority;
+        #endregion
+        #region WeightSliderEnabled
+        public GenderedItem<Boolean> WeightSliderEnabled { get; set; } = new GenderedItem<Boolean>(default, default);
+        IGenderedItemGetter<Boolean> IArmorAddonGetter.WeightSliderEnabled => this.WeightSliderEnabled;
+        #endregion
+        #region Unknown
+        public UInt16 Unknown { get; set; } = default;
+        #endregion
+        #region DetectionSoundValue
+        public Byte DetectionSoundValue { get; set; } = default;
+        #endregion
+        #region Unknown2
+        public Byte Unknown2 { get; set; } = default;
+        #endregion
+        #region WeaponAdjust
+        public Single WeaponAdjust { get; set; } = default;
+        #endregion
+        #region WorldModel
+        public GenderedItem<Model?>? WorldModel { get; set; }
+        IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.WorldModel => this.WorldModel;
+        #endregion
+        #region FirstPersonModel
+        public GenderedItem<Model?>? FirstPersonModel { get; set; }
+        IGenderedItemGetter<IModelGetter?>? IArmorAddonGetter.FirstPersonModel => this.FirstPersonModel;
+        #endregion
+        #region SkinTexture
+        public GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
+        IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? IArmorAddonGetter.SkinTexture => this.SkinTexture;
+        #endregion
+        #region TextureSwapList
+        public GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
+        IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? IArmorAddonGetter.TextureSwapList => this.TextureSwapList;
+        #endregion
+        #region AdditionalRaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
+        public ExtendedList<IFormLink<Race>> AdditionalRaces
+        {
+            get => this._AdditionalRaces;
+            protected set => this._AdditionalRaces = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IRaceGetter>> IArmorAddonGetter.AdditionalRaces => _AdditionalRaces;
+        #endregion
+
+        #endregion
+        #region FootstepSound
+        public FormLinkNullable<FootstepSet> FootstepSound { get; set; } = new FormLinkNullable<FootstepSet>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IFootstepSetGetter> IArmorAddonGetter.FootstepSound => this.FootstepSound;
+        #endregion
+        #region ArtObject
+        public FormLinkNullable<ArtObject> ArtObject { get; set; } = new FormLinkNullable<ArtObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IArtObjectGetter> IArmorAddonGetter.ArtObject => this.ArtObject;
+        #endregion
+        #region DNAMDataTypeState
+        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -219,6 +298,22 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(initialValue, new BodyTemplate.Mask<TItem>(initialValue));
+                this.Race = initialValue;
+                this.Priority = new GenderedItem<TItem>(initialValue, initialValue);
+                this.WeightSliderEnabled = new GenderedItem<TItem>(initialValue, initialValue);
+                this.Unknown = initialValue;
+                this.DetectionSoundValue = initialValue;
+                this.Unknown2 = initialValue;
+                this.WeaponAdjust = initialValue;
+                this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
+                this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(initialValue, default);
+                this.SkinTexture = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.TextureSwapList = new MaskItem<TItem, GenderedItem<TItem>?>(initialValue, default);
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FootstepSound = initialValue;
+                this.ArtObject = initialValue;
+                this.DNAMDataTypeState = initialValue;
             }
 
             public Mask(
@@ -227,7 +322,23 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem BodyTemplate,
+                TItem Race,
+                TItem Priority,
+                TItem WeightSliderEnabled,
+                TItem Unknown,
+                TItem DetectionSoundValue,
+                TItem Unknown2,
+                TItem WeaponAdjust,
+                TItem WorldModel,
+                TItem FirstPersonModel,
+                TItem SkinTexture,
+                TItem TextureSwapList,
+                TItem AdditionalRaces,
+                TItem FootstepSound,
+                TItem ArtObject,
+                TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -236,6 +347,22 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.BodyTemplate = new MaskItem<TItem, BodyTemplate.Mask<TItem>?>(BodyTemplate, new BodyTemplate.Mask<TItem>(BodyTemplate));
+                this.Race = Race;
+                this.Priority = new GenderedItem<TItem>(Priority, Priority);
+                this.WeightSliderEnabled = new GenderedItem<TItem>(WeightSliderEnabled, WeightSliderEnabled);
+                this.Unknown = Unknown;
+                this.DetectionSoundValue = DetectionSoundValue;
+                this.Unknown2 = Unknown2;
+                this.WeaponAdjust = WeaponAdjust;
+                this.WorldModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(WorldModel, default);
+                this.FirstPersonModel = new MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>(FirstPersonModel, default);
+                this.SkinTexture = new MaskItem<TItem, GenderedItem<TItem>?>(SkinTexture, default);
+                this.TextureSwapList = new MaskItem<TItem, GenderedItem<TItem>?>(TextureSwapList, default);
+                this.AdditionalRaces = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(AdditionalRaces, Enumerable.Empty<(int Index, TItem Value)>());
+                this.FootstepSound = FootstepSound;
+                this.ArtObject = ArtObject;
+                this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -244,6 +371,25 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, BodyTemplate.Mask<TItem>?>? BodyTemplate { get; set; }
+            public TItem Race;
+            public GenderedItem<TItem> Priority;
+            public GenderedItem<TItem> WeightSliderEnabled;
+            public TItem Unknown;
+            public TItem DetectionSoundValue;
+            public TItem Unknown2;
+            public TItem WeaponAdjust;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? WorldModel;
+            public MaskItem<TItem, GenderedItem<MaskItem<TItem, Model.Mask<TItem>?>?>?>? FirstPersonModel;
+            public MaskItem<TItem, GenderedItem<TItem>?>? SkinTexture;
+            public MaskItem<TItem, GenderedItem<TItem>?>? TextureSwapList;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? AdditionalRaces;
+            public TItem FootstepSound;
+            public TItem ArtObject;
+            public TItem DNAMDataTypeState;
             #endregion
 
             #region Equals
@@ -257,11 +403,43 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.BodyTemplate, rhs.BodyTemplate)) return false;
+                if (!object.Equals(this.Race, rhs.Race)) return false;
+                if (!object.Equals(this.Priority, rhs.Priority)) return false;
+                if (!object.Equals(this.WeightSliderEnabled, rhs.WeightSliderEnabled)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DetectionSoundValue, rhs.DetectionSoundValue)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.WeaponAdjust, rhs.WeaponAdjust)) return false;
+                if (!object.Equals(this.WorldModel, rhs.WorldModel)) return false;
+                if (!object.Equals(this.FirstPersonModel, rhs.FirstPersonModel)) return false;
+                if (!object.Equals(this.SkinTexture, rhs.SkinTexture)) return false;
+                if (!object.Equals(this.TextureSwapList, rhs.TextureSwapList)) return false;
+                if (!object.Equals(this.AdditionalRaces, rhs.AdditionalRaces)) return false;
+                if (!object.Equals(this.FootstepSound, rhs.FootstepSound)) return false;
+                if (!object.Equals(this.ArtObject, rhs.ArtObject)) return false;
+                if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.BodyTemplate);
+                hash.Add(this.Race);
+                hash.Add(this.Priority);
+                hash.Add(this.WeightSliderEnabled);
+                hash.Add(this.Unknown);
+                hash.Add(this.DetectionSoundValue);
+                hash.Add(this.Unknown2);
+                hash.Add(this.WeaponAdjust);
+                hash.Add(this.WorldModel);
+                hash.Add(this.FirstPersonModel);
+                hash.Add(this.SkinTexture);
+                hash.Add(this.TextureSwapList);
+                hash.Add(this.AdditionalRaces);
+                hash.Add(this.FootstepSound);
+                hash.Add(this.ArtObject);
+                hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -272,6 +450,44 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (BodyTemplate != null)
+                {
+                    if (!eval(this.BodyTemplate.Overall)) return false;
+                    if (this.BodyTemplate.Specific != null && !this.BodyTemplate.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Race)) return false;
+                if (!eval(this.Priority.Male) || !eval(this.Priority.Female)) return false;
+                if (!eval(this.WeightSliderEnabled.Male) || !eval(this.WeightSliderEnabled.Female)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.DetectionSoundValue)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.WeaponAdjust)) return false;
+                if (!GenderedItem.AllMask(
+                    this.WorldModel,
+                    eval: eval)) return false;
+                if (!GenderedItem.AllMask(
+                    this.FirstPersonModel,
+                    eval: eval)) return false;
+                if (!GenderedItem.All(
+                    this.SkinTexture,
+                    eval: eval)) return false;
+                if (!GenderedItem.All(
+                    this.TextureSwapList,
+                    eval: eval)) return false;
+                if (this.AdditionalRaces != null)
+                {
+                    if (!eval(this.AdditionalRaces.Overall)) return false;
+                    if (this.AdditionalRaces.Specific != null)
+                    {
+                        foreach (var item in this.AdditionalRaces.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.FootstepSound)) return false;
+                if (!eval(this.ArtObject)) return false;
+                if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -280,6 +496,44 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (BodyTemplate != null)
+                {
+                    if (eval(this.BodyTemplate.Overall)) return true;
+                    if (this.BodyTemplate.Specific != null && this.BodyTemplate.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Race)) return true;
+                if (eval(this.Priority.Male) || eval(this.Priority.Female)) return true;
+                if (eval(this.WeightSliderEnabled.Male) || eval(this.WeightSliderEnabled.Female)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.DetectionSoundValue)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.WeaponAdjust)) return true;
+                if (GenderedItem.AnyMask(
+                    this.WorldModel,
+                    eval: eval)) return true;
+                if (GenderedItem.AnyMask(
+                    this.FirstPersonModel,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.SkinTexture,
+                    eval: eval)) return true;
+                if (GenderedItem.Any(
+                    this.TextureSwapList,
+                    eval: eval)) return true;
+                if (this.AdditionalRaces != null)
+                {
+                    if (eval(this.AdditionalRaces.Overall)) return true;
+                    if (this.AdditionalRaces.Specific != null)
+                    {
+                        foreach (var item in this.AdditionalRaces.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.FootstepSound)) return true;
+                if (eval(this.ArtObject)) return true;
+                if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -295,6 +549,49 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.BodyTemplate = this.BodyTemplate == null ? null : new MaskItem<R, BodyTemplate.Mask<R>?>(eval(this.BodyTemplate.Overall), this.BodyTemplate.Specific?.Translate(eval));
+                obj.Race = eval(this.Race);
+                obj.Priority = new GenderedItem<R>(
+                    eval(this.Priority.Male),
+                    eval(this.Priority.Female));
+                obj.WeightSliderEnabled = new GenderedItem<R>(
+                    eval(this.WeightSliderEnabled.Male),
+                    eval(this.WeightSliderEnabled.Female));
+                obj.Unknown = eval(this.Unknown);
+                obj.DetectionSoundValue = eval(this.DetectionSoundValue);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.WeaponAdjust = eval(this.WeaponAdjust);
+                obj.WorldModel = GenderedItem.TranslateHelper(
+                    this.WorldModel,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.FirstPersonModel = GenderedItem.TranslateHelper(
+                    this.FirstPersonModel,
+                    eval,
+                    (m, e) => m?.Translate(e));
+                obj.SkinTexture = GenderedItem.TranslateHelper(
+                    this.SkinTexture,
+                    eval);
+                obj.TextureSwapList = GenderedItem.TranslateHelper(
+                    this.TextureSwapList,
+                    eval);
+                if (AdditionalRaces != null)
+                {
+                    obj.AdditionalRaces = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.AdditionalRaces.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (AdditionalRaces.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.AdditionalRaces.Specific = l;
+                        foreach (var item in AdditionalRaces.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.FootstepSound = eval(this.FootstepSound);
+                obj.ArtObject = eval(this.ArtObject);
+                obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
 
@@ -317,6 +614,93 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.BodyTemplate?.Overall ?? true)
+                    {
+                        BodyTemplate?.ToString(fg);
+                    }
+                    if (printMask?.Race ?? true)
+                    {
+                        fg.AppendItem(Race, "Race");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"Priority => {Priority}");
+                    }
+                    if ((true))
+                    {
+                        fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.DetectionSoundValue ?? true)
+                    {
+                        fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.WeaponAdjust ?? true)
+                    {
+                        fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                    }
+                    if (WorldModel != null
+                        && (printMask?.WorldModel?.Overall ?? true))
+                    {
+                        fg.AppendLine($"WorldModel => {WorldModel}");
+                    }
+                    if (FirstPersonModel != null
+                        && (printMask?.FirstPersonModel?.Overall ?? true))
+                    {
+                        fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                    }
+                    if (SkinTexture != null
+                        && (printMask?.SkinTexture?.Overall ?? true))
+                    {
+                        fg.AppendLine($"SkinTexture => {SkinTexture}");
+                    }
+                    if (TextureSwapList != null
+                        && (printMask?.TextureSwapList?.Overall ?? true))
+                    {
+                        fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                    }
+                    if ((printMask?.AdditionalRaces?.Overall ?? true)
+                        && AdditionalRaces.TryGet(out var AdditionalRacesItem))
+                    {
+                        fg.AppendLine("AdditionalRaces =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(AdditionalRacesItem.Overall);
+                            if (AdditionalRacesItem.Specific != null)
+                            {
+                                foreach (var subItem in AdditionalRacesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.FootstepSound ?? true)
+                    {
+                        fg.AppendItem(FootstepSound, "FootstepSound");
+                    }
+                    if (printMask?.ArtObject ?? true)
+                    {
+                        fg.AppendItem(ArtObject, "ArtObject");
+                    }
+                    if (printMask?.DNAMDataTypeState ?? true)
+                    {
+                        fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -328,12 +712,63 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, BodyTemplate.ErrorMask?>? BodyTemplate;
+            public Exception? Race;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? Priority;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? WeightSliderEnabled;
+            public Exception? Unknown;
+            public Exception? DetectionSoundValue;
+            public Exception? Unknown2;
+            public Exception? WeaponAdjust;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? WorldModel;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? FirstPersonModel;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? SkinTexture;
+            public MaskItem<Exception?, GenderedItem<Exception?>?>? TextureSwapList;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? AdditionalRaces;
+            public Exception? FootstepSound;
+            public Exception? ArtObject;
+            public Exception? DNAMDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArmorAddon_FieldIndex.BodyTemplate:
+                        return BodyTemplate;
+                    case ArmorAddon_FieldIndex.Race:
+                        return Race;
+                    case ArmorAddon_FieldIndex.Priority:
+                        return Priority;
+                    case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                        return WeightSliderEnabled;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        return Unknown;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        return DetectionSoundValue;
+                    case ArmorAddon_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        return WeaponAdjust;
+                    case ArmorAddon_FieldIndex.WorldModel:
+                        return WorldModel;
+                    case ArmorAddon_FieldIndex.FirstPersonModel:
+                        return FirstPersonModel;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        return SkinTexture;
+                    case ArmorAddon_FieldIndex.TextureSwapList:
+                        return TextureSwapList;
+                    case ArmorAddon_FieldIndex.AdditionalRaces:
+                        return AdditionalRaces;
+                    case ArmorAddon_FieldIndex.FootstepSound:
+                        return FootstepSound;
+                    case ArmorAddon_FieldIndex.ArtObject:
+                        return ArtObject;
+                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                        return DNAMDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -344,6 +779,54 @@ namespace Mutagen.Bethesda.Skyrim
                 ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArmorAddon_FieldIndex.BodyTemplate:
+                        this.BodyTemplate = new MaskItem<Exception?, BodyTemplate.ErrorMask?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.Race:
+                        this.Race = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.Priority:
+                        this.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                        this.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        this.DetectionSoundValue = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        this.WeaponAdjust = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.WorldModel:
+                        this.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.FirstPersonModel:
+                        this.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        this.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.TextureSwapList:
+                        this.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.AdditionalRaces:
+                        this.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case ArmorAddon_FieldIndex.FootstepSound:
+                        this.FootstepSound = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.ArtObject:
+                        this.ArtObject = ex;
+                        break;
+                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -355,6 +838,54 @@ namespace Mutagen.Bethesda.Skyrim
                 ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
                 switch (enu)
                 {
+                    case ArmorAddon_FieldIndex.BodyTemplate:
+                        this.BodyTemplate = (MaskItem<Exception?, BodyTemplate.ErrorMask?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.Race:
+                        this.Race = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.Priority:
+                        this.Priority = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                        this.WeightSliderEnabled = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.DetectionSoundValue:
+                        this.DetectionSoundValue = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.WeaponAdjust:
+                        this.WeaponAdjust = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.WorldModel:
+                        this.WorldModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.FirstPersonModel:
+                        this.FirstPersonModel = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.SkinTexture:
+                        this.SkinTexture = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.TextureSwapList:
+                        this.TextureSwapList = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.AdditionalRaces:
+                        this.AdditionalRaces = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.FootstepSound:
+                        this.FootstepSound = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.ArtObject:
+                        this.ArtObject = (Exception?)obj;
+                        break;
+                    case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                        this.DNAMDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -364,6 +895,22 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (BodyTemplate != null) return true;
+                if (Race != null) return true;
+                if (Priority != null) return true;
+                if (WeightSliderEnabled != null) return true;
+                if (Unknown != null) return true;
+                if (DetectionSoundValue != null) return true;
+                if (Unknown2 != null) return true;
+                if (WeaponAdjust != null) return true;
+                if (WorldModel != null) return true;
+                if (FirstPersonModel != null) return true;
+                if (SkinTexture != null) return true;
+                if (TextureSwapList != null) return true;
+                if (AdditionalRaces != null) return true;
+                if (FootstepSound != null) return true;
+                if (ArtObject != null) return true;
+                if (DNAMDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -399,6 +946,55 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                BodyTemplate?.ToString(fg);
+                fg.AppendItem(Race, "Race");
+                fg.AppendLine($"Priority => {Priority}");
+                fg.AppendLine($"WeightSliderEnabled => {WeightSliderEnabled}");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(DetectionSoundValue, "DetectionSoundValue");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(WeaponAdjust, "WeaponAdjust");
+                if (WorldModel != null)
+                {
+                    fg.AppendLine($"WorldModel => {WorldModel}");
+                }
+                if (FirstPersonModel != null)
+                {
+                    fg.AppendLine($"FirstPersonModel => {FirstPersonModel}");
+                }
+                if (SkinTexture != null)
+                {
+                    fg.AppendLine($"SkinTexture => {SkinTexture}");
+                }
+                if (TextureSwapList != null)
+                {
+                    fg.AppendLine($"TextureSwapList => {TextureSwapList}");
+                }
+                if (AdditionalRaces.TryGet(out var AdditionalRacesItem))
+                {
+                    fg.AppendLine("AdditionalRaces =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(AdditionalRacesItem.Overall);
+                        if (AdditionalRacesItem.Specific != null)
+                        {
+                            foreach (var subItem in AdditionalRacesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(FootstepSound, "FootstepSound");
+                fg.AppendItem(ArtObject, "ArtObject");
+                fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
 
@@ -407,6 +1003,22 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.BodyTemplate = this.BodyTemplate.Combine(rhs.BodyTemplate, (l, r) => l.Combine(r));
+                ret.Race = this.Race.Combine(rhs.Race);
+                ret.Priority = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.Priority?.Overall, rhs.Priority?.Overall), GenderedItem.Combine(this.Priority?.Specific, rhs.Priority?.Specific));
+                ret.WeightSliderEnabled = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WeightSliderEnabled?.Overall, rhs.WeightSliderEnabled?.Overall), GenderedItem.Combine(this.WeightSliderEnabled?.Specific, rhs.WeightSliderEnabled?.Specific));
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DetectionSoundValue = this.DetectionSoundValue.Combine(rhs.DetectionSoundValue);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.WeaponAdjust = this.WeaponAdjust.Combine(rhs.WeaponAdjust);
+                ret.WorldModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.WorldModel?.Overall, rhs.WorldModel?.Overall), GenderedItem.Combine(this.WorldModel?.Specific, rhs.WorldModel?.Specific));
+                ret.FirstPersonModel = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.FirstPersonModel?.Overall, rhs.FirstPersonModel?.Overall), GenderedItem.Combine(this.FirstPersonModel?.Specific, rhs.FirstPersonModel?.Specific));
+                ret.SkinTexture = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.SkinTexture?.Overall, rhs.SkinTexture?.Overall), GenderedItem.Combine(this.SkinTexture?.Specific, rhs.SkinTexture?.Specific));
+                ret.TextureSwapList = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.TextureSwapList?.Overall, rhs.TextureSwapList?.Overall), GenderedItem.Combine(this.TextureSwapList?.Specific, rhs.TextureSwapList?.Specific));
+                ret.AdditionalRaces = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.AdditionalRaces?.Overall, rhs.AdditionalRaces?.Overall), ExceptionExt.Combine(this.AdditionalRaces?.Specific, rhs.AdditionalRaces?.Specific));
+                ret.FootstepSound = this.FootstepSound.Combine(rhs.FootstepSound);
+                ret.ArtObject = this.ArtObject.Combine(rhs.ArtObject);
+                ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -428,19 +1040,80 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, BodyTemplate.TranslationMask?> BodyTemplate;
+            public bool Race;
+            public MaskItem<bool, GenderedItem<bool>?> Priority;
+            public MaskItem<bool, GenderedItem<bool>?> WeightSliderEnabled;
+            public bool Unknown;
+            public bool DetectionSoundValue;
+            public bool Unknown2;
+            public bool WeaponAdjust;
+            public MaskItem<bool, GenderedItem<Model.TranslationMask?>?> WorldModel;
+            public MaskItem<bool, GenderedItem<Model.TranslationMask?>?> FirstPersonModel;
+            public MaskItem<bool, GenderedItem<bool>?> SkinTexture;
+            public MaskItem<bool, GenderedItem<bool>?> TextureSwapList;
+            public bool AdditionalRaces;
+            public bool FootstepSound;
+            public bool ArtObject;
+            public bool DNAMDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.BodyTemplate = new MaskItem<bool, BodyTemplate.TranslationMask?>(defaultOn, null);
+                this.Race = defaultOn;
+                this.Priority = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.WeightSliderEnabled = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.Unknown = defaultOn;
+                this.DetectionSoundValue = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.WeaponAdjust = defaultOn;
+                this.WorldModel = new MaskItem<bool, GenderedItem<Model.TranslationMask?>?>(defaultOn, default);
+                this.FirstPersonModel = new MaskItem<bool, GenderedItem<Model.TranslationMask?>?>(defaultOn, default);
+                this.SkinTexture = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.TextureSwapList = new MaskItem<bool, GenderedItem<bool>?>(defaultOn, default);
+                this.AdditionalRaces = defaultOn;
+                this.FootstepSound = defaultOn;
+                this.ArtObject = defaultOn;
+                this.DNAMDataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((BodyTemplate?.Overall ?? true, BodyTemplate?.Specific?.GetCrystal()));
+                ret.Add((Race, null));
+                ret.Add((Priority?.Overall ?? true, null));
+                ret.Add((WeightSliderEnabled?.Overall ?? true, null));
+                ret.Add((Unknown, null));
+                ret.Add((DetectionSoundValue, null));
+                ret.Add((Unknown2, null));
+                ret.Add((WeaponAdjust, null));
+                ret.Add((WorldModel?.Overall ?? true, null));
+                ret.Add((FirstPersonModel?.Overall ?? true, null));
+                ret.Add((SkinTexture?.Overall ?? true, null));
+                ret.Add((TextureSwapList?.Overall ?? true, null));
+                ret.Add((AdditionalRaces, null));
+                ret.Add((FootstepSound, null));
+                ret.Add((ArtObject, null));
+                ret.Add((DNAMDataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = ArmorAddon_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
         public ArmorAddon(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -458,6 +1131,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DNAMDataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -520,6 +1197,22 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IArmorAddonInternal>
     {
+        new BodyTemplate? BodyTemplate { get; set; }
+        new FormLinkNullable<Race> Race { get; set; }
+        new GenderedItem<Byte> Priority { get; set; }
+        new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
+        new UInt16 Unknown { get; set; }
+        new Byte DetectionSoundValue { get; set; }
+        new Byte Unknown2 { get; set; }
+        new Single WeaponAdjust { get; set; }
+        new GenderedItem<Model?>? WorldModel { get; set; }
+        new GenderedItem<Model?>? FirstPersonModel { get; set; }
+        new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
+        new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
+        new ExtendedList<IFormLink<Race>> AdditionalRaces { get; }
+        new FormLinkNullable<FootstepSet> FootstepSound { get; set; }
+        new FormLinkNullable<ArtObject> ArtObject { get; set; }
+        new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
     public partial interface IArmorAddonInternal :
@@ -527,15 +1220,38 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorAddon,
         IArmorAddonGetter
     {
+        new GenderedItem<Byte> Priority { get; set; }
+        new GenderedItem<Boolean> WeightSliderEnabled { get; set; }
+        new GenderedItem<Model?>? WorldModel { get; set; }
+        new GenderedItem<Model?>? FirstPersonModel { get; set; }
+        new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
+        new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
     }
 
     public partial interface IArmorAddonGetter :
         ISkyrimMajorRecordGetter,
         ILoquiObject<IArmorAddonGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => ArmorAddon_Registration.Instance;
+        IBodyTemplateGetter? BodyTemplate { get; }
+        IFormLinkNullable<IRaceGetter> Race { get; }
+        IGenderedItemGetter<Byte> Priority { get; }
+        IGenderedItemGetter<Boolean> WeightSliderEnabled { get; }
+        UInt16 Unknown { get; }
+        Byte DetectionSoundValue { get; }
+        Byte Unknown2 { get; }
+        Single WeaponAdjust { get; }
+        IGenderedItemGetter<IModelGetter?>? WorldModel { get; }
+        IGenderedItemGetter<IModelGetter?>? FirstPersonModel { get; }
+        IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? SkinTexture { get; }
+        IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? TextureSwapList { get; }
+        IReadOnlyList<IFormLink<IRaceGetter>> AdditionalRaces { get; }
+        IFormLinkNullable<IFootstepSetGetter> FootstepSound { get; }
+        IFormLinkNullable<IArtObjectGetter> ArtObject { get; }
+        ArmorAddon.DNAMDataType DNAMDataTypeState { get; }
 
     }
 
@@ -836,6 +1552,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        BodyTemplate = 6,
+        Race = 7,
+        Priority = 8,
+        WeightSliderEnabled = 9,
+        Unknown = 10,
+        DetectionSoundValue = 11,
+        Unknown2 = 12,
+        WeaponAdjust = 13,
+        WorldModel = 14,
+        FirstPersonModel = 15,
+        SkinTexture = 16,
+        TextureSwapList = 17,
+        AdditionalRaces = 18,
+        FootstepSound = 19,
+        ArtObject = 20,
+        DNAMDataTypeState = 21,
     }
     #endregion
 
@@ -853,9 +1585,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "4b6db51f-a0b8-4378-8e8b-8103dfdcd353";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(ArmorAddon.Mask<>);
 
@@ -885,6 +1617,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "BODYTEMPLATE":
+                    return (ushort)ArmorAddon_FieldIndex.BodyTemplate;
+                case "RACE":
+                    return (ushort)ArmorAddon_FieldIndex.Race;
+                case "PRIORITY":
+                    return (ushort)ArmorAddon_FieldIndex.Priority;
+                case "WEIGHTSLIDERENABLED":
+                    return (ushort)ArmorAddon_FieldIndex.WeightSliderEnabled;
+                case "UNKNOWN":
+                    return (ushort)ArmorAddon_FieldIndex.Unknown;
+                case "DETECTIONSOUNDVALUE":
+                    return (ushort)ArmorAddon_FieldIndex.DetectionSoundValue;
+                case "UNKNOWN2":
+                    return (ushort)ArmorAddon_FieldIndex.Unknown2;
+                case "WEAPONADJUST":
+                    return (ushort)ArmorAddon_FieldIndex.WeaponAdjust;
+                case "WORLDMODEL":
+                    return (ushort)ArmorAddon_FieldIndex.WorldModel;
+                case "FIRSTPERSONMODEL":
+                    return (ushort)ArmorAddon_FieldIndex.FirstPersonModel;
+                case "SKINTEXTURE":
+                    return (ushort)ArmorAddon_FieldIndex.SkinTexture;
+                case "TEXTURESWAPLIST":
+                    return (ushort)ArmorAddon_FieldIndex.TextureSwapList;
+                case "ADDITIONALRACES":
+                    return (ushort)ArmorAddon_FieldIndex.AdditionalRaces;
+                case "FOOTSTEPSOUND":
+                    return (ushort)ArmorAddon_FieldIndex.FootstepSound;
+                case "ARTOBJECT":
+                    return (ushort)ArmorAddon_FieldIndex.ArtObject;
+                case "DNAMDATATYPESTATE":
+                    return (ushort)ArmorAddon_FieldIndex.DNAMDataTypeState;
                 default:
                     return null;
             }
@@ -895,6 +1659,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                    return true;
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                case ArmorAddon_FieldIndex.Race:
+                case ArmorAddon_FieldIndex.Priority:
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                case ArmorAddon_FieldIndex.Unknown:
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                case ArmorAddon_FieldIndex.Unknown2:
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                case ArmorAddon_FieldIndex.WorldModel:
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                case ArmorAddon_FieldIndex.SkinTexture:
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                case ArmorAddon_FieldIndex.FootstepSound:
+                case ArmorAddon_FieldIndex.ArtObject:
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -905,6 +1687,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                case ArmorAddon_FieldIndex.WorldModel:
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                    return true;
+                case ArmorAddon_FieldIndex.Race:
+                case ArmorAddon_FieldIndex.Priority:
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                case ArmorAddon_FieldIndex.Unknown:
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                case ArmorAddon_FieldIndex.Unknown2:
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                case ArmorAddon_FieldIndex.SkinTexture:
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                case ArmorAddon_FieldIndex.FootstepSound:
+                case ArmorAddon_FieldIndex.ArtObject:
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -915,6 +1715,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                case ArmorAddon_FieldIndex.Race:
+                case ArmorAddon_FieldIndex.Priority:
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                case ArmorAddon_FieldIndex.Unknown:
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                case ArmorAddon_FieldIndex.Unknown2:
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                case ArmorAddon_FieldIndex.WorldModel:
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                case ArmorAddon_FieldIndex.SkinTexture:
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                case ArmorAddon_FieldIndex.FootstepSound:
+                case ArmorAddon_FieldIndex.ArtObject:
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -925,6 +1742,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                    return "BodyTemplate";
+                case ArmorAddon_FieldIndex.Race:
+                    return "Race";
+                case ArmorAddon_FieldIndex.Priority:
+                    return "Priority";
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                    return "WeightSliderEnabled";
+                case ArmorAddon_FieldIndex.Unknown:
+                    return "Unknown";
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                    return "DetectionSoundValue";
+                case ArmorAddon_FieldIndex.Unknown2:
+                    return "Unknown2";
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                    return "WeaponAdjust";
+                case ArmorAddon_FieldIndex.WorldModel:
+                    return "WorldModel";
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                    return "FirstPersonModel";
+                case ArmorAddon_FieldIndex.SkinTexture:
+                    return "SkinTexture";
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                    return "TextureSwapList";
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                    return "AdditionalRaces";
+                case ArmorAddon_FieldIndex.FootstepSound:
+                    return "FootstepSound";
+                case ArmorAddon_FieldIndex.ArtObject:
+                    return "ArtObject";
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return "DNAMDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -935,6 +1784,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                case ArmorAddon_FieldIndex.Race:
+                case ArmorAddon_FieldIndex.Priority:
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                case ArmorAddon_FieldIndex.Unknown:
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                case ArmorAddon_FieldIndex.Unknown2:
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                case ArmorAddon_FieldIndex.WorldModel:
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                case ArmorAddon_FieldIndex.SkinTexture:
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                case ArmorAddon_FieldIndex.FootstepSound:
+                case ArmorAddon_FieldIndex.ArtObject:
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -945,6 +1811,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                case ArmorAddon_FieldIndex.Race:
+                case ArmorAddon_FieldIndex.Priority:
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                case ArmorAddon_FieldIndex.Unknown:
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                case ArmorAddon_FieldIndex.Unknown2:
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                case ArmorAddon_FieldIndex.WorldModel:
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                case ArmorAddon_FieldIndex.SkinTexture:
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                case ArmorAddon_FieldIndex.FootstepSound:
+                case ArmorAddon_FieldIndex.ArtObject:
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -955,6 +1838,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ArmorAddon_FieldIndex enu = (ArmorAddon_FieldIndex)index;
             switch (enu)
             {
+                case ArmorAddon_FieldIndex.BodyTemplate:
+                    return typeof(BodyTemplate);
+                case ArmorAddon_FieldIndex.Race:
+                    return typeof(FormLinkNullable<Race>);
+                case ArmorAddon_FieldIndex.Priority:
+                    return typeof(GenderedItem<Byte>);
+                case ArmorAddon_FieldIndex.WeightSliderEnabled:
+                    return typeof(GenderedItem<Boolean>);
+                case ArmorAddon_FieldIndex.Unknown:
+                    return typeof(UInt16);
+                case ArmorAddon_FieldIndex.DetectionSoundValue:
+                    return typeof(Byte);
+                case ArmorAddon_FieldIndex.Unknown2:
+                    return typeof(Byte);
+                case ArmorAddon_FieldIndex.WeaponAdjust:
+                    return typeof(Single);
+                case ArmorAddon_FieldIndex.WorldModel:
+                    return typeof(GenderedItem<Model?>);
+                case ArmorAddon_FieldIndex.FirstPersonModel:
+                    return typeof(GenderedItem<Model?>);
+                case ArmorAddon_FieldIndex.SkinTexture:
+                    return typeof(GenderedItem<IFormLinkNullable<TextureSet>>);
+                case ArmorAddon_FieldIndex.TextureSwapList:
+                    return typeof(GenderedItem<IFormLinkNullable<FormList>>);
+                case ArmorAddon_FieldIndex.AdditionalRaces:
+                    return typeof(ExtendedList<IFormLink<Race>>);
+                case ArmorAddon_FieldIndex.FootstepSound:
+                    return typeof(FormLinkNullable<FootstepSet>);
+                case ArmorAddon_FieldIndex.ArtObject:
+                    return typeof(FormLinkNullable<ArtObject>);
+                case ArmorAddon_FieldIndex.DNAMDataTypeState:
+                    return typeof(ArmorAddon.DNAMDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -963,6 +1878,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly Type XmlWriteTranslation = typeof(ArmorAddonXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMA;
         public static readonly Type BinaryWriteTranslation = typeof(ArmorAddonBinaryWriteTranslation);
+        public static RecordTypeConverter WorldModelFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD3")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO3T")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODS"),
+                new RecordType("MO3S")));
+        public static RecordTypeConverter WorldModelMaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD2")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO2T")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODS"),
+                new RecordType("MO2S")));
+        public static RecordTypeConverter FirstPersonModelFemaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD5")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO5T")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODS"),
+                new RecordType("MO5S")));
+        public static RecordTypeConverter FirstPersonModelMaleConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD4")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO4T")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODS"),
+                new RecordType("MO4S")));
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1004,6 +1959,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IArmorAddonInternal item)
         {
             ClearPartial();
+            item.BodyTemplate = null;
+            item.Race = FormLinkNullable<Race>.Null;
+            item.Priority.Male = default;
+            item.Priority.Female = default;
+            item.WeightSliderEnabled.Male = default;
+            item.WeightSliderEnabled.Female = default;
+            item.Unknown = default;
+            item.DetectionSoundValue = default;
+            item.Unknown2 = default;
+            item.WeaponAdjust = default;
+            item.WorldModel = null;
+            item.FirstPersonModel = null;
+            item.SkinTexture = null;
+            item.TextureSwapList = null;
+            item.AdditionalRaces.Clear();
+            item.FootstepSound = FormLinkNullable<FootstepSet>.Null;
+            item.ArtObject = FormLinkNullable<ArtObject>.Null;
+            item.DNAMDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1161,6 +2134,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.BodyTemplate = EqualsMaskHelper.EqualsHelper(
+                item.BodyTemplate,
+                rhs.BodyTemplate,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.Race = object.Equals(item.Race, rhs.Race);
+            ret.Priority = new GenderedItem<bool>(
+                male: item.Priority.Male == rhs.Priority.Male,
+                female: item.Priority.Female == rhs.Priority.Female);
+            ret.WeightSliderEnabled = new GenderedItem<bool>(
+                male: item.WeightSliderEnabled.Male == rhs.WeightSliderEnabled.Male,
+                female: item.WeightSliderEnabled.Female == rhs.WeightSliderEnabled.Female);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.DetectionSoundValue = item.DetectionSoundValue == rhs.DetectionSoundValue;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.WeaponAdjust = item.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust);
+            ret.WorldModel = GenderedItem.EqualityMaskHelper(
+                lhs: item.WorldModel,
+                rhs: rhs.WorldModel,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.FirstPersonModel = GenderedItem.EqualityMaskHelper(
+                lhs: item.FirstPersonModel,
+                rhs: rhs.FirstPersonModel,
+                maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
+                include: include);
+            ret.SkinTexture = GenderedItem.EqualityMaskHelper(
+                lhs: item.SkinTexture,
+                rhs: rhs.SkinTexture,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullable<ITextureSetGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.TextureSwapList = GenderedItem.EqualityMaskHelper(
+                lhs: item.TextureSwapList,
+                rhs: rhs.TextureSwapList,
+                maskGetter: (l, r, i) => EqualityComparer<IFormLinkNullable<IFormListGetter>>.Default.Equals(l, r),
+                include: include);
+            ret.AdditionalRaces = item.AdditionalRaces.CollectionEqualsHelper(
+                rhs.AdditionalRaces,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.FootstepSound = object.Equals(item.FootstepSound, rhs.FootstepSound);
+            ret.ArtObject = object.Equals(item.ArtObject, rhs.ArtObject);
+            ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1212,12 +2228,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.BodyTemplate?.Overall ?? true)
+                && item.BodyTemplate.TryGet(out var BodyTemplateItem))
+            {
+                BodyTemplateItem?.ToString(fg, "BodyTemplate");
+            }
+            if ((printMask?.Race ?? true)
+                && item.Race.TryGet(out var RaceItem))
+            {
+                fg.AppendItem(RaceItem, "Race");
+            }
+            if (true)
+            {
+                item.Priority.ToString(fg, "Priority");
+            }
+            if (true)
+            {
+                item.WeightSliderEnabled.ToString(fg, "WeightSliderEnabled");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.DetectionSoundValue ?? true)
+            {
+                fg.AppendItem(item.DetectionSoundValue, "DetectionSoundValue");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.WeaponAdjust ?? true)
+            {
+                fg.AppendItem(item.WeaponAdjust, "WeaponAdjust");
+            }
+            if ((printMask?.WorldModel?.Overall ?? true)
+                && item.WorldModel.TryGet(out var WorldModelItem))
+            {
+                WorldModelItem?.ToString(fg, "WorldModel");
+            }
+            if ((printMask?.FirstPersonModel?.Overall ?? true)
+                && item.FirstPersonModel.TryGet(out var FirstPersonModelItem))
+            {
+                FirstPersonModelItem?.ToString(fg, "FirstPersonModel");
+            }
+            if ((printMask?.SkinTexture?.Overall ?? true)
+                && item.SkinTexture.TryGet(out var SkinTextureItem))
+            {
+                SkinTextureItem?.ToString(fg, "SkinTexture");
+            }
+            if ((printMask?.TextureSwapList?.Overall ?? true)
+                && item.TextureSwapList.TryGet(out var TextureSwapListItem))
+            {
+                TextureSwapListItem?.ToString(fg, "TextureSwapList");
+            }
+            if (printMask?.AdditionalRaces?.Overall ?? true)
+            {
+                fg.AppendLine("AdditionalRaces =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.AdditionalRaces)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.FootstepSound ?? true)
+                && item.FootstepSound.TryGet(out var FootstepSoundItem))
+            {
+                fg.AppendItem(FootstepSoundItem, "FootstepSound");
+            }
+            if ((printMask?.ArtObject ?? true)
+                && item.ArtObject.TryGet(out var ArtObjectItem))
+            {
+                fg.AppendItem(ArtObjectItem, "ArtObject");
+            }
+            if (printMask?.DNAMDataTypeState ?? true)
+            {
+                fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IArmorAddonGetter item,
             ArmorAddon.Mask<bool?> checkMask)
         {
+            if (checkMask.BodyTemplate?.Overall.HasValue ?? false && checkMask.BodyTemplate.Overall.Value != (item.BodyTemplate != null)) return false;
+            if (checkMask.BodyTemplate?.Specific != null && (item.BodyTemplate == null || !item.BodyTemplate.HasBeenSet(checkMask.BodyTemplate.Specific))) return false;
+            if (checkMask.Race.HasValue && checkMask.Race.Value != (item.Race.FormKey != null)) return false;
+            if (checkMask.WorldModel?.Overall ?? false) return false;
+            if (checkMask.FirstPersonModel?.Overall ?? false) return false;
+            if (checkMask.SkinTexture?.Overall ?? false) return false;
+            if (checkMask.TextureSwapList?.Overall ?? false) return false;
+            if (checkMask.FootstepSound.HasValue && checkMask.FootstepSound.Value != (item.FootstepSound.FormKey != null)) return false;
+            if (checkMask.ArtObject.HasValue && checkMask.ArtObject.Value != (item.ArtObject.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1227,6 +2338,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArmorAddonGetter item,
             ArmorAddon.Mask<bool> mask)
         {
+            var itemBodyTemplate = item.BodyTemplate;
+            mask.BodyTemplate = new MaskItem<bool, BodyTemplate.Mask<bool>?>(itemBodyTemplate != null, itemBodyTemplate?.GetHasBeenSetMask());
+            mask.Race = (item.Race.FormKey != null);
+            mask.Priority = new GenderedItem<bool>(true, true);
+            mask.WeightSliderEnabled = new GenderedItem<bool>(true, true);
+            mask.Unknown = true;
+            mask.DetectionSoundValue = true;
+            mask.Unknown2 = true;
+            mask.WeaponAdjust = true;
+            mask.WorldModel = GenderedItem.HasBeenSetMaskHelper(
+                item.WorldModel,
+                (i) => i?.GetHasBeenSetMask());
+            mask.FirstPersonModel = GenderedItem.HasBeenSetMaskHelper(
+                item.FirstPersonModel,
+                (i) => i?.GetHasBeenSetMask());
+            mask.SkinTexture = item.SkinTexture == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.TextureSwapList = item.TextureSwapList == null ? null : new MaskItem<bool, GenderedItem<bool>?>(true, default);
+            mask.AdditionalRaces = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.FootstepSound = (item.FootstepSound.FormKey != null);
+            mask.ArtObject = (item.ArtObject.FormKey != null);
+            mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1278,6 +2410,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
+            if (!lhs.Race.Equals(rhs.Race)) return false;
+            if (!Equals(lhs.Priority, rhs.Priority)) return false;
+            if (!Equals(lhs.WeightSliderEnabled, rhs.WeightSliderEnabled)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.DetectionSoundValue != rhs.DetectionSoundValue) return false;
+            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if (!lhs.WeaponAdjust.EqualsWithin(rhs.WeaponAdjust)) return false;
+            if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+            if (!Equals(lhs.FirstPersonModel, rhs.FirstPersonModel)) return false;
+            if (!Equals(lhs.SkinTexture, rhs.SkinTexture)) return false;
+            if (!Equals(lhs.TextureSwapList, rhs.TextureSwapList)) return false;
+            if (!lhs.AdditionalRaces.SequenceEqual(rhs.AdditionalRaces)) return false;
+            if (!lhs.FootstepSound.Equals(rhs.FootstepSound)) return false;
+            if (!lhs.ArtObject.Equals(rhs.ArtObject)) return false;
+            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
         
@@ -1302,6 +2450,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IArmorAddonGetter item)
         {
             var hash = new HashCode();
+            if (item.BodyTemplate.TryGet(out var BodyTemplateitem))
+            {
+                hash.Add(BodyTemplateitem);
+            }
+            if (item.Race.TryGet(out var Raceitem))
+            {
+                hash.Add(Raceitem);
+            }
+            hash.Add(HashCode.Combine(item.Priority.Male, item.Priority.Female));
+            hash.Add(HashCode.Combine(item.WeightSliderEnabled.Male, item.WeightSliderEnabled.Female));
+            hash.Add(item.Unknown);
+            hash.Add(item.DetectionSoundValue);
+            hash.Add(item.Unknown2);
+            hash.Add(item.WeaponAdjust);
+            if (item.WorldModel.TryGet(out var WorldModelitem))
+            {
+                hash.Add(HashCode.Combine(WorldModelitem.Male, WorldModelitem.Female));
+            }
+            if (item.FirstPersonModel.TryGet(out var FirstPersonModelitem))
+            {
+                hash.Add(HashCode.Combine(FirstPersonModelitem.Male, FirstPersonModelitem.Female));
+            }
+            if (item.SkinTexture.TryGet(out var SkinTextureitem))
+            {
+                hash.Add(HashCode.Combine(SkinTextureitem.Male, SkinTextureitem.Female));
+            }
+            if (item.TextureSwapList.TryGet(out var TextureSwapListitem))
+            {
+                hash.Add(HashCode.Combine(TextureSwapListitem.Male, TextureSwapListitem.Female));
+            }
+            hash.Add(item.AdditionalRaces);
+            if (item.FootstepSound.TryGet(out var FootstepSounditem))
+            {
+                hash.Add(FootstepSounditem);
+            }
+            if (item.ArtObject.TryGet(out var ArtObjectitem))
+            {
+                hash.Add(ArtObjectitem);
+            }
+            hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1330,6 +2518,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Race.FormKey.TryGet(out var RaceKey))
+            {
+                yield return RaceKey;
+            }
+            foreach (var item in obj.AdditionalRaces.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            if (obj.FootstepSound.FormKey.TryGet(out var FootstepSoundKey))
+            {
+                yield return FootstepSoundKey;
+            }
+            if (obj.ArtObject.FormKey.TryGet(out var ArtObjectKey))
+            {
+                yield return ArtObjectKey;
             }
             yield break;
         }
@@ -1378,6 +2582,137 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
+            {
+                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.BodyTemplate);
+                try
+                {
+                    if(rhs.BodyTemplate.TryGet(out var rhsBodyTemplate))
+                    {
+                        item.BodyTemplate = rhsBodyTemplate.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate));
+                    }
+                    else
+                    {
+                        item.BodyTemplate = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
+            {
+                item.Race = rhs.Race.FormKey;
+            }
+            item.Priority = new GenderedItem<Byte>(
+                male: rhs.Priority.Male,
+                female: rhs.Priority.Female);
+            item.WeightSliderEnabled = new GenderedItem<Boolean>(
+                male: rhs.WeightSliderEnabled.Male,
+                female: rhs.WeightSliderEnabled.Female);
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            {
+                item.DetectionSoundValue = rhs.DetectionSoundValue;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
+            {
+                item.WeaponAdjust = rhs.WeaponAdjust;
+            }
+            if (!rhs.WorldModel.TryGet(out var rhsWorldModelitem))
+            {
+                item.WorldModel = null;
+            }
+            else
+            {
+                item.WorldModel = new GenderedItem<Model?>(
+                    male: rhsWorldModelitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsWorldModelitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if (!rhs.FirstPersonModel.TryGet(out var rhsFirstPersonModelitem))
+            {
+                item.FirstPersonModel = null;
+            }
+            else
+            {
+                item.FirstPersonModel = new GenderedItem<Model?>(
+                    male: rhsFirstPersonModelitem.Male?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)),
+                    female: rhsFirstPersonModelitem.Female?.DeepCopy(
+                        errorMask: errorMask,
+                        default(TranslationCrystal)));
+            }
+            if (!rhs.SkinTexture.TryGet(out var rhsSkinTextureitem))
+            {
+                item.SkinTexture = null;
+            }
+            else
+            {
+                item.SkinTexture = new GenderedItem<IFormLinkNullable<TextureSet>>(
+                    male: new FormLinkNullable<TextureSet>(rhsSkinTextureitem.Male.FormKey),
+                    female: new FormLinkNullable<TextureSet>(rhsSkinTextureitem.Female.FormKey));
+            }
+            if (!rhs.TextureSwapList.TryGet(out var rhsTextureSwapListitem))
+            {
+                item.TextureSwapList = null;
+            }
+            else
+            {
+                item.TextureSwapList = new GenderedItem<IFormLinkNullable<FormList>>(
+                    male: new FormLinkNullable<FormList>(rhsTextureSwapListitem.Male.FormKey),
+                    female: new FormLinkNullable<FormList>(rhsTextureSwapListitem.Female.FormKey));
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
+            {
+                errorMask?.PushIndex((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                try
+                {
+                    item.AdditionalRaces.SetTo(
+                        rhs.AdditionalRaces
+                        .Select(r => (IFormLink<Race>)new FormLink<Race>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
+            {
+                item.FootstepSound = rhs.FootstepSound.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
+            {
+                item.ArtObject = rhs.ArtObject.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                item.DNAMDataTypeState = rhs.DNAMDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1520,6 +2855,235 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.BodyTemplate != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
+            {
+                if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
+                {
+                    ((BodyTemplateXmlWriteTranslation)((IXmlItem)BodyTemplateItem).XmlWriteTranslator).Write(
+                        item: BodyTemplateItem,
+                        node: node,
+                        name: nameof(item.BodyTemplate),
+                        fieldIndex: (int)ArmorAddon_FieldIndex.BodyTemplate,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate));
+                }
+            }
+            if ((item.Race.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Race),
+                    item: item.Race.FormKey,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.Race,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Priority) ?? true))
+            {
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Priority),
+                        item: item.Priority.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    ByteXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Priority),
+                        item: item.Priority.Female,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeightSliderEnabled) ?? true))
+            {
+                {
+                    BooleanXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WeightSliderEnabled),
+                        item: item.WeightSliderEnabled.Male,
+                        errorMask: errorMask);
+                }
+                {
+                    BooleanXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.WeightSliderEnabled),
+                        item: item.WeightSliderEnabled.Female,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DetectionSoundValue) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DetectionSoundValue),
+                    item: item.DetectionSoundValue,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.DetectionSoundValue,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Unknown2) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown2),
+                    item: item.Unknown2,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.Unknown2,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WeaponAdjust) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WeaponAdjust),
+                    item: item.WeaponAdjust,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.WeaponAdjust,
+                    errorMask: errorMask);
+            }
+            if ((item.WorldModel != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.WorldModel) ?? true))
+            {
+                {
+                    if (item.WorldModel.Male.TryGet(out var Item))
+                    {
+                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: node,
+                            name: nameof(item.WorldModel),
+                            errorMask: errorMask,
+                            translationMask: translationMask);
+                    }
+                }
+                {
+                    if (item.WorldModel.Female.TryGet(out var Item))
+                    {
+                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: node,
+                            name: nameof(item.WorldModel),
+                            errorMask: errorMask,
+                            translationMask: translationMask);
+                    }
+                }
+            }
+            if ((item.FirstPersonModel != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FirstPersonModel) ?? true))
+            {
+                {
+                    if (item.FirstPersonModel.Male.TryGet(out var Item))
+                    {
+                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: node,
+                            name: nameof(item.FirstPersonModel),
+                            errorMask: errorMask,
+                            translationMask: translationMask);
+                    }
+                }
+                {
+                    if (item.FirstPersonModel.Female.TryGet(out var Item))
+                    {
+                        ((ModelXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: node,
+                            name: nameof(item.FirstPersonModel),
+                            errorMask: errorMask,
+                            translationMask: translationMask);
+                    }
+                }
+            }
+            if ((item.SkinTexture != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.SkinTexture) ?? true))
+            {
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SkinTexture),
+                        item: item.SkinTexture.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.SkinTexture),
+                        item: item.SkinTexture.Female.FormKey,
+                        errorMask: errorMask);
+                }
+            }
+            if ((item.TextureSwapList != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.TextureSwapList) ?? true))
+            {
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.TextureSwapList),
+                        item: item.TextureSwapList.Male.FormKey,
+                        errorMask: errorMask);
+                }
+                {
+                    FormKeyXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.TextureSwapList),
+                        item: item.TextureSwapList.Female.FormKey,
+                        errorMask: errorMask);
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.AdditionalRaces) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IRaceGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.AdditionalRaces),
+                    item: item.AdditionalRaces,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.AdditionalRaces,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.AdditionalRaces),
+                    transl: (XElement subNode, IFormLink<IRaceGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.FootstepSound.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.FootstepSound) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FootstepSound),
+                    item: item.FootstepSound.FormKey,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.FootstepSound,
+                    errorMask: errorMask);
+            }
+            if ((item.ArtObject.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.ArtObject) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ArtObject),
+                    item: item.ArtObject.FormKey,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.ArtObject,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ArmorAddon_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ArmorAddon.DNAMDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DNAMDataTypeState),
+                    item: item.DNAMDataTypeState,
+                    fieldIndex: (int)ArmorAddon_FieldIndex.DNAMDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1627,6 +3191,333 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "BodyTemplate":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.BodyTemplate);
+                    try
+                    {
+                        item.BodyTemplate = LoquiXmlTranslation<BodyTemplate>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Race":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Race);
+                    try
+                    {
+                        item.Race = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Priority":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Priority);
+                    try
+                    {
+                        item.Priority = new GenderedItem<Byte>(
+                            male: ByteXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: ByteXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WeightSliderEnabled":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WeightSliderEnabled);
+                    try
+                    {
+                        item.WeightSliderEnabled = new GenderedItem<Boolean>(
+                            male: BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask),
+                            female: BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DetectionSoundValue":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.DetectionSoundValue);
+                    try
+                    {
+                        item.DetectionSoundValue = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown2":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.Unknown2);
+                    try
+                    {
+                        item.Unknown2 = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WeaponAdjust":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                    try
+                    {
+                        item.WeaponAdjust = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WorldModel":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.WorldModel);
+                    try
+                    {
+                        item.WorldModel = new GenderedItem<Model?>(
+                            male: LoquiXmlTranslation<Model>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null),
+                            female: LoquiXmlTranslation<Model>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FirstPersonModel":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                    try
+                    {
+                        item.FirstPersonModel = new GenderedItem<Model?>(
+                            male: LoquiXmlTranslation<Model>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null),
+                            female: LoquiXmlTranslation<Model>.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask,
+                                translationMask: null));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SkinTexture":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.SkinTexture);
+                    try
+                    {
+                        item.SkinTexture = new GenderedItem<IFormLinkNullable<TextureSet>>(
+                            male: new FormLinkNullable<TextureSet>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLinkNullable<TextureSet>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TextureSwapList":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.TextureSwapList);
+                    try
+                    {
+                        item.TextureSwapList = new GenderedItem<IFormLinkNullable<FormList>>(
+                            male: new FormLinkNullable<FormList>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)),
+                            female: new FormLinkNullable<FormList>(FormKeyXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask)));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AdditionalRaces":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Race>>.Instance.Parse(
+                            node: node,
+                            enumer: out var AdditionalRacesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.AdditionalRaces.SetTo(AdditionalRacesItem);
+                        }
+                        else
+                        {
+                            item.AdditionalRaces.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FootstepSound":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.FootstepSound);
+                    try
+                    {
+                        item.FootstepSound = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ArtObject":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.ArtObject);
+                    try
+                    {
+                        item.ArtObject = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DNAMDataTypeState":
+                    errorMask?.PushIndex((int)ArmorAddon_FieldIndex.DNAMDataTypeState);
+                    try
+                    {
+                        item.DNAMDataTypeState = EnumXmlTranslation<ArmorAddon.DNAMDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1713,6 +3604,136 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
+        static partial void WriteBinaryWeightSliderEnabledCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryWeightSliderEnabled(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryWeightSliderEnabledCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IArmorAddonGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IArmorAddonGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
+            {
+                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
+                    item: BodyTemplateItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Race,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
+            {
+                GenderedItemBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.Priority,
+                    transl: ByteBinaryTranslation.Instance.Write);
+                ArmorAddonBinaryWriteTranslation.WriteBinaryWeightSliderEnabled(
+                    writer: writer,
+                    item: item);
+                writer.Write(item.Unknown);
+                writer.Write(item.DetectionSoundValue);
+                writer.Write(item.Unknown2);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.WeaponAdjust);
+            }
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.WorldModel,
+                femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
+                maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, RecordTypeConverter? conv) =>
+                {
+                    if (subItem.TryGet(out var Item))
+                    {
+                        ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.FirstPersonModel,
+                femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
+                maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
+                transl: (MutagenWriter subWriter, IModelGetter? subItem, RecordTypeConverter? conv) =>
+                {
+                    if (subItem.TryGet(out var Item))
+                    {
+                        ((ModelBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.SkinTexture,
+                maleMarker: RecordTypes.NAM0,
+                femaleMarker: RecordTypes.NAM1,
+                transl: (MutagenWriter subWriter, IFormLinkNullable<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            GenderedItemBinaryTranslation.Write(
+                writer: writer,
+                item: item.TextureSwapList,
+                maleMarker: RecordTypes.NAM2,
+                femaleMarker: RecordTypes.NAM3,
+                transl: (MutagenWriter subWriter, IFormLinkNullable<IFormListGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IRaceGetter>>.Instance.Write(
+                writer: writer,
+                items: item.AdditionalRaces,
+                transl: (MutagenWriter subWriter, IFormLink<IRaceGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem,
+                        header: recordTypeConverter.ConvertToCustom(RecordTypes.MODL));
+                });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FootstepSound,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNDD));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ArtObject,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             IArmorAddonGetter item,
@@ -1723,10 +3744,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ARMA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1782,6 +3803,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IArmorAddonInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.BODT:
+                {
+                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Priority = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Byte>(
+                        frame: frame,
+                        transl: ByteBinaryTranslation.Instance.Parse);
+                    ArmorAddonBinaryCreateTranslation.FillBinaryWeightSliderEnabledCustom(
+                        frame: dataFrame,
+                        item: item);
+                    item.Unknown = dataFrame.ReadUInt16();
+                    item.DetectionSoundValue = dataFrame.ReadUInt8();
+                    item.Unknown2 = dataFrame.ReadUInt8();
+                    item.WeaponAdjust = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                }
+                case RecordTypeInts.MOD2:
+                case RecordTypeInts.MOD3:
+                {
+                    item.WorldModel = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Model>(
+                        frame: frame,
+                        femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
+                        transl: LoquiBinaryTranslation<Model>.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                }
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MOD5:
+                {
+                    item.FirstPersonModel = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Model>(
+                        frame: frame,
+                        femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
+                        transl: LoquiBinaryTranslation<Model>.Instance.Parse);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                }
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM1:
+                {
+                    item.SkinTexture = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<TextureSet>>(
+                        frame: frame,
+                        maleMarker: RecordTypes.NAM0,
+                        femaleMarker: RecordTypes.NAM1,
+                        transl: FormLinkBinaryTranslation.Instance.Parse,
+                        skipMarker: false,
+                        fallback: FormLinkNullable<TextureSet>.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                }
+                case RecordTypeInts.NAM2:
+                case RecordTypeInts.NAM3:
+                {
+                    item.TextureSwapList = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<IFormLinkNullable<FormList>>(
+                        frame: frame,
+                        maleMarker: RecordTypes.NAM2,
+                        femaleMarker: RecordTypes.NAM3,
+                        transl: FormLinkBinaryTranslation.Instance.Parse,
+                        skipMarker: false,
+                        fallback: FormLinkNullable<FormList>.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.AdditionalRaces.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Race>>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.MODL,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: FormLinkBinaryTranslation.Instance.Parse));
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                }
+                case RecordTypeInts.SNDD:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FootstepSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ArtObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        static partial void FillBinaryWeightSliderEnabledCustom(
+            MutagenFrame frame,
+            IArmorAddonInternal item);
+
     }
 
 }
@@ -1817,6 +3960,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IArmorAddonGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ArmorAddonCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorAddonCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ArmorAddonXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1843,6 +3992,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region BodyTemplate
+        private RangeInt32? _BodyTemplateLocation;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package) : default;
+        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        #endregion
+        #region Race
+        private int? _RaceLocation;
+        public bool Race_IsSet => _RaceLocation.HasValue;
+        public IFormLinkNullable<IRaceGetter> Race => _RaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _RaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        private int? _DNAMLocation;
+        public ArmorAddon.DNAMDataType DNAMDataTypeState { get; private set; }
+        #region Priority
+        private int _PriorityLocation => _DNAMLocation!.Value;
+        private bool _Priority_IsSet => _DNAMLocation.HasValue;
+        public IGenderedItemGetter<Byte> Priority
+        {
+            get
+            {
+                if (!_Priority_IsSet) return new GenderedItem<Byte>(default, default);
+                var data = _data.Span.Slice(_PriorityLocation);
+                return new GenderedItem<Byte>(
+                    data[0],
+                    data.Slice(1)[0]);
+            }
+        }
+        #endregion
+        #region WeightSliderEnabled
+        private int _WeightSliderEnabledLocation => _DNAMLocation!.Value + 0x2;
+        public IGenderedItemGetter<Boolean> WeightSliderEnabled => GetWeightSliderEnabledCustom();
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DNAMLocation!.Value + 0x4;
+        private bool _Unknown_IsSet => _DNAMLocation.HasValue;
+        public UInt16 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_UnknownLocation, 2)) : default;
+        #endregion
+        #region DetectionSoundValue
+        private int _DetectionSoundValueLocation => _DNAMLocation!.Value + 0x6;
+        private bool _DetectionSoundValue_IsSet => _DNAMLocation.HasValue;
+        public Byte DetectionSoundValue => _DetectionSoundValue_IsSet ? _data.Span[_DetectionSoundValueLocation] : default;
+        #endregion
+        #region Unknown2
+        private int _Unknown2Location => _DNAMLocation!.Value + 0x7;
+        private bool _Unknown2_IsSet => _DNAMLocation.HasValue;
+        public Byte Unknown2 => _Unknown2_IsSet ? _data.Span[_Unknown2Location] : default;
+        #endregion
+        #region WeaponAdjust
+        private int _WeaponAdjustLocation => _DNAMLocation!.Value + 0x8;
+        private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? SpanExt.GetFloat(_data.Slice(_WeaponAdjustLocation, 4)) : default;
+        #endregion
+        #region WorldModel
+        private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;
+        public IGenderedItemGetter<IModelGetter?>? WorldModel => _WorldModelOverlay;
+        #endregion
+        #region FirstPersonModel
+        private IGenderedItemGetter<IModelGetter?>? _FirstPersonModelOverlay;
+        public IGenderedItemGetter<IModelGetter?>? FirstPersonModel => _FirstPersonModelOverlay;
+        #endregion
+        #region SkinTexture
+        private IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? _SkinTextureOverlay;
+        public IGenderedItemGetter<IFormLinkNullable<ITextureSetGetter>>? SkinTexture => _SkinTextureOverlay;
+        #endregion
+        #region TextureSwapList
+        private IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? _TextureSwapListOverlay;
+        public IGenderedItemGetter<IFormLinkNullable<IFormListGetter>>? TextureSwapList => _TextureSwapListOverlay;
+        #endregion
+        public IReadOnlyList<IFormLink<IRaceGetter>> AdditionalRaces { get; private set; } = ListExt.Empty<IFormLink<IRaceGetter>>();
+        #region FootstepSound
+        private int? _FootstepSoundLocation;
+        public bool FootstepSound_IsSet => _FootstepSoundLocation.HasValue;
+        public IFormLinkNullable<IFootstepSetGetter> FootstepSound => _FootstepSoundLocation.HasValue ? new FormLinkNullable<IFootstepSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FootstepSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFootstepSetGetter>.Null;
+        #endregion
+        #region ArtObject
+        private int? _ArtObjectLocation;
+        public bool ArtObject_IsSet => _ArtObjectLocation.HasValue;
+        public IFormLinkNullable<IArtObjectGetter> ArtObject => _ArtObjectLocation.HasValue ? new FormLinkNullable<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArtObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArtObjectGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1895,6 +4122,112 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.BODT:
+                {
+                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _RaceLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                }
+                case RecordTypeInts.MOD2:
+                case RecordTypeInts.MOD3:
+                {
+                    _WorldModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
+                        package: _package,
+                        stream: stream,
+                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                }
+                case RecordTypeInts.MOD4:
+                case RecordTypeInts.MOD5:
+                {
+                    _FirstPersonModelOverlay = GenderedItemBinaryOverlay.Factory<IModelGetter>(
+                        package: _package,
+                        stream: stream,
+                        creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
+                        femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
+                        maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                }
+                case RecordTypeInts.NAM0:
+                case RecordTypeInts.NAM1:
+                {
+                    _SkinTextureOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullable<ITextureSetGetter>>(
+                        package: _package,
+                        male: RecordTypes.NAM0,
+                        female: RecordTypes.NAM1,
+                        stream: stream,
+                        creator: (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        fallback: FormLinkNullable<TextureSet>.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                }
+                case RecordTypeInts.NAM2:
+                case RecordTypeInts.NAM3:
+                {
+                    _TextureSwapListOverlay = GenderedItemBinaryOverlay.Factory<IFormLinkNullable<IFormListGetter>>(
+                        package: _package,
+                        male: RecordTypes.NAM2,
+                        female: RecordTypes.NAM3,
+                        stream: stream,
+                        creator: (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
+                        fallback: FormLinkNullable<FormList>.Null);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.AdditionalRaces = BinaryOverlayList<IFormLink<IRaceGetter>>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            finalPos: finalPos,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            trigger: type,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter));
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                }
+                case RecordTypeInts.SNDD:
+                {
+                    _FootstepSoundLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                }
+                case RecordTypeInts.ONAM:
+                {
+                    _ArtObjectLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

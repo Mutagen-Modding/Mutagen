@@ -52,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{readerAccessor}.Position += {readerAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)} + contentLength; // Skip marker");
             }
 
+            bool notNull = gender.ItemHasBeenSet && !gender.SubTypeGeneration.IsNullable;
             using (var args = new ArgsWrapper(fg,
                 $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
             {
@@ -100,6 +101,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"skipMarker: false");
                     }
+                }
+                if (notNull)
+                {
+                    args.Add($"fallback: {gender.SubTypeGeneration.GetDefault(getter: false)}");
                 }
             }
         }
@@ -188,7 +193,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add((gen) =>
                     {
                         var listTranslMask = this.MaskModule.GetMaskModule(gendered.SubTypeGeneration.GetType()).GetTranslationMaskTypeStr(gendered.SubTypeGeneration);
-                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                        gen.AppendLine($"transl: (MutagenWriter subWriter, {typeName}{gendered.SubTypeGeneration.NullChar} subItem{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
                         using (new BraceWrapper(gen))
                         {
                             subTransl.GenerateWrite(
@@ -243,7 +248,7 @@ namespace Mutagen.Bethesda.Generation
 
             var gendered = typeGen as GenderedType;
             this.Module.TryGetTypeGeneration(gendered.SubTypeGeneration.GetType(), out var subBin);
-            var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}";
+            var typeName = $"{gendered.SubTypeGeneration.TypeName(getter: true)}{gendered.SubTypeGeneration.NullChar}";
 
             if (data.HasTrigger
                 && !gendered.ItemHasBeenSet)
@@ -330,9 +335,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{(gendered.SubTypeGeneration.HasBeenSet ? "?" : null)}>? _{typeGen.Name}Overlay;");
+                    fg.AppendLine($"private IGenderedItemGetter<{gendered.SubTypeGeneration.TypeName(getter: true)}{gendered.SubTypeGeneration.NullChar}>? _{typeGen.Name}Overlay;");
                 }
-                fg.AppendLine($"public IGenderedItemGetter<{typeName}>{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.HasBeenSet ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
+                fg.AppendLine($"public IGenderedItemGetter<{typeName}>{typeGen.NullChar} {typeGen.Name} => _{typeGen.Name}Overlay{(typeGen.HasBeenSet ? null : $" ?? new GenderedItem<{typeName}>(default, default)")};");
             }
         }
 
@@ -365,6 +370,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             callName = "Factory";
                         }
+                        bool notNull = gendered.ItemHasBeenSet && !gendered.SubTypeGeneration.IsNullable;
                         using (var args = new ArgsWrapper(fg,
                             $"_{typeGen.Name}Overlay = GenderedItemBinaryOverlay.{callName}<{gendered.SubTypeGeneration.TypeName(getter: true)}>"))
                         {
@@ -408,6 +414,10 @@ namespace Mutagen.Bethesda.Generation
                             if (gendered.MaleConversions != null)
                             {
                                 args.Add($"maleRecordConverter: {objGen.RegistrationName}.{typeGen.Name}MaleConverter");
+                            }
+                            if (notNull)
+                            {
+                                args.Add($"fallback: {gendered.SubTypeGeneration.GetDefault(getter: false)}");
                             }
                         }
                     }

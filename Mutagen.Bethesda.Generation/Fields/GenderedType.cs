@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
-            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
+            fg.AppendLine($"public GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}{(this.HasBeenSet ? null : $" = new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>({this.SubTypeGeneration.GetDefault(getter: false)}, {this.SubTypeGeneration.GetDefault(getter: false)});")}");
+            fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.ObjectGen.Interface(getter: true, internalInterface: true)}.{this.Name} => this.{this.Name};");
         }
 
         public override string GenerateACopy(string rhsAccessor)
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg, doIt: this.HasBeenSet))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>"))
+                    $"{accessor} = new GenderedItem<{this.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>"))
                 {
                     if (this.isLoquiSingle)
                     {
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Generation
                             loqui.GenerateTypicalMakeCopy(
                                 subFg,
                                 retAccessor: $"male: ",
-                                rhsAccessor: $"{rhs}.Male{(this.ItemHasBeenSet ? "?" : null)}",
+                                rhsAccessor: $"{rhs}.Male{this.SubTypeGeneration.NullChar}",
                                 copyMaskAccessor: $"{copyMaskAccessor}.Male",
                                 deepCopy: deepCopy,
                                 doTranslationMask: false);
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
                             loqui.GenerateTypicalMakeCopy(
                                 subFg,
                                 retAccessor: $"female: ",
-                                rhsAccessor: $"{rhs}.Female{(this.ItemHasBeenSet ? "?" : null)}",
+                                rhsAccessor: $"{rhs}.Female{this.SubTypeGeneration.NullChar}",
                                 copyMaskAccessor: $"{copyMaskAccessor}.Female",
                                 deepCopy: deepCopy,
                                 doTranslationMask: false);
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"rhs: {rhsAccessor.DirectAccess}");
                     if (loqui == null)
                     {
-                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>.Default.Equals(l, r)");
+                        args.Add($"maskGetter: (l, r, i) => EqualityComparer<{this.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>.Default.Equals(l, r)");
                     }
                     else
                     {
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Generation
                     $"{retAccessor} = GenderedItem.HasBeenSet{(this.ItemHasBeenSet ? "Mask" : null)}Helper"))
                 {
                     args.Add($"{accessor}");
-                    args.Add($"(i) => i{(this.ItemHasBeenSet ? "?" : null)}.GetHasBeenSetMask()");
+                    args.Add($"(i) => i{this.SubTypeGeneration.NullChar}.GetHasBeenSetMask()");
                 }
             }
             else if (this.HasBeenSet)
@@ -216,11 +216,11 @@ namespace Mutagen.Bethesda.Generation
         {
             if (getter)
             {
-                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; }}");
+                fg.AppendLine($"IGenderedItemGetter<{SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; }}");
             }
             else
             {
-                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
+                fg.AppendLine($"new GenderedItem<{SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}{SubTypeGeneration.NullChar}>{(this.HasBeenSet ? "?" : null)} {this.Name} {{ get; set; }}");
             }
         }
 
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override string TypeName(bool getter, bool needsCovariance = false)
         {
-            return $"GenderedItem<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{(this.ItemHasBeenSet ? "?" : null)}>";
+            return $"{(getter ? "IGenderedItemGetter" : "GenderedItem")}<{SubTypeGeneration.TypeName(getter, needsCovariance: true)}{this.SubTypeGeneration.NullChar}>";
         }
 
         public override string GetDuplicate(Accessor accessor)
