@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LocationKeyword obj)
+        public bool Equals(LocationKeyword? obj)
         {
             return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -217,7 +217,6 @@ namespace Mutagen.Bethesda.Skyrim
             ALocationTarget.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem Link)
@@ -245,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

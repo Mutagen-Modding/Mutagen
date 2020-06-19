@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WorldspaceNavigationMeshData obj)
+        public bool Equals(WorldspaceNavigationMeshData? obj)
         {
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -220,7 +220,6 @@ namespace Mutagen.Bethesda.Skyrim
             ANavigationMeshData.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -283,7 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

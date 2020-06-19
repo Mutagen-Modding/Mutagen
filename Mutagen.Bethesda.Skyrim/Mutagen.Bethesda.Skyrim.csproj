@@ -1246,9 +1246,6 @@
     <Compile Include="Records\Major Records\PackageTargetObjectType_LoquiGenerated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PackageTargetPlacedReference_LoquiGenerated.cs">
-      <DependentUpon>Package.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PackageTargetReference_LoquiGenerated.cs">
       <DependentUpon>Package.xml</DependentUpon>
     </Compile>
@@ -1888,7 +1885,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.13" />
+    <PackageReference Include="Loqui" Version="1.1.14" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.22" />
   </ItemGroup>
   <ItemGroup>

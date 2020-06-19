@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledSpell obj)
+        public bool Equals(LeveledSpell? obj)
         {
             return ((LeveledSpellCommon)((ILeveledSpellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -240,7 +240,6 @@ namespace Mutagen.Bethesda.Skyrim
             ASpell.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -299,7 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Cell obj)
+        public bool Equals(Cell? obj)
         {
             return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -364,7 +364,6 @@ namespace Mutagen.Bethesda.Oblivion
             Place.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -489,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

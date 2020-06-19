@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ImageSpaceTint obj)
+        public bool Equals(ImageSpaceTint? obj)
         {
             return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -218,7 +218,6 @@ namespace Mutagen.Bethesda.Skyrim
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -255,7 +254,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Amount, rhs.Amount)) return false;

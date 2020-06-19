@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EffectShader obj)
+        public bool Equals(EffectShader? obj)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -234,7 +234,6 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMajorRecord.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -287,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

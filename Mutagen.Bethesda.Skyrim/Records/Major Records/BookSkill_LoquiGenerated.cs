@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(BookSkill obj)
+        public bool Equals(BookSkill? obj)
         {
             return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -217,7 +217,6 @@ namespace Mutagen.Bethesda.Skyrim
             BookTeachTarget.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem Skill)
@@ -245,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

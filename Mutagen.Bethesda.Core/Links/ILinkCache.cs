@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -18,7 +19,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
         /// <returns>True if a matching record was found</returns>
-        bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec);
+        bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
         /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
@@ -36,7 +37,7 @@ namespace Mutagen.Bethesda
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryLookup<TMajor>(FormKey formKey, out TMajor majorRec)
+        bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter;
     }
 

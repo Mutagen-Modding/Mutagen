@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EffectData obj)
+        public bool Equals(EffectData? obj)
         {
             return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -220,7 +220,6 @@ namespace Mutagen.Bethesda.Skyrim
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -261,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Magnitude, rhs.Magnitude)) return false;

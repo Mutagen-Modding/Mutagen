@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Tests
             return ((DataFolderLocationsCommon)((IDataFolderLocationsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DataFolderLocations obj)
+        public bool Equals(DataFolderLocations? obj)
         {
             return ((DataFolderLocationsCommon)((IDataFolderLocationsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -85,7 +85,6 @@ namespace Mutagen.Bethesda.Tests
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -122,7 +121,7 @@ namespace Mutagen.Bethesda.Tests
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Oblivion, rhs.Oblivion)) return false;

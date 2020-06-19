@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(NpcSoundTypes obj)
+        public bool Equals(NpcSoundTypes? obj)
         {
             return ((NpcSoundTypesCommon)((INpcSoundTypesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -226,7 +226,6 @@ namespace Mutagen.Bethesda.Skyrim
             ANpcSoundDefinition.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem Types)
@@ -254,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

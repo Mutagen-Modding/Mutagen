@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MagicEffectData obj)
+        public bool Equals(MagicEffectData? obj)
         {
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -257,7 +257,6 @@ namespace Mutagen.Bethesda.Oblivion
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -330,7 +329,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Versioning, rhs.Versioning)) return false;

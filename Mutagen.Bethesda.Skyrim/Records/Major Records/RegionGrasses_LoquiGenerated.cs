@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RegionGrasses obj)
+        public bool Equals(RegionGrasses? obj)
         {
             return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -226,7 +226,6 @@ namespace Mutagen.Bethesda.Skyrim
             RegionData.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -265,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

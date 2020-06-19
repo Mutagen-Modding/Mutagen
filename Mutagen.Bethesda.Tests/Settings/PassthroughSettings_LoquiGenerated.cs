@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Tests
             return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PassthroughSettings obj)
+        public bool Equals(PassthroughSettings? obj)
         {
             return ((PassthroughSettingsCommon)((IPassthroughSettingsGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -107,7 +107,6 @@ namespace Mutagen.Bethesda.Tests
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -172,7 +171,7 @@ namespace Mutagen.Bethesda.Tests
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;

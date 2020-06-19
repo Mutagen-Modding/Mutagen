@@ -913,7 +913,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Loqui" Version="1.1.13" />
+    <PackageReference Include="Loqui" Version="1.1.14" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.22" />
   </ItemGroup>
   <ItemGroup>

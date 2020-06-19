@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(QuestTargetData obj)
+        public bool Equals(QuestTargetData? obj)
         {
             return ((QuestTargetDataCommon)((IQuestTargetDataGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -219,7 +219,6 @@ namespace Mutagen.Bethesda.Oblivion
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -256,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Target, rhs.Target)) return false;

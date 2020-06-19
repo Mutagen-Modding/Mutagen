@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(AlphaLayer obj)
+        public bool Equals(AlphaLayer? obj)
         {
             return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -223,7 +223,6 @@ namespace Mutagen.Bethesda.Skyrim
             BaseLayer.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -259,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

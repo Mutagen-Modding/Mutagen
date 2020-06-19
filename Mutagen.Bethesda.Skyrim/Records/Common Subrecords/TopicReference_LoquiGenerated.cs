@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(TopicReference obj)
+        public bool Equals(TopicReference? obj)
         {
             return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -217,7 +217,6 @@ namespace Mutagen.Bethesda.Skyrim
             ATopicReference.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem Reference)
@@ -245,7 +244,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;

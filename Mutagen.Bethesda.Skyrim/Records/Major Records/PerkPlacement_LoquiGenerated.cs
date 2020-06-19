@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(PerkPlacement obj)
+        public bool Equals(PerkPlacement? obj)
         {
             return ((PerkPlacementCommon)((IPerkPlacementGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -230,7 +230,6 @@ namespace Mutagen.Bethesda.Skyrim
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -271,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Perk, rhs.Perk)) return false;

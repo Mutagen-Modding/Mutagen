@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
             return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Phoneme obj)
+        public bool Equals(Phoneme? obj)
         {
             return ((PhonemeCommon)((IPhonemeGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -340,7 +340,6 @@ namespace Mutagen.Bethesda.Skyrim
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -541,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.IY, rhs.IY)) return false;
