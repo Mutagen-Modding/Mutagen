@@ -4584,7 +4584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ArmorRating,
                 integerType: FloatIntegerType.UInt,
-                multiplier: 1,
+                multiplier: 0.01,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -4831,7 +4831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ArmorRating = FloatBinaryTranslation.Parse(
                         frame: frame,
                         integerType: FloatIntegerType.UInt,
-                        multiplier: 1);
+                        multiplier: 0.01);
                     return TryGet<int?>.Succeed((int)Armor_FieldIndex.ArmorRating);
                 }
                 case RecordTypeInts.TNAM:
@@ -5006,7 +5006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ArmorRating
         private int? _ArmorRatingLocation;
-        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 1) : default;
+        public Single ArmorRating => _ArmorRatingLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ArmorRatingLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 0.01) : default;
         #endregion
         #region TemplateArmor
         private int? _TemplateArmorLocation;

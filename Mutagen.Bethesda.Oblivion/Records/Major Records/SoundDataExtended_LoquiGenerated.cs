@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1);
+                multiplier: 0.01);
             SoundDataExtendedBinaryWriteTranslation.WriteBinaryStopTime(
                 writer: writer,
                 item: item);
@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.StaticAttenuation = FloatBinaryTranslation.Parse(
                 frame: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1);
+                multiplier: 0.01);
             SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustom(
                 frame: frame,
                 item: item);
@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single StaticAttenuation => FloatBinaryTranslation.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 1);
+        public Single StaticAttenuation => FloatBinaryTranslation.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
         public Single StopTime => GetStopTimeCustom(location: 0xA);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
         partial void CustomFactoryEnd(

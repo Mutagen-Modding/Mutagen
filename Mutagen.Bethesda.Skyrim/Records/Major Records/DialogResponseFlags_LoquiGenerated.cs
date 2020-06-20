@@ -1753,7 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ResetHours,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1);
+                multiplier: 0.0003663003663003663);
         }
 
         public void Write(
@@ -1797,7 +1797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ResetHours = FloatBinaryTranslation.Parse(
                 frame: frame,
                 integerType: FloatIntegerType.UShort,
-                multiplier: 1);
+                multiplier: 0.0003663003663003663);
         }
 
     }
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public DialogResponses.Flag Flags => (DialogResponses.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public Single ResetHours => FloatBinaryTranslation.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 1);
+        public Single ResetHours => FloatBinaryTranslation.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.0003663003663003663);
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,

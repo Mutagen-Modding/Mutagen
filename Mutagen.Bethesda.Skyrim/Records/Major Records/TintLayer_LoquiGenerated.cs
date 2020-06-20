@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.InterpolationValue,
                 integerType: FloatIntegerType.UInt,
-                multiplier: 1,
+                multiplier: 0.01,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINV));
             Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -2042,7 +2042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.InterpolationValue = FloatBinaryTranslation.Parse(
                         frame: frame,
                         integerType: FloatIntegerType.UInt,
-                        multiplier: 1);
+                        multiplier: 0.01);
                     return TryGet<int?>.Succeed((int)TintLayer_FieldIndex.InterpolationValue);
                 }
                 case RecordTypeInts.TIAS:
@@ -2148,7 +2148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InterpolationValue
         private int? _InterpolationValueLocation;
-        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 1) : default(Single?);
+        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 0.01) : default(Single?);
         #endregion
         #region Preset
         private int? _PresetLocation;

@@ -18,6 +18,10 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             var data = this.TryCreateFieldData();
             this.Multiplier = node.GetAttribute("multiplier", 1d);
+            if (node.TryGetAttribute("divisor", out double div))
+            {
+                this.Multiplier *= 1 / div;
+            }
             this.IntegerType = node.GetAttribute("integerType", default(FloatIntegerType?));
             if (this.IntegerType.HasValue)
             {
@@ -25,17 +29,17 @@ namespace Mutagen.Bethesda.Generation
                 {
                     case FloatIntegerType.UInt:
                         this.Min = "0";
-                        this.Max = $"{uint.MaxValue * Multiplier}";
+                        this.Max = $"{uint.MaxValue * Multiplier}f";
                         data.Length = 4;
                         break;
                     case FloatIntegerType.UShort:
                         this.Min = "0";
-                        this.Max = $"{ushort.MaxValue * Multiplier}";
+                        this.Max = $"{ushort.MaxValue * Multiplier}f";
                         data.Length = 2;
                         break;
                     case FloatIntegerType.Byte:
                         this.Min = "0";
-                        this.Max = $"{byte.MaxValue * Multiplier}";
+                        this.Max = $"{byte.MaxValue * Multiplier}f";
                         data.Length = 1;
                         break;
                     default:

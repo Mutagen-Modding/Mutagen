@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TransDelta
         public Single TransDelta { get; set; } = default;
-        public static RangeFloat TransDelta_Range = new RangeFloat(0, 1020);
+        public static RangeFloat TransDelta_Range = new RangeFloat(0, 1020f);
         #endregion
         #region SunGlare
         public Percent SunGlare { get; set; } = default;
@@ -308,11 +308,11 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WindDirection
         public Single WindDirection { get; set; } = default;
-        public static RangeFloat WindDirection_Range = new RangeFloat(0, 360);
+        public static RangeFloat WindDirection_Range = new RangeFloat(0, 0.7083333333333334f);
         #endregion
         #region WindDirectionRange
         public Single WindDirectionRange { get; set; } = default;
-        public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 180);
+        public static RangeFloat WindDirectionRange_Range = new RangeFloat(0, 1.4166666666666667f);
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -8733,12 +8733,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.WindDirection,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 1.411764705882353);
+                    multiplier: 0.002777777777777778);
                 FloatBinaryTranslation.Write(
                     writer: writer,
                     item: item.WindDirectionRange,
                     integerType: FloatIntegerType.Byte,
-                    multiplier: 0.7058823529411765);
+                    multiplier: 0.005555555555555556);
             }
             WeatherBinaryWriteTranslation.WriteBinaryDisabledCloudLayers(
                 writer: writer,
@@ -9041,11 +9041,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WindDirection = FloatBinaryTranslation.Parse(
                         frame: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 1.411764705882353);
+                        multiplier: 0.002777777777777778);
                     item.WindDirectionRange = FloatBinaryTranslation.Parse(
                         frame: dataFrame,
                         integerType: FloatIntegerType.Byte,
-                        multiplier: 0.7058823529411765);
+                        multiplier: 0.005555555555555556);
                     return TryGet<int?>.Succeed((int)Weather_FieldIndex.WindDirectionRange);
                 }
                 case RecordTypeInts.NAM1:
@@ -9494,12 +9494,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WindDirection
         private int _WindDirectionLocation => _DATALocation!.Value + 0x11;
         private bool _WindDirection_IsSet => _DATALocation.HasValue;
-        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 1.411764705882353) : default;
+        public Single WindDirection => _WindDirection_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_WindDirectionLocation, 1), FloatIntegerType.Byte, 0.002777777777777778) : default;
         #endregion
         #region WindDirectionRange
         private int _WindDirectionRangeLocation => _DATALocation!.Value + 0x12;
         private bool _WindDirectionRange_IsSet => _DATALocation.HasValue;
-        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.7058823529411765) : default;
+        public Single WindDirectionRange => _WindDirectionRange_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_WindDirectionRangeLocation, 1), FloatIntegerType.Byte, 0.005555555555555556) : default;
         #endregion
         #region DisabledCloudLayers
         partial void DisabledCloudLayersCustomParse(

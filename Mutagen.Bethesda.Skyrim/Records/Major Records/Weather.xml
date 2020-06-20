@@ -71,8 +71,8 @@
           <Color name="LightningColor" binaryType="NoAlpha" />
           <Percent name="VisualEffectBegin" integerType="Byte" />
           <Percent name="VisualEffectEnd" integerType="Byte" />
-          <Float name="WindDirection" integerType="Byte" min="0" max="360" multiplier="1.411764705882353" />
-          <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" multiplier="0.7058823529411765" />
+          <Float name="WindDirection" integerType="Byte" min="0" max="360" divisor="360" />
+          <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" divisor="180" />
         </Fields>
       </Data>
       <CustomLogic name="DisabledCloudLayers" recordType="NAM1" />
