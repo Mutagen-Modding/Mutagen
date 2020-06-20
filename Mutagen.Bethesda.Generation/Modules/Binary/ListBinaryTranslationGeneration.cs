@@ -402,20 +402,28 @@ namespace Mutagen.Bethesda.Generation
                     }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                    if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
-                        objGen,
-                        typeGen: list.SubTypeGeneration,
-                        squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
+                    if (subGenTypes.Count <= 1
+                        && subTransl.AllowDirectParse(
+                            objGen,
+                            typeGen: list.SubTypeGeneration,
+                            squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                     {
-                        if (list.SubTypeGeneration is LoquiType loqui
-                            && !loqui.CanStronglyType)
+                        args.Add(subFg =>
                         {
-                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
-                        }
-                        else
-                        {
-                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
-                        }
+                            subGen.GenerateCopyInRet(
+                                fg: subFg,
+                                objGen: objGen,
+                                targetGen: list.SubTypeGeneration,
+                                typeGen: list.SubTypeGeneration,
+                                readerAccessor: "r",
+                                translationAccessor: "listTranslMask",
+                                retAccessor: "transl: ",
+                                outItemAccessor: new Accessor("listSubItem"),
+                                asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
+                                errorMaskAccessor: "listErrMask",
+                                converterAccessor: "conv",
+                                inline: true);
+                        });
                     }
                     else
                     {
@@ -423,10 +431,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (subGenTypes.Count <= 1)
                             {
-                                if (subGen.CanInline(
+                                if (subGen.AllowDirectParse(
                                     objGen: objGen,
-                                    targetGen: list.SubTypeGeneration,
-                                    typeGen: list.SubTypeGeneration))
+                                    typeGen: list.SubTypeGeneration,
+                                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                                 {
                                     subGen.GenerateCopyInRet(
                                         fg: gen,

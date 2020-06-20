@@ -66,14 +66,6 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor,
             bool inline);
 
-        public virtual bool CanInline(
-            ObjectGeneration objGen,
-            TypeGeneration targetGen,
-            TypeGeneration typeGen)
-        {
-            return true;
-        }
-
         public virtual async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,

@@ -140,7 +140,11 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor,
             bool inline)
         {
-            if (inline) throw new NotImplementedException();
+            if (inline)
+            {
+                fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
+                return;
+            }
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
@@ -159,11 +163,6 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
-        }
-
-        public override bool CanInline(ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen)
-        {
-            return false;
         }
 
         public override async Task GenerateWrapperFields(

@@ -109,7 +109,11 @@ namespace Mutagen.Bethesda.Generation
             Accessor converterAccessor,
             bool inline)
         {
-            if (inline) throw new NotImplementedException();
+            if (inline)
+            {
+                fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
+                return;
+            }
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",

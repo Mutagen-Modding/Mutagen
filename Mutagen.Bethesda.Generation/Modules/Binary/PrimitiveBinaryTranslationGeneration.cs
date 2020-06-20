@@ -163,21 +163,21 @@ namespace Mutagen.Bethesda.Generation
             bool inline)
         {
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
-            if (typeGen.TryGetFieldData(out var data)
-                && data.RecordType.HasValue)
-            {
-                if (inline)
-                {
-                    throw new NotImplementedException();
-                }
-                fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
-            }
             if (inline)
             {
-                throw new NotImplementedException();
+                fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
             }
             else
             {
+                if (typeGen.TryGetFieldData(out var data)
+                    && data.RecordType.HasValue)
+                {
+                    if (inline)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
+                }
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {

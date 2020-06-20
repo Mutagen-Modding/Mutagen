@@ -137,8 +137,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override bool CanInline(ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen) => false;
-
         public override async Task GenerateWrapperFields(
             FileGeneration fg,
             ObjectGeneration objGen,

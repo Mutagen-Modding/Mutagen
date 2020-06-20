@@ -33,11 +33,6 @@ namespace Mutagen.Bethesda.Generation
             return false;
         }
 
-        public override bool AllowDirectParse(ObjectGeneration objGen, TypeGeneration typeGen, bool squashedRepeatedList)
-        {
-            return false;
-        }
-
         public override bool AllowDirectWrite(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             return false;
