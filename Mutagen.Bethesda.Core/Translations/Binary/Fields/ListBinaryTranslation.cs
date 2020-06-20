@@ -121,19 +121,20 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null,
+            bool skipHeader = false)
         {
             var ret = new List<T>();
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
-                if (!IsLoqui)
+                if (!frame.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
+                if (!IsLoqui || skipHeader)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    frame.Position += header.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, out var subItem, recordTypeConverter))
+                if (transl(skipHeader ? frame.SpawnWithLength(header.ContentLength) : frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }

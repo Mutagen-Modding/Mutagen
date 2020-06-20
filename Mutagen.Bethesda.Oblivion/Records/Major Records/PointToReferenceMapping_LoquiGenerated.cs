@@ -2062,6 +2062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            ret.PointsEndingPos = ret._data.Length;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

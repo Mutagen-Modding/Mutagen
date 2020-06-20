@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Mutagen.Bethesda.Skyrim;
+using System.Drawing;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -49,6 +50,284 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ActorCellPersistentReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationReference>? _ActorCellPersistentReferences;
+        public ExtendedList<LocationReference>? ActorCellPersistentReferences
+        {
+            get => this._ActorCellPersistentReferences;
+            set => this._ActorCellPersistentReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.ActorCellPersistentReferences => _ActorCellPersistentReferences;
+        #endregion
+
+        #endregion
+        #region LocationCellPersistentReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationReference>? _LocationCellPersistentReferences;
+        public ExtendedList<LocationReference>? LocationCellPersistentReferences
+        {
+            get => this._LocationCellPersistentReferences;
+            set => this._LocationCellPersistentReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.LocationCellPersistentReferences => _LocationCellPersistentReferences;
+        #endregion
+
+        #endregion
+        #region ReferenceCellPersistentReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
+        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
+        {
+            get => this._ReferenceCellPersistentReferences;
+            set => this._ReferenceCellPersistentReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellPersistentReferences => _ReferenceCellPersistentReferences;
+        #endregion
+
+        #endregion
+        #region ActorCellUniques
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationReference>? _ActorCellUniques;
+        public ExtendedList<LocationReference>? ActorCellUniques
+        {
+            get => this._ActorCellUniques;
+            set => this._ActorCellUniques = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.ActorCellUniques => _ActorCellUniques;
+        #endregion
+
+        #endregion
+        #region LocationCellUniques
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationReference>? _LocationCellUniques;
+        public ExtendedList<LocationReference>? LocationCellUniques
+        {
+            get => this._LocationCellUniques;
+            set => this._LocationCellUniques = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationReferenceGetter>? ILocationGetter.LocationCellUniques => _LocationCellUniques;
+        #endregion
+
+        #endregion
+        #region ReferenceCellUnique
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
+        public ExtendedList<IFormLink<Npc>>? ReferenceCellUnique
+        {
+            get => this._ReferenceCellUnique;
+            set => this._ReferenceCellUnique = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<INpcGetter>>? ILocationGetter.ReferenceCellUnique => _ReferenceCellUnique;
+        #endregion
+
+        #endregion
+        #region ActorCellStaticReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
+        public ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
+        {
+            get => this._ActorCellStaticReferences;
+            set => this._ActorCellStaticReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCellStaticReferenceGetter>? ILocationGetter.ActorCellStaticReferences => _ActorCellStaticReferences;
+        #endregion
+
+        #endregion
+        #region LocationCellStaticReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
+        public ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
+        {
+            get => this._LocationCellStaticReferences;
+            set => this._LocationCellStaticReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCellStaticReferenceGetter>? ILocationGetter.LocationCellStaticReferences => _LocationCellStaticReferences;
+        #endregion
+
+        #endregion
+        #region ReferenceCellStaticReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
+        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
+        {
+            get => this._ReferenceCellStaticReferences;
+            set => this._ReferenceCellStaticReferences = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellStaticReferences => _ReferenceCellStaticReferences;
+        #endregion
+
+        #endregion
+        #region ActorCellEncounterCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> ActorCellEncounterCell
+        {
+            get => this._ActorCellEncounterCell;
+            protected set => this._ActorCellEncounterCell = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.ActorCellEncounterCell => _ActorCellEncounterCell;
+        #endregion
+
+        #endregion
+        #region LocationCellEncounterCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> LocationCellEncounterCell
+        {
+            get => this._LocationCellEncounterCell;
+            protected set => this._LocationCellEncounterCell = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.LocationCellEncounterCell => _LocationCellEncounterCell;
+        #endregion
+
+        #endregion
+        #region ReferenceCellEncounterCell
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
+        {
+            get => this._ReferenceCellEncounterCell;
+            protected set => this._ReferenceCellEncounterCell = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCoordinateGetter> ILocationGetter.ReferenceCellEncounterCell => _ReferenceCellEncounterCell;
+        #endregion
+
+        #endregion
+        #region ActorCellMarkerReference
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
+        public ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
+        {
+            get => this._ActorCellMarkerReference;
+            set => this._ActorCellMarkerReference = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IPlacedGetter>>? ILocationGetter.ActorCellMarkerReference => _ActorCellMarkerReference;
+        #endregion
+
+        #endregion
+        #region LocationCellMarkerReference
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
+        public ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
+        {
+            get => this._LocationCellMarkerReference;
+            set => this._LocationCellMarkerReference = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IPlacedGetter>>? ILocationGetter.LocationCellMarkerReference => _LocationCellMarkerReference;
+        #endregion
+
+        #endregion
+        #region ActorCellEnablePoint
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
+        public ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
+        {
+            get => this._ActorCellEnablePoint;
+            set => this._ActorCellEnablePoint = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCellEnablePointGetter>? ILocationGetter.ActorCellEnablePoint => _ActorCellEnablePoint;
+        #endregion
+
+        #endregion
+        #region LocationCellEnablePoint
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
+        public ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
+        {
+            get => this._LocationCellEnablePoint;
+            set => this._LocationCellEnablePoint = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<ILocationCellEnablePointGetter>? ILocationGetter.LocationCellEnablePoint => _LocationCellEnablePoint;
+        #endregion
+
+        #endregion
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? ILocationGetter.Name => this.Name;
+        #endregion
+        #region Keywords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Keyword>>? _Keywords;
+        public ExtendedList<IFormLink<Keyword>>? Keywords
+        {
+            get => this._Keywords;
+            set => this._Keywords = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IKeywordGetter>>? ILocationGetter.Keywords => _Keywords;
+        #endregion
+
+        #endregion
+        #region ParentLocation
+        public FormLinkNullable<Location> ParentLocation { get; set; } = new FormLinkNullable<Location>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
+        #endregion
+        #region Music
+        public FormLinkNullable<Music> Music { get; set; } = new FormLinkNullable<Music>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IMusicGetter> ILocationGetter.Music => this.Music;
+        #endregion
+        #region UnreportedCrimeFaction
+        public FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<Faction>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
+        #endregion
+        #region WorldLocationMarkerRef
+        public FormLinkNullable<IPlacedSimple> WorldLocationMarkerRef { get; set; } = new FormLinkNullable<IPlacedSimple>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
+        #endregion
+        #region WorldLocationRadius
+        public Single? WorldLocationRadius { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
+        #endregion
+        #region HorseMarkerRef
+        public FormLinkNullable<PlacedObject> HorseMarkerRef { get; set; } = new FormLinkNullable<PlacedObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;
+        #endregion
+        #region Color
+        public Color? Color { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Color? ILocationGetter.Color => this.Color;
+        #endregion
 
         #region To String
 
@@ -218,6 +497,31 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
+                this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
+                this.ReferenceCellStaticReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.LocationCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.ReferenceCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.ActorCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.LocationCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.Name = initialValue;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentLocation = initialValue;
+                this.Music = initialValue;
+                this.UnreportedCrimeFaction = initialValue;
+                this.WorldLocationMarkerRef = initialValue;
+                this.WorldLocationRadius = initialValue;
+                this.HorseMarkerRef = initialValue;
+                this.Color = initialValue;
             }
 
             public Mask(
@@ -226,7 +530,32 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ActorCellPersistentReferences,
+                TItem LocationCellPersistentReferences,
+                TItem ReferenceCellPersistentReferences,
+                TItem ActorCellUniques,
+                TItem LocationCellUniques,
+                TItem ReferenceCellUnique,
+                TItem ActorCellStaticReferences,
+                TItem LocationCellStaticReferences,
+                TItem ReferenceCellStaticReferences,
+                TItem ActorCellEncounterCell,
+                TItem LocationCellEncounterCell,
+                TItem ReferenceCellEncounterCell,
+                TItem ActorCellMarkerReference,
+                TItem LocationCellMarkerReference,
+                TItem ActorCellEnablePoint,
+                TItem LocationCellEnablePoint,
+                TItem Name,
+                TItem Keywords,
+                TItem ParentLocation,
+                TItem Music,
+                TItem UnreportedCrimeFaction,
+                TItem WorldLocationMarkerRef,
+                TItem WorldLocationRadius,
+                TItem HorseMarkerRef,
+                TItem Color)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +564,31 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ActorCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.LocationCellPersistentReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellPersistentReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ReferenceCellPersistentReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellPersistentReferences, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(ActorCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.LocationCellUniques = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>(LocationCellUniques, Enumerable.Empty<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>());
+                this.ReferenceCellUnique = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellUnique, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(ActorCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
+                this.LocationCellStaticReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>(LocationCellStaticReferences, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>());
+                this.ReferenceCellStaticReferences = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ReferenceCellStaticReferences, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(ActorCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.LocationCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(LocationCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.ReferenceCellEncounterCell = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>(ReferenceCellEncounterCell, Enumerable.Empty<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>());
+                this.ActorCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(ActorCellMarkerReference, Enumerable.Empty<(int Index, TItem Value)>());
+                this.LocationCellMarkerReference = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(LocationCellMarkerReference, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ActorCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(ActorCellEnablePoint, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.LocationCellEnablePoint = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>(LocationCellEnablePoint, Enumerable.Empty<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>());
+                this.Name = Name;
+                this.Keywords = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Keywords, Enumerable.Empty<(int Index, TItem Value)>());
+                this.ParentLocation = ParentLocation;
+                this.Music = Music;
+                this.UnreportedCrimeFaction = UnreportedCrimeFaction;
+                this.WorldLocationMarkerRef = WorldLocationMarkerRef;
+                this.WorldLocationRadius = WorldLocationRadius;
+                this.HorseMarkerRef = HorseMarkerRef;
+                this.Color = Color;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +597,34 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? ActorCellPersistentReferences;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? LocationCellPersistentReferences;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellPersistentReferences;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? ActorCellUniques;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationReference.Mask<TItem>?>>?>? LocationCellUniques;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellUnique;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? ActorCellStaticReferences;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellStaticReference.Mask<TItem>?>>?>? LocationCellStaticReferences;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ReferenceCellStaticReferences;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? ActorCellEncounterCell;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? LocationCellEncounterCell;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCoordinate.Mask<TItem>?>>?>? ReferenceCellEncounterCell;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? ActorCellMarkerReference;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? LocationCellMarkerReference;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>? ActorCellEnablePoint;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LocationCellEnablePoint.Mask<TItem>?>>?>? LocationCellEnablePoint;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Keywords;
+            public TItem ParentLocation;
+            public TItem Music;
+            public TItem UnreportedCrimeFaction;
+            public TItem WorldLocationMarkerRef;
+            public TItem WorldLocationRadius;
+            public TItem HorseMarkerRef;
+            public TItem Color;
             #endregion
 
             #region Equals
@@ -256,11 +638,61 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ActorCellPersistentReferences, rhs.ActorCellPersistentReferences)) return false;
+                if (!object.Equals(this.LocationCellPersistentReferences, rhs.LocationCellPersistentReferences)) return false;
+                if (!object.Equals(this.ReferenceCellPersistentReferences, rhs.ReferenceCellPersistentReferences)) return false;
+                if (!object.Equals(this.ActorCellUniques, rhs.ActorCellUniques)) return false;
+                if (!object.Equals(this.LocationCellUniques, rhs.LocationCellUniques)) return false;
+                if (!object.Equals(this.ReferenceCellUnique, rhs.ReferenceCellUnique)) return false;
+                if (!object.Equals(this.ActorCellStaticReferences, rhs.ActorCellStaticReferences)) return false;
+                if (!object.Equals(this.LocationCellStaticReferences, rhs.LocationCellStaticReferences)) return false;
+                if (!object.Equals(this.ReferenceCellStaticReferences, rhs.ReferenceCellStaticReferences)) return false;
+                if (!object.Equals(this.ActorCellEncounterCell, rhs.ActorCellEncounterCell)) return false;
+                if (!object.Equals(this.LocationCellEncounterCell, rhs.LocationCellEncounterCell)) return false;
+                if (!object.Equals(this.ReferenceCellEncounterCell, rhs.ReferenceCellEncounterCell)) return false;
+                if (!object.Equals(this.ActorCellMarkerReference, rhs.ActorCellMarkerReference)) return false;
+                if (!object.Equals(this.LocationCellMarkerReference, rhs.LocationCellMarkerReference)) return false;
+                if (!object.Equals(this.ActorCellEnablePoint, rhs.ActorCellEnablePoint)) return false;
+                if (!object.Equals(this.LocationCellEnablePoint, rhs.LocationCellEnablePoint)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Keywords, rhs.Keywords)) return false;
+                if (!object.Equals(this.ParentLocation, rhs.ParentLocation)) return false;
+                if (!object.Equals(this.Music, rhs.Music)) return false;
+                if (!object.Equals(this.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction)) return false;
+                if (!object.Equals(this.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef)) return false;
+                if (!object.Equals(this.WorldLocationRadius, rhs.WorldLocationRadius)) return false;
+                if (!object.Equals(this.HorseMarkerRef, rhs.HorseMarkerRef)) return false;
+                if (!object.Equals(this.Color, rhs.Color)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ActorCellPersistentReferences);
+                hash.Add(this.LocationCellPersistentReferences);
+                hash.Add(this.ReferenceCellPersistentReferences);
+                hash.Add(this.ActorCellUniques);
+                hash.Add(this.LocationCellUniques);
+                hash.Add(this.ReferenceCellUnique);
+                hash.Add(this.ActorCellStaticReferences);
+                hash.Add(this.LocationCellStaticReferences);
+                hash.Add(this.ReferenceCellStaticReferences);
+                hash.Add(this.ActorCellEncounterCell);
+                hash.Add(this.LocationCellEncounterCell);
+                hash.Add(this.ReferenceCellEncounterCell);
+                hash.Add(this.ActorCellMarkerReference);
+                hash.Add(this.LocationCellMarkerReference);
+                hash.Add(this.ActorCellEnablePoint);
+                hash.Add(this.LocationCellEnablePoint);
+                hash.Add(this.Name);
+                hash.Add(this.Keywords);
+                hash.Add(this.ParentLocation);
+                hash.Add(this.Music);
+                hash.Add(this.UnreportedCrimeFaction);
+                hash.Add(this.WorldLocationMarkerRef);
+                hash.Add(this.WorldLocationRadius);
+                hash.Add(this.HorseMarkerRef);
+                hash.Add(this.Color);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +703,212 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.ActorCellPersistentReferences != null)
+                {
+                    if (!eval(this.ActorCellPersistentReferences.Overall)) return false;
+                    if (this.ActorCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellPersistentReferences != null)
+                {
+                    if (!eval(this.LocationCellPersistentReferences.Overall)) return false;
+                    if (this.LocationCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellPersistentReferences != null)
+                {
+                    if (!eval(this.ReferenceCellPersistentReferences.Overall)) return false;
+                    if (this.ReferenceCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellUniques != null)
+                {
+                    if (!eval(this.ActorCellUniques.Overall)) return false;
+                    if (this.ActorCellUniques.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellUniques.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellUniques != null)
+                {
+                    if (!eval(this.LocationCellUniques.Overall)) return false;
+                    if (this.LocationCellUniques.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellUniques.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellUnique != null)
+                {
+                    if (!eval(this.ReferenceCellUnique.Overall)) return false;
+                    if (this.ReferenceCellUnique.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellUnique.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellStaticReferences != null)
+                {
+                    if (!eval(this.ActorCellStaticReferences.Overall)) return false;
+                    if (this.ActorCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellStaticReferences != null)
+                {
+                    if (!eval(this.LocationCellStaticReferences.Overall)) return false;
+                    if (this.LocationCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellStaticReferences != null)
+                {
+                    if (!eval(this.ReferenceCellStaticReferences.Overall)) return false;
+                    if (this.ReferenceCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellEncounterCell != null)
+                {
+                    if (!eval(this.ActorCellEncounterCell.Overall)) return false;
+                    if (this.ActorCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellEncounterCell != null)
+                {
+                    if (!eval(this.LocationCellEncounterCell.Overall)) return false;
+                    if (this.LocationCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellEncounterCell != null)
+                {
+                    if (!eval(this.ReferenceCellEncounterCell.Overall)) return false;
+                    if (this.ReferenceCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellMarkerReference != null)
+                {
+                    if (!eval(this.ActorCellMarkerReference.Overall)) return false;
+                    if (this.ActorCellMarkerReference.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellMarkerReference.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellMarkerReference != null)
+                {
+                    if (!eval(this.LocationCellMarkerReference.Overall)) return false;
+                    if (this.LocationCellMarkerReference.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellMarkerReference.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellEnablePoint != null)
+                {
+                    if (!eval(this.ActorCellEnablePoint.Overall)) return false;
+                    if (this.ActorCellEnablePoint.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellEnablePoint.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellEnablePoint != null)
+                {
+                    if (!eval(this.LocationCellEnablePoint.Overall)) return false;
+                    if (this.LocationCellEnablePoint.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellEnablePoint.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.Name)) return false;
+                if (this.Keywords != null)
+                {
+                    if (!eval(this.Keywords.Overall)) return false;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (!eval(this.ParentLocation)) return false;
+                if (!eval(this.Music)) return false;
+                if (!eval(this.UnreportedCrimeFaction)) return false;
+                if (!eval(this.WorldLocationMarkerRef)) return false;
+                if (!eval(this.WorldLocationRadius)) return false;
+                if (!eval(this.HorseMarkerRef)) return false;
+                if (!eval(this.Color)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +917,212 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.ActorCellPersistentReferences != null)
+                {
+                    if (eval(this.ActorCellPersistentReferences.Overall)) return true;
+                    if (this.ActorCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellPersistentReferences != null)
+                {
+                    if (eval(this.LocationCellPersistentReferences.Overall)) return true;
+                    if (this.LocationCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellPersistentReferences != null)
+                {
+                    if (eval(this.ReferenceCellPersistentReferences.Overall)) return true;
+                    if (this.ReferenceCellPersistentReferences.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellPersistentReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellUniques != null)
+                {
+                    if (eval(this.ActorCellUniques.Overall)) return true;
+                    if (this.ActorCellUniques.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellUniques.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellUniques != null)
+                {
+                    if (eval(this.LocationCellUniques.Overall)) return true;
+                    if (this.LocationCellUniques.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellUniques.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellUnique != null)
+                {
+                    if (eval(this.ReferenceCellUnique.Overall)) return true;
+                    if (this.ReferenceCellUnique.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellUnique.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellStaticReferences != null)
+                {
+                    if (eval(this.ActorCellStaticReferences.Overall)) return true;
+                    if (this.ActorCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellStaticReferences != null)
+                {
+                    if (eval(this.LocationCellStaticReferences.Overall)) return true;
+                    if (this.LocationCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellStaticReferences != null)
+                {
+                    if (eval(this.ReferenceCellStaticReferences.Overall)) return true;
+                    if (this.ReferenceCellStaticReferences.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellStaticReferences.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellEncounterCell != null)
+                {
+                    if (eval(this.ActorCellEncounterCell.Overall)) return true;
+                    if (this.ActorCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellEncounterCell != null)
+                {
+                    if (eval(this.LocationCellEncounterCell.Overall)) return true;
+                    if (this.LocationCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ReferenceCellEncounterCell != null)
+                {
+                    if (eval(this.ReferenceCellEncounterCell.Overall)) return true;
+                    if (this.ReferenceCellEncounterCell.Specific != null)
+                    {
+                        foreach (var item in this.ReferenceCellEncounterCell.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellMarkerReference != null)
+                {
+                    if (eval(this.ActorCellMarkerReference.Overall)) return true;
+                    if (this.ActorCellMarkerReference.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellMarkerReference.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellMarkerReference != null)
+                {
+                    if (eval(this.LocationCellMarkerReference.Overall)) return true;
+                    if (this.LocationCellMarkerReference.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellMarkerReference.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.ActorCellEnablePoint != null)
+                {
+                    if (eval(this.ActorCellEnablePoint.Overall)) return true;
+                    if (this.ActorCellEnablePoint.Specific != null)
+                    {
+                        foreach (var item in this.ActorCellEnablePoint.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.LocationCellEnablePoint != null)
+                {
+                    if (eval(this.LocationCellEnablePoint.Overall)) return true;
+                    if (this.LocationCellEnablePoint.Specific != null)
+                    {
+                        foreach (var item in this.LocationCellEnablePoint.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (eval(this.Name)) return true;
+                if (this.Keywords != null)
+                {
+                    if (eval(this.Keywords.Overall)) return true;
+                    if (this.Keywords.Specific != null)
+                    {
+                        foreach (var item in this.Keywords.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (eval(this.ParentLocation)) return true;
+                if (eval(this.Music)) return true;
+                if (eval(this.UnreportedCrimeFaction)) return true;
+                if (eval(this.WorldLocationMarkerRef)) return true;
+                if (eval(this.WorldLocationRadius)) return true;
+                if (eval(this.HorseMarkerRef)) return true;
+                if (eval(this.Color)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +1138,263 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (ActorCellPersistentReferences != null)
+                {
+                    obj.ActorCellPersistentReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.ActorCellPersistentReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    if (ActorCellPersistentReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        obj.ActorCellPersistentReferences.Specific = l;
+                        foreach (var item in ActorCellPersistentReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LocationCellPersistentReferences != null)
+                {
+                    obj.LocationCellPersistentReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.LocationCellPersistentReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    if (LocationCellPersistentReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        obj.LocationCellPersistentReferences.Specific = l;
+                        foreach (var item in LocationCellPersistentReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ReferenceCellPersistentReferences != null)
+                {
+                    obj.ReferenceCellPersistentReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellPersistentReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ReferenceCellPersistentReferences.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ReferenceCellPersistentReferences.Specific = l;
+                        foreach (var item in ReferenceCellPersistentReferences.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ActorCellUniques != null)
+                {
+                    obj.ActorCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.ActorCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    if (ActorCellUniques.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        obj.ActorCellUniques.Specific = l;
+                        foreach (var item in ActorCellUniques.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LocationCellUniques != null)
+                {
+                    obj.LocationCellUniques = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationReference.Mask<R>?>>?>(eval(this.LocationCellUniques.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationReference.Mask<R>?>>());
+                    if (LocationCellUniques.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationReference.Mask<R>?>>();
+                        obj.LocationCellUniques.Specific = l;
+                        foreach (var item in LocationCellUniques.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ReferenceCellUnique != null)
+                {
+                    obj.ReferenceCellUnique = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellUnique.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ReferenceCellUnique.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ReferenceCellUnique.Specific = l;
+                        foreach (var item in ReferenceCellUnique.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ActorCellStaticReferences != null)
+                {
+                    obj.ActorCellStaticReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.ActorCellStaticReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
+                    if (ActorCellStaticReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
+                        obj.ActorCellStaticReferences.Specific = l;
+                        foreach (var item in ActorCellStaticReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LocationCellStaticReferences != null)
+                {
+                    obj.LocationCellStaticReferences = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>?>(eval(this.LocationCellStaticReferences.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>());
+                    if (LocationCellStaticReferences.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>>();
+                        obj.LocationCellStaticReferences.Specific = l;
+                        foreach (var item in LocationCellStaticReferences.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellStaticReference.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ReferenceCellStaticReferences != null)
+                {
+                    obj.ReferenceCellStaticReferences = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ReferenceCellStaticReferences.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ReferenceCellStaticReferences.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ReferenceCellStaticReferences.Specific = l;
+                        foreach (var item in ReferenceCellStaticReferences.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ActorCellEncounterCell != null)
+                {
+                    obj.ActorCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.ActorCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (ActorCellEncounterCell.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
+                        obj.ActorCellEncounterCell.Specific = l;
+                        foreach (var item in ActorCellEncounterCell.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LocationCellEncounterCell != null)
+                {
+                    obj.LocationCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.LocationCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (LocationCellEncounterCell.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
+                        obj.LocationCellEncounterCell.Specific = l;
+                        foreach (var item in LocationCellEncounterCell.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ReferenceCellEncounterCell != null)
+                {
+                    obj.ReferenceCellEncounterCell = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>?>(eval(this.ReferenceCellEncounterCell.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>());
+                    if (ReferenceCellEncounterCell.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCoordinate.Mask<R>?>>();
+                        obj.ReferenceCellEncounterCell.Specific = l;
+                        foreach (var item in ReferenceCellEncounterCell.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCoordinate.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCoordinate.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (ActorCellMarkerReference != null)
+                {
+                    obj.ActorCellMarkerReference = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.ActorCellMarkerReference.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (ActorCellMarkerReference.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.ActorCellMarkerReference.Specific = l;
+                        foreach (var item in ActorCellMarkerReference.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (LocationCellMarkerReference != null)
+                {
+                    obj.LocationCellMarkerReference = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.LocationCellMarkerReference.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (LocationCellMarkerReference.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.LocationCellMarkerReference.Specific = l;
+                        foreach (var item in LocationCellMarkerReference.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (ActorCellEnablePoint != null)
+                {
+                    obj.ActorCellEnablePoint = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.ActorCellEnablePoint.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
+                    if (ActorCellEnablePoint.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
+                        obj.ActorCellEnablePoint.Specific = l;
+                        foreach (var item in ActorCellEnablePoint.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (LocationCellEnablePoint != null)
+                {
+                    obj.LocationCellEnablePoint = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>?>(eval(this.LocationCellEnablePoint.Overall), Enumerable.Empty<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>());
+                    if (LocationCellEnablePoint.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>>();
+                        obj.LocationCellEnablePoint.Specific = l;
+                        foreach (var item in LocationCellEnablePoint.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LocationCellEnablePoint.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                obj.Name = eval(this.Name);
+                if (Keywords != null)
+                {
+                    obj.Keywords = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Keywords.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Keywords.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Keywords.Specific = l;
+                        foreach (var item in Keywords.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                obj.ParentLocation = eval(this.ParentLocation);
+                obj.Music = eval(this.Music);
+                obj.UnreportedCrimeFaction = eval(this.UnreportedCrimeFaction);
+                obj.WorldLocationMarkerRef = eval(this.WorldLocationMarkerRef);
+                obj.WorldLocationRadius = eval(this.WorldLocationRadius);
+                obj.HorseMarkerRef = eval(this.HorseMarkerRef);
+                obj.Color = eval(this.Color);
             }
             #endregion
 
@@ -316,6 +1417,429 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
+                        && ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+                    {
+                        fg.AppendLine("ActorCellPersistentReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                            if (ActorCellPersistentReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
+                        && LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+                    {
+                        fg.AppendLine("LocationCellPersistentReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                            if (LocationCellPersistentReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
+                        && ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+                    {
+                        fg.AppendLine("ReferenceCellPersistentReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                            if (ReferenceCellPersistentReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ActorCellUniques?.Overall ?? true)
+                        && ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+                    {
+                        fg.AppendLine("ActorCellUniques =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellUniquesItem.Overall);
+                            if (ActorCellUniquesItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellUniquesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellUniques?.Overall ?? true)
+                        && LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+                    {
+                        fg.AppendLine("LocationCellUniques =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellUniquesItem.Overall);
+                            if (LocationCellUniquesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellUniquesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ReferenceCellUnique?.Overall ?? true)
+                        && ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+                    {
+                        fg.AppendLine("ReferenceCellUnique =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                            if (ReferenceCellUniqueItem.Specific != null)
+                            {
+                                foreach (var subItem in ReferenceCellUniqueItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
+                        && ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+                    {
+                        fg.AppendLine("ActorCellStaticReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                            if (ActorCellStaticReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellStaticReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
+                        && LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+                    {
+                        fg.AppendLine("LocationCellStaticReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                            if (LocationCellStaticReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellStaticReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
+                        && ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+                    {
+                        fg.AppendLine("ReferenceCellStaticReferences =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                            if (ReferenceCellStaticReferencesItem.Specific != null)
+                            {
+                                foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ActorCellEncounterCell?.Overall ?? true)
+                        && ActorCellEncounterCell.TryGet(out var ActorCellEncounterCellItem))
+                    {
+                        fg.AppendLine("ActorCellEncounterCell =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                            if (ActorCellEncounterCellItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellEncounterCellItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellEncounterCell?.Overall ?? true)
+                        && LocationCellEncounterCell.TryGet(out var LocationCellEncounterCellItem))
+                    {
+                        fg.AppendLine("LocationCellEncounterCell =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                            if (LocationCellEncounterCellItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellEncounterCellItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ReferenceCellEncounterCell?.Overall ?? true)
+                        && ReferenceCellEncounterCell.TryGet(out var ReferenceCellEncounterCellItem))
+                    {
+                        fg.AppendLine("ReferenceCellEncounterCell =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                            if (ReferenceCellEncounterCellItem.Specific != null)
+                            {
+                                foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
+                        && ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+                    {
+                        fg.AppendLine("ActorCellMarkerReference =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                            if (ActorCellMarkerReferenceItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
+                        && LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+                    {
+                        fg.AppendLine("LocationCellMarkerReference =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                            if (LocationCellMarkerReferenceItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
+                        && ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+                    {
+                        fg.AppendLine("ActorCellEnablePoint =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ActorCellEnablePointItem.Overall);
+                            if (ActorCellEnablePointItem.Specific != null)
+                            {
+                                foreach (var subItem in ActorCellEnablePointItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
+                        && LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+                    {
+                        fg.AppendLine("LocationCellEnablePoint =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(LocationCellEnablePointItem.Overall);
+                            if (LocationCellEnablePointItem.Specific != null)
+                            {
+                                foreach (var subItem in LocationCellEnablePointItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.Keywords?.Overall ?? true)
+                        && Keywords.TryGet(out var KeywordsItem))
+                    {
+                        fg.AppendLine("Keywords =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(KeywordsItem.Overall);
+                            if (KeywordsItem.Specific != null)
+                            {
+                                foreach (var subItem in KeywordsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if (printMask?.ParentLocation ?? true)
+                    {
+                        fg.AppendItem(ParentLocation, "ParentLocation");
+                    }
+                    if (printMask?.Music ?? true)
+                    {
+                        fg.AppendItem(Music, "Music");
+                    }
+                    if (printMask?.UnreportedCrimeFaction ?? true)
+                    {
+                        fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                    }
+                    if (printMask?.WorldLocationMarkerRef ?? true)
+                    {
+                        fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                    }
+                    if (printMask?.WorldLocationRadius ?? true)
+                    {
+                        fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                    }
+                    if (printMask?.HorseMarkerRef ?? true)
+                    {
+                        fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                    }
+                    if (printMask?.Color ?? true)
+                    {
+                        fg.AppendItem(Color, "Color");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +1851,90 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? ActorCellPersistentReferences;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? LocationCellPersistentReferences;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellPersistentReferences;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? ActorCellUniques;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>? LocationCellUniques;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellUnique;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? ActorCellStaticReferences;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>? LocationCellStaticReferences;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ReferenceCellStaticReferences;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? ActorCellEncounterCell;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? LocationCellEncounterCell;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>? ReferenceCellEncounterCell;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? ActorCellMarkerReference;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? LocationCellMarkerReference;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>? ActorCellEnablePoint;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>? LocationCellEnablePoint;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Keywords;
+            public Exception? ParentLocation;
+            public Exception? Music;
+            public Exception? UnreportedCrimeFaction;
+            public Exception? WorldLocationMarkerRef;
+            public Exception? WorldLocationRadius;
+            public Exception? HorseMarkerRef;
+            public Exception? Color;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.ActorCellPersistentReferences:
+                        return ActorCellPersistentReferences;
+                    case Location_FieldIndex.LocationCellPersistentReferences:
+                        return LocationCellPersistentReferences;
+                    case Location_FieldIndex.ReferenceCellPersistentReferences:
+                        return ReferenceCellPersistentReferences;
+                    case Location_FieldIndex.ActorCellUniques:
+                        return ActorCellUniques;
+                    case Location_FieldIndex.LocationCellUniques:
+                        return LocationCellUniques;
+                    case Location_FieldIndex.ReferenceCellUnique:
+                        return ReferenceCellUnique;
+                    case Location_FieldIndex.ActorCellStaticReferences:
+                        return ActorCellStaticReferences;
+                    case Location_FieldIndex.LocationCellStaticReferences:
+                        return LocationCellStaticReferences;
+                    case Location_FieldIndex.ReferenceCellStaticReferences:
+                        return ReferenceCellStaticReferences;
+                    case Location_FieldIndex.ActorCellEncounterCell:
+                        return ActorCellEncounterCell;
+                    case Location_FieldIndex.LocationCellEncounterCell:
+                        return LocationCellEncounterCell;
+                    case Location_FieldIndex.ReferenceCellEncounterCell:
+                        return ReferenceCellEncounterCell;
+                    case Location_FieldIndex.ActorCellMarkerReference:
+                        return ActorCellMarkerReference;
+                    case Location_FieldIndex.LocationCellMarkerReference:
+                        return LocationCellMarkerReference;
+                    case Location_FieldIndex.ActorCellEnablePoint:
+                        return ActorCellEnablePoint;
+                    case Location_FieldIndex.LocationCellEnablePoint:
+                        return LocationCellEnablePoint;
+                    case Location_FieldIndex.Name:
+                        return Name;
+                    case Location_FieldIndex.Keywords:
+                        return Keywords;
+                    case Location_FieldIndex.ParentLocation:
+                        return ParentLocation;
+                    case Location_FieldIndex.Music:
+                        return Music;
+                    case Location_FieldIndex.UnreportedCrimeFaction:
+                        return UnreportedCrimeFaction;
+                    case Location_FieldIndex.WorldLocationMarkerRef:
+                        return WorldLocationMarkerRef;
+                    case Location_FieldIndex.WorldLocationRadius:
+                        return WorldLocationRadius;
+                    case Location_FieldIndex.HorseMarkerRef:
+                        return HorseMarkerRef;
+                    case Location_FieldIndex.Color:
+                        return Color;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +1945,81 @@ namespace Mutagen.Bethesda.Skyrim
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.ActorCellPersistentReferences:
+                        this.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellPersistentReferences:
+                        this.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ReferenceCellPersistentReferences:
+                        this.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ActorCellUniques:
+                        this.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellUniques:
+                        this.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ReferenceCellUnique:
+                        this.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ActorCellStaticReferences:
+                        this.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellStaticReferences:
+                        this.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ReferenceCellStaticReferences:
+                        this.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ActorCellEncounterCell:
+                        this.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellEncounterCell:
+                        this.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ReferenceCellEncounterCell:
+                        this.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ActorCellMarkerReference:
+                        this.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellMarkerReference:
+                        this.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ActorCellEnablePoint:
+                        this.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.LocationCellEnablePoint:
+                        this.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Location_FieldIndex.Keywords:
+                        this.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case Location_FieldIndex.ParentLocation:
+                        this.ParentLocation = ex;
+                        break;
+                    case Location_FieldIndex.Music:
+                        this.Music = ex;
+                        break;
+                    case Location_FieldIndex.UnreportedCrimeFaction:
+                        this.UnreportedCrimeFaction = ex;
+                        break;
+                    case Location_FieldIndex.WorldLocationMarkerRef:
+                        this.WorldLocationMarkerRef = ex;
+                        break;
+                    case Location_FieldIndex.WorldLocationRadius:
+                        this.WorldLocationRadius = ex;
+                        break;
+                    case Location_FieldIndex.HorseMarkerRef:
+                        this.HorseMarkerRef = ex;
+                        break;
+                    case Location_FieldIndex.Color:
+                        this.Color = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +2031,81 @@ namespace Mutagen.Bethesda.Skyrim
                 Location_FieldIndex enu = (Location_FieldIndex)index;
                 switch (enu)
                 {
+                    case Location_FieldIndex.ActorCellPersistentReferences:
+                        this.ActorCellPersistentReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellPersistentReferences:
+                        this.LocationCellPersistentReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.ReferenceCellPersistentReferences:
+                        this.ReferenceCellPersistentReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.ActorCellUniques:
+                        this.ActorCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellUniques:
+                        this.LocationCellUniques = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.ReferenceCellUnique:
+                        this.ReferenceCellUnique = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.ActorCellStaticReferences:
+                        this.ActorCellStaticReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellStaticReferences:
+                        this.LocationCellStaticReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.ReferenceCellStaticReferences:
+                        this.ReferenceCellStaticReferences = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.ActorCellEncounterCell:
+                        this.ActorCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellEncounterCell:
+                        this.LocationCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.ReferenceCellEncounterCell:
+                        this.ReferenceCellEncounterCell = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.ActorCellMarkerReference:
+                        this.ActorCellMarkerReference = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellMarkerReference:
+                        this.LocationCellMarkerReference = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.ActorCellEnablePoint:
+                        this.ActorCellEnablePoint = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.LocationCellEnablePoint:
+                        this.LocationCellEnablePoint = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>)obj;
+                        break;
+                    case Location_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.Keywords:
+                        this.Keywords = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case Location_FieldIndex.ParentLocation:
+                        this.ParentLocation = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.Music:
+                        this.Music = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.UnreportedCrimeFaction:
+                        this.UnreportedCrimeFaction = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.WorldLocationMarkerRef:
+                        this.WorldLocationMarkerRef = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.WorldLocationRadius:
+                        this.WorldLocationRadius = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.HorseMarkerRef:
+                        this.HorseMarkerRef = (Exception?)obj;
+                        break;
+                    case Location_FieldIndex.Color:
+                        this.Color = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +2115,31 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ActorCellPersistentReferences != null) return true;
+                if (LocationCellPersistentReferences != null) return true;
+                if (ReferenceCellPersistentReferences != null) return true;
+                if (ActorCellUniques != null) return true;
+                if (LocationCellUniques != null) return true;
+                if (ReferenceCellUnique != null) return true;
+                if (ActorCellStaticReferences != null) return true;
+                if (LocationCellStaticReferences != null) return true;
+                if (ReferenceCellStaticReferences != null) return true;
+                if (ActorCellEncounterCell != null) return true;
+                if (LocationCellEncounterCell != null) return true;
+                if (ReferenceCellEncounterCell != null) return true;
+                if (ActorCellMarkerReference != null) return true;
+                if (LocationCellMarkerReference != null) return true;
+                if (ActorCellEnablePoint != null) return true;
+                if (LocationCellEnablePoint != null) return true;
+                if (Name != null) return true;
+                if (Keywords != null) return true;
+                if (ParentLocation != null) return true;
+                if (Music != null) return true;
+                if (UnreportedCrimeFaction != null) return true;
+                if (WorldLocationMarkerRef != null) return true;
+                if (WorldLocationRadius != null) return true;
+                if (HorseMarkerRef != null) return true;
+                if (Color != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +2175,388 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+                {
+                    fg.AppendLine("ActorCellPersistentReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellPersistentReferencesItem.Overall);
+                        if (ActorCellPersistentReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellPersistentReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+                {
+                    fg.AppendLine("LocationCellPersistentReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellPersistentReferencesItem.Overall);
+                        if (LocationCellPersistentReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellPersistentReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+                {
+                    fg.AppendLine("ReferenceCellPersistentReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ReferenceCellPersistentReferencesItem.Overall);
+                        if (ReferenceCellPersistentReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in ReferenceCellPersistentReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+                {
+                    fg.AppendLine("ActorCellUniques =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellUniquesItem.Overall);
+                        if (ActorCellUniquesItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellUniquesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+                {
+                    fg.AppendLine("LocationCellUniques =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellUniquesItem.Overall);
+                        if (LocationCellUniquesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellUniquesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+                {
+                    fg.AppendLine("ReferenceCellUnique =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ReferenceCellUniqueItem.Overall);
+                        if (ReferenceCellUniqueItem.Specific != null)
+                        {
+                            foreach (var subItem in ReferenceCellUniqueItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+                {
+                    fg.AppendLine("ActorCellStaticReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellStaticReferencesItem.Overall);
+                        if (ActorCellStaticReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellStaticReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+                {
+                    fg.AppendLine("LocationCellStaticReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellStaticReferencesItem.Overall);
+                        if (LocationCellStaticReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellStaticReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+                {
+                    fg.AppendLine("ReferenceCellStaticReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ReferenceCellStaticReferencesItem.Overall);
+                        if (ReferenceCellStaticReferencesItem.Specific != null)
+                        {
+                            foreach (var subItem in ReferenceCellStaticReferencesItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ActorCellEncounterCell.TryGet(out var ActorCellEncounterCellItem))
+                {
+                    fg.AppendLine("ActorCellEncounterCell =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellEncounterCellItem.Overall);
+                        if (ActorCellEncounterCellItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellEncounterCellItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellEncounterCell.TryGet(out var LocationCellEncounterCellItem))
+                {
+                    fg.AppendLine("LocationCellEncounterCell =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellEncounterCellItem.Overall);
+                        if (LocationCellEncounterCellItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellEncounterCellItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ReferenceCellEncounterCell.TryGet(out var ReferenceCellEncounterCellItem))
+                {
+                    fg.AppendLine("ReferenceCellEncounterCell =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ReferenceCellEncounterCellItem.Overall);
+                        if (ReferenceCellEncounterCellItem.Specific != null)
+                        {
+                            foreach (var subItem in ReferenceCellEncounterCellItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+                {
+                    fg.AppendLine("ActorCellMarkerReference =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellMarkerReferenceItem.Overall);
+                        if (ActorCellMarkerReferenceItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellMarkerReferenceItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+                {
+                    fg.AppendLine("LocationCellMarkerReference =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellMarkerReferenceItem.Overall);
+                        if (LocationCellMarkerReferenceItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellMarkerReferenceItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+                {
+                    fg.AppendLine("ActorCellEnablePoint =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ActorCellEnablePointItem.Overall);
+                        if (ActorCellEnablePointItem.Specific != null)
+                        {
+                            foreach (var subItem in ActorCellEnablePointItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+                {
+                    fg.AppendLine("LocationCellEnablePoint =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(LocationCellEnablePointItem.Overall);
+                        if (LocationCellEnablePointItem.Specific != null)
+                        {
+                            foreach (var subItem in LocationCellEnablePointItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(Name, "Name");
+                if (Keywords.TryGet(out var KeywordsItem))
+                {
+                    fg.AppendLine("Keywords =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(KeywordsItem.Overall);
+                        if (KeywordsItem.Specific != null)
+                        {
+                            foreach (var subItem in KeywordsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                fg.AppendItem(ParentLocation, "ParentLocation");
+                fg.AppendItem(Music, "Music");
+                fg.AppendItem(UnreportedCrimeFaction, "UnreportedCrimeFaction");
+                fg.AppendItem(WorldLocationMarkerRef, "WorldLocationMarkerRef");
+                fg.AppendItem(WorldLocationRadius, "WorldLocationRadius");
+                fg.AppendItem(HorseMarkerRef, "HorseMarkerRef");
+                fg.AppendItem(Color, "Color");
             }
             #endregion
 
@@ -406,6 +2565,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ActorCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellPersistentReferences?.Overall, rhs.ActorCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ActorCellPersistentReferences?.Specific, rhs.ActorCellPersistentReferences?.Specific));
+                ret.LocationCellPersistentReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellPersistentReferences?.Overall, rhs.LocationCellPersistentReferences?.Overall), ExceptionExt.Combine(this.LocationCellPersistentReferences?.Specific, rhs.LocationCellPersistentReferences?.Specific));
+                ret.ReferenceCellPersistentReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Overall, rhs.ReferenceCellPersistentReferences?.Overall), ExceptionExt.Combine(this.ReferenceCellPersistentReferences?.Specific, rhs.ReferenceCellPersistentReferences?.Specific));
+                ret.ActorCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellUniques?.Overall, rhs.ActorCellUniques?.Overall), ExceptionExt.Combine(this.ActorCellUniques?.Specific, rhs.ActorCellUniques?.Specific));
+                ret.LocationCellUniques = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellUniques?.Overall, rhs.LocationCellUniques?.Overall), ExceptionExt.Combine(this.LocationCellUniques?.Specific, rhs.LocationCellUniques?.Specific));
+                ret.ReferenceCellUnique = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellUnique?.Overall, rhs.ReferenceCellUnique?.Overall), ExceptionExt.Combine(this.ReferenceCellUnique?.Specific, rhs.ReferenceCellUnique?.Specific));
+                ret.ActorCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellStaticReferences?.Overall, rhs.ActorCellStaticReferences?.Overall), ExceptionExt.Combine(this.ActorCellStaticReferences?.Specific, rhs.ActorCellStaticReferences?.Specific));
+                ret.LocationCellStaticReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellStaticReference.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellStaticReferences?.Overall, rhs.LocationCellStaticReferences?.Overall), ExceptionExt.Combine(this.LocationCellStaticReferences?.Specific, rhs.LocationCellStaticReferences?.Specific));
+                ret.ReferenceCellStaticReferences = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Overall, rhs.ReferenceCellStaticReferences?.Overall), ExceptionExt.Combine(this.ReferenceCellStaticReferences?.Specific, rhs.ReferenceCellStaticReferences?.Specific));
+                ret.ActorCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellEncounterCell?.Overall, rhs.ActorCellEncounterCell?.Overall), ExceptionExt.Combine(this.ActorCellEncounterCell?.Specific, rhs.ActorCellEncounterCell?.Specific));
+                ret.LocationCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellEncounterCell?.Overall, rhs.LocationCellEncounterCell?.Overall), ExceptionExt.Combine(this.LocationCellEncounterCell?.Specific, rhs.LocationCellEncounterCell?.Specific));
+                ret.ReferenceCellEncounterCell = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCoordinate.ErrorMask?>>?>(ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Overall, rhs.ReferenceCellEncounterCell?.Overall), ExceptionExt.Combine(this.ReferenceCellEncounterCell?.Specific, rhs.ReferenceCellEncounterCell?.Specific));
+                ret.ActorCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.ActorCellMarkerReference?.Overall, rhs.ActorCellMarkerReference?.Overall), ExceptionExt.Combine(this.ActorCellMarkerReference?.Specific, rhs.ActorCellMarkerReference?.Specific));
+                ret.LocationCellMarkerReference = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.LocationCellMarkerReference?.Overall, rhs.LocationCellMarkerReference?.Overall), ExceptionExt.Combine(this.LocationCellMarkerReference?.Specific, rhs.LocationCellMarkerReference?.Specific));
+                ret.ActorCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ExceptionExt.Combine(this.ActorCellEnablePoint?.Overall, rhs.ActorCellEnablePoint?.Overall), ExceptionExt.Combine(this.ActorCellEnablePoint?.Specific, rhs.ActorCellEnablePoint?.Specific));
+                ret.LocationCellEnablePoint = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LocationCellEnablePoint.ErrorMask?>>?>(ExceptionExt.Combine(this.LocationCellEnablePoint?.Overall, rhs.LocationCellEnablePoint?.Overall), ExceptionExt.Combine(this.LocationCellEnablePoint?.Specific, rhs.LocationCellEnablePoint?.Specific));
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Keywords = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Keywords?.Overall, rhs.Keywords?.Overall), ExceptionExt.Combine(this.Keywords?.Specific, rhs.Keywords?.Specific));
+                ret.ParentLocation = this.ParentLocation.Combine(rhs.ParentLocation);
+                ret.Music = this.Music.Combine(rhs.Music);
+                ret.UnreportedCrimeFaction = this.UnreportedCrimeFaction.Combine(rhs.UnreportedCrimeFaction);
+                ret.WorldLocationMarkerRef = this.WorldLocationMarkerRef.Combine(rhs.WorldLocationMarkerRef);
+                ret.WorldLocationRadius = this.WorldLocationRadius.Combine(rhs.WorldLocationRadius);
+                ret.HorseMarkerRef = this.HorseMarkerRef.Combine(rhs.HorseMarkerRef);
+                ret.Color = this.Color.Combine(rhs.Color);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +2611,107 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, LocationReference.TranslationMask?> ActorCellPersistentReferences;
+            public MaskItem<bool, LocationReference.TranslationMask?> LocationCellPersistentReferences;
+            public bool ReferenceCellPersistentReferences;
+            public MaskItem<bool, LocationReference.TranslationMask?> ActorCellUniques;
+            public MaskItem<bool, LocationReference.TranslationMask?> LocationCellUniques;
+            public bool ReferenceCellUnique;
+            public MaskItem<bool, LocationCellStaticReference.TranslationMask?> ActorCellStaticReferences;
+            public MaskItem<bool, LocationCellStaticReference.TranslationMask?> LocationCellStaticReferences;
+            public bool ReferenceCellStaticReferences;
+            public MaskItem<bool, LocationCoordinate.TranslationMask?> ActorCellEncounterCell;
+            public MaskItem<bool, LocationCoordinate.TranslationMask?> LocationCellEncounterCell;
+            public MaskItem<bool, LocationCoordinate.TranslationMask?> ReferenceCellEncounterCell;
+            public bool ActorCellMarkerReference;
+            public bool LocationCellMarkerReference;
+            public MaskItem<bool, LocationCellEnablePoint.TranslationMask?> ActorCellEnablePoint;
+            public MaskItem<bool, LocationCellEnablePoint.TranslationMask?> LocationCellEnablePoint;
+            public bool Name;
+            public bool Keywords;
+            public bool ParentLocation;
+            public bool Music;
+            public bool UnreportedCrimeFaction;
+            public bool WorldLocationMarkerRef;
+            public bool WorldLocationRadius;
+            public bool HorseMarkerRef;
+            public bool Color;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ActorCellPersistentReferences = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
+                this.LocationCellPersistentReferences = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
+                this.ReferenceCellPersistentReferences = defaultOn;
+                this.ActorCellUniques = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
+                this.LocationCellUniques = new MaskItem<bool, LocationReference.TranslationMask?>(defaultOn, null);
+                this.ReferenceCellUnique = defaultOn;
+                this.ActorCellStaticReferences = new MaskItem<bool, LocationCellStaticReference.TranslationMask?>(defaultOn, null);
+                this.LocationCellStaticReferences = new MaskItem<bool, LocationCellStaticReference.TranslationMask?>(defaultOn, null);
+                this.ReferenceCellStaticReferences = defaultOn;
+                this.ActorCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
+                this.LocationCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
+                this.ReferenceCellEncounterCell = new MaskItem<bool, LocationCoordinate.TranslationMask?>(defaultOn, null);
+                this.ActorCellMarkerReference = defaultOn;
+                this.LocationCellMarkerReference = defaultOn;
+                this.ActorCellEnablePoint = new MaskItem<bool, LocationCellEnablePoint.TranslationMask?>(defaultOn, null);
+                this.LocationCellEnablePoint = new MaskItem<bool, LocationCellEnablePoint.TranslationMask?>(defaultOn, null);
+                this.Name = defaultOn;
+                this.Keywords = defaultOn;
+                this.ParentLocation = defaultOn;
+                this.Music = defaultOn;
+                this.UnreportedCrimeFaction = defaultOn;
+                this.WorldLocationMarkerRef = defaultOn;
+                this.WorldLocationRadius = defaultOn;
+                this.HorseMarkerRef = defaultOn;
+                this.Color = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ActorCellPersistentReferences?.Overall ?? true, ActorCellPersistentReferences?.Specific?.GetCrystal()));
+                ret.Add((LocationCellPersistentReferences?.Overall ?? true, LocationCellPersistentReferences?.Specific?.GetCrystal()));
+                ret.Add((ReferenceCellPersistentReferences, null));
+                ret.Add((ActorCellUniques?.Overall ?? true, ActorCellUniques?.Specific?.GetCrystal()));
+                ret.Add((LocationCellUniques?.Overall ?? true, LocationCellUniques?.Specific?.GetCrystal()));
+                ret.Add((ReferenceCellUnique, null));
+                ret.Add((ActorCellStaticReferences?.Overall ?? true, ActorCellStaticReferences?.Specific?.GetCrystal()));
+                ret.Add((LocationCellStaticReferences?.Overall ?? true, LocationCellStaticReferences?.Specific?.GetCrystal()));
+                ret.Add((ReferenceCellStaticReferences, null));
+                ret.Add((ActorCellEncounterCell?.Overall ?? true, ActorCellEncounterCell?.Specific?.GetCrystal()));
+                ret.Add((LocationCellEncounterCell?.Overall ?? true, LocationCellEncounterCell?.Specific?.GetCrystal()));
+                ret.Add((ReferenceCellEncounterCell?.Overall ?? true, ReferenceCellEncounterCell?.Specific?.GetCrystal()));
+                ret.Add((ActorCellMarkerReference, null));
+                ret.Add((LocationCellMarkerReference, null));
+                ret.Add((ActorCellEnablePoint?.Overall ?? true, ActorCellEnablePoint?.Specific?.GetCrystal()));
+                ret.Add((LocationCellEnablePoint?.Overall ?? true, LocationCellEnablePoint?.Specific?.GetCrystal()));
+                ret.Add((Name, null));
+                ret.Add((Keywords, null));
+                ret.Add((ParentLocation, null));
+                ret.Add((Music, null));
+                ret.Add((UnreportedCrimeFaction, null));
+                ret.Add((WorldLocationMarkerRef, null));
+                ret.Add((WorldLocationRadius, null));
+                ret.Add((HorseMarkerRef, null));
+                ret.Add((Color, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
         public Location(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -527,8 +2799,34 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationGetter,
         ISkyrimMajorRecord,
         ILocationRecord,
+        ITranslatedNamed,
         ILoquiObjectSetter<ILocationInternal>
     {
+        new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
+        new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
+        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
+        new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
+        new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
+        new ExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
+        new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
+        new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
+        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
+        new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
+        new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
+        new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
+        new ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
+        new ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
+        new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
+        new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        new TranslatedString? Name { get; set; }
+        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new FormLinkNullable<Location> ParentLocation { get; set; }
+        new FormLinkNullable<Music> Music { get; set; }
+        new FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; }
+        new FormLinkNullable<IPlacedSimple> WorldLocationMarkerRef { get; set; }
+        new Single? WorldLocationRadius { get; set; }
+        new FormLinkNullable<PlacedObject> HorseMarkerRef { get; set; }
+        new Color? Color { get; set; }
     }
 
     public partial interface ILocationInternal :
@@ -541,11 +2839,38 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILocationGetter :
         ISkyrimMajorRecordGetter,
         ILocationRecordGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<ILocationGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Location_Registration.Instance;
+        IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
+        IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
+        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
+        IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; }
+        IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; }
+        IReadOnlyList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; }
+        IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; }
+        IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; }
+        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; }
+        IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; }
+        IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; }
+        IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; }
+        IReadOnlyList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; }
+        IReadOnlyList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; }
+        IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; }
+        IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
+        TranslatedString? Name { get; }
+        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IFormLinkNullable<ILocationGetter> ParentLocation { get; }
+        IFormLinkNullable<IMusicGetter> Music { get; }
+        IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
+        IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
+        Single? WorldLocationRadius { get; }
+        IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
+        Color? Color { get; }
 
     }
 
@@ -846,6 +3171,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ActorCellPersistentReferences = 6,
+        LocationCellPersistentReferences = 7,
+        ReferenceCellPersistentReferences = 8,
+        ActorCellUniques = 9,
+        LocationCellUniques = 10,
+        ReferenceCellUnique = 11,
+        ActorCellStaticReferences = 12,
+        LocationCellStaticReferences = 13,
+        ReferenceCellStaticReferences = 14,
+        ActorCellEncounterCell = 15,
+        LocationCellEncounterCell = 16,
+        ReferenceCellEncounterCell = 17,
+        ActorCellMarkerReference = 18,
+        LocationCellMarkerReference = 19,
+        ActorCellEnablePoint = 20,
+        LocationCellEnablePoint = 21,
+        Name = 22,
+        Keywords = 23,
+        ParentLocation = 24,
+        Music = 25,
+        UnreportedCrimeFaction = 26,
+        WorldLocationMarkerRef = 27,
+        WorldLocationRadius = 28,
+        HorseMarkerRef = 29,
+        Color = 30,
     }
     #endregion
 
@@ -863,9 +3213,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9450f7b5-2485-4eb3-ad52-910e7f254018";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(Location.Mask<>);
 
@@ -895,6 +3245,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "ACTORCELLPERSISTENTREFERENCES":
+                    return (ushort)Location_FieldIndex.ActorCellPersistentReferences;
+                case "LOCATIONCELLPERSISTENTREFERENCES":
+                    return (ushort)Location_FieldIndex.LocationCellPersistentReferences;
+                case "REFERENCECELLPERSISTENTREFERENCES":
+                    return (ushort)Location_FieldIndex.ReferenceCellPersistentReferences;
+                case "ACTORCELLUNIQUES":
+                    return (ushort)Location_FieldIndex.ActorCellUniques;
+                case "LOCATIONCELLUNIQUES":
+                    return (ushort)Location_FieldIndex.LocationCellUniques;
+                case "REFERENCECELLUNIQUE":
+                    return (ushort)Location_FieldIndex.ReferenceCellUnique;
+                case "ACTORCELLSTATICREFERENCES":
+                    return (ushort)Location_FieldIndex.ActorCellStaticReferences;
+                case "LOCATIONCELLSTATICREFERENCES":
+                    return (ushort)Location_FieldIndex.LocationCellStaticReferences;
+                case "REFERENCECELLSTATICREFERENCES":
+                    return (ushort)Location_FieldIndex.ReferenceCellStaticReferences;
+                case "ACTORCELLENCOUNTERCELL":
+                    return (ushort)Location_FieldIndex.ActorCellEncounterCell;
+                case "LOCATIONCELLENCOUNTERCELL":
+                    return (ushort)Location_FieldIndex.LocationCellEncounterCell;
+                case "REFERENCECELLENCOUNTERCELL":
+                    return (ushort)Location_FieldIndex.ReferenceCellEncounterCell;
+                case "ACTORCELLMARKERREFERENCE":
+                    return (ushort)Location_FieldIndex.ActorCellMarkerReference;
+                case "LOCATIONCELLMARKERREFERENCE":
+                    return (ushort)Location_FieldIndex.LocationCellMarkerReference;
+                case "ACTORCELLENABLEPOINT":
+                    return (ushort)Location_FieldIndex.ActorCellEnablePoint;
+                case "LOCATIONCELLENABLEPOINT":
+                    return (ushort)Location_FieldIndex.LocationCellEnablePoint;
+                case "NAME":
+                    return (ushort)Location_FieldIndex.Name;
+                case "KEYWORDS":
+                    return (ushort)Location_FieldIndex.Keywords;
+                case "PARENTLOCATION":
+                    return (ushort)Location_FieldIndex.ParentLocation;
+                case "MUSIC":
+                    return (ushort)Location_FieldIndex.Music;
+                case "UNREPORTEDCRIMEFACTION":
+                    return (ushort)Location_FieldIndex.UnreportedCrimeFaction;
+                case "WORLDLOCATIONMARKERREF":
+                    return (ushort)Location_FieldIndex.WorldLocationMarkerRef;
+                case "WORLDLOCATIONRADIUS":
+                    return (ushort)Location_FieldIndex.WorldLocationRadius;
+                case "HORSEMARKERREF":
+                    return (ushort)Location_FieldIndex.HorseMarkerRef;
+                case "COLOR":
+                    return (ushort)Location_FieldIndex.Color;
                 default:
                     return null;
             }
@@ -905,6 +3305,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                case Location_FieldIndex.ActorCellUniques:
+                case Location_FieldIndex.LocationCellUniques:
+                case Location_FieldIndex.ReferenceCellUnique:
+                case Location_FieldIndex.ActorCellStaticReferences:
+                case Location_FieldIndex.LocationCellStaticReferences:
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                case Location_FieldIndex.ActorCellEncounterCell:
+                case Location_FieldIndex.LocationCellEncounterCell:
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                case Location_FieldIndex.ActorCellMarkerReference:
+                case Location_FieldIndex.LocationCellMarkerReference:
+                case Location_FieldIndex.ActorCellEnablePoint:
+                case Location_FieldIndex.LocationCellEnablePoint:
+                case Location_FieldIndex.Keywords:
+                    return true;
+                case Location_FieldIndex.Name:
+                case Location_FieldIndex.ParentLocation:
+                case Location_FieldIndex.Music:
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                case Location_FieldIndex.WorldLocationRadius:
+                case Location_FieldIndex.HorseMarkerRef:
+                case Location_FieldIndex.Color:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -915,6 +3342,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                case Location_FieldIndex.ActorCellUniques:
+                case Location_FieldIndex.LocationCellUniques:
+                case Location_FieldIndex.ActorCellStaticReferences:
+                case Location_FieldIndex.LocationCellStaticReferences:
+                case Location_FieldIndex.ActorCellEncounterCell:
+                case Location_FieldIndex.LocationCellEncounterCell:
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                case Location_FieldIndex.ActorCellEnablePoint:
+                case Location_FieldIndex.LocationCellEnablePoint:
+                    return true;
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                case Location_FieldIndex.ReferenceCellUnique:
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                case Location_FieldIndex.ActorCellMarkerReference:
+                case Location_FieldIndex.LocationCellMarkerReference:
+                case Location_FieldIndex.Name:
+                case Location_FieldIndex.Keywords:
+                case Location_FieldIndex.ParentLocation:
+                case Location_FieldIndex.Music:
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                case Location_FieldIndex.WorldLocationRadius:
+                case Location_FieldIndex.HorseMarkerRef:
+                case Location_FieldIndex.Color:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -925,6 +3379,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                case Location_FieldIndex.ActorCellUniques:
+                case Location_FieldIndex.LocationCellUniques:
+                case Location_FieldIndex.ReferenceCellUnique:
+                case Location_FieldIndex.ActorCellStaticReferences:
+                case Location_FieldIndex.LocationCellStaticReferences:
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                case Location_FieldIndex.ActorCellEncounterCell:
+                case Location_FieldIndex.LocationCellEncounterCell:
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                case Location_FieldIndex.ActorCellMarkerReference:
+                case Location_FieldIndex.LocationCellMarkerReference:
+                case Location_FieldIndex.ActorCellEnablePoint:
+                case Location_FieldIndex.LocationCellEnablePoint:
+                case Location_FieldIndex.Name:
+                case Location_FieldIndex.Keywords:
+                case Location_FieldIndex.ParentLocation:
+                case Location_FieldIndex.Music:
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                case Location_FieldIndex.WorldLocationRadius:
+                case Location_FieldIndex.HorseMarkerRef:
+                case Location_FieldIndex.Color:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -935,6 +3415,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                    return "ActorCellPersistentReferences";
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                    return "LocationCellPersistentReferences";
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                    return "ReferenceCellPersistentReferences";
+                case Location_FieldIndex.ActorCellUniques:
+                    return "ActorCellUniques";
+                case Location_FieldIndex.LocationCellUniques:
+                    return "LocationCellUniques";
+                case Location_FieldIndex.ReferenceCellUnique:
+                    return "ReferenceCellUnique";
+                case Location_FieldIndex.ActorCellStaticReferences:
+                    return "ActorCellStaticReferences";
+                case Location_FieldIndex.LocationCellStaticReferences:
+                    return "LocationCellStaticReferences";
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                    return "ReferenceCellStaticReferences";
+                case Location_FieldIndex.ActorCellEncounterCell:
+                    return "ActorCellEncounterCell";
+                case Location_FieldIndex.LocationCellEncounterCell:
+                    return "LocationCellEncounterCell";
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                    return "ReferenceCellEncounterCell";
+                case Location_FieldIndex.ActorCellMarkerReference:
+                    return "ActorCellMarkerReference";
+                case Location_FieldIndex.LocationCellMarkerReference:
+                    return "LocationCellMarkerReference";
+                case Location_FieldIndex.ActorCellEnablePoint:
+                    return "ActorCellEnablePoint";
+                case Location_FieldIndex.LocationCellEnablePoint:
+                    return "LocationCellEnablePoint";
+                case Location_FieldIndex.Name:
+                    return "Name";
+                case Location_FieldIndex.Keywords:
+                    return "Keywords";
+                case Location_FieldIndex.ParentLocation:
+                    return "ParentLocation";
+                case Location_FieldIndex.Music:
+                    return "Music";
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                    return "UnreportedCrimeFaction";
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                    return "WorldLocationMarkerRef";
+                case Location_FieldIndex.WorldLocationRadius:
+                    return "WorldLocationRadius";
+                case Location_FieldIndex.HorseMarkerRef:
+                    return "HorseMarkerRef";
+                case Location_FieldIndex.Color:
+                    return "Color";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -945,6 +3475,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                case Location_FieldIndex.ActorCellUniques:
+                case Location_FieldIndex.LocationCellUniques:
+                case Location_FieldIndex.ReferenceCellUnique:
+                case Location_FieldIndex.ActorCellStaticReferences:
+                case Location_FieldIndex.LocationCellStaticReferences:
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                case Location_FieldIndex.ActorCellEncounterCell:
+                case Location_FieldIndex.LocationCellEncounterCell:
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                case Location_FieldIndex.ActorCellMarkerReference:
+                case Location_FieldIndex.LocationCellMarkerReference:
+                case Location_FieldIndex.ActorCellEnablePoint:
+                case Location_FieldIndex.LocationCellEnablePoint:
+                case Location_FieldIndex.Name:
+                case Location_FieldIndex.Keywords:
+                case Location_FieldIndex.ParentLocation:
+                case Location_FieldIndex.Music:
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                case Location_FieldIndex.WorldLocationRadius:
+                case Location_FieldIndex.HorseMarkerRef:
+                case Location_FieldIndex.Color:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -955,6 +3511,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                case Location_FieldIndex.ActorCellUniques:
+                case Location_FieldIndex.LocationCellUniques:
+                case Location_FieldIndex.ReferenceCellUnique:
+                case Location_FieldIndex.ActorCellStaticReferences:
+                case Location_FieldIndex.LocationCellStaticReferences:
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                case Location_FieldIndex.ActorCellEncounterCell:
+                case Location_FieldIndex.LocationCellEncounterCell:
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                case Location_FieldIndex.ActorCellMarkerReference:
+                case Location_FieldIndex.LocationCellMarkerReference:
+                case Location_FieldIndex.ActorCellEnablePoint:
+                case Location_FieldIndex.LocationCellEnablePoint:
+                case Location_FieldIndex.Name:
+                case Location_FieldIndex.Keywords:
+                case Location_FieldIndex.ParentLocation:
+                case Location_FieldIndex.Music:
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                case Location_FieldIndex.WorldLocationRadius:
+                case Location_FieldIndex.HorseMarkerRef:
+                case Location_FieldIndex.Color:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -965,6 +3547,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Location_FieldIndex enu = (Location_FieldIndex)index;
             switch (enu)
             {
+                case Location_FieldIndex.ActorCellPersistentReferences:
+                    return typeof(ExtendedList<LocationReference>);
+                case Location_FieldIndex.LocationCellPersistentReferences:
+                    return typeof(ExtendedList<LocationReference>);
+                case Location_FieldIndex.ReferenceCellPersistentReferences:
+                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                case Location_FieldIndex.ActorCellUniques:
+                    return typeof(ExtendedList<LocationReference>);
+                case Location_FieldIndex.LocationCellUniques:
+                    return typeof(ExtendedList<LocationReference>);
+                case Location_FieldIndex.ReferenceCellUnique:
+                    return typeof(ExtendedList<IFormLink<Npc>>);
+                case Location_FieldIndex.ActorCellStaticReferences:
+                    return typeof(ExtendedList<LocationCellStaticReference>);
+                case Location_FieldIndex.LocationCellStaticReferences:
+                    return typeof(ExtendedList<LocationCellStaticReference>);
+                case Location_FieldIndex.ReferenceCellStaticReferences:
+                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                case Location_FieldIndex.ActorCellEncounterCell:
+                    return typeof(ExtendedList<LocationCoordinate>);
+                case Location_FieldIndex.LocationCellEncounterCell:
+                    return typeof(ExtendedList<LocationCoordinate>);
+                case Location_FieldIndex.ReferenceCellEncounterCell:
+                    return typeof(ExtendedList<LocationCoordinate>);
+                case Location_FieldIndex.ActorCellMarkerReference:
+                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                case Location_FieldIndex.LocationCellMarkerReference:
+                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                case Location_FieldIndex.ActorCellEnablePoint:
+                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                case Location_FieldIndex.LocationCellEnablePoint:
+                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                case Location_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Location_FieldIndex.Keywords:
+                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                case Location_FieldIndex.ParentLocation:
+                    return typeof(FormLinkNullable<Location>);
+                case Location_FieldIndex.Music:
+                    return typeof(FormLinkNullable<Music>);
+                case Location_FieldIndex.UnreportedCrimeFaction:
+                    return typeof(FormLinkNullable<Faction>);
+                case Location_FieldIndex.WorldLocationMarkerRef:
+                    return typeof(FormLinkNullable<IPlacedSimple>);
+                case Location_FieldIndex.WorldLocationRadius:
+                    return typeof(Single);
+                case Location_FieldIndex.HorseMarkerRef:
+                    return typeof(FormLinkNullable<PlacedObject>);
+                case Location_FieldIndex.Color:
+                    return typeof(Color);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1014,6 +3646,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationInternal item)
         {
             ClearPartial();
+            item.ActorCellPersistentReferences = null;
+            item.LocationCellPersistentReferences = null;
+            item.ReferenceCellPersistentReferences = null;
+            item.ActorCellUniques = null;
+            item.LocationCellUniques = null;
+            item.ReferenceCellUnique = null;
+            item.ActorCellStaticReferences = null;
+            item.LocationCellStaticReferences = null;
+            item.ReferenceCellStaticReferences = null;
+            item.ActorCellEncounterCell.Clear();
+            item.LocationCellEncounterCell.Clear();
+            item.ReferenceCellEncounterCell.Clear();
+            item.ActorCellMarkerReference = null;
+            item.LocationCellMarkerReference = null;
+            item.ActorCellEnablePoint = null;
+            item.LocationCellEnablePoint = null;
+            item.Name = default;
+            item.Keywords = null;
+            item.ParentLocation = FormLinkNullable<Location>.Null;
+            item.Music = FormLinkNullable<Music>.Null;
+            item.UnreportedCrimeFaction = FormLinkNullable<Faction>.Null;
+            item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimple>.Null;
+            item.WorldLocationRadius = default;
+            item.HorseMarkerRef = FormLinkNullable<PlacedObject>.Null;
+            item.Color = default;
             base.Clear(item);
         }
         
@@ -1171,6 +3828,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ActorCellPersistentReferences = item.ActorCellPersistentReferences.CollectionEqualsHelper(
+                rhs.ActorCellPersistentReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LocationCellPersistentReferences = item.LocationCellPersistentReferences.CollectionEqualsHelper(
+                rhs.LocationCellPersistentReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ReferenceCellPersistentReferences = item.ReferenceCellPersistentReferences.CollectionEqualsHelper(
+                rhs.ReferenceCellPersistentReferences,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ActorCellUniques = item.ActorCellUniques.CollectionEqualsHelper(
+                rhs.ActorCellUniques,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LocationCellUniques = item.LocationCellUniques.CollectionEqualsHelper(
+                rhs.LocationCellUniques,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ReferenceCellUnique = item.ReferenceCellUnique.CollectionEqualsHelper(
+                rhs.ReferenceCellUnique,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ActorCellStaticReferences = item.ActorCellStaticReferences.CollectionEqualsHelper(
+                rhs.ActorCellStaticReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LocationCellStaticReferences = item.LocationCellStaticReferences.CollectionEqualsHelper(
+                rhs.LocationCellStaticReferences,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ReferenceCellStaticReferences = item.ReferenceCellStaticReferences.CollectionEqualsHelper(
+                rhs.ReferenceCellStaticReferences,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ActorCellEncounterCell = item.ActorCellEncounterCell.CollectionEqualsHelper(
+                rhs.ActorCellEncounterCell,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LocationCellEncounterCell = item.LocationCellEncounterCell.CollectionEqualsHelper(
+                rhs.LocationCellEncounterCell,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ReferenceCellEncounterCell = item.ReferenceCellEncounterCell.CollectionEqualsHelper(
+                rhs.ReferenceCellEncounterCell,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.ActorCellMarkerReference = item.ActorCellMarkerReference.CollectionEqualsHelper(
+                rhs.ActorCellMarkerReference,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.LocationCellMarkerReference = item.LocationCellMarkerReference.CollectionEqualsHelper(
+                rhs.LocationCellMarkerReference,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ActorCellEnablePoint = item.ActorCellEnablePoint.CollectionEqualsHelper(
+                rhs.ActorCellEnablePoint,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.LocationCellEnablePoint = item.LocationCellEnablePoint.CollectionEqualsHelper(
+                rhs.LocationCellEnablePoint,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Keywords = item.Keywords.CollectionEqualsHelper(
+                rhs.Keywords,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.ParentLocation = object.Equals(item.ParentLocation, rhs.ParentLocation);
+            ret.Music = object.Equals(item.Music, rhs.Music);
+            ret.UnreportedCrimeFaction = object.Equals(item.UnreportedCrimeFaction, rhs.UnreportedCrimeFaction);
+            ret.WorldLocationMarkerRef = object.Equals(item.WorldLocationMarkerRef, rhs.WorldLocationMarkerRef);
+            ret.WorldLocationRadius = item.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius);
+            ret.HorseMarkerRef = object.Equals(item.HorseMarkerRef, rhs.HorseMarkerRef);
+            ret.Color = item.Color.ColorOnlyEquals(rhs.Color);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1222,12 +3955,394 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.ActorCellPersistentReferences?.Overall ?? true)
+                && item.ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+            {
+                fg.AppendLine("ActorCellPersistentReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorCellPersistentReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.LocationCellPersistentReferences?.Overall ?? true)
+                && item.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+            {
+                fg.AppendLine("LocationCellPersistentReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationCellPersistentReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ReferenceCellPersistentReferences?.Overall ?? true)
+                && item.ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+            {
+                fg.AppendLine("ReferenceCellPersistentReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ReferenceCellPersistentReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ActorCellUniques?.Overall ?? true)
+                && item.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+            {
+                fg.AppendLine("ActorCellUniques =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorCellUniquesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.LocationCellUniques?.Overall ?? true)
+                && item.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+            {
+                fg.AppendLine("LocationCellUniques =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationCellUniquesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ReferenceCellUnique?.Overall ?? true)
+                && item.ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+            {
+                fg.AppendLine("ReferenceCellUnique =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ReferenceCellUniqueItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ActorCellStaticReferences?.Overall ?? true)
+                && item.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+            {
+                fg.AppendLine("ActorCellStaticReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorCellStaticReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.LocationCellStaticReferences?.Overall ?? true)
+                && item.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+            {
+                fg.AppendLine("LocationCellStaticReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationCellStaticReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ReferenceCellStaticReferences?.Overall ?? true)
+                && item.ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+            {
+                fg.AppendLine("ReferenceCellStaticReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ReferenceCellStaticReferencesItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ActorCellEncounterCell?.Overall ?? true)
+            {
+                fg.AppendLine("ActorCellEncounterCell =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.ActorCellEncounterCell)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.LocationCellEncounterCell?.Overall ?? true)
+            {
+                fg.AppendLine("LocationCellEncounterCell =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.LocationCellEncounterCell)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.ReferenceCellEncounterCell?.Overall ?? true)
+            {
+                fg.AppendLine("ReferenceCellEncounterCell =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.ReferenceCellEncounterCell)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ActorCellMarkerReference?.Overall ?? true)
+                && item.ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+            {
+                fg.AppendLine("ActorCellMarkerReference =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorCellMarkerReferenceItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.LocationCellMarkerReference?.Overall ?? true)
+                && item.LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+            {
+                fg.AppendLine("LocationCellMarkerReference =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationCellMarkerReferenceItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ActorCellEnablePoint?.Overall ?? true)
+                && item.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+            {
+                fg.AppendLine("ActorCellEnablePoint =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ActorCellEnablePointItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.LocationCellEnablePoint?.Overall ?? true)
+                && item.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+            {
+                fg.AppendLine("LocationCellEnablePoint =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in LocationCellEnablePointItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.Keywords?.Overall ?? true)
+                && item.Keywords.TryGet(out var KeywordsItem))
+            {
+                fg.AppendLine("Keywords =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in KeywordsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.ParentLocation ?? true)
+                && item.ParentLocation.TryGet(out var ParentLocationItem))
+            {
+                fg.AppendItem(ParentLocationItem, "ParentLocation");
+            }
+            if ((printMask?.Music ?? true)
+                && item.Music.TryGet(out var MusicItem))
+            {
+                fg.AppendItem(MusicItem, "Music");
+            }
+            if ((printMask?.UnreportedCrimeFaction ?? true)
+                && item.UnreportedCrimeFaction.TryGet(out var UnreportedCrimeFactionItem))
+            {
+                fg.AppendItem(UnreportedCrimeFactionItem, "UnreportedCrimeFaction");
+            }
+            if ((printMask?.WorldLocationMarkerRef ?? true)
+                && item.WorldLocationMarkerRef.TryGet(out var WorldLocationMarkerRefItem))
+            {
+                fg.AppendItem(WorldLocationMarkerRefItem, "WorldLocationMarkerRef");
+            }
+            if ((printMask?.WorldLocationRadius ?? true)
+                && item.WorldLocationRadius.TryGet(out var WorldLocationRadiusItem))
+            {
+                fg.AppendItem(WorldLocationRadiusItem, "WorldLocationRadius");
+            }
+            if ((printMask?.HorseMarkerRef ?? true)
+                && item.HorseMarkerRef.TryGet(out var HorseMarkerRefItem))
+            {
+                fg.AppendItem(HorseMarkerRefItem, "HorseMarkerRef");
+            }
+            if ((printMask?.Color ?? true)
+                && item.Color.TryGet(out var ColorItem))
+            {
+                fg.AppendItem(ColorItem, "Color");
+            }
         }
         
         public bool HasBeenSet(
             ILocationGetter item,
             Location.Mask<bool?> checkMask)
         {
+            if (checkMask.ActorCellPersistentReferences?.Overall.HasValue ?? false && checkMask.ActorCellPersistentReferences!.Overall.Value != (item.ActorCellPersistentReferences != null)) return false;
+            if (checkMask.LocationCellPersistentReferences?.Overall.HasValue ?? false && checkMask.LocationCellPersistentReferences!.Overall.Value != (item.LocationCellPersistentReferences != null)) return false;
+            if (checkMask.ReferenceCellPersistentReferences?.Overall.HasValue ?? false && checkMask.ReferenceCellPersistentReferences!.Overall.Value != (item.ReferenceCellPersistentReferences != null)) return false;
+            if (checkMask.ActorCellUniques?.Overall.HasValue ?? false && checkMask.ActorCellUniques!.Overall.Value != (item.ActorCellUniques != null)) return false;
+            if (checkMask.LocationCellUniques?.Overall.HasValue ?? false && checkMask.LocationCellUniques!.Overall.Value != (item.LocationCellUniques != null)) return false;
+            if (checkMask.ReferenceCellUnique?.Overall.HasValue ?? false && checkMask.ReferenceCellUnique!.Overall.Value != (item.ReferenceCellUnique != null)) return false;
+            if (checkMask.ActorCellStaticReferences?.Overall.HasValue ?? false && checkMask.ActorCellStaticReferences!.Overall.Value != (item.ActorCellStaticReferences != null)) return false;
+            if (checkMask.LocationCellStaticReferences?.Overall.HasValue ?? false && checkMask.LocationCellStaticReferences!.Overall.Value != (item.LocationCellStaticReferences != null)) return false;
+            if (checkMask.ReferenceCellStaticReferences?.Overall.HasValue ?? false && checkMask.ReferenceCellStaticReferences!.Overall.Value != (item.ReferenceCellStaticReferences != null)) return false;
+            if (checkMask.ActorCellMarkerReference?.Overall.HasValue ?? false && checkMask.ActorCellMarkerReference!.Overall.Value != (item.ActorCellMarkerReference != null)) return false;
+            if (checkMask.LocationCellMarkerReference?.Overall.HasValue ?? false && checkMask.LocationCellMarkerReference!.Overall.Value != (item.LocationCellMarkerReference != null)) return false;
+            if (checkMask.ActorCellEnablePoint?.Overall.HasValue ?? false && checkMask.ActorCellEnablePoint!.Overall.Value != (item.ActorCellEnablePoint != null)) return false;
+            if (checkMask.LocationCellEnablePoint?.Overall.HasValue ?? false && checkMask.LocationCellEnablePoint!.Overall.Value != (item.LocationCellEnablePoint != null)) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Keywords?.Overall.HasValue ?? false && checkMask.Keywords!.Overall.Value != (item.Keywords != null)) return false;
+            if (checkMask.ParentLocation.HasValue && checkMask.ParentLocation.Value != (item.ParentLocation.FormKey != null)) return false;
+            if (checkMask.Music.HasValue && checkMask.Music.Value != (item.Music.FormKey != null)) return false;
+            if (checkMask.UnreportedCrimeFaction.HasValue && checkMask.UnreportedCrimeFaction.Value != (item.UnreportedCrimeFaction.FormKey != null)) return false;
+            if (checkMask.WorldLocationMarkerRef.HasValue && checkMask.WorldLocationMarkerRef.Value != (item.WorldLocationMarkerRef.FormKey != null)) return false;
+            if (checkMask.WorldLocationRadius.HasValue && checkMask.WorldLocationRadius.Value != (item.WorldLocationRadius != null)) return false;
+            if (checkMask.HorseMarkerRef.HasValue && checkMask.HorseMarkerRef.Value != (item.HorseMarkerRef.FormKey != null)) return false;
+            if (checkMask.Color.HasValue && checkMask.Color.Value != (item.Color != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1237,6 +4352,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationGetter item,
             Location.Mask<bool> mask)
         {
+            if (item.ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+            {
+                mask.ActorCellPersistentReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationReference.Mask<bool>?>>?>(true, ActorCellPersistentReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+            {
+                mask.LocationCellPersistentReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationReference.Mask<bool>?>>?>(true, LocationCellPersistentReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.ReferenceCellPersistentReferences = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ReferenceCellPersistentReferences != null), default);
+            if (item.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+            {
+                mask.ActorCellUniques = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationReference.Mask<bool>?>>?>(true, ActorCellUniquesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+            {
+                mask.LocationCellUniques = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationReference.Mask<bool>?>>?>(true, LocationCellUniquesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.ReferenceCellUnique = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ReferenceCellUnique != null), default);
+            if (item.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+            {
+                mask.ActorCellStaticReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCellStaticReference.Mask<bool>?>>?>(true, ActorCellStaticReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCellStaticReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+            {
+                mask.LocationCellStaticReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCellStaticReference.Mask<bool>?>>?>(true, LocationCellStaticReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCellStaticReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.ReferenceCellStaticReferences = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ReferenceCellStaticReferences != null), default);
+            var ActorCellEncounterCellItem = item.ActorCellEncounterCell;
+            mask.ActorCellEncounterCell = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>>?>(true, ActorCellEncounterCellItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var LocationCellEncounterCellItem = item.LocationCellEncounterCell;
+            mask.LocationCellEncounterCell = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>>?>(true, LocationCellEncounterCellItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var ReferenceCellEncounterCellItem = item.ReferenceCellEncounterCell;
+            mask.ReferenceCellEncounterCell = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>>?>(true, ReferenceCellEncounterCellItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCoordinate.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            mask.ActorCellMarkerReference = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.ActorCellMarkerReference != null), default);
+            mask.LocationCellMarkerReference = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.LocationCellMarkerReference != null), default);
+            if (item.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+            {
+                mask.ActorCellEnablePoint = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCellEnablePoint.Mask<bool>?>>?>(true, ActorCellEnablePointItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCellEnablePoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            if (item.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+            {
+                mask.LocationCellEnablePoint = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LocationCellEnablePoint.Mask<bool>?>>?>(true, LocationCellEnablePointItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LocationCellEnablePoint.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.Name = (item.Name != null);
+            mask.Keywords = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Keywords != null), default);
+            mask.ParentLocation = (item.ParentLocation.FormKey != null);
+            mask.Music = (item.Music.FormKey != null);
+            mask.UnreportedCrimeFaction = (item.UnreportedCrimeFaction.FormKey != null);
+            mask.WorldLocationMarkerRef = (item.WorldLocationMarkerRef.FormKey != null);
+            mask.WorldLocationRadius = (item.WorldLocationRadius != null);
+            mask.HorseMarkerRef = (item.HorseMarkerRef.FormKey != null);
+            mask.Color = (item.Color != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1288,6 +4455,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.ActorCellPersistentReferences.SequenceEqual(rhs.ActorCellPersistentReferences)) return false;
+            if (!lhs.LocationCellPersistentReferences.SequenceEqual(rhs.LocationCellPersistentReferences)) return false;
+            if (!lhs.ReferenceCellPersistentReferences.SequenceEqual(rhs.ReferenceCellPersistentReferences)) return false;
+            if (!lhs.ActorCellUniques.SequenceEqual(rhs.ActorCellUniques)) return false;
+            if (!lhs.LocationCellUniques.SequenceEqual(rhs.LocationCellUniques)) return false;
+            if (!lhs.ReferenceCellUnique.SequenceEqual(rhs.ReferenceCellUnique)) return false;
+            if (!lhs.ActorCellStaticReferences.SequenceEqual(rhs.ActorCellStaticReferences)) return false;
+            if (!lhs.LocationCellStaticReferences.SequenceEqual(rhs.LocationCellStaticReferences)) return false;
+            if (!lhs.ReferenceCellStaticReferences.SequenceEqual(rhs.ReferenceCellStaticReferences)) return false;
+            if (!lhs.ActorCellEncounterCell.SequenceEqual(rhs.ActorCellEncounterCell)) return false;
+            if (!lhs.LocationCellEncounterCell.SequenceEqual(rhs.LocationCellEncounterCell)) return false;
+            if (!lhs.ReferenceCellEncounterCell.SequenceEqual(rhs.ReferenceCellEncounterCell)) return false;
+            if (!lhs.ActorCellMarkerReference.SequenceEqual(rhs.ActorCellMarkerReference)) return false;
+            if (!lhs.LocationCellMarkerReference.SequenceEqual(rhs.LocationCellMarkerReference)) return false;
+            if (!lhs.ActorCellEnablePoint.SequenceEqual(rhs.ActorCellEnablePoint)) return false;
+            if (!lhs.LocationCellEnablePoint.SequenceEqual(rhs.LocationCellEnablePoint)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.Keywords.SequenceEqual(rhs.Keywords)) return false;
+            if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
+            if (!lhs.Music.Equals(rhs.Music)) return false;
+            if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
+            if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
+            if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
+            if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
+            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
             return true;
         }
         
@@ -1312,6 +4504,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILocationGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ActorCellPersistentReferences);
+            hash.Add(item.LocationCellPersistentReferences);
+            hash.Add(item.ReferenceCellPersistentReferences);
+            hash.Add(item.ActorCellUniques);
+            hash.Add(item.LocationCellUniques);
+            hash.Add(item.ReferenceCellUnique);
+            hash.Add(item.ActorCellStaticReferences);
+            hash.Add(item.LocationCellStaticReferences);
+            hash.Add(item.ReferenceCellStaticReferences);
+            hash.Add(item.ActorCellEncounterCell);
+            hash.Add(item.LocationCellEncounterCell);
+            hash.Add(item.ReferenceCellEncounterCell);
+            hash.Add(item.ActorCellMarkerReference);
+            hash.Add(item.LocationCellMarkerReference);
+            hash.Add(item.ActorCellEnablePoint);
+            hash.Add(item.LocationCellEnablePoint);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Keywords);
+            if (item.ParentLocation.TryGet(out var ParentLocationitem))
+            {
+                hash.Add(ParentLocationitem);
+            }
+            if (item.Music.TryGet(out var Musicitem))
+            {
+                hash.Add(Musicitem);
+            }
+            if (item.UnreportedCrimeFaction.TryGet(out var UnreportedCrimeFactionitem))
+            {
+                hash.Add(UnreportedCrimeFactionitem);
+            }
+            if (item.WorldLocationMarkerRef.TryGet(out var WorldLocationMarkerRefitem))
+            {
+                hash.Add(WorldLocationMarkerRefitem);
+            }
+            if (item.WorldLocationRadius.TryGet(out var WorldLocationRadiusitem))
+            {
+                hash.Add(WorldLocationRadiusitem);
+            }
+            if (item.HorseMarkerRef.TryGet(out var HorseMarkerRefitem))
+            {
+                hash.Add(HorseMarkerRefitem);
+            }
+            if (item.Color.TryGet(out var Coloritem))
+            {
+                hash.Add(Coloritem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1340,6 +4581,136 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.ActorCellPersistentReferences.TryGet(out var ActorCellPersistentReferencesItem))
+            {
+                foreach (var item in ActorCellPersistentReferencesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationCellPersistentReferences.TryGet(out var LocationCellPersistentReferencesItem))
+            {
+                foreach (var item in LocationCellPersistentReferencesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReferenceCellPersistentReferences.TryGet(out var ReferenceCellPersistentReferencesItem))
+            {
+                foreach (var item in ReferenceCellPersistentReferencesItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorCellUniques.TryGet(out var ActorCellUniquesItem))
+            {
+                foreach (var item in ActorCellUniquesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationCellUniques.TryGet(out var LocationCellUniquesItem))
+            {
+                foreach (var item in LocationCellUniquesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReferenceCellUnique.TryGet(out var ReferenceCellUniqueItem))
+            {
+                foreach (var item in ReferenceCellUniqueItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorCellStaticReferences.TryGet(out var ActorCellStaticReferencesItem))
+            {
+                foreach (var item in ActorCellStaticReferencesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationCellStaticReferences.TryGet(out var LocationCellStaticReferencesItem))
+            {
+                foreach (var item in LocationCellStaticReferencesItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReferenceCellStaticReferences.TryGet(out var ReferenceCellStaticReferencesItem))
+            {
+                foreach (var item in ReferenceCellStaticReferencesItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            foreach (var item in obj.ActorCellEncounterCell.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LocationCellEncounterCell.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReferenceCellEncounterCell.SelectMany(f => f.LinkFormKeys))
+            {
+                yield return item;
+            }
+            if (obj.ActorCellMarkerReference.TryGet(out var ActorCellMarkerReferenceItem))
+            {
+                foreach (var item in ActorCellMarkerReferenceItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationCellMarkerReference.TryGet(out var LocationCellMarkerReferenceItem))
+            {
+                foreach (var item in LocationCellMarkerReferenceItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ActorCellEnablePoint.TryGet(out var ActorCellEnablePointItem))
+            {
+                foreach (var item in ActorCellEnablePointItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LocationCellEnablePoint.TryGet(out var LocationCellEnablePointItem))
+            {
+                foreach (var item in LocationCellEnablePointItem.SelectMany(f => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Keywords.TryGet(out var KeywordsItem))
+            {
+                foreach (var item in KeywordsItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ParentLocation.FormKey.TryGet(out var ParentLocationKey))
+            {
+                yield return ParentLocationKey;
+            }
+            if (obj.Music.FormKey.TryGet(out var MusicKey))
+            {
+                yield return MusicKey;
+            }
+            if (obj.UnreportedCrimeFaction.FormKey.TryGet(out var UnreportedCrimeFactionKey))
+            {
+                yield return UnreportedCrimeFactionKey;
+            }
+            if (obj.WorldLocationMarkerRef.FormKey.TryGet(out var WorldLocationMarkerRefKey))
+            {
+                yield return WorldLocationMarkerRefKey;
+            }
+            if (obj.HorseMarkerRef.FormKey.TryGet(out var HorseMarkerRefKey))
+            {
+                yield return HorseMarkerRefKey;
             }
             yield break;
         }
@@ -1388,6 +4759,528 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellPersistentReferences);
+                try
+                {
+                    if ((rhs.ActorCellPersistentReferences != null))
+                    {
+                        item.ActorCellPersistentReferences = 
+                            rhs.ActorCellPersistentReferences
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationReference>();
+                    }
+                    else
+                    {
+                        item.ActorCellPersistentReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellPersistentReferences);
+                try
+                {
+                    if ((rhs.LocationCellPersistentReferences != null))
+                    {
+                        item.LocationCellPersistentReferences = 
+                            rhs.LocationCellPersistentReferences
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationReference>();
+                    }
+                    else
+                    {
+                        item.LocationCellPersistentReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                try
+                {
+                    if ((rhs.ReferenceCellPersistentReferences != null))
+                    {
+                        item.ReferenceCellPersistentReferences = 
+                            rhs.ReferenceCellPersistentReferences
+                            .Select(r => (IFormLink<IPlacedSimple>)new FormLink<IPlacedSimple>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedSimple>>();
+                    }
+                    else
+                    {
+                        item.ReferenceCellPersistentReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellUniques);
+                try
+                {
+                    if ((rhs.ActorCellUniques != null))
+                    {
+                        item.ActorCellUniques = 
+                            rhs.ActorCellUniques
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationReference>();
+                    }
+                    else
+                    {
+                        item.ActorCellUniques = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellUniques);
+                try
+                {
+                    if ((rhs.LocationCellUniques != null))
+                    {
+                        item.LocationCellUniques = 
+                            rhs.LocationCellUniques
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationReference>();
+                    }
+                    else
+                    {
+                        item.LocationCellUniques = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellUnique);
+                try
+                {
+                    if ((rhs.ReferenceCellUnique != null))
+                    {
+                        item.ReferenceCellUnique = 
+                            rhs.ReferenceCellUnique
+                            .Select(r => (IFormLink<Npc>)new FormLink<Npc>(r.FormKey))
+                            .ToExtendedList<IFormLink<Npc>>();
+                    }
+                    else
+                    {
+                        item.ReferenceCellUnique = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellStaticReferences);
+                try
+                {
+                    if ((rhs.ActorCellStaticReferences != null))
+                    {
+                        item.ActorCellStaticReferences = 
+                            rhs.ActorCellStaticReferences
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationCellStaticReference>();
+                    }
+                    else
+                    {
+                        item.ActorCellStaticReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellStaticReferences);
+                try
+                {
+                    if ((rhs.LocationCellStaticReferences != null))
+                    {
+                        item.LocationCellStaticReferences = 
+                            rhs.LocationCellStaticReferences
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationCellStaticReference>();
+                    }
+                    else
+                    {
+                        item.LocationCellStaticReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                try
+                {
+                    if ((rhs.ReferenceCellStaticReferences != null))
+                    {
+                        item.ReferenceCellStaticReferences = 
+                            rhs.ReferenceCellStaticReferences
+                            .Select(r => (IFormLink<IPlacedSimple>)new FormLink<IPlacedSimple>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlacedSimple>>();
+                    }
+                    else
+                    {
+                        item.ReferenceCellStaticReferences = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEncounterCell);
+                try
+                {
+                    item.ActorCellEncounterCell.SetTo(
+                        rhs.ActorCellEncounterCell
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEncounterCell);
+                try
+                {
+                    item.LocationCellEncounterCell.SetTo(
+                        rhs.LocationCellEncounterCell
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                try
+                {
+                    item.ReferenceCellEncounterCell.SetTo(
+                        rhs.ReferenceCellEncounterCell
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellMarkerReference);
+                try
+                {
+                    if ((rhs.ActorCellMarkerReference != null))
+                    {
+                        item.ActorCellMarkerReference = 
+                            rhs.ActorCellMarkerReference
+                            .Select(r => (IFormLink<IPlaced>)new FormLink<IPlaced>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlaced>>();
+                    }
+                    else
+                    {
+                        item.ActorCellMarkerReference = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellMarkerReference);
+                try
+                {
+                    if ((rhs.LocationCellMarkerReference != null))
+                    {
+                        item.LocationCellMarkerReference = 
+                            rhs.LocationCellMarkerReference
+                            .Select(r => (IFormLink<IPlaced>)new FormLink<IPlaced>(r.FormKey))
+                            .ToExtendedList<IFormLink<IPlaced>>();
+                    }
+                    else
+                    {
+                        item.LocationCellMarkerReference = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEnablePoint);
+                try
+                {
+                    if ((rhs.ActorCellEnablePoint != null))
+                    {
+                        item.ActorCellEnablePoint = 
+                            rhs.ActorCellEnablePoint
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationCellEnablePoint>();
+                    }
+                    else
+                    {
+                        item.ActorCellEnablePoint = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEnablePoint);
+                try
+                {
+                    if ((rhs.LocationCellEnablePoint != null))
+                    {
+                        item.LocationCellEnablePoint = 
+                            rhs.LocationCellEnablePoint
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<LocationCellEnablePoint>();
+                    }
+                    else
+                    {
+                        item.LocationCellEnablePoint = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            {
+                errorMask?.PushIndex((int)Location_FieldIndex.Keywords);
+                try
+                {
+                    if ((rhs.Keywords != null))
+                    {
+                        item.Keywords = 
+                            rhs.Keywords
+                            .Select(r => (IFormLink<Keyword>)new FormLink<Keyword>(r.FormKey))
+                            .ToExtendedList<IFormLink<Keyword>>();
+                    }
+                    else
+                    {
+                        item.Keywords = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            {
+                item.ParentLocation = rhs.ParentLocation.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            {
+                item.Music = rhs.Music.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            {
+                item.UnreportedCrimeFaction = rhs.UnreportedCrimeFaction.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            {
+                item.WorldLocationMarkerRef = rhs.WorldLocationMarkerRef.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            {
+                item.WorldLocationRadius = rhs.WorldLocationRadius;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
+            {
+                item.HorseMarkerRef = rhs.HorseMarkerRef.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            {
+                item.Color = rhs.Color;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1530,6 +5423,428 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.ActorCellPersistentReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            {
+                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellPersistentReferences),
+                    item: item.ActorCellPersistentReferences,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellPersistentReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellPersistentReferences),
+                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.LocationCellPersistentReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            {
+                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellPersistentReferences),
+                    item: item.LocationCellPersistentReferences,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellPersistentReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellPersistentReferences),
+                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.ReferenceCellPersistentReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReferenceCellPersistentReferences),
+                    item: item.ReferenceCellPersistentReferences,
+                    fieldIndex: (int)Location_FieldIndex.ReferenceCellPersistentReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellPersistentReferences),
+                    transl: (XElement subNode, IFormLink<IPlacedSimpleGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.ActorCellUniques != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            {
+                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellUniques),
+                    item: item.ActorCellUniques,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellUniques,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellUniques),
+                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.LocationCellUniques != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            {
+                ListXmlTranslation<ILocationReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellUniques),
+                    item: item.LocationCellUniques,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellUniques,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellUniques),
+                    transl: (XElement subNode, ILocationReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.ReferenceCellUnique != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            {
+                ListXmlTranslation<IFormLink<INpcGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReferenceCellUnique),
+                    item: item.ReferenceCellUnique,
+                    fieldIndex: (int)Location_FieldIndex.ReferenceCellUnique,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellUnique),
+                    transl: (XElement subNode, IFormLink<INpcGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.ActorCellStaticReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            {
+                ListXmlTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellStaticReferences),
+                    item: item.ActorCellStaticReferences,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellStaticReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellStaticReferences),
+                    transl: (XElement subNode, ILocationCellStaticReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCellStaticReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.LocationCellStaticReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            {
+                ListXmlTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellStaticReferences),
+                    item: item.LocationCellStaticReferences,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellStaticReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellStaticReferences),
+                    transl: (XElement subNode, ILocationCellStaticReferenceGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCellStaticReferenceXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.ReferenceCellStaticReferences != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReferenceCellStaticReferences),
+                    item: item.ReferenceCellStaticReferences,
+                    fieldIndex: (int)Location_FieldIndex.ReferenceCellStaticReferences,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellStaticReferences),
+                    transl: (XElement subNode, IFormLink<IPlacedSimpleGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            {
+                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellEncounterCell),
+                    item: item.ActorCellEncounterCell,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellEncounterCell,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEncounterCell),
+                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            {
+                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellEncounterCell),
+                    item: item.LocationCellEncounterCell,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellEncounterCell,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEncounterCell),
+                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            {
+                ListXmlTranslation<ILocationCoordinateGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReferenceCellEncounterCell),
+                    item: item.ReferenceCellEncounterCell,
+                    fieldIndex: (int)Location_FieldIndex.ReferenceCellEncounterCell,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ReferenceCellEncounterCell),
+                    transl: (XElement subNode, ILocationCoordinateGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCoordinateXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.ActorCellMarkerReference != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellMarkerReference),
+                    item: item.ActorCellMarkerReference,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellMarkerReference,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellMarkerReference),
+                    transl: (XElement subNode, IFormLink<IPlacedGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.LocationCellMarkerReference != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellMarkerReference),
+                    item: item.LocationCellMarkerReference,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellMarkerReference,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellMarkerReference),
+                    transl: (XElement subNode, IFormLink<IPlacedGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.ActorCellEnablePoint != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            {
+                ListXmlTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActorCellEnablePoint),
+                    item: item.ActorCellEnablePoint,
+                    fieldIndex: (int)Location_FieldIndex.ActorCellEnablePoint,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.ActorCellEnablePoint),
+                    transl: (XElement subNode, ILocationCellEnablePointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCellEnablePointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.LocationCellEnablePoint != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            {
+                ListXmlTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.LocationCellEnablePoint),
+                    item: item.LocationCellEnablePoint,
+                    fieldIndex: (int)Location_FieldIndex.LocationCellEnablePoint,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.LocationCellEnablePoint),
+                    transl: (XElement subNode, ILocationCellEnablePointGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((LocationCellEnablePointXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Location_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.Keywords != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Keywords),
+                    item: item.Keywords,
+                    fieldIndex: (int)Location_FieldIndex.Keywords,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Location_FieldIndex.Keywords),
+                    transl: (XElement subNode, IFormLink<IKeywordGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.ParentLocation.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ParentLocation),
+                    item: item.ParentLocation.FormKey,
+                    fieldIndex: (int)Location_FieldIndex.ParentLocation,
+                    errorMask: errorMask);
+            }
+            if ((item.Music.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Music),
+                    item: item.Music.FormKey,
+                    fieldIndex: (int)Location_FieldIndex.Music,
+                    errorMask: errorMask);
+            }
+            if ((item.UnreportedCrimeFaction.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.UnreportedCrimeFaction),
+                    item: item.UnreportedCrimeFaction.FormKey,
+                    fieldIndex: (int)Location_FieldIndex.UnreportedCrimeFaction,
+                    errorMask: errorMask);
+            }
+            if ((item.WorldLocationMarkerRef.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WorldLocationMarkerRef),
+                    item: item.WorldLocationMarkerRef.FormKey,
+                    fieldIndex: (int)Location_FieldIndex.WorldLocationMarkerRef,
+                    errorMask: errorMask);
+            }
+            if ((item.WorldLocationRadius != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.WorldLocationRadius),
+                    item: item.WorldLocationRadius.Value,
+                    fieldIndex: (int)Location_FieldIndex.WorldLocationRadius,
+                    errorMask: errorMask);
+            }
+            if ((item.HorseMarkerRef.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HorseMarkerRef),
+                    item: item.HorseMarkerRef.FormKey,
+                    fieldIndex: (int)Location_FieldIndex.HorseMarkerRef,
+                    errorMask: errorMask);
+            }
+            if ((item.Color != null)
+                && (translationMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Color),
+                    item: item.Color.Value,
+                    fieldIndex: (int)Location_FieldIndex.Color,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1637,6 +5952,626 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ActorCellPersistentReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellPersistentReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellPersistentReferencesItem,
+                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellPersistentReferences = ActorCellPersistentReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ActorCellPersistentReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellPersistentReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellPersistentReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellPersistentReferencesItem,
+                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellPersistentReferences = LocationCellPersistentReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationCellPersistentReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReferenceCellPersistentReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                            node: node,
+                            enumer: out var ReferenceCellPersistentReferencesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ReferenceCellPersistentReferences = ReferenceCellPersistentReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ReferenceCellPersistentReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorCellUniques":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellUniques);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellUniquesItem,
+                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellUniques = ActorCellUniquesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ActorCellUniques = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellUniques":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellUniques);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellUniquesItem,
+                            transl: LoquiXmlTranslation<LocationReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellUniques = LocationCellUniquesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationCellUniques = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReferenceCellUnique":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellUnique);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Npc>>.Instance.Parse(
+                            node: node,
+                            enumer: out var ReferenceCellUniqueItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ReferenceCellUnique = ReferenceCellUniqueItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ReferenceCellUnique = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorCellStaticReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellStaticReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCellStaticReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellStaticReferencesItem,
+                            transl: LoquiXmlTranslation<LocationCellStaticReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellStaticReferences = ActorCellStaticReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ActorCellStaticReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellStaticReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellStaticReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCellStaticReference>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellStaticReferencesItem,
+                            transl: LoquiXmlTranslation<LocationCellStaticReference>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellStaticReferences = LocationCellStaticReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationCellStaticReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReferenceCellStaticReferences":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                            node: node,
+                            enumer: out var ReferenceCellStaticReferencesItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ReferenceCellStaticReferences = ReferenceCellStaticReferencesItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ReferenceCellStaticReferences = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorCellEncounterCell":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEncounterCell);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellEncounterCellItem,
+                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellEncounterCell.SetTo(ActorCellEncounterCellItem);
+                        }
+                        else
+                        {
+                            item.ActorCellEncounterCell.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellEncounterCell":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEncounterCell);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellEncounterCellItem,
+                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellEncounterCell.SetTo(LocationCellEncounterCellItem);
+                        }
+                        else
+                        {
+                            item.LocationCellEncounterCell.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReferenceCellEncounterCell":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCoordinate>.Instance.Parse(
+                            node: node,
+                            enumer: out var ReferenceCellEncounterCellItem,
+                            transl: LoquiXmlTranslation<LocationCoordinate>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ReferenceCellEncounterCell.SetTo(ReferenceCellEncounterCellItem);
+                        }
+                        else
+                        {
+                            item.ReferenceCellEncounterCell.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorCellMarkerReference":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellMarkerReference);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellMarkerReferenceItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellMarkerReference = ActorCellMarkerReferenceItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ActorCellMarkerReference = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellMarkerReference":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellMarkerReference);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellMarkerReferenceItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellMarkerReference = LocationCellMarkerReferenceItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationCellMarkerReference = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActorCellEnablePoint":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ActorCellEnablePoint);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCellEnablePoint>.Instance.Parse(
+                            node: node,
+                            enumer: out var ActorCellEnablePointItem,
+                            transl: LoquiXmlTranslation<LocationCellEnablePoint>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.ActorCellEnablePoint = ActorCellEnablePointItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.ActorCellEnablePoint = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LocationCellEnablePoint":
+                    errorMask?.PushIndex((int)Location_FieldIndex.LocationCellEnablePoint);
+                    try
+                    {
+                        if (ListXmlTranslation<LocationCellEnablePoint>.Instance.Parse(
+                            node: node,
+                            enumer: out var LocationCellEnablePointItem,
+                            transl: LoquiXmlTranslation<LocationCellEnablePoint>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.LocationCellEnablePoint = LocationCellEnablePointItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.LocationCellEnablePoint = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Keywords":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Keywords);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            node: node,
+                            enumer: out var KeywordsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Keywords = KeywordsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Keywords = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ParentLocation":
+                    errorMask?.PushIndex((int)Location_FieldIndex.ParentLocation);
+                    try
+                    {
+                        item.ParentLocation = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Music":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Music);
+                    try
+                    {
+                        item.Music = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "UnreportedCrimeFaction":
+                    errorMask?.PushIndex((int)Location_FieldIndex.UnreportedCrimeFaction);
+                    try
+                    {
+                        item.UnreportedCrimeFaction = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WorldLocationMarkerRef":
+                    errorMask?.PushIndex((int)Location_FieldIndex.WorldLocationMarkerRef);
+                    try
+                    {
+                        item.WorldLocationMarkerRef = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WorldLocationRadius":
+                    errorMask?.PushIndex((int)Location_FieldIndex.WorldLocationRadius);
+                    try
+                    {
+                        item.WorldLocationRadius = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HorseMarkerRef":
+                    errorMask?.PushIndex((int)Location_FieldIndex.HorseMarkerRef);
+                    try
+                    {
+                        item.HorseMarkerRef = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Color":
+                    errorMask?.PushIndex((int)Location_FieldIndex.Color);
+                    try
+                    {
+                        item.Color = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1723,6 +6658,251 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LocationBinaryWriteTranslation Instance = new LocationBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ILocationGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellPersistentReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACPR),
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellPersistentReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCPR),
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ReferenceCellPersistentReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCPR),
+                transl: (MutagenWriter subWriter, IFormLink<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellUniques,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACUN),
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellUniques,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCUN),
+                transl: (MutagenWriter subWriter, ILocationReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ReferenceCellUnique,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCUN),
+                transl: (MutagenWriter subWriter, IFormLink<INpcGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellStaticReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACSR),
+                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCellStaticReferenceGetter>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellStaticReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCSR),
+                transl: (MutagenWriter subWriter, ILocationCellStaticReferenceGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationCellStaticReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ReferenceCellStaticReferences,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCSR),
+                transl: (MutagenWriter subWriter, IFormLink<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellEncounterCell,
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    using (HeaderExport.Subrecord(writer, RecordTypes.ACEC))
+                    {
+                        ((LocationCoordinateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellEncounterCell,
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    using (HeaderExport.Subrecord(writer, RecordTypes.LCEC))
+                    {
+                        ((LocationCoordinateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCoordinateGetter>.Instance.Write(
+                writer: writer,
+                items: item.ReferenceCellEncounterCell,
+                transl: (MutagenWriter subWriter, ILocationCoordinateGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    using (HeaderExport.Subrecord(writer, RecordTypes.RCEC))
+                    {
+                        ((LocationCoordinateBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: subWriter,
+                            recordTypeConverter: conv);
+                    }
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellMarkerReference,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACID),
+                transl: (MutagenWriter subWriter, IFormLink<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellMarkerReference,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCID),
+                transl: (MutagenWriter subWriter, IFormLink<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+                writer: writer,
+                items: item.ActorCellEnablePoint,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACEP),
+                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocationCellEnablePointGetter>.Instance.Write(
+                writer: writer,
+                items: item.LocationCellEnablePoint,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCEP),
+                transl: (MutagenWriter subWriter, ILocationCellEnablePointGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((LocationCellEnablePointBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.Keywords,
+                counterType: RecordTypes.KSIZ,
+                counterLength: 4,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
+                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ParentLocation,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Music,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.UnreportedCrimeFaction,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WorldLocationMarkerRef,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.WorldLocationRadius,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.HorseMarkerRef,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Color,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+        }
+
         public void Write(
             MutagenWriter writer,
             ILocationGetter item,
@@ -1736,7 +6916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1792,6 +6972,262 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILocationInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.ACPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorCellPersistentReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                }
+                case RecordTypeInts.LCPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationCellPersistentReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                }
+                case RecordTypeInts.RCPR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ReferenceCellPersistentReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<IPlacedSimple>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                }
+                case RecordTypeInts.ACUN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorCellUniques = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                }
+                case RecordTypeInts.LCUN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationCellUniques = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                }
+                case RecordTypeInts.RCUN:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ReferenceCellUnique = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Npc>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                }
+                case RecordTypeInts.ACSR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorCellStaticReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationCellStaticReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationCellStaticReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                }
+                case RecordTypeInts.LCSR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationCellStaticReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationCellStaticReference.TryCreateFromBinary)
+                        .ToExtendedList<LocationCellStaticReference>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                }
+                case RecordTypeInts.RCSR:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ReferenceCellStaticReferences = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<IPlacedSimple>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                }
+                case RecordTypeInts.ACEC:
+                {
+                    item.ActorCellEncounterCell.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.ACEC,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: LocationCoordinate.TryCreateFromBinary));
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                }
+                case RecordTypeInts.LCEC:
+                {
+                    item.LocationCellEncounterCell.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.LCEC,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: LocationCoordinate.TryCreateFromBinary));
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                }
+                case RecordTypeInts.RCEC:
+                {
+                    item.ReferenceCellEncounterCell.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.RCEC,
+                            skipHeader: true,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: LocationCoordinate.TryCreateFromBinary));
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                }
+                case RecordTypeInts.ACID:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorCellMarkerReference = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<IPlaced>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                }
+                case RecordTypeInts.LCID:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationCellMarkerReference = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<IPlaced>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                }
+                case RecordTypeInts.ACEP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ActorCellEnablePoint = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationCellEnablePoint.TryCreateFromBinary)
+                        .ToExtendedList<LocationCellEnablePoint>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                }
+                case RecordTypeInts.LCEP:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.LocationCellEnablePoint = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: LocationCellEnablePoint.TryCreateFromBinary)
+                        .ToExtendedList<LocationCellEnablePoint>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    item.Keywords = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Keyword>>.Instance.Parse(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<Keyword>>();
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ParentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.UnreportedCrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WorldLocationMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.WorldLocationRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.HorseMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Color = frame.ReadColor(ColorBinaryType.Alpha);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1827,6 +7263,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILocationGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => LocationXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1853,6 +7295,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
+        public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }
+        public IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; private set; }
+        public IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; private set; }
+        public IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; private set; }
+        public IReadOnlyList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; private set; }
+        public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
+        public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
+        public IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
+        public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
+        public IReadOnlyList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
+        public IReadOnlyList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
+        public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }
+        public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
+        #region ParentLocation
+        private int? _ParentLocationLocation;
+        public bool ParentLocation_IsSet => _ParentLocationLocation.HasValue;
+        public IFormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        #endregion
+        #region Music
+        private int? _MusicLocation;
+        public bool Music_IsSet => _MusicLocation.HasValue;
+        public IFormLinkNullable<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        #endregion
+        #region UnreportedCrimeFaction
+        private int? _UnreportedCrimeFactionLocation;
+        public bool UnreportedCrimeFaction_IsSet => _UnreportedCrimeFactionLocation.HasValue;
+        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        #endregion
+        #region WorldLocationMarkerRef
+        private int? _WorldLocationMarkerRefLocation;
+        public bool WorldLocationMarkerRef_IsSet => _WorldLocationMarkerRefLocation.HasValue;
+        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
+        #endregion
+        #region WorldLocationRadius
+        private int? _WorldLocationRadiusLocation;
+        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region HorseMarkerRef
+        private int? _HorseMarkerRefLocation;
+        public bool HorseMarkerRef_IsSet => _HorseMarkerRefLocation.HasValue;
+        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        #endregion
+        #region Color
+        private int? _ColorLocation;
+        public Color? Color => _ColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default(Color?);
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1905,6 +7401,265 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.ACPR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ActorCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                }
+                case RecordTypeInts.LCPR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                }
+                case RecordTypeInts.RCPR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ReferenceCellPersistentReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                }
+                case RecordTypeInts.ACUN:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ActorCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                }
+                case RecordTypeInts.LCUN:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                }
+                case RecordTypeInts.RCUN:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ReferenceCellUnique = BinaryOverlayList<IFormLink<INpcGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                }
+                case RecordTypeInts.ACSR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ActorCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 16,
+                        getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                }
+                case RecordTypeInts.LCSR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 16,
+                        getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                }
+                case RecordTypeInts.RCSR:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ReferenceCellStaticReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                }
+                case RecordTypeInts.ACEC:
+                {
+                    this.ActorCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: RecordTypes.ACEC,
+                        factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
+                        skipHeader: true);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                }
+                case RecordTypeInts.LCEC:
+                {
+                    this.LocationCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: RecordTypes.LCEC,
+                        factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
+                        skipHeader: true);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                }
+                case RecordTypeInts.RCEC:
+                {
+                    this.ReferenceCellEncounterCell = this.ParseRepeatedTypelessSubrecord<LocationCoordinateBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: RecordTypes.RCEC,
+                        factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
+                        skipHeader: true);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                }
+                case RecordTypeInts.ACID:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ActorCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                }
+                case RecordTypeInts.LCID:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                }
+                case RecordTypeInts.ACEP:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.ActorCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                }
+                case RecordTypeInts.LCEP:
+                {
+                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subLen = subMeta.ContentLength;
+                    this.LocationCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 12,
+                        getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                }
+                case RecordTypeInts.KWDA:
+                case RecordTypeInts.KSIZ:
+                {
+                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.KSIZ,
+                        subrecordType: RecordTypes.KWDA,
+                        getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                }
+                case RecordTypeInts.PNAM:
+                {
+                    _ParentLocationLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                }
+                case RecordTypeInts.NAM1:
+                {
+                    _MusicLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _UnreportedCrimeFactionLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _WorldLocationMarkerRefLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _WorldLocationRadiusLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                }
+                case RecordTypeInts.NAM0:
+                {
+                    _HorseMarkerRefLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                }
+                case RecordTypeInts.CNAM:
+                {
+                    _ColorLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

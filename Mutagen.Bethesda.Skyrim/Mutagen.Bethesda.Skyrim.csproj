@@ -56,6 +56,7 @@
     <Compile Include="Interfaces\IHarvestTarget.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
     <Compile Include="Interfaces\IIdleRelation.cs" />
+    <Compile Include="Interfaces\IComplexLocation.cs" />
     <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IKeywordLinkedReference.cs" />
     <Compile Include="Interfaces\ILinkedReference.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IObjectId.cs" />
     <Compile Include="Interfaces\IOwner.cs" />
+    <Compile Include="Interfaces\IPlacedSimple.cs" />
     <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="Interfaces\IPlacedThing.cs" />
     <Compile Include="Interfaces\IPlacedTrapTarget.cs" />
@@ -664,6 +666,9 @@
     <Compile Include="Records\Major Records\EffectShader_LoquiGenerated.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\EncounterZone.cs">
+      <DependentUpon>EncounterZone.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\EncounterZone_LoquiGenerated.cs">
       <DependentUpon>EncounterZone.xml</DependentUpon>
     </Compile>
@@ -951,6 +956,9 @@
     </Compile>
     <Compile Include="Records\Major Records\LoadScreen_LoquiGenerated.cs">
       <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Location.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LocationAliasReference_LoquiGenerated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
@@ -1882,6 +1890,21 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTarget_LoquiGenerated.cs">
       <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationReference_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellUnique_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellStaticReference_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCoordinate_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocationCellEnablePoint_LoquiGenerated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

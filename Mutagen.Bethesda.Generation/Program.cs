@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "blic bool Equals(Mask<TItem> rhs)";
+            string testString = "return Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Pa";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

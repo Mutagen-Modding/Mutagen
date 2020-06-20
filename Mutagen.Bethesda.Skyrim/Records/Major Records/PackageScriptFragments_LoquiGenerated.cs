@@ -2237,6 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             int offset = stream.Position;
             ret.FileNameEndingPos = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x2)) + 2;
+            ret.FragmentsEndingPos = ret._data.Length;
             stream.Position += ret.FragmentsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

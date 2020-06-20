@@ -124,6 +124,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Impacts_Object = new Group<Impact>(this);
             _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
             _ArmorAddons_Object = new Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Group<EncounterZone>(this);
+            _Locations_Object = new Group<Location>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -703,6 +705,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IArmorAddonGetter> ISkyrimModGetter.ArmorAddons => _ArmorAddons_Object;
         #endregion
+        #region EncounterZones
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<EncounterZone> _EncounterZones_Object;
+        public Group<EncounterZone> EncounterZones => _EncounterZones_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IEncounterZoneGetter> ISkyrimModGetter.EncounterZones => _EncounterZones_Object;
+        #endregion
+        #region Locations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Location> _Locations_Object;
+        public Group<Location> Locations => _Locations_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILocationGetter> ISkyrimModGetter.Locations => _Locations_Object;
+        #endregion
 
         #region To String
 
@@ -954,6 +970,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1038,7 +1056,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MaterialTypes,
                 TItem Impacts,
                 TItem ImpactDataSets,
-                TItem ArmorAddons)
+                TItem ArmorAddons,
+                TItem EncounterZones,
+                TItem Locations)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1122,6 +1142,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Impacts = new MaskItem<TItem, Group.Mask<TItem>?>(Impacts, new Group.Mask<TItem>(Impacts));
                 this.ImpactDataSets = new MaskItem<TItem, Group.Mask<TItem>?>(ImpactDataSets, new Group.Mask<TItem>(ImpactDataSets));
                 this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(ArmorAddons, new Group.Mask<TItem>(ArmorAddons));
+                this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(EncounterZones, new Group.Mask<TItem>(EncounterZones));
+                this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(Locations, new Group.Mask<TItem>(Locations));
             }
 
             #pragma warning disable CS8618
@@ -1215,6 +1237,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Impacts { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ImpactDataSets { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ArmorAddons { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? EncounterZones { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Locations { get; set; }
             #endregion
 
             #region Equals
@@ -1309,6 +1333,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Impacts, rhs.Impacts)) return false;
                 if (!object.Equals(this.ImpactDataSets, rhs.ImpactDataSets)) return false;
                 if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
+                if (!object.Equals(this.EncounterZones, rhs.EncounterZones)) return false;
+                if (!object.Equals(this.Locations, rhs.Locations)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1396,6 +1422,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Impacts);
                 hash.Add(this.ImpactDataSets);
                 hash.Add(this.ArmorAddons);
+                hash.Add(this.EncounterZones);
+                hash.Add(this.Locations);
                 return hash.ToHashCode();
             }
 
@@ -1814,6 +1842,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.ArmorAddons.Overall)) return false;
                     if (this.ArmorAddons.Specific != null && !this.ArmorAddons.Specific.All(eval)) return false;
                 }
+                if (EncounterZones != null)
+                {
+                    if (!eval(this.EncounterZones.Overall)) return false;
+                    if (this.EncounterZones.Specific != null && !this.EncounterZones.Specific.All(eval)) return false;
+                }
+                if (Locations != null)
+                {
+                    if (!eval(this.Locations.Overall)) return false;
+                    if (this.Locations.Specific != null && !this.Locations.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2231,6 +2269,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.ArmorAddons.Overall)) return true;
                     if (this.ArmorAddons.Specific != null && this.ArmorAddons.Specific.Any(eval)) return true;
                 }
+                if (EncounterZones != null)
+                {
+                    if (eval(this.EncounterZones.Overall)) return true;
+                    if (this.EncounterZones.Specific != null && this.EncounterZones.Specific.Any(eval)) return true;
+                }
+                if (Locations != null)
+                {
+                    if (eval(this.Locations.Overall)) return true;
+                    if (this.Locations.Specific != null && this.Locations.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2327,6 +2375,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Impacts = this.Impacts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Impacts.Overall), this.Impacts.Specific?.Translate(eval));
                 obj.ImpactDataSets = this.ImpactDataSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ImpactDataSets.Overall), this.ImpactDataSets.Specific?.Translate(eval));
                 obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
+                obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
+                obj.Locations = this.Locations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2677,6 +2727,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ArmorAddons?.ToString(fg);
                     }
+                    if (printMask?.EncounterZones?.Overall ?? true)
+                    {
+                        EncounterZones?.ToString(fg);
+                    }
+                    if (printMask?.Locations?.Overall ?? true)
+                    {
+                        Locations?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2784,6 +2842,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Impact.ErrorMask>?>? Impacts;
             public MaskItem<Exception?, Group.ErrorMask<ImpactDataSet.ErrorMask>?>? ImpactDataSets;
             public MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
+            public MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
+            public MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>? Locations;
             #endregion
 
             #region IErrorMask
@@ -2956,6 +3016,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return ImpactDataSets;
                     case SkyrimMod_FieldIndex.ArmorAddons:
                         return ArmorAddons;
+                    case SkyrimMod_FieldIndex.EncounterZones:
+                        return EncounterZones;
+                    case SkyrimMod_FieldIndex.Locations:
+                        return Locations;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3211,6 +3275,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = new MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.EncounterZones:
+                        this.EncounterZones = new MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Locations:
+                        this.Locations = new MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3468,6 +3538,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.ArmorAddons:
                         this.ArmorAddons = (MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.EncounterZones:
+                        this.EncounterZones = (MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Locations:
+                        this.Locations = (MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3558,6 +3634,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Impacts != null) return true;
                 if (ImpactDataSets != null) return true;
                 if (ArmorAddons != null) return true;
+                if (EncounterZones != null) return true;
+                if (Locations != null) return true;
                 return false;
             }
             #endregion
@@ -3674,6 +3752,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Impacts?.ToString(fg);
                 ImpactDataSets?.ToString(fg);
                 ArmorAddons?.ToString(fg);
+                EncounterZones?.ToString(fg);
+                Locations?.ToString(fg);
             }
             #endregion
 
@@ -3764,6 +3844,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Impacts = this.Impacts.Combine(rhs.Impacts, (l, r) => l.Combine(r));
                 ret.ImpactDataSets = this.ImpactDataSets.Combine(rhs.ImpactDataSets, (l, r) => l.Combine(r));
                 ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
+                ret.EncounterZones = this.EncounterZones.Combine(rhs.EncounterZones, (l, r) => l.Combine(r));
+                ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3867,6 +3949,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?> Impacts;
             public MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?> ImpactDataSets;
             public MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?> ArmorAddons;
+            public MaskItem<bool, Group.TranslationMask<EncounterZone.TranslationMask>?> EncounterZones;
+            public MaskItem<bool, Group.TranslationMask<Location.TranslationMask>?> Locations;
             #endregion
 
             #region Ctors
@@ -3954,6 +4038,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Impacts = new MaskItem<bool, Group.TranslationMask<Impact.TranslationMask>?>(defaultOn, null);
                 this.ImpactDataSets = new MaskItem<bool, Group.TranslationMask<ImpactDataSet.TranslationMask>?>(defaultOn, null);
                 this.ArmorAddons = new MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?>(defaultOn, null);
+                this.EncounterZones = new MaskItem<bool, Group.TranslationMask<EncounterZone.TranslationMask>?>(defaultOn, null);
+                this.Locations = new MaskItem<bool, Group.TranslationMask<Location.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4051,6 +4137,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Impacts?.Overall ?? true, Impacts?.Specific?.GetCrystal()));
                 ret.Add((ImpactDataSets?.Overall ?? true, ImpactDataSets?.Specific?.GetCrystal()));
                 ret.Add((ArmorAddons?.Overall ?? true, ArmorAddons?.Specific?.GetCrystal()));
+                ret.Add((EncounterZones?.Overall ?? true, EncounterZones?.Specific?.GetCrystal()));
+                ret.Add((Locations?.Overall ?? true, Locations?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4146,6 +4234,8 @@ namespace Mutagen.Bethesda.Skyrim
             _Impacts_Object = new Group<Impact>(this);
             _ImpactDataSets_Object = new Group<ImpactDataSet>(this);
             _ArmorAddons_Object = new Group<ArmorAddon>(this);
+            _EncounterZones_Object = new Group<EncounterZone>(this);
+            _Locations_Object = new Group<Location>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -4477,6 +4567,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.ArmorAddons ?? true)
             {
                 this.ArmorAddons.RecordCache.Set(rhsMod.ArmorAddons.RecordCache.Items);
+            }
+            if (mask?.EncounterZones ?? true)
+            {
+                this.EncounterZones.RecordCache.Set(rhsMod.EncounterZones.RecordCache.Items);
+            }
+            if (mask?.Locations ?? true)
+            {
+                this.Locations.RecordCache.Set(rhsMod.Locations.RecordCache.Items);
             }
         }
 
@@ -5052,6 +5150,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<ArmorAddon>());
             }
+            if (mask?.EncounterZones ?? true)
+            {
+                this.EncounterZones.RecordCache.Set(
+                    rhs.EncounterZones.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<EncounterZone>());
+            }
+            if (mask?.Locations ?? true)
+            {
+                this.Locations.RecordCache.Set(
+                    rhs.Locations.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Location>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5152,6 +5264,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += Impacts.RecordCache.Count > 0 ? 1 : 0;
             count += ImpactDataSets.RecordCache.Count > 0 ? 1 : 0;
             count += ArmorAddons.RecordCache.Count > 0 ? 1 : 0;
+            count += EncounterZones.RecordCache.Count > 0 ? 1 : 0;
+            count += Locations.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5452,6 +5566,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Impact> Impacts { get; }
         new Group<ImpactDataSet> ImpactDataSets { get; }
         new Group<ArmorAddon> ArmorAddons { get; }
+        new Group<EncounterZone> EncounterZones { get; }
+        new Group<Location> Locations { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -5551,6 +5667,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IImpactGetter> Impacts { get; }
         IGroupGetter<IImpactDataSetGetter> ImpactDataSets { get; }
         IGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
+        IGroupGetter<IEncounterZoneGetter> EncounterZones { get; }
+        IGroupGetter<ILocationGetter> Locations { get; }
 
     }
 
@@ -6088,6 +6206,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Impacts = 79,
         ImpactDataSets = 80,
         ArmorAddons = 81,
+        EncounterZones = 82,
+        Locations = 83,
     }
     #endregion
 
@@ -6105,9 +6225,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 82;
+        public const ushort AdditionalFieldCount = 84;
 
-        public const ushort FieldCount = 82;
+        public const ushort FieldCount = 84;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -6301,6 +6421,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.ImpactDataSets;
                 case "ARMORADDONS":
                     return (ushort)SkyrimMod_FieldIndex.ArmorAddons;
+                case "ENCOUNTERZONES":
+                    return (ushort)SkyrimMod_FieldIndex.EncounterZones;
+                case "LOCATIONS":
+                    return (ushort)SkyrimMod_FieldIndex.Locations;
                 default:
                     return null;
             }
@@ -6393,6 +6517,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                 case SkyrimMod_FieldIndex.ArmorAddons:
+                case SkyrimMod_FieldIndex.EncounterZones:
+                case SkyrimMod_FieldIndex.Locations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6486,6 +6612,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                 case SkyrimMod_FieldIndex.ArmorAddons:
+                case SkyrimMod_FieldIndex.EncounterZones:
+                case SkyrimMod_FieldIndex.Locations:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6579,6 +6707,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                 case SkyrimMod_FieldIndex.ArmorAddons:
+                case SkyrimMod_FieldIndex.EncounterZones:
+                case SkyrimMod_FieldIndex.Locations:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6754,6 +6884,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "ImpactDataSets";
                 case SkyrimMod_FieldIndex.ArmorAddons:
                     return "ArmorAddons";
+                case SkyrimMod_FieldIndex.EncounterZones:
+                    return "EncounterZones";
+                case SkyrimMod_FieldIndex.Locations:
+                    return "Locations";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6846,6 +6980,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                 case SkyrimMod_FieldIndex.ArmorAddons:
+                case SkyrimMod_FieldIndex.EncounterZones:
+                case SkyrimMod_FieldIndex.Locations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6940,6 +7076,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Impacts:
                 case SkyrimMod_FieldIndex.ImpactDataSets:
                 case SkyrimMod_FieldIndex.ArmorAddons:
+                case SkyrimMod_FieldIndex.EncounterZones:
+                case SkyrimMod_FieldIndex.Locations:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7115,6 +7253,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<ImpactDataSet>);
                 case SkyrimMod_FieldIndex.ArmorAddons:
                     return typeof(Group<ArmorAddon>);
+                case SkyrimMod_FieldIndex.EncounterZones:
+                    return typeof(Group<EncounterZone>);
+                case SkyrimMod_FieldIndex.Locations:
+                    return typeof(Group<Location>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7244,6 +7386,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Impacts.Clear();
             item.ImpactDataSets.Clear();
             item.ArmorAddons.Clear();
+            item.EncounterZones.Clear();
+            item.Locations.Clear();
         }
         
         #region Xml Translation
@@ -7480,6 +7624,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Impacts = MaskItemExt.Factory(item.Impacts.GetEqualsMask(rhs.Impacts, include), include);
             ret.ImpactDataSets = MaskItemExt.Factory(item.ImpactDataSets.GetEqualsMask(rhs.ImpactDataSets, include), include);
             ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
+            ret.EncounterZones = MaskItemExt.Factory(item.EncounterZones.GetEqualsMask(rhs.EncounterZones, include), include);
+            ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
         }
         
         public string ToString(
@@ -7854,6 +8000,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ArmorAddons?.ToString(fg, "ArmorAddons");
             }
+            if (printMask?.EncounterZones?.Overall ?? true)
+            {
+                item.EncounterZones?.ToString(fg, "EncounterZones");
+            }
+            if (printMask?.Locations?.Overall ?? true)
+            {
+                item.Locations?.ToString(fg, "Locations");
+            }
         }
         
         public bool HasBeenSet(
@@ -7949,6 +8103,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Impacts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Impacts?.GetHasBeenSetMask());
             mask.ImpactDataSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.ImpactDataSets?.GetHasBeenSetMask());
             mask.ArmorAddons = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArmorAddons?.GetHasBeenSetMask());
+            mask.EncounterZones = new MaskItem<bool, Group.Mask<bool>?>(true, item.EncounterZones?.GetHasBeenSetMask());
+            mask.Locations = new MaskItem<bool, Group.Mask<bool>?>(true, item.Locations?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8040,6 +8196,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Impacts, rhs.Impacts)) return false;
             if (!object.Equals(lhs.ImpactDataSets, rhs.ImpactDataSets)) return false;
             if (!object.Equals(lhs.ArmorAddons, rhs.ArmorAddons)) return false;
+            if (!object.Equals(lhs.EncounterZones, rhs.EncounterZones)) return false;
+            if (!object.Equals(lhs.Locations, rhs.Locations)) return false;
             return true;
         }
         
@@ -8128,6 +8286,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Impacts);
             hash.Add(item.ImpactDataSets);
             hash.Add(item.ArmorAddons);
+            hash.Add(item.EncounterZones);
+            hash.Add(item.Locations);
             return hash.ToHashCode();
         }
         
@@ -8549,6 +8709,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
                     return obj.ArmorAddons.RecordCache;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    return obj.EncounterZones.RecordCache;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    return obj.Locations.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -8568,7 +8738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[81];
+            Stream[] outputStreams = new Stream[83];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -8651,6 +8821,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9268,6 +9440,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.EncounterZones is ILinkedFormKeyContainer EncounterZoneslinkCont)
+            {
+                foreach (var item in EncounterZoneslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Locations is ILinkedFormKeyContainer LocationslinkCont)
+            {
+                foreach (var item in LocationslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -9595,6 +9781,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.ArmorAddons.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EncounterZones.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Locations.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10340,6 +10534,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
                     foreach (var item in obj.ArmorAddons.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EncounterZone":
+                case "IEncounterZoneGetter":
+                case "IEncounterZone":
+                case "IEncounterZoneInternal":
+                    foreach (var item in obj.EncounterZones.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Location":
+                case "ILocationGetter":
+                case "ILocation":
+                case "ILocationInternal":
+                    foreach (var item in obj.Locations.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -12003,6 +12215,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EncounterZones) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EncounterZones);
+                try
+                {
+                    item.EncounterZones.DeepCopyIn(
+                        rhs: rhs.EncounterZones,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EncounterZones));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Locations) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Locations);
+                try
+                {
+                    item.Locations.DeepCopyIn(
+                        rhs: rhs.Locations,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Locations));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -12993,6 +13245,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.ArmorAddons,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ArmorAddons));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EncounterZones) ?? true))
+            {
+                var EncounterZonesItem = item.EncounterZones;
+                ((GroupXmlWriteTranslation)((IXmlItem)EncounterZonesItem).XmlWriteTranslator).Write<IEncounterZoneGetter>(
+                    item: EncounterZonesItem,
+                    node: node,
+                    name: nameof(item.EncounterZones),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.EncounterZones,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EncounterZones));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Locations) ?? true))
+            {
+                var LocationsItem = item.Locations;
+                ((GroupXmlWriteTranslation)((IXmlItem)LocationsItem).XmlWriteTranslator).Write<ILocationGetter>(
+                    item: LocationsItem,
+                    node: node,
+                    name: nameof(item.Locations),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Locations,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Locations));
             }
         }
 
@@ -14620,6 +14894,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "EncounterZones":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EncounterZones);
+                    try
+                    {
+                        item.EncounterZones.CopyInFromXml<EncounterZone>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Locations":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Locations);
+                    try
+                    {
+                        item.Locations.CopyInFromXml<Location>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -14870,6 +15182,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Impacts;
         public bool ImpactDataSets;
         public bool ArmorAddons;
+        public bool EncounterZones;
+        public bool Locations;
         public GroupMask()
         {
         }
@@ -14956,6 +15270,8 @@ namespace Mutagen.Bethesda.Skyrim
             Impacts = defaultValue;
             ImpactDataSets = defaultValue;
             ArmorAddons = defaultValue;
+            EncounterZones = defaultValue;
+            Locations = defaultValue;
         }
     }
 
@@ -15871,6 +16187,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ArmorAddonsItem).BinaryWriteTranslator).Write<IArmorAddonGetter>(
                         item: ArmorAddonsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.EncounterZones ?? true)
+            {
+                var EncounterZonesItem = item.EncounterZones;
+                if (EncounterZonesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EncounterZonesItem).BinaryWriteTranslator).Write<IEncounterZoneGetter>(
+                        item: EncounterZonesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Locations ?? true)
+            {
+                var LocationsItem = item.Locations;
+                if (LocationsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
+                        item: LocationsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -17078,6 +17416,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
                 }
+                case RecordTypeInts.ECZN:
+                {
+                    if (importMask?.EncounterZones ?? true)
+                    {
+                        item.EncounterZones.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                }
+                case RecordTypeInts.LCTN:
+                {
+                    if (importMask?.Locations ?? true)
+                    {
+                        item.Locations.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -17654,6 +18020,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IArmorAddonGetter>? _ArmorAddons => _ArmorAddonsLocation.HasValue ? GroupBinaryOverlay<IArmorAddonGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _ArmorAddonsLocation!.Value.Min, _ArmorAddonsLocation!.Value.Max)), _package) : default;
         public IGroupGetter<IArmorAddonGetter> ArmorAddons => _ArmorAddons ?? new Group<ArmorAddon>(this);
         #endregion
+        #region EncounterZones
+        private RangeInt64? _EncounterZonesLocation;
+        private IGroupGetter<IEncounterZoneGetter>? _EncounterZones => _EncounterZonesLocation.HasValue ? GroupBinaryOverlay<IEncounterZoneGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _EncounterZonesLocation!.Value.Min, _EncounterZonesLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<IEncounterZoneGetter> EncounterZones => _EncounterZones ?? new Group<EncounterZone>(this);
+        #endregion
+        #region Locations
+        private RangeInt64? _LocationsLocation;
+        private IGroupGetter<ILocationGetter>? _Locations => _LocationsLocation.HasValue ? GroupBinaryOverlay<ILocationGetter>.GroupFactory(new BinaryMemoryReadStream(BinaryOverlay.LockExtractMemory(_data, _LocationsLocation!.Value.Min, _LocationsLocation!.Value.Max)), _package) : default;
+        public IGroupGetter<ILocationGetter> Locations => _Locations ?? new Group<Location>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -18153,6 +18529,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                }
+                case RecordTypeInts.ECZN:
+                {
+                    _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                }
+                case RecordTypeInts.LCTN:
+                {
+                    _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

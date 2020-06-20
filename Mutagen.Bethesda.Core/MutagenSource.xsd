@@ -281,6 +281,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="P2">
+      <xs:complexContent>
+        <xs:extension base="P2">
+          <xs:attribute name="swapCoords" type="xs:boolean" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="RangedFloat">
       <xs:complexContent>
         <xs:extension base="RangedFloat">

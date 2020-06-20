@@ -593,6 +593,33 @@ namespace Mutagen.Bethesda.Binary
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
             BinaryMemoryReadStream stream,
             RecordType trigger,
+            SpanRecordFactory<T> factory,
+            RecordTypeConverter? recordTypeConverter,
+            bool skipHeader)
+        {
+            var ret = new List<T>();
+            while (!stream.Complete)
+            {
+                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+                var recType = subMeta.RecordType;
+                if (trigger != recType) break;
+                var minimumFinalPos = stream.Position + subMeta.TotalLength;
+                if (skipHeader)
+                {
+                    stream.Position += subMeta.HeaderLength;
+                }
+                ret.Add(factory(stream.ReadMemory(skipHeader ? subMeta.ContentLength : subMeta.TotalLength), _package, recordTypeConverter));
+                if (stream.Position < minimumFinalPos)
+                {
+                    stream.Position = minimumFinalPos;
+                }
+            }
+            return ret;
+        }
+
+        public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
+            BinaryMemoryReadStream stream,
+            RecordType trigger,
             ConverterFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
         {

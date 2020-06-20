@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// An interface for something that can be placed in a Cell/Worldspace
     /// Implemented by: [PlacedObject, PlacedNpc, APlacedTrap]
     /// </summary>
-    public interface IPlaced : IPlacedGetter, IMajorRecordInternal, IPlacedThing
+    public interface IPlaced : IPlacedGetter, IMajorRecordInternal, IPlacedThing, IPlacedSimple
     {
     }
 
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// An interface for something that can be placed in a Cell/Worldspace
     /// Implemented by: [PlacedObject, PlacedNpc, APlacedTrap]
     /// </summary>
-    public interface IPlacedGetter : IMajorRecordGetter, IPlacedThingGetter
+    public interface IPlacedGetter : IMajorRecordGetter, IPlacedThingGetter, IPlacedSimpleGetter
     {
     }
 }

@@ -113,6 +113,16 @@
             Implemented by: [IdleAnimation, ActionRecord]
             </summary>
         </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IComplexLocation">
+            <summary>
+            Implemented by: [Cell, Worldspace]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IComplexLocationGetter">
+            <summary>
+            Implemented by: [Cell, Worldspace]
+            </summary>
+        </member>
         <member name="T:Mutagen.Bethesda.Skyrim.IItem">
             <summary>
             Used for specifying which records are allowed in a container
@@ -255,6 +265,16 @@
             <summary>
             Used for specifying which records are allowed as an owner
             Implemented by: [Faction, PlacedNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlacedSimple">
+            <summary>
+            Implemented by: [PlacedObject, PlacedNpc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Skyrim.IPlacedSimpleGetter">
+            <summary>
+            Implemented by: [PlacedObject, PlacedNpc]
             </summary>
         </member>
         <member name="T:Mutagen.Bethesda.Skyrim.IPlaced">

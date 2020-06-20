@@ -88,6 +88,8 @@
       <Group name="Impacts" refName="Impact" />
       <Group name="ImpactDataSets" refName="ImpactDataSet" />
       <Group name="ArmorAddons" refName="ArmorAddon" />
+      <Group name="EncounterZones" refName="EncounterZone" />
+      <Group name="Locations" refName="Location" />
     </Fields>
   </Object>
 </Loqui>

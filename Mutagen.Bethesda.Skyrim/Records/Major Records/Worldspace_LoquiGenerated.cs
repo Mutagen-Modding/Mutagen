@@ -1858,6 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceGetter,
         ISkyrimMajorRecord,
         ITranslatedNamed,
+        IComplexLocation,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>
     {
@@ -1908,6 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWorldspaceGetter :
         ISkyrimMajorRecordGetter,
         ITranslatedNamedGetter,
+        IComplexLocationGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IWorldspaceGetter>,
         IXmlItem,

@@ -49,6 +49,71 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Owner
+        public FormLink<IOwner> Owner { get; set; } = new FormLink<IOwner>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IOwnerGetter> IEncounterZoneGetter.Owner => this.Owner;
+        #endregion
+        #region Location
+        public FormLink<Location> Location { get; set; } = new FormLink<Location>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<ILocationGetter> IEncounterZoneGetter.Location => this.Location;
+        #endregion
+        #region Rank
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SByte _Rank;
+        public SByte Rank
+        {
+            get => this._Rank;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._Rank = value;
+            }
+        }
+        #endregion
+        #region MinLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SByte _MinLevel;
+        public SByte MinLevel
+        {
+            get => this._MinLevel;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._MinLevel = value;
+            }
+        }
+        #endregion
+        #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private EncounterZone.Flag _Flags;
+        public EncounterZone.Flag Flags
+        {
+            get => this._Flags;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._Flags = value;
+            }
+        }
+        #endregion
+        #region MaxLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private SByte _MaxLevel;
+        public SByte MaxLevel
+        {
+            get => this._MaxLevel;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._MaxLevel = value;
+            }
+        }
+        #endregion
+        #region DATADataTypeState
+        public EncounterZone.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +283,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Owner = initialValue;
+                this.Location = initialValue;
+                this.Rank = initialValue;
+                this.MinLevel = initialValue;
+                this.Flags = initialValue;
+                this.MaxLevel = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +298,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Owner,
+                TItem Location,
+                TItem Rank,
+                TItem MinLevel,
+                TItem Flags,
+                TItem MaxLevel,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +314,13 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Owner = Owner;
+                this.Location = Location;
+                this.Rank = Rank;
+                this.MinLevel = MinLevel;
+                this.Flags = Flags;
+                this.MaxLevel = MaxLevel;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +329,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Owner;
+            public TItem Location;
+            public TItem Rank;
+            public TItem MinLevel;
+            public TItem Flags;
+            public TItem MaxLevel;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +352,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Owner, rhs.Owner)) return false;
+                if (!object.Equals(this.Location, rhs.Location)) return false;
+                if (!object.Equals(this.Rank, rhs.Rank)) return false;
+                if (!object.Equals(this.MinLevel, rhs.MinLevel)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.MaxLevel, rhs.MaxLevel)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Owner);
+                hash.Add(this.Location);
+                hash.Add(this.Rank);
+                hash.Add(this.MinLevel);
+                hash.Add(this.Flags);
+                hash.Add(this.MaxLevel);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +381,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Owner)) return false;
+                if (!eval(this.Location)) return false;
+                if (!eval(this.Rank)) return false;
+                if (!eval(this.MinLevel)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.MaxLevel)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +396,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Owner)) return true;
+                if (eval(this.Location)) return true;
+                if (eval(this.Rank)) return true;
+                if (eval(this.MinLevel)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.MaxLevel)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Owner = eval(this.Owner);
+                obj.Location = eval(this.Location);
+                obj.Rank = eval(this.Rank);
+                obj.MinLevel = eval(this.MinLevel);
+                obj.Flags = eval(this.Flags);
+                obj.MaxLevel = eval(this.MaxLevel);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +447,34 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Owner ?? true)
+                    {
+                        fg.AppendItem(Owner, "Owner");
+                    }
+                    if (printMask?.Location ?? true)
+                    {
+                        fg.AppendItem(Location, "Location");
+                    }
+                    if (printMask?.Rank ?? true)
+                    {
+                        fg.AppendItem(Rank, "Rank");
+                    }
+                    if (printMask?.MinLevel ?? true)
+                    {
+                        fg.AppendItem(MinLevel, "MinLevel");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.MaxLevel ?? true)
+                    {
+                        fg.AppendItem(MaxLevel, "MaxLevel");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +486,36 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Owner;
+            public Exception? Location;
+            public Exception? Rank;
+            public Exception? MinLevel;
+            public Exception? Flags;
+            public Exception? MaxLevel;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        return Owner;
+                    case EncounterZone_FieldIndex.Location:
+                        return Location;
+                    case EncounterZone_FieldIndex.Rank:
+                        return Rank;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        return MinLevel;
+                    case EncounterZone_FieldIndex.Flags:
+                        return Flags;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        return MaxLevel;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +526,27 @@ namespace Mutagen.Bethesda.Skyrim
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        this.Owner = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Location:
+                        this.Location = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Rank:
+                        this.Rank = ex;
+                        break;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        this.MinLevel = ex;
+                        break;
+                    case EncounterZone_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        this.MaxLevel = ex;
+                        break;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +558,27 @@ namespace Mutagen.Bethesda.Skyrim
                 EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
                 switch (enu)
                 {
+                    case EncounterZone_FieldIndex.Owner:
+                        this.Owner = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Location:
+                        this.Location = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Rank:
+                        this.Rank = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.MinLevel:
+                        this.MinLevel = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.MaxLevel:
+                        this.MaxLevel = (Exception?)obj;
+                        break;
+                    case EncounterZone_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +588,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Owner != null) return true;
+                if (Location != null) return true;
+                if (Rank != null) return true;
+                if (MinLevel != null) return true;
+                if (Flags != null) return true;
+                if (MaxLevel != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +630,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Owner, "Owner");
+                fg.AppendItem(Location, "Location");
+                fg.AppendItem(Rank, "Rank");
+                fg.AppendItem(MinLevel, "MinLevel");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(MaxLevel, "MaxLevel");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +645,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Owner = this.Owner.Combine(rhs.Owner);
+                ret.Location = this.Location.Combine(rhs.Location);
+                ret.Rank = this.Rank.Combine(rhs.Rank);
+                ret.MinLevel = this.MinLevel.Combine(rhs.MinLevel);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.MaxLevel = this.MaxLevel.Combine(rhs.MaxLevel);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +673,53 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Owner;
+            public bool Location;
+            public bool Rank;
+            public bool MinLevel;
+            public bool Flags;
+            public bool MaxLevel;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Owner = defaultOn;
+                this.Location = defaultOn;
+                this.Rank = defaultOn;
+                this.MinLevel = defaultOn;
+                this.Flags = defaultOn;
+                this.MaxLevel = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Owner, null));
+                ret.Add((Location, null));
+                ret.Add((Rank, null));
+                ret.Add((MinLevel, null));
+                ret.Add((Flags, null));
+                ret.Add((MaxLevel, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = EncounterZone_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
         public EncounterZone(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +737,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -528,6 +813,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEncounterZoneInternal>
     {
+        new FormLink<IOwner> Owner { get; set; }
+        new FormLink<Location> Location { get; set; }
+        new SByte Rank { get; set; }
+        new SByte MinLevel { get; set; }
+        new EncounterZone.Flag Flags { get; set; }
+        new SByte MaxLevel { get; set; }
+        new EncounterZone.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IEncounterZoneInternal :
@@ -541,9 +833,17 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IEncounterZoneGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => EncounterZone_Registration.Instance;
+        IFormLink<IOwnerGetter> Owner { get; }
+        IFormLink<ILocationGetter> Location { get; }
+        SByte Rank { get; }
+        SByte MinLevel { get; }
+        EncounterZone.Flag Flags { get; }
+        SByte MaxLevel { get; }
+        EncounterZone.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -844,6 +1144,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Owner = 6,
+        Location = 7,
+        Rank = 8,
+        MinLevel = 9,
+        Flags = 10,
+        MaxLevel = 11,
+        DATADataTypeState = 12,
     }
     #endregion
 
@@ -861,9 +1168,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "d3b68196-d8aa-4fe4-b9c0-10a7b96c98ea";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(EncounterZone.Mask<>);
 
@@ -893,6 +1200,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OWNER":
+                    return (ushort)EncounterZone_FieldIndex.Owner;
+                case "LOCATION":
+                    return (ushort)EncounterZone_FieldIndex.Location;
+                case "RANK":
+                    return (ushort)EncounterZone_FieldIndex.Rank;
+                case "MINLEVEL":
+                    return (ushort)EncounterZone_FieldIndex.MinLevel;
+                case "FLAGS":
+                    return (ushort)EncounterZone_FieldIndex.Flags;
+                case "MAXLEVEL":
+                    return (ushort)EncounterZone_FieldIndex.MaxLevel;
+                case "DATADATATYPESTATE":
+                    return (ushort)EncounterZone_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -903,6 +1224,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                case EncounterZone_FieldIndex.Location:
+                case EncounterZone_FieldIndex.Rank:
+                case EncounterZone_FieldIndex.MinLevel:
+                case EncounterZone_FieldIndex.Flags:
+                case EncounterZone_FieldIndex.MaxLevel:
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1242,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                case EncounterZone_FieldIndex.Location:
+                case EncounterZone_FieldIndex.Rank:
+                case EncounterZone_FieldIndex.MinLevel:
+                case EncounterZone_FieldIndex.Flags:
+                case EncounterZone_FieldIndex.MaxLevel:
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1260,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                case EncounterZone_FieldIndex.Location:
+                case EncounterZone_FieldIndex.Rank:
+                case EncounterZone_FieldIndex.MinLevel:
+                case EncounterZone_FieldIndex.Flags:
+                case EncounterZone_FieldIndex.MaxLevel:
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1278,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                    return "Owner";
+                case EncounterZone_FieldIndex.Location:
+                    return "Location";
+                case EncounterZone_FieldIndex.Rank:
+                    return "Rank";
+                case EncounterZone_FieldIndex.MinLevel:
+                    return "MinLevel";
+                case EncounterZone_FieldIndex.Flags:
+                    return "Flags";
+                case EncounterZone_FieldIndex.MaxLevel:
+                    return "MaxLevel";
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1302,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                case EncounterZone_FieldIndex.Location:
+                case EncounterZone_FieldIndex.Rank:
+                case EncounterZone_FieldIndex.MinLevel:
+                case EncounterZone_FieldIndex.Flags:
+                case EncounterZone_FieldIndex.MaxLevel:
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1320,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                case EncounterZone_FieldIndex.Location:
+                case EncounterZone_FieldIndex.Rank:
+                case EncounterZone_FieldIndex.MinLevel:
+                case EncounterZone_FieldIndex.Flags:
+                case EncounterZone_FieldIndex.MaxLevel:
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1338,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EncounterZone_FieldIndex enu = (EncounterZone_FieldIndex)index;
             switch (enu)
             {
+                case EncounterZone_FieldIndex.Owner:
+                    return typeof(FormLink<IOwner>);
+                case EncounterZone_FieldIndex.Location:
+                    return typeof(FormLink<Location>);
+                case EncounterZone_FieldIndex.Rank:
+                    return typeof(SByte);
+                case EncounterZone_FieldIndex.MinLevel:
+                    return typeof(SByte);
+                case EncounterZone_FieldIndex.Flags:
+                    return typeof(EncounterZone.Flag);
+                case EncounterZone_FieldIndex.MaxLevel:
+                    return typeof(SByte);
+                case EncounterZone_FieldIndex.DATADataTypeState:
+                    return typeof(EncounterZone.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1401,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEncounterZoneInternal item)
         {
             ClearPartial();
+            item.Owner = FormLink<IOwner>.Null;
+            item.Location = FormLink<Location>.Null;
+            item.Rank = default;
+            item.MinLevel = default;
+            item.Flags = default;
+            item.MaxLevel = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1054,6 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.DATADataTypeState |= EncounterZone.DATADataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -1169,6 +1566,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Owner = object.Equals(item.Owner, rhs.Owner);
+            ret.Location = object.Equals(item.Location, rhs.Location);
+            ret.Rank = item.Rank == rhs.Rank;
+            ret.MinLevel = item.MinLevel == rhs.MinLevel;
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.MaxLevel = item.MaxLevel == rhs.MaxLevel;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,6 +1624,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Owner ?? true)
+            {
+                fg.AppendItem(item.Owner, "Owner");
+            }
+            if (printMask?.Location ?? true)
+            {
+                fg.AppendItem(item.Location, "Location");
+            }
+            if (printMask?.Rank ?? true)
+            {
+                fg.AppendItem(item.Rank, "Rank");
+            }
+            if (printMask?.MinLevel ?? true)
+            {
+                fg.AppendItem(item.MinLevel, "MinLevel");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.MaxLevel ?? true)
+            {
+                fg.AppendItem(item.MaxLevel, "MaxLevel");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -1235,6 +1667,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEncounterZoneGetter item,
             EncounterZone.Mask<bool> mask)
         {
+            mask.Owner = true;
+            mask.Location = true;
+            mask.Rank = true;
+            mask.MinLevel = true;
+            mask.Flags = true;
+            mask.MaxLevel = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +1725,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            if (!lhs.Location.Equals(rhs.Location)) return false;
+            if (lhs.Rank != rhs.Rank) return false;
+            if (lhs.MinLevel != rhs.MinLevel) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.MaxLevel != rhs.MaxLevel) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1310,6 +1756,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IEncounterZoneGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Owner);
+            hash.Add(item.Location);
+            hash.Add(item.Rank);
+            hash.Add(item.MinLevel);
+            hash.Add(item.Flags);
+            hash.Add(item.MaxLevel);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1339,6 +1792,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            yield return obj.Owner.FormKey;
+            yield return obj.Location.FormKey;
             yield break;
         }
         
@@ -1386,6 +1841,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            {
+                item.Owner = rhs.Owner.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            {
+                item.Location = rhs.Location.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            {
+                item.Rank = rhs.Rank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            {
+                item.MinLevel = rhs.MinLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            {
+                item.MaxLevel = rhs.MaxLevel;
+            }
+            if ((copyMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2011,76 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Owner),
+                    item: item.Owner.FormKey,
+                    fieldIndex: (int)EncounterZone_FieldIndex.Owner,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Location),
+                    item: item.Location.FormKey,
+                    fieldIndex: (int)EncounterZone_FieldIndex.Location,
+                    errorMask: errorMask);
+            }
+            if (!item.DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+                {
+                    Int8XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.Rank),
+                        item: item.Rank,
+                        fieldIndex: (int)EncounterZone_FieldIndex.Rank,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+                {
+                    Int8XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MinLevel),
+                        item: item.MinLevel,
+                        fieldIndex: (int)EncounterZone_FieldIndex.MinLevel,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+                {
+                    EnumXmlTranslation<EncounterZone.Flag>.Instance.Write(
+                        node: node,
+                        name: nameof(item.Flags),
+                        item: item.Flags,
+                        fieldIndex: (int)EncounterZone_FieldIndex.Flags,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+                {
+                    Int8XmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.MaxLevel),
+                        item: item.MaxLevel,
+                        fieldIndex: (int)EncounterZone_FieldIndex.MaxLevel,
+                        errorMask: errorMask);
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasDATADataType"));
+            }
+            if ((translationMask?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<EncounterZone.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)EncounterZone_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1635,6 +2188,133 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Owner":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.Owner);
+                    try
+                    {
+                        item.Owner = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Location":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.Location);
+                    try
+                    {
+                        item.Location = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rank":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.Rank);
+                    try
+                    {
+                        item.Rank = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~EncounterZone.DATADataType.Break0;
+                    break;
+                case "MinLevel":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.MinLevel);
+                    try
+                    {
+                        item.MinLevel = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<EncounterZone.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MaxLevel":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.MaxLevel);
+                    try
+                    {
+                        item.MaxLevel = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)EncounterZone_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<EncounterZone.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2401,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static EncounterZoneBinaryWriteTranslation Instance = new EncounterZoneBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IEncounterZoneGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IEncounterZoneGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Owner);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Location);
+                if (!item.DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0))
+                {
+                    writer.Write(item.Rank);
+                    writer.Write(item.MinLevel);
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<EncounterZone.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                    writer.Write(item.MaxLevel);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IEncounterZoneGetter item,
@@ -1731,10 +2450,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ECZN),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +2509,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IEncounterZoneInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Owner = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= EncounterZone.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.Location);
+                    }
+                    item.Rank = dataFrame.ReadInt8();
+                    item.MinLevel = dataFrame.ReadInt8();
+                    item.Flags = EnumBinaryTranslation<EncounterZone.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.MaxLevel = dataFrame.ReadInt8();
+                    return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.MaxLevel);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,6 +2584,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEncounterZoneGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EncounterZoneCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EncounterZoneCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => EncounterZoneXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +2616,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        private int? _DATALocation;
+        public EncounterZone.DATADataType DATADataTypeState { get; private set; }
+        #region Owner
+        private int _OwnerLocation => _DATALocation!.Value;
+        private bool _Owner_IsSet => _DATALocation.HasValue;
+        public IFormLink<IOwnerGetter> Owner => _Owner_IsSet ? new FormLink<IOwnerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OwnerLocation, 0x4)))) : FormLink<IOwnerGetter>.Null;
+        #endregion
+        #region Location
+        private int _LocationLocation => _DATALocation!.Value + 0x4;
+        private bool _Location_IsSet => _DATALocation.HasValue;
+        public IFormLink<ILocationGetter> Location => _Location_IsSet ? new FormLink<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_LocationLocation, 0x4)))) : FormLink<ILocationGetter>.Null;
+        #endregion
+        #region Rank
+        private int _RankLocation => _DATALocation!.Value + 0x8;
+        private bool _Rank_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
+        public SByte Rank => _Rank_IsSet ? (sbyte)_data.Slice(_RankLocation, 1)[0] : default;
+        #endregion
+        #region MinLevel
+        private int _MinLevelLocation => _DATALocation!.Value + 0x9;
+        private bool _MinLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
+        public SByte MinLevel => _MinLevel_IsSet ? (sbyte)_data.Slice(_MinLevelLocation, 1)[0] : default;
+        #endregion
+        #region Flags
+        private int _FlagsLocation => _DATALocation!.Value + 0xA;
+        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
+        public EncounterZone.Flag Flags => _Flags_IsSet ? (EncounterZone.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region MaxLevel
+        private int _MaxLevelLocation => _DATALocation!.Value + 0xB;
+        private bool _MaxLevel_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EncounterZone.DATADataType.Break0);
+        public SByte MaxLevel => _MaxLevel_IsSet ? (sbyte)_data.Slice(_MaxLevelLocation, 1)[0] : default;
+        #endregion
         partial void CustomFactoryEnd(
             BinaryMemoryReadStream stream,
             int finalPos,
@@ -1903,6 +2700,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            BinaryMemoryReadStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x8)
+                    {
+                        this.DATADataTypeState |= EncounterZone.DATADataType.Break0;
+                    }
+                    return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.MaxLevel);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

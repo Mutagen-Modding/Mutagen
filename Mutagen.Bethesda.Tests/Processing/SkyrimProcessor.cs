@@ -1016,7 +1016,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "EXPL", "FULL" },
                     new StringsAlignmentCustom("PERK", PerkStringHandler),
                     new RecordType[] { "BPTD", "BPTN" },
-                    new RecordType[] { "AVIF", "FULL" }
+                    new RecordType[] { "AVIF", "FULL" },
+                    new RecordType[] { "LCTN", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

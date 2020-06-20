@@ -179,14 +179,13 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
                 }
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                    $"{outItemAccessor} = {this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                 {
                     args.Add(nodeAccessor.DirectAccess);
                     if (this.DoErrorMasks)
                     {
                         args.Add($"errorMask: {errorMaskAccessor}");
                     }
-                    args.Add($"translationMask: {translationMaskAccessor}");
                     foreach (var writeParam in this.AdditionalCopyInRetParams)
                     {
                         var get = writeParam(
@@ -196,6 +195,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add(get.Value);
                     }
                 }
+                fg.AppendLine("return true;");
             }
         }
 

@@ -327,6 +327,12 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
                                 }
+                                if (list.SubTypeGeneration is LoquiType loqui
+                                    && !loqui.TargetObjectGeneration.Abstract
+                                    && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
+                                {
+                                    args.Add("skipHeader: true");
+                                }
                                 break;
                             case ListBinaryType.Trigger:
                                 args.Add($"frame: frame.SpawnWithLength(contentLength)");
@@ -717,6 +723,12 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     });
                                 }
+                                if (loqui != null
+                                    && !loqui.TargetObjectGeneration.Abstract
+                                    && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
+                                {
+                                    args.Add("skipHeader: true");
+                                }
                             }
                         }
                         else
@@ -1027,25 +1039,46 @@ namespace Mutagen.Bethesda.Generation
             string passedLengthAccessor)
         {
             ListType list = typeGen as ListType;
-            if (!list.CustomData.TryGetValue(CounterByteLength, out var counterLenObj)) return;
-            var len = (byte)counterLenObj;
-            string readStr;
-            switch (len)
-            {
-                case 0:
-                    return;
-                case 2:
-                    readStr = $"ReadUInt16LittleEndian";
-                    break;
-                case 4:
-                    readStr = $"ReadInt32LittleEndian";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+            ListBinaryType listBinaryType = GetListType(list, list.GetFieldData(), list.SubTypeGeneration.GetFieldData());
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             var subExpLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
-            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.{readStr}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + {len};");
+            switch (listBinaryType)
+            {
+                case ListBinaryType.SubTrigger:
+                    break;
+                case ListBinaryType.Trigger:
+                    break;
+                case ListBinaryType.CounterRecord:
+                    break;
+                case ListBinaryType.PrependCount:
+                    {
+                        var len = (byte)list.CustomData[CounterByteLength];
+                        string readStr;
+                        switch (len)
+                        {
+                            case 0:
+                                return;
+                            case 2:
+                                readStr = $"ReadUInt16LittleEndian";
+                                break;
+                            case 4:
+                                readStr = $"ReadInt32LittleEndian";
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.{readStr}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + {len};");
+                    }
+                    break;
+                case ListBinaryType.Frame:
+                    if (!list.SubTypeGeneration.GetFieldData().HasTrigger)
+                    {
+                        fg.AppendLine($"ret.{typeGen.Name}EndingPos = ret._data.Length;");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
