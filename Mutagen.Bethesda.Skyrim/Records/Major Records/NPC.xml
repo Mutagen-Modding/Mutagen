@@ -206,7 +206,7 @@
     <Fields>
       <UInt16 name="Index" recordType="TINI" />
       <Color name="Color" binaryType="Alpha" recordType="TINC" />
-      <Float name="InterpolationValue" recordType="TINV" binaryType="Integer" integerDivisor="100" integerType="UInt" />
+      <Float name="InterpolationValue" recordType="TINV" divisor="100" integerType="UInt" />
       <Int16 name="Preset" recordType="TIAS" />
     </Fields>
   </Object>

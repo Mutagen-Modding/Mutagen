@@ -59,7 +59,7 @@
         <Fields>
           <Percent name="WindSpeed" integerType="Byte" />
           <UInt16 name="Unknown" />
-          <Float name="TransDelta" binaryType="Integer" integerType="Byte" min="0" max="0.25" multiplier="4" />
+          <Float name="TransDelta" integerType="Byte" min="0" max="0.25" multiplier="4" />
           <Percent name="SunGlare" integerType="Byte" />
           <Percent name="SunDamage" integerType="Byte" />
           <Percent name="PrecipitationBeginFadeIn" integerType="Byte" />
@@ -71,8 +71,8 @@
           <Color name="LightningColor" binaryType="NoAlpha" />
           <Percent name="VisualEffectBegin" integerType="Byte" />
           <Percent name="VisualEffectEnd" integerType="Byte" />
-          <Float name="WindDirection" integerType="Byte" min="0" max="360" binaryType="Integer" multiplier="1.411764705882353" />
-          <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" binaryType="Integer" multiplier="0.7058823529411765" />
+          <Float name="WindDirection" integerType="Byte" min="0" max="360" multiplier="1.411764705882353" />
+          <Float name="WindDirectionRange" integerType="Byte" min="0" max="180" multiplier="0.7058823529411765" />
         </Fields>
       </Data>
       <CustomLogic name="DisabledCloudLayers" recordType="NAM1" />

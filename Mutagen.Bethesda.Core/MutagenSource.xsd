@@ -292,7 +292,6 @@
     <xs:complexType name="RangedFloat">
       <xs:complexContent>
         <xs:extension base="RangedFloat">
-          <xs:attribute name="binaryType" type="FloatBinaryType" />
           <xs:attribute name="multiplier" type="xs:double" />
           <xs:attribute name="divisor" type="xs:double" />
           <xs:attribute name="integerType" type="FloatIntegerType" />
@@ -476,13 +475,6 @@
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
       <xs:enumeration value="PrependLengthUShort" />
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="FloatBinaryType" final="restriction" >
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Normal" />
-      <xs:enumeration value="Integer" />
     </xs:restriction>
   </xs:simpleType>
 

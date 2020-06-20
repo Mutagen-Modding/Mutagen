@@ -23,24 +23,19 @@ namespace Mutagen.Bethesda.Generation
         {
             if (typeGen.GetFieldData().Binary != BinaryGenerationType.Normal) return await base.ExpectedLength(objGen, typeGen);
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
-            switch (floatType.StorageType)
+            if (floatType.IntegerType.HasValue)
             {
-                case Binary.FloatBinaryType.Normal:
-                    return 4;
-                case Binary.FloatBinaryType.Integer:
-                    switch (floatType.IntegerType)
-                    {
-                        case FloatIntegerType.UInt:
-                            return 4;
-                        case FloatIntegerType.UShort:
-                            return 2;
-                        case FloatIntegerType.Byte:
-                            return 1;
-                        default:
-                            throw new NotImplementedException();
-                    }
-                default:
-                    throw new NotImplementedException();
+                return floatType.IntegerType switch
+                {
+                    FloatIntegerType.UInt => 4,
+                    FloatIntegerType.UShort => 2,
+                    FloatIntegerType.Byte => 1,
+                    _ => throw new NotImplementedException(),
+                };
+            }
+            else
+            {
+                return 4;
             }
         }
 
@@ -51,35 +46,33 @@ namespace Mutagen.Bethesda.Generation
             Accessor packageAccessor)
         {
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
-            switch (floatType.StorageType)
+            if (floatType.IntegerType.HasValue)
             {
-                case Binary.FloatBinaryType.Normal:
-                    return $"SpanExt.GetFloat({dataAccessor})";
-                case Binary.FloatBinaryType.Integer:
-                    return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
-                default:
-                    throw new NotImplementedException();
+                return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
+            }
+            else
+            {
+                return $"SpanExt.GetFloat({dataAccessor})";
             }
         }
 
         bool ReadFloat(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor reader, Accessor item)
         {
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
-            switch (floatType.StorageType)
+            if (floatType.IntegerType.HasValue)
             {
-                case Binary.FloatBinaryType.Normal:
-                    return false;
-                case Binary.FloatBinaryType.Integer:
-                    using (var args = new ArgsWrapper(fg,
-                        $"{item} = FloatBinaryTranslation.Parse"))
-                    {
-                        args.Add($"frame: {reader}");
-                        args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                        args.Add($"multiplier: {floatType.Multiplier}");
-                    }
-                    return true;
-                default:
-                    throw new NotImplementedException();
+                using (var args = new ArgsWrapper(fg,
+                    $"{item} = FloatBinaryTranslation.Parse"))
+                {
+                    args.Add($"frame: {reader}");
+                    args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
+                    args.Add($"multiplier: {floatType.Multiplier}");
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -87,27 +80,26 @@ namespace Mutagen.Bethesda.Generation
         {
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
             var data = floatType.GetFieldData();
-            switch (floatType.StorageType)
+            if (floatType.IntegerType.HasValue)
             {
-                case Binary.FloatBinaryType.Normal:
-                    return false;
-                case Binary.FloatBinaryType.Integer:
-                    using (var args = new ArgsWrapper(fg,
-                        $"FloatBinaryTranslation.Write"))
+                using (var args = new ArgsWrapper(fg,
+                    $"FloatBinaryTranslation.Write"))
+                {
+                    args.Add($"writer: {writer}");
+                    args.Add($"item: {item}");
+                    args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
+                    args.Add($"multiplier: {floatType.Multiplier}");
+                    if (data.RecordType.HasValue
+                        && data.HandleTrigger)
                     {
-                        args.Add($"writer: {writer}");
-                        args.Add($"item: {item}");
-                        args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
-                        args.Add($"multiplier: {floatType.Multiplier}");
-                        if (data.RecordType.HasValue
-                            && data.HandleTrigger)
-                        {
-                            args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
-                        }
+                        args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     }
-                    return true;
-                default:
-                    throw new NotImplementedException();
+                }
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }

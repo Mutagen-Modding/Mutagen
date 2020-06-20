@@ -27,7 +27,7 @@
   <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="8f8feabd-8d62-4c94-8fb7-3edfc3c31f25" ID="359">
     <Fields>
       <Enum name="Flags" enumName="DialogResponses.Flag" byteLength="2" />
-      <Float name="ResetHours" binaryType="Integer" integerType="UShort" divisor="2730" />
+      <Float name="ResetHours" integerType="UShort" divisor="2730" />
     </Fields>
   </Object>
   <Object name="DialogResponse" objType="Subrecord" GUID="a48dd14d-639a-47de-b96d-4517394936b7" ID="356">

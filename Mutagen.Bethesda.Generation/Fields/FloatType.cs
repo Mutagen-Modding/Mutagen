@@ -10,18 +10,16 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FloatType : Loqui.Generation.FloatType
     {
-        public FloatBinaryType StorageType;
-        public FloatIntegerType IntegerType;
+        public FloatIntegerType? IntegerType;
         public double Multiplier;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
             var data = this.TryCreateFieldData();
-            this.StorageType = node.GetAttribute("binaryType", FloatBinaryType.Normal);
             this.Multiplier = node.GetAttribute("multiplier", 1d);
-            this.IntegerType = node.GetAttribute("integerType", FloatIntegerType.UInt);
-            if (this.StorageType == FloatBinaryType.Integer)
+            this.IntegerType = node.GetAttribute("integerType", default(FloatIntegerType?));
+            if (this.IntegerType.HasValue)
             {
                 switch (this.IntegerType)
                 {
