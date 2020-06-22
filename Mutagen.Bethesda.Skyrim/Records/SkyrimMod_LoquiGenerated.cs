@@ -126,6 +126,10 @@ namespace Mutagen.Bethesda.Skyrim
             _ArmorAddons_Object = new Group<ArmorAddon>(this);
             _EncounterZones_Object = new Group<EncounterZone>(this);
             _Locations_Object = new Group<Location>(this);
+            _Messages_Object = new Group<Message>(this);
+            _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Group<MusicType>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -719,6 +723,34 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ILocationGetter> ISkyrimModGetter.Locations => _Locations_Object;
         #endregion
+        #region Messages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Message> _Messages_Object;
+        public Group<Message> Messages => _Messages_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMessageGetter> ISkyrimModGetter.Messages => _Messages_Object;
+        #endregion
+        #region DefaultObjectManagers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<DefaultObjectManager> _DefaultObjectManagers_Object;
+        public Group<DefaultObjectManager> DefaultObjectManagers => _DefaultObjectManagers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDefaultObjectManagerGetter> ISkyrimModGetter.DefaultObjectManagers => _DefaultObjectManagers_Object;
+        #endregion
+        #region LightingTemplates
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<LightingTemplate> _LightingTemplates_Object;
+        public Group<LightingTemplate> LightingTemplates => _LightingTemplates_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ILightingTemplateGetter> ISkyrimModGetter.LightingTemplates => _LightingTemplates_Object;
+        #endregion
+        #region MusicTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MusicType> _MusicTypes_Object;
+        public Group<MusicType> MusicTypes => _MusicTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMusicTypeGetter> ISkyrimModGetter.MusicTypes => _MusicTypes_Object;
+        #endregion
 
         #region To String
 
@@ -972,6 +1004,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Messages = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1058,7 +1094,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ImpactDataSets,
                 TItem ArmorAddons,
                 TItem EncounterZones,
-                TItem Locations)
+                TItem Locations,
+                TItem Messages,
+                TItem DefaultObjectManagers,
+                TItem LightingTemplates,
+                TItem MusicTypes)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1144,6 +1184,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ArmorAddons = new MaskItem<TItem, Group.Mask<TItem>?>(ArmorAddons, new Group.Mask<TItem>(ArmorAddons));
                 this.EncounterZones = new MaskItem<TItem, Group.Mask<TItem>?>(EncounterZones, new Group.Mask<TItem>(EncounterZones));
                 this.Locations = new MaskItem<TItem, Group.Mask<TItem>?>(Locations, new Group.Mask<TItem>(Locations));
+                this.Messages = new MaskItem<TItem, Group.Mask<TItem>?>(Messages, new Group.Mask<TItem>(Messages));
+                this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(DefaultObjectManagers, new Group.Mask<TItem>(DefaultObjectManagers));
+                this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(LightingTemplates, new Group.Mask<TItem>(LightingTemplates));
+                this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTypes, new Group.Mask<TItem>(MusicTypes));
             }
 
             #pragma warning disable CS8618
@@ -1239,6 +1283,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? ArmorAddons { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? EncounterZones { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Locations { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Messages { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? LightingTemplates { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MusicTypes { get; set; }
             #endregion
 
             #region Equals
@@ -1335,6 +1383,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ArmorAddons, rhs.ArmorAddons)) return false;
                 if (!object.Equals(this.EncounterZones, rhs.EncounterZones)) return false;
                 if (!object.Equals(this.Locations, rhs.Locations)) return false;
+                if (!object.Equals(this.Messages, rhs.Messages)) return false;
+                if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
+                if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
+                if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1424,6 +1476,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ArmorAddons);
                 hash.Add(this.EncounterZones);
                 hash.Add(this.Locations);
+                hash.Add(this.Messages);
+                hash.Add(this.DefaultObjectManagers);
+                hash.Add(this.LightingTemplates);
+                hash.Add(this.MusicTypes);
                 return hash.ToHashCode();
             }
 
@@ -1852,6 +1908,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Locations.Overall)) return false;
                     if (this.Locations.Specific != null && !this.Locations.Specific.All(eval)) return false;
                 }
+                if (Messages != null)
+                {
+                    if (!eval(this.Messages.Overall)) return false;
+                    if (this.Messages.Specific != null && !this.Messages.Specific.All(eval)) return false;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (!eval(this.DefaultObjectManagers.Overall)) return false;
+                    if (this.DefaultObjectManagers.Specific != null && !this.DefaultObjectManagers.Specific.All(eval)) return false;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (!eval(this.LightingTemplates.Overall)) return false;
+                    if (this.LightingTemplates.Specific != null && !this.LightingTemplates.Specific.All(eval)) return false;
+                }
+                if (MusicTypes != null)
+                {
+                    if (!eval(this.MusicTypes.Overall)) return false;
+                    if (this.MusicTypes.Specific != null && !this.MusicTypes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2279,6 +2355,26 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Locations.Overall)) return true;
                     if (this.Locations.Specific != null && this.Locations.Specific.Any(eval)) return true;
                 }
+                if (Messages != null)
+                {
+                    if (eval(this.Messages.Overall)) return true;
+                    if (this.Messages.Specific != null && this.Messages.Specific.Any(eval)) return true;
+                }
+                if (DefaultObjectManagers != null)
+                {
+                    if (eval(this.DefaultObjectManagers.Overall)) return true;
+                    if (this.DefaultObjectManagers.Specific != null && this.DefaultObjectManagers.Specific.Any(eval)) return true;
+                }
+                if (LightingTemplates != null)
+                {
+                    if (eval(this.LightingTemplates.Overall)) return true;
+                    if (this.LightingTemplates.Specific != null && this.LightingTemplates.Specific.Any(eval)) return true;
+                }
+                if (MusicTypes != null)
+                {
+                    if (eval(this.MusicTypes.Overall)) return true;
+                    if (this.MusicTypes.Specific != null && this.MusicTypes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2377,6 +2473,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ArmorAddons = this.ArmorAddons == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ArmorAddons.Overall), this.ArmorAddons.Specific?.Translate(eval));
                 obj.EncounterZones = this.EncounterZones == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EncounterZones.Overall), this.EncounterZones.Specific?.Translate(eval));
                 obj.Locations = this.Locations == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Locations.Overall), this.Locations.Specific?.Translate(eval));
+                obj.Messages = this.Messages == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Messages.Overall), this.Messages.Specific?.Translate(eval));
+                obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
+                obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
+                obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2735,6 +2835,22 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Locations?.ToString(fg);
                     }
+                    if (printMask?.Messages?.Overall ?? true)
+                    {
+                        Messages?.ToString(fg);
+                    }
+                    if (printMask?.DefaultObjectManagers?.Overall ?? true)
+                    {
+                        DefaultObjectManagers?.ToString(fg);
+                    }
+                    if (printMask?.LightingTemplates?.Overall ?? true)
+                    {
+                        LightingTemplates?.ToString(fg);
+                    }
+                    if (printMask?.MusicTypes?.Overall ?? true)
+                    {
+                        MusicTypes?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2844,6 +2960,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<ArmorAddon.ErrorMask>?>? ArmorAddons;
             public MaskItem<Exception?, Group.ErrorMask<EncounterZone.ErrorMask>?>? EncounterZones;
             public MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>? Locations;
+            public MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>? Messages;
+            public MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
+            public MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
+            public MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
             #endregion
 
             #region IErrorMask
@@ -3020,6 +3140,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return EncounterZones;
                     case SkyrimMod_FieldIndex.Locations:
                         return Locations;
+                    case SkyrimMod_FieldIndex.Messages:
+                        return Messages;
+                    case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                        return DefaultObjectManagers;
+                    case SkyrimMod_FieldIndex.LightingTemplates:
+                        return LightingTemplates;
+                    case SkyrimMod_FieldIndex.MusicTypes:
+                        return MusicTypes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3281,6 +3409,18 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Locations:
                         this.Locations = new MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Messages:
+                        this.Messages = new MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = new MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = new MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MusicTypes:
+                        this.MusicTypes = new MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3544,6 +3684,18 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Locations:
                         this.Locations = (MaskItem<Exception?, Group.ErrorMask<Location.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Messages:
+                        this.Messages = (MaskItem<Exception?, Group.ErrorMask<Message.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                        this.DefaultObjectManagers = (MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.LightingTemplates:
+                        this.LightingTemplates = (MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MusicTypes:
+                        this.MusicTypes = (MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3636,6 +3788,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ArmorAddons != null) return true;
                 if (EncounterZones != null) return true;
                 if (Locations != null) return true;
+                if (Messages != null) return true;
+                if (DefaultObjectManagers != null) return true;
+                if (LightingTemplates != null) return true;
+                if (MusicTypes != null) return true;
                 return false;
             }
             #endregion
@@ -3754,6 +3910,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ArmorAddons?.ToString(fg);
                 EncounterZones?.ToString(fg);
                 Locations?.ToString(fg);
+                Messages?.ToString(fg);
+                DefaultObjectManagers?.ToString(fg);
+                LightingTemplates?.ToString(fg);
+                MusicTypes?.ToString(fg);
             }
             #endregion
 
@@ -3846,6 +4006,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ArmorAddons = this.ArmorAddons.Combine(rhs.ArmorAddons, (l, r) => l.Combine(r));
                 ret.EncounterZones = this.EncounterZones.Combine(rhs.EncounterZones, (l, r) => l.Combine(r));
                 ret.Locations = this.Locations.Combine(rhs.Locations, (l, r) => l.Combine(r));
+                ret.Messages = this.Messages.Combine(rhs.Messages, (l, r) => l.Combine(r));
+                ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
+                ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
+                ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -3951,6 +4115,10 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?> ArmorAddons;
             public MaskItem<bool, Group.TranslationMask<EncounterZone.TranslationMask>?> EncounterZones;
             public MaskItem<bool, Group.TranslationMask<Location.TranslationMask>?> Locations;
+            public MaskItem<bool, Group.TranslationMask<Message.TranslationMask>?> Messages;
+            public MaskItem<bool, Group.TranslationMask<DefaultObjectManager.TranslationMask>?> DefaultObjectManagers;
+            public MaskItem<bool, Group.TranslationMask<LightingTemplate.TranslationMask>?> LightingTemplates;
+            public MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?> MusicTypes;
             #endregion
 
             #region Ctors
@@ -4040,6 +4208,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ArmorAddons = new MaskItem<bool, Group.TranslationMask<ArmorAddon.TranslationMask>?>(defaultOn, null);
                 this.EncounterZones = new MaskItem<bool, Group.TranslationMask<EncounterZone.TranslationMask>?>(defaultOn, null);
                 this.Locations = new MaskItem<bool, Group.TranslationMask<Location.TranslationMask>?>(defaultOn, null);
+                this.Messages = new MaskItem<bool, Group.TranslationMask<Message.TranslationMask>?>(defaultOn, null);
+                this.DefaultObjectManagers = new MaskItem<bool, Group.TranslationMask<DefaultObjectManager.TranslationMask>?>(defaultOn, null);
+                this.LightingTemplates = new MaskItem<bool, Group.TranslationMask<LightingTemplate.TranslationMask>?>(defaultOn, null);
+                this.MusicTypes = new MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4139,6 +4311,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ArmorAddons?.Overall ?? true, ArmorAddons?.Specific?.GetCrystal()));
                 ret.Add((EncounterZones?.Overall ?? true, EncounterZones?.Specific?.GetCrystal()));
                 ret.Add((Locations?.Overall ?? true, Locations?.Specific?.GetCrystal()));
+                ret.Add((Messages?.Overall ?? true, Messages?.Specific?.GetCrystal()));
+                ret.Add((DefaultObjectManagers?.Overall ?? true, DefaultObjectManagers?.Specific?.GetCrystal()));
+                ret.Add((LightingTemplates?.Overall ?? true, LightingTemplates?.Specific?.GetCrystal()));
+                ret.Add((MusicTypes?.Overall ?? true, MusicTypes?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4236,6 +4412,10 @@ namespace Mutagen.Bethesda.Skyrim
             _ArmorAddons_Object = new Group<ArmorAddon>(this);
             _EncounterZones_Object = new Group<EncounterZone>(this);
             _Locations_Object = new Group<Location>(this);
+            _Messages_Object = new Group<Message>(this);
+            _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
+            _LightingTemplates_Object = new Group<LightingTemplate>(this);
+            _MusicTypes_Object = new Group<MusicType>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -4575,6 +4755,22 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Locations ?? true)
             {
                 this.Locations.RecordCache.Set(rhsMod.Locations.RecordCache.Items);
+            }
+            if (mask?.Messages ?? true)
+            {
+                this.Messages.RecordCache.Set(rhsMod.Messages.RecordCache.Items);
+            }
+            if (mask?.DefaultObjectManagers ?? true)
+            {
+                this.DefaultObjectManagers.RecordCache.Set(rhsMod.DefaultObjectManagers.RecordCache.Items);
+            }
+            if (mask?.LightingTemplates ?? true)
+            {
+                this.LightingTemplates.RecordCache.Set(rhsMod.LightingTemplates.RecordCache.Items);
+            }
+            if (mask?.MusicTypes ?? true)
+            {
+                this.MusicTypes.RecordCache.Set(rhsMod.MusicTypes.RecordCache.Items);
             }
         }
 
@@ -5164,6 +5360,34 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Location>());
             }
+            if (mask?.Messages ?? true)
+            {
+                this.Messages.RecordCache.Set(
+                    rhs.Messages.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Message>());
+            }
+            if (mask?.DefaultObjectManagers ?? true)
+            {
+                this.DefaultObjectManagers.RecordCache.Set(
+                    rhs.DefaultObjectManagers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<DefaultObjectManager>());
+            }
+            if (mask?.LightingTemplates ?? true)
+            {
+                this.LightingTemplates.RecordCache.Set(
+                    rhs.LightingTemplates.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<LightingTemplate>());
+            }
+            if (mask?.MusicTypes ?? true)
+            {
+                this.MusicTypes.RecordCache.Set(
+                    rhs.MusicTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MusicType>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5266,6 +5490,10 @@ namespace Mutagen.Bethesda.Skyrim
             count += ArmorAddons.RecordCache.Count > 0 ? 1 : 0;
             count += EncounterZones.RecordCache.Count > 0 ? 1 : 0;
             count += Locations.RecordCache.Count > 0 ? 1 : 0;
+            count += Messages.RecordCache.Count > 0 ? 1 : 0;
+            count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : 0;
+            count += LightingTemplates.RecordCache.Count > 0 ? 1 : 0;
+            count += MusicTypes.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5568,6 +5796,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<ArmorAddon> ArmorAddons { get; }
         new Group<EncounterZone> EncounterZones { get; }
         new Group<Location> Locations { get; }
+        new Group<Message> Messages { get; }
+        new Group<DefaultObjectManager> DefaultObjectManagers { get; }
+        new Group<LightingTemplate> LightingTemplates { get; }
+        new Group<MusicType> MusicTypes { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -5669,6 +5901,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IArmorAddonGetter> ArmorAddons { get; }
         IGroupGetter<IEncounterZoneGetter> EncounterZones { get; }
         IGroupGetter<ILocationGetter> Locations { get; }
+        IGroupGetter<IMessageGetter> Messages { get; }
+        IGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
+        IGroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
+        IGroupGetter<IMusicTypeGetter> MusicTypes { get; }
 
     }
 
@@ -6208,6 +6444,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         ArmorAddons = 81,
         EncounterZones = 82,
         Locations = 83,
+        Messages = 84,
+        DefaultObjectManagers = 85,
+        LightingTemplates = 86,
+        MusicTypes = 87,
     }
     #endregion
 
@@ -6225,9 +6465,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 84;
+        public const ushort AdditionalFieldCount = 88;
 
-        public const ushort FieldCount = 84;
+        public const ushort FieldCount = 88;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -6425,6 +6665,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.EncounterZones;
                 case "LOCATIONS":
                     return (ushort)SkyrimMod_FieldIndex.Locations;
+                case "MESSAGES":
+                    return (ushort)SkyrimMod_FieldIndex.Messages;
+                case "DEFAULTOBJECTMANAGERS":
+                    return (ushort)SkyrimMod_FieldIndex.DefaultObjectManagers;
+                case "LIGHTINGTEMPLATES":
+                    return (ushort)SkyrimMod_FieldIndex.LightingTemplates;
+                case "MUSICTYPES":
+                    return (ushort)SkyrimMod_FieldIndex.MusicTypes;
                 default:
                     return null;
             }
@@ -6519,6 +6767,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ArmorAddons:
                 case SkyrimMod_FieldIndex.EncounterZones:
                 case SkyrimMod_FieldIndex.Locations:
+                case SkyrimMod_FieldIndex.Messages:
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                case SkyrimMod_FieldIndex.MusicTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6614,6 +6866,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ArmorAddons:
                 case SkyrimMod_FieldIndex.EncounterZones:
                 case SkyrimMod_FieldIndex.Locations:
+                case SkyrimMod_FieldIndex.Messages:
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                case SkyrimMod_FieldIndex.MusicTypes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6709,6 +6965,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ArmorAddons:
                 case SkyrimMod_FieldIndex.EncounterZones:
                 case SkyrimMod_FieldIndex.Locations:
+                case SkyrimMod_FieldIndex.Messages:
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                case SkyrimMod_FieldIndex.MusicTypes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6888,6 +7148,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EncounterZones";
                 case SkyrimMod_FieldIndex.Locations:
                     return "Locations";
+                case SkyrimMod_FieldIndex.Messages:
+                    return "Messages";
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                    return "DefaultObjectManagers";
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                    return "LightingTemplates";
+                case SkyrimMod_FieldIndex.MusicTypes:
+                    return "MusicTypes";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6982,6 +7250,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ArmorAddons:
                 case SkyrimMod_FieldIndex.EncounterZones:
                 case SkyrimMod_FieldIndex.Locations:
+                case SkyrimMod_FieldIndex.Messages:
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                case SkyrimMod_FieldIndex.MusicTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7078,6 +7350,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.ArmorAddons:
                 case SkyrimMod_FieldIndex.EncounterZones:
                 case SkyrimMod_FieldIndex.Locations:
+                case SkyrimMod_FieldIndex.Messages:
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                case SkyrimMod_FieldIndex.MusicTypes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7257,6 +7533,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<EncounterZone>);
                 case SkyrimMod_FieldIndex.Locations:
                     return typeof(Group<Location>);
+                case SkyrimMod_FieldIndex.Messages:
+                    return typeof(Group<Message>);
+                case SkyrimMod_FieldIndex.DefaultObjectManagers:
+                    return typeof(Group<DefaultObjectManager>);
+                case SkyrimMod_FieldIndex.LightingTemplates:
+                    return typeof(Group<LightingTemplate>);
+                case SkyrimMod_FieldIndex.MusicTypes:
+                    return typeof(Group<MusicType>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7388,6 +7672,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ArmorAddons.Clear();
             item.EncounterZones.Clear();
             item.Locations.Clear();
+            item.Messages.Clear();
+            item.DefaultObjectManagers.Clear();
+            item.LightingTemplates.Clear();
+            item.MusicTypes.Clear();
         }
         
         #region Xml Translation
@@ -7626,6 +7914,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ArmorAddons = MaskItemExt.Factory(item.ArmorAddons.GetEqualsMask(rhs.ArmorAddons, include), include);
             ret.EncounterZones = MaskItemExt.Factory(item.EncounterZones.GetEqualsMask(rhs.EncounterZones, include), include);
             ret.Locations = MaskItemExt.Factory(item.Locations.GetEqualsMask(rhs.Locations, include), include);
+            ret.Messages = MaskItemExt.Factory(item.Messages.GetEqualsMask(rhs.Messages, include), include);
+            ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
+            ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
+            ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
         }
         
         public string ToString(
@@ -8008,6 +8300,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Locations?.ToString(fg, "Locations");
             }
+            if (printMask?.Messages?.Overall ?? true)
+            {
+                item.Messages?.ToString(fg, "Messages");
+            }
+            if (printMask?.DefaultObjectManagers?.Overall ?? true)
+            {
+                item.DefaultObjectManagers?.ToString(fg, "DefaultObjectManagers");
+            }
+            if (printMask?.LightingTemplates?.Overall ?? true)
+            {
+                item.LightingTemplates?.ToString(fg, "LightingTemplates");
+            }
+            if (printMask?.MusicTypes?.Overall ?? true)
+            {
+                item.MusicTypes?.ToString(fg, "MusicTypes");
+            }
         }
         
         public bool HasBeenSet(
@@ -8105,6 +8413,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.ArmorAddons = new MaskItem<bool, Group.Mask<bool>?>(true, item.ArmorAddons?.GetHasBeenSetMask());
             mask.EncounterZones = new MaskItem<bool, Group.Mask<bool>?>(true, item.EncounterZones?.GetHasBeenSetMask());
             mask.Locations = new MaskItem<bool, Group.Mask<bool>?>(true, item.Locations?.GetHasBeenSetMask());
+            mask.Messages = new MaskItem<bool, Group.Mask<bool>?>(true, item.Messages?.GetHasBeenSetMask());
+            mask.DefaultObjectManagers = new MaskItem<bool, Group.Mask<bool>?>(true, item.DefaultObjectManagers?.GetHasBeenSetMask());
+            mask.LightingTemplates = new MaskItem<bool, Group.Mask<bool>?>(true, item.LightingTemplates?.GetHasBeenSetMask());
+            mask.MusicTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTypes?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8198,6 +8510,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.ArmorAddons, rhs.ArmorAddons)) return false;
             if (!object.Equals(lhs.EncounterZones, rhs.EncounterZones)) return false;
             if (!object.Equals(lhs.Locations, rhs.Locations)) return false;
+            if (!object.Equals(lhs.Messages, rhs.Messages)) return false;
+            if (!object.Equals(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
+            if (!object.Equals(lhs.LightingTemplates, rhs.LightingTemplates)) return false;
+            if (!object.Equals(lhs.MusicTypes, rhs.MusicTypes)) return false;
             return true;
         }
         
@@ -8288,6 +8604,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.ArmorAddons);
             hash.Add(item.EncounterZones);
             hash.Add(item.Locations);
+            hash.Add(item.Messages);
+            hash.Add(item.DefaultObjectManagers);
+            hash.Add(item.LightingTemplates);
+            hash.Add(item.MusicTypes);
             return hash.ToHashCode();
         }
         
@@ -8719,6 +9039,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocation":
                 case "ILocationInternal":
                     return obj.Locations.RecordCache;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    return obj.Messages.RecordCache;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    return obj.DefaultObjectManagers.RecordCache;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    return obj.LightingTemplates.RecordCache;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    return obj.MusicTypes.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -8738,7 +9078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[83];
+            Stream[] outputStreams = new Stream[87];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -8823,6 +9163,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9454,6 +9798,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Messages is ILinkedFormKeyContainer MessageslinkCont)
+            {
+                foreach (var item in MessageslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DefaultObjectManagers is ILinkedFormKeyContainer DefaultObjectManagerslinkCont)
+            {
+                foreach (var item in DefaultObjectManagerslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.LightingTemplates is ILinkedFormKeyContainer LightingTemplateslinkCont)
+            {
+                foreach (var item in LightingTemplateslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MusicTypes is ILinkedFormKeyContainer MusicTypeslinkCont)
+            {
+                foreach (var item in MusicTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -9789,6 +10161,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Locations.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Messages.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.LightingTemplates.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTypes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10552,6 +10940,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ILocation":
                 case "ILocationInternal":
                     foreach (var item in obj.Locations.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Message":
+                case "IMessageGetter":
+                case "IMessage":
+                case "IMessageInternal":
+                    foreach (var item in obj.Messages.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DefaultObjectManager":
+                case "IDefaultObjectManagerGetter":
+                case "IDefaultObjectManager":
+                case "IDefaultObjectManagerInternal":
+                    foreach (var item in obj.DefaultObjectManagers.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "LightingTemplate":
+                case "ILightingTemplateGetter":
+                case "ILightingTemplate":
+                case "ILightingTemplateInternal":
+                    foreach (var item in obj.LightingTemplates.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicType":
+                case "IMusicTypeGetter":
+                case "IMusicType":
+                case "IMusicTypeInternal":
+                    foreach (var item in obj.MusicTypes.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -12255,6 +12679,86 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Messages) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Messages);
+                try
+                {
+                    item.Messages.DeepCopyIn(
+                        rhs: rhs.Messages,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Messages));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                try
+                {
+                    item.DefaultObjectManagers.DeepCopyIn(
+                        rhs: rhs.DefaultObjectManagers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DefaultObjectManagers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LightingTemplates) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LightingTemplates);
+                try
+                {
+                    item.LightingTemplates.DeepCopyIn(
+                        rhs: rhs.LightingTemplates,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LightingTemplates));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTypes);
+                try
+                {
+                    item.MusicTypes.DeepCopyIn(
+                        rhs: rhs.MusicTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -13267,6 +13771,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Locations,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Locations));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Messages) ?? true))
+            {
+                var MessagesItem = item.Messages;
+                ((GroupXmlWriteTranslation)((IXmlItem)MessagesItem).XmlWriteTranslator).Write<IMessageGetter>(
+                    item: MessagesItem,
+                    node: node,
+                    name: nameof(item.Messages),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Messages,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Messages));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                var DefaultObjectManagersItem = item.DefaultObjectManagers;
+                ((GroupXmlWriteTranslation)((IXmlItem)DefaultObjectManagersItem).XmlWriteTranslator).Write<IDefaultObjectManagerGetter>(
+                    item: DefaultObjectManagersItem,
+                    node: node,
+                    name: nameof(item.DefaultObjectManagers),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.DefaultObjectManagers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DefaultObjectManagers));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LightingTemplates) ?? true))
+            {
+                var LightingTemplatesItem = item.LightingTemplates;
+                ((GroupXmlWriteTranslation)((IXmlItem)LightingTemplatesItem).XmlWriteTranslator).Write<ILightingTemplateGetter>(
+                    item: LightingTemplatesItem,
+                    node: node,
+                    name: nameof(item.LightingTemplates),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.LightingTemplates,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.LightingTemplates));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTypes) ?? true))
+            {
+                var MusicTypesItem = item.MusicTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)MusicTypesItem).XmlWriteTranslator).Write<IMusicTypeGetter>(
+                    item: MusicTypesItem,
+                    node: node,
+                    name: nameof(item.MusicTypes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.MusicTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTypes));
             }
         }
 
@@ -14932,6 +15480,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Messages":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Messages);
+                    try
+                    {
+                        item.Messages.CopyInFromXml<Message>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DefaultObjectManagers":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                    try
+                    {
+                        item.DefaultObjectManagers.CopyInFromXml<DefaultObjectManager>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightingTemplates":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.LightingTemplates);
+                    try
+                    {
+                        item.LightingTemplates.CopyInFromXml<LightingTemplate>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MusicTypes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTypes);
+                    try
+                    {
+                        item.MusicTypes.CopyInFromXml<MusicType>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -15184,6 +15808,10 @@ namespace Mutagen.Bethesda.Skyrim
         public bool ArmorAddons;
         public bool EncounterZones;
         public bool Locations;
+        public bool Messages;
+        public bool DefaultObjectManagers;
+        public bool LightingTemplates;
+        public bool MusicTypes;
         public GroupMask()
         {
         }
@@ -15272,6 +15900,10 @@ namespace Mutagen.Bethesda.Skyrim
             ArmorAddons = defaultValue;
             EncounterZones = defaultValue;
             Locations = defaultValue;
+            Messages = defaultValue;
+            DefaultObjectManagers = defaultValue;
+            LightingTemplates = defaultValue;
+            MusicTypes = defaultValue;
         }
     }
 
@@ -16209,6 +16841,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)LocationsItem).BinaryWriteTranslator).Write<ILocationGetter>(
                         item: LocationsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Messages ?? true)
+            {
+                var MessagesItem = item.Messages;
+                if (MessagesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MessagesItem).BinaryWriteTranslator).Write<IMessageGetter>(
+                        item: MessagesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.DefaultObjectManagers ?? true)
+            {
+                var DefaultObjectManagersItem = item.DefaultObjectManagers;
+                if (DefaultObjectManagersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DefaultObjectManagersItem).BinaryWriteTranslator).Write<IDefaultObjectManagerGetter>(
+                        item: DefaultObjectManagersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.LightingTemplates ?? true)
+            {
+                var LightingTemplatesItem = item.LightingTemplates;
+                if (LightingTemplatesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)LightingTemplatesItem).BinaryWriteTranslator).Write<ILightingTemplateGetter>(
+                        item: LightingTemplatesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MusicTypes ?? true)
+            {
+                var MusicTypesItem = item.MusicTypes;
+                if (MusicTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
+                        item: MusicTypesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -17444,6 +18120,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
                 }
+                case RecordTypeInts.MESG:
+                {
+                    if (importMask?.Messages ?? true)
+                    {
+                        item.Messages.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    if (importMask?.DefaultObjectManagers ?? true)
+                    {
+                        item.DefaultObjectManagers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    if (importMask?.LightingTemplates ?? true)
+                    {
+                        item.LightingTemplates.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                }
+                case RecordTypeInts.MUSC:
+                {
+                    if (importMask?.MusicTypes ?? true)
+                    {
+                        item.MusicTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -18030,6 +18762,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ILocationGetter>? _Locations => _LocationsLocation.HasValue ? GroupBinaryOverlay<ILocationGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _LocationsLocation!.Value.Min, _LocationsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<ILocationGetter> Locations => _Locations ?? new Group<Location>(this);
         #endregion
+        #region Messages
+        private RangeInt64? _MessagesLocation;
+        private IGroupGetter<IMessageGetter>? _Messages => _MessagesLocation.HasValue ? GroupBinaryOverlay<IMessageGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MessagesLocation!.Value.Min, _MessagesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IMessageGetter> Messages => _Messages ?? new Group<Message>(this);
+        #endregion
+        #region DefaultObjectManagers
+        private RangeInt64? _DefaultObjectManagersLocation;
+        private IGroupGetter<IDefaultObjectManagerGetter>? _DefaultObjectManagers => _DefaultObjectManagersLocation.HasValue ? GroupBinaryOverlay<IDefaultObjectManagerGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _DefaultObjectManagersLocation!.Value.Min, _DefaultObjectManagersLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers => _DefaultObjectManagers ?? new Group<DefaultObjectManager>(this);
+        #endregion
+        #region LightingTemplates
+        private RangeInt64? _LightingTemplatesLocation;
+        private IGroupGetter<ILightingTemplateGetter>? _LightingTemplates => _LightingTemplatesLocation.HasValue ? GroupBinaryOverlay<ILightingTemplateGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _LightingTemplatesLocation!.Value.Min, _LightingTemplatesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ILightingTemplateGetter> LightingTemplates => _LightingTemplates ?? new Group<LightingTemplate>(this);
+        #endregion
+        #region MusicTypes
+        private RangeInt64? _MusicTypesLocation;
+        private IGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocation.HasValue ? GroupBinaryOverlay<IMusicTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MusicTypesLocation!.Value.Min, _MusicTypesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Group<MusicType>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -18539,6 +19291,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                }
+                case RecordTypeInts.MESG:
+                {
+                    _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                }
+                case RecordTypeInts.DOBJ:
+                {
+                    _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                }
+                case RecordTypeInts.LGTM:
+                {
+                    _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                }
+                case RecordTypeInts.MUSC:
+                {
+                    _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

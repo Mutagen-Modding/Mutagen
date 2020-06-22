@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface ICellLighting :
         ICellLightingGetter,
-        IAmbientColors,
+        IAmbientColorsCommon,
         ILoquiObjectSetter<ICellLighting>
     {
         new CellLighting.VersioningBreaks Versioning { get; set; }
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellLightingGetter :
         ILoquiObject,
-        IAmbientColorsGetter,
+        IAmbientColorsCommonGetter,
         ILoquiObject<ICellLightingGetter>,
         IXmlItem,
         IBinaryItem

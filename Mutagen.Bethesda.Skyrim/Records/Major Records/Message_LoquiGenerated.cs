@@ -49,6 +49,52 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        #endregion
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IMessageGetter.Name => this.Name;
+        #endregion
+        #region INAM
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _INAM = new byte[0];
+        public MemorySlice<Byte> INAM
+        {
+            get => _INAM;
+            set => this._INAM = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
+        #endregion
+        #region Quest
+        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IQuestGetter> IMessageGetter.Quest => this.Quest;
+        #endregion
+        #region Flags
+        public Message.Flag Flags { get; set; } = default;
+        #endregion
+        #region DisplayTime
+        public UInt32? DisplayTime { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt32? IMessageGetter.DisplayTime => this.DisplayTime;
+        #endregion
+        #region MenuButtons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
+        public ExtendedList<MessageButton> MenuButtons
+        {
+            get => this._MenuButtons;
+            protected set => this._MenuButtons = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMessageButtonGetter> IMessageGetter.MenuButtons => _MenuButtons;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +264,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Description = initialValue;
+                this.Name = initialValue;
+                this.INAM = initialValue;
+                this.Quest = initialValue;
+                this.Flags = initialValue;
+                this.DisplayTime = initialValue;
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -226,7 +279,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Description,
+                TItem Name,
+                TItem INAM,
+                TItem Quest,
+                TItem Flags,
+                TItem DisplayTime,
+                TItem MenuButtons)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +295,13 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Description = Description;
+                this.Name = Name;
+                this.INAM = INAM;
+                this.Quest = Quest;
+                this.Flags = Flags;
+                this.DisplayTime = DisplayTime;
+                this.MenuButtons = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>(MenuButtons, Enumerable.Empty<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +310,16 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Description;
+            public TItem Name;
+            public TItem INAM;
+            public TItem Quest;
+            public TItem Flags;
+            public TItem DisplayTime;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MessageButton.Mask<TItem>?>>?>? MenuButtons;
             #endregion
 
             #region Equals
@@ -256,11 +333,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.INAM, rhs.INAM)) return false;
+                if (!object.Equals(this.Quest, rhs.Quest)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.DisplayTime, rhs.DisplayTime)) return false;
+                if (!object.Equals(this.MenuButtons, rhs.MenuButtons)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Description);
+                hash.Add(this.Name);
+                hash.Add(this.INAM);
+                hash.Add(this.Quest);
+                hash.Add(this.Flags);
+                hash.Add(this.DisplayTime);
+                hash.Add(this.MenuButtons);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +362,24 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.INAM)) return false;
+                if (!eval(this.Quest)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.DisplayTime)) return false;
+                if (this.MenuButtons != null)
+                {
+                    if (!eval(this.MenuButtons.Overall)) return false;
+                    if (this.MenuButtons.Specific != null)
+                    {
+                        foreach (var item in this.MenuButtons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +388,24 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.INAM)) return true;
+                if (eval(this.Quest)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.DisplayTime)) return true;
+                if (this.MenuButtons != null)
+                {
+                    if (eval(this.MenuButtons.Overall)) return true;
+                    if (this.MenuButtons.Specific != null)
+                    {
+                        foreach (var item in this.MenuButtons.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +421,27 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Description = eval(this.Description);
+                obj.Name = eval(this.Name);
+                obj.INAM = eval(this.INAM);
+                obj.Quest = eval(this.Quest);
+                obj.Flags = eval(this.Flags);
+                obj.DisplayTime = eval(this.DisplayTime);
+                if (MenuButtons != null)
+                {
+                    obj.MenuButtons = new MaskItem<R, IEnumerable<MaskItemIndexed<R, MessageButton.Mask<R>?>>?>(eval(this.MenuButtons.Overall), Enumerable.Empty<MaskItemIndexed<R, MessageButton.Mask<R>?>>());
+                    if (MenuButtons.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, MessageButton.Mask<R>?>>();
+                        obj.MenuButtons.Specific = l;
+                        foreach (var item in MenuButtons.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, MessageButton.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, MessageButton.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +464,53 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.INAM ?? true)
+                    {
+                        fg.AppendItem(INAM, "INAM");
+                    }
+                    if (printMask?.Quest ?? true)
+                    {
+                        fg.AppendItem(Quest, "Quest");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.DisplayTime ?? true)
+                    {
+                        fg.AppendItem(DisplayTime, "DisplayTime");
+                    }
+                    if ((printMask?.MenuButtons?.Overall ?? true)
+                        && MenuButtons.TryGet(out var MenuButtonsItem))
+                    {
+                        fg.AppendLine("MenuButtons =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(MenuButtonsItem.Overall);
+                            if (MenuButtonsItem.Specific != null)
+                            {
+                                foreach (var subItem in MenuButtonsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +522,36 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Description;
+            public Exception? Name;
+            public Exception? INAM;
+            public Exception? Quest;
+            public Exception? Flags;
+            public Exception? DisplayTime;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>? MenuButtons;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        return Description;
+                    case Message_FieldIndex.Name:
+                        return Name;
+                    case Message_FieldIndex.INAM:
+                        return INAM;
+                    case Message_FieldIndex.Quest:
+                        return Quest;
+                    case Message_FieldIndex.Flags:
+                        return Flags;
+                    case Message_FieldIndex.DisplayTime:
+                        return DisplayTime;
+                    case Message_FieldIndex.MenuButtons:
+                        return MenuButtons;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +562,27 @@ namespace Mutagen.Bethesda.Skyrim
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Message_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Message_FieldIndex.INAM:
+                        this.INAM = ex;
+                        break;
+                    case Message_FieldIndex.Quest:
+                        this.Quest = ex;
+                        break;
+                    case Message_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Message_FieldIndex.DisplayTime:
+                        this.DisplayTime = ex;
+                        break;
+                    case Message_FieldIndex.MenuButtons:
+                        this.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +594,27 @@ namespace Mutagen.Bethesda.Skyrim
                 Message_FieldIndex enu = (Message_FieldIndex)index;
                 switch (enu)
                 {
+                    case Message_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.INAM:
+                        this.INAM = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.Quest:
+                        this.Quest = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.DisplayTime:
+                        this.DisplayTime = (Exception?)obj;
+                        break;
+                    case Message_FieldIndex.MenuButtons:
+                        this.MenuButtons = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +624,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Description != null) return true;
+                if (Name != null) return true;
+                if (INAM != null) return true;
+                if (Quest != null) return true;
+                if (Flags != null) return true;
+                if (DisplayTime != null) return true;
+                if (MenuButtons != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +666,34 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(INAM, "INAM");
+                fg.AppendItem(Quest, "Quest");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(DisplayTime, "DisplayTime");
+                if (MenuButtons.TryGet(out var MenuButtonsItem))
+                {
+                    fg.AppendLine("MenuButtons =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(MenuButtonsItem.Overall);
+                        if (MenuButtonsItem.Specific != null)
+                        {
+                            foreach (var subItem in MenuButtonsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +702,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.INAM = this.INAM.Combine(rhs.INAM);
+                ret.Quest = this.Quest.Combine(rhs.Quest);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.DisplayTime = this.DisplayTime.Combine(rhs.DisplayTime);
+                ret.MenuButtons = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MessageButton.ErrorMask?>>?>(ExceptionExt.Combine(this.MenuButtons?.Overall, rhs.MenuButtons?.Overall), ExceptionExt.Combine(this.MenuButtons?.Specific, rhs.MenuButtons?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +730,53 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Description;
+            public bool Name;
+            public bool INAM;
+            public bool Quest;
+            public bool Flags;
+            public bool DisplayTime;
+            public MaskItem<bool, MessageButton.TranslationMask?> MenuButtons;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Description = defaultOn;
+                this.Name = defaultOn;
+                this.INAM = defaultOn;
+                this.Quest = defaultOn;
+                this.Flags = defaultOn;
+                this.DisplayTime = defaultOn;
+                this.MenuButtons = new MaskItem<bool, MessageButton.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Description, null));
+                ret.Add((Name, null));
+                ret.Add((INAM, null));
+                ret.Add((Quest, null));
+                ret.Add((Flags, null));
+                ret.Add((DisplayTime, null));
+                ret.Add((MenuButtons?.Overall ?? true, MenuButtons?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Message_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
         public Message(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -526,8 +863,16 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMessage :
         IMessageGetter,
         ISkyrimMajorRecord,
+        ITranslatedNamed,
         ILoquiObjectSetter<IMessageInternal>
     {
+        new TranslatedString Description { get; set; }
+        new TranslatedString? Name { get; set; }
+        new MemorySlice<Byte> INAM { get; set; }
+        new FormLinkNullable<Quest> Quest { get; set; }
+        new Message.Flag Flags { get; set; }
+        new UInt32? DisplayTime { get; set; }
+        new ExtendedList<MessageButton> MenuButtons { get; }
     }
 
     public partial interface IMessageInternal :
@@ -539,11 +884,20 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMessageGetter :
         ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IMessageGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Message_Registration.Instance;
+        TranslatedString Description { get; }
+        TranslatedString? Name { get; }
+        ReadOnlyMemorySlice<Byte> INAM { get; }
+        IFormLinkNullable<IQuestGetter> Quest { get; }
+        Message.Flag Flags { get; }
+        UInt32? DisplayTime { get; }
+        IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
 
     }
 
@@ -844,6 +1198,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Description = 6,
+        Name = 7,
+        INAM = 8,
+        Quest = 9,
+        Flags = 10,
+        DisplayTime = 11,
+        MenuButtons = 12,
     }
     #endregion
 
@@ -861,9 +1222,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "924feeb5-b9e9-4526-9caa-89a233a69240";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Message.Mask<>);
 
@@ -893,6 +1254,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "DESCRIPTION":
+                    return (ushort)Message_FieldIndex.Description;
+                case "NAME":
+                    return (ushort)Message_FieldIndex.Name;
+                case "INAM":
+                    return (ushort)Message_FieldIndex.INAM;
+                case "QUEST":
+                    return (ushort)Message_FieldIndex.Quest;
+                case "FLAGS":
+                    return (ushort)Message_FieldIndex.Flags;
+                case "DISPLAYTIME":
+                    return (ushort)Message_FieldIndex.DisplayTime;
+                case "MENUBUTTONS":
+                    return (ushort)Message_FieldIndex.MenuButtons;
                 default:
                     return null;
             }
@@ -903,6 +1278,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.MenuButtons:
+                    return true;
+                case Message_FieldIndex.Description:
+                case Message_FieldIndex.Name:
+                case Message_FieldIndex.INAM:
+                case Message_FieldIndex.Quest:
+                case Message_FieldIndex.Flags:
+                case Message_FieldIndex.DisplayTime:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1297,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.MenuButtons:
+                    return true;
+                case Message_FieldIndex.Description:
+                case Message_FieldIndex.Name:
+                case Message_FieldIndex.INAM:
+                case Message_FieldIndex.Quest:
+                case Message_FieldIndex.Flags:
+                case Message_FieldIndex.DisplayTime:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1316,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.Description:
+                case Message_FieldIndex.Name:
+                case Message_FieldIndex.INAM:
+                case Message_FieldIndex.Quest:
+                case Message_FieldIndex.Flags:
+                case Message_FieldIndex.DisplayTime:
+                case Message_FieldIndex.MenuButtons:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1334,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.Description:
+                    return "Description";
+                case Message_FieldIndex.Name:
+                    return "Name";
+                case Message_FieldIndex.INAM:
+                    return "INAM";
+                case Message_FieldIndex.Quest:
+                    return "Quest";
+                case Message_FieldIndex.Flags:
+                    return "Flags";
+                case Message_FieldIndex.DisplayTime:
+                    return "DisplayTime";
+                case Message_FieldIndex.MenuButtons:
+                    return "MenuButtons";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1358,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.Description:
+                case Message_FieldIndex.Name:
+                case Message_FieldIndex.INAM:
+                case Message_FieldIndex.Quest:
+                case Message_FieldIndex.Flags:
+                case Message_FieldIndex.DisplayTime:
+                case Message_FieldIndex.MenuButtons:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1376,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.Description:
+                case Message_FieldIndex.Name:
+                case Message_FieldIndex.INAM:
+                case Message_FieldIndex.Quest:
+                case Message_FieldIndex.Flags:
+                case Message_FieldIndex.DisplayTime:
+                case Message_FieldIndex.MenuButtons:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1394,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Message_FieldIndex enu = (Message_FieldIndex)index;
             switch (enu)
             {
+                case Message_FieldIndex.Description:
+                    return typeof(TranslatedString);
+                case Message_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Message_FieldIndex.INAM:
+                    return typeof(MemorySlice<Byte>);
+                case Message_FieldIndex.Quest:
+                    return typeof(FormLinkNullable<Quest>);
+                case Message_FieldIndex.Flags:
+                    return typeof(Message.Flag);
+                case Message_FieldIndex.DisplayTime:
+                    return typeof(UInt32);
+                case Message_FieldIndex.MenuButtons:
+                    return typeof(ExtendedList<MessageButton>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1457,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IMessageInternal item)
         {
             ClearPartial();
+            item.Description.Clear();
+            item.Name = default;
+            item.INAM = new byte[0];
+            item.Quest = FormLinkNullable<Quest>.Null;
+            item.Flags = default;
+            item.DisplayTime = default;
+            item.MenuButtons.Clear();
             base.Clear(item);
         }
         
@@ -1169,6 +1621,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.INAM = MemoryExtensions.SequenceEqual(item.INAM.Span, rhs.INAM.Span);
+            ret.Quest = object.Equals(item.Quest, rhs.Quest);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.DisplayTime = item.DisplayTime == rhs.DisplayTime;
+            ret.MenuButtons = item.MenuButtons.CollectionEqualsHelper(
+                rhs.MenuButtons,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1682,60 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendItem(item.Description, "Description");
+            }
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.INAM ?? true)
+            {
+                fg.AppendLine($"INAM => {SpanExt.ToHexString(item.INAM)}");
+            }
+            if ((printMask?.Quest ?? true)
+                && item.Quest.TryGet(out var QuestItem))
+            {
+                fg.AppendItem(QuestItem, "Quest");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if ((printMask?.DisplayTime ?? true)
+                && item.DisplayTime.TryGet(out var DisplayTimeItem))
+            {
+                fg.AppendItem(DisplayTimeItem, "DisplayTime");
+            }
+            if (printMask?.MenuButtons?.Overall ?? true)
+            {
+                fg.AppendLine("MenuButtons =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.MenuButtons)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IMessageGetter item,
             Message.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
+            if (checkMask.DisplayTime.HasValue && checkMask.DisplayTime.Value != (item.DisplayTime != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1745,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMessageGetter item,
             Message.Mask<bool> mask)
         {
+            mask.Description = true;
+            mask.Name = (item.Name != null);
+            mask.INAM = true;
+            mask.Quest = (item.Quest.FormKey != null);
+            mask.Flags = true;
+            mask.DisplayTime = (item.DisplayTime != null);
+            var MenuButtonsItem = item.MenuButtons;
+            mask.MenuButtons = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MessageButton.Mask<bool>?>>?>(true, MenuButtonsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MessageButton.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +1804,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
+            if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (lhs.DisplayTime != rhs.DisplayTime) return false;
+            if (!lhs.MenuButtons.SequenceEqual(rhs.MenuButtons)) return false;
             return true;
         }
         
@@ -1310,6 +1835,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMessageGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Description);
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.INAM);
+            if (item.Quest.TryGet(out var Questitem))
+            {
+                hash.Add(Questitem);
+            }
+            hash.Add(item.Flags);
+            if (item.DisplayTime.TryGet(out var DisplayTimeitem))
+            {
+                hash.Add(DisplayTimeitem);
+            }
+            hash.Add(item.MenuButtons);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1336,6 +1877,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IMessageGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            if (obj.Quest.FormKey.TryGet(out var QuestKey))
+            {
+                yield return QuestKey;
+            }
+            foreach (var item in obj.MenuButtons.WhereCastable<IMessageButtonGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1386,6 +1936,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            {
+                item.INAM = rhs.INAM.ToArray();
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
+            {
+                item.Quest = rhs.Quest.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            {
+                item.DisplayTime = rhs.DisplayTime;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            {
+                errorMask?.PushIndex((int)Message_FieldIndex.MenuButtons);
+                try
+                {
+                    item.MenuButtons.SetTo(
+                        rhs.MenuButtons
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2126,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)Message_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Message_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.INAM),
+                    item: item.INAM,
+                    fieldIndex: (int)Message_FieldIndex.INAM,
+                    errorMask: errorMask);
+            }
+            if ((item.Quest.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Quest),
+                    item: item.Quest.FormKey,
+                    fieldIndex: (int)Message_FieldIndex.Quest,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Message.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Message_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((item.DisplayTime != null)
+                && (translationMask?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DisplayTime),
+                    item: item.DisplayTime.Value,
+                    fieldIndex: (int)Message_FieldIndex.DisplayTime,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            {
+                ListXmlTranslation<IMessageButtonGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.MenuButtons),
+                    item: item.MenuButtons,
+                    fieldIndex: (int)Message_FieldIndex.MenuButtons,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Message_FieldIndex.MenuButtons),
+                    transl: (XElement subNode, IMessageButtonGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((MessageButtonXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1635,6 +2310,143 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Description":
+                    errorMask?.PushIndex((int)Message_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)Message_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "INAM":
+                    errorMask?.PushIndex((int)Message_FieldIndex.INAM);
+                    try
+                    {
+                        item.INAM = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 0,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Quest":
+                    errorMask?.PushIndex((int)Message_FieldIndex.Quest);
+                    try
+                    {
+                        item.Quest = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)Message_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Message.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DisplayTime":
+                    errorMask?.PushIndex((int)Message_FieldIndex.DisplayTime);
+                    try
+                    {
+                        item.DisplayTime = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MenuButtons":
+                    errorMask?.PushIndex((int)Message_FieldIndex.MenuButtons);
+                    try
+                    {
+                        if (ListXmlTranslation<MessageButton>.Instance.Parse(
+                            node: node,
+                            enumer: out var MenuButtonsItem,
+                            transl: LoquiXmlTranslation<MessageButton>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.MenuButtons.SetTo(MenuButtonsItem);
+                        }
+                        else
+                        {
+                            item.MenuButtons.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2533,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MessageBinaryWriteTranslation Instance = new MessageBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IMessageGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.INAM,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Quest,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Message.Flag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.DisplayTime,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IMessageButtonGetter>.Instance.Write(
+                writer: writer,
+                items: item.MenuButtons,
+                transl: (MutagenWriter subWriter, IMessageButtonGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((MessageButtonBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IMessageGetter item,
@@ -1734,7 +2597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +2653,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMessageInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Description);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Name);
+                }
+                case RecordTypeInts.INAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.INAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.INAM);
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Quest);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<Message.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Flags);
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DisplayTime = frame.ReadUInt32();
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.DisplayTime);
+                }
+                case RecordTypeInts.ITXT:
+                case RecordTypeInts.CTDA:
+                {
+                    item.MenuButtons.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MessageButton>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: MessageButton_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: MessageButton.TryCreateFromBinary));
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.MenuButtons);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,6 +2762,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMessageGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MessageCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MessageCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MessageXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +2794,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        #region INAM
+        private int? _INAMLocation;
+        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants) : UtilityTranslation.Zeros.Slice(0, 0);
+        #endregion
+        #region Quest
+        private int? _QuestLocation;
+        public bool Quest_IsSet => _QuestLocation.HasValue;
+        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public Message.Flag Flags => _FlagsLocation.HasValue ? (Message.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(Message.Flag);
+        #endregion
+        #region DisplayTime
+        private int? _DisplayTimeLocation;
+        public UInt32? DisplayTime => _DisplayTimeLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DisplayTimeLocation.Value, _package.MetaData.Constants)) : default(UInt32?);
+        #endregion
+        public IReadOnlyList<IMessageButtonGetter> MenuButtons { get; private set; } = ListExt.Empty<MessageButtonBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +2872,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Description);
+                }
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Name);
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _INAMLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.INAM);
+                }
+                case RecordTypeInts.QNAM:
+                {
+                    _QuestLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Quest);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Flags);
+                }
+                case RecordTypeInts.TNAM:
+                {
+                    _DisplayTimeLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.DisplayTime);
+                }
+                case RecordTypeInts.ITXT:
+                case RecordTypeInts.CTDA:
+                {
+                    this.MenuButtons = this.ParseRepeatedTypelessSubrecord<MessageButtonBinaryOverlay>(
+                        stream: stream,
+                        recordTypeConverter: recordTypeConverter,
+                        trigger: MessageButton_Registration.TriggeringRecordTypes,
+                        factory:  MessageButtonBinaryOverlay.MessageButtonFactory);
+                    return TryGet<int?>.Succeed((int)Message_FieldIndex.MenuButtons);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

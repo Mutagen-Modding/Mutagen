@@ -34,15 +34,15 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class Music :
+    public partial class MusicTrack :
         SkyrimMajorRecord,
-        IMusicInternal,
-        ILoquiObjectSetter<Music>,
-        IEquatable<Music>,
+        IMusicTrackInternal,
+        ILoquiObjectSetter<MusicTrack>,
+        IEquatable<MusicTrack>,
         IEqualsMask
     {
         #region Ctor
-        protected Music()
+        protected MusicTrack()
         {
             CustomCtor();
         }
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            MusicMixIn.ToString(
+            MusicTrackMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -66,29 +66,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMusicGetter rhs)) return false;
-            return ((MusicCommon)((IMusicGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IMusicTrackGetter rhs)) return false;
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Music? obj)
+        public bool Equals(MusicTrack? obj)
         {
-            return ((MusicCommon)((IMusicGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((MusicCommon)((IMusicGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MusicXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => MusicTrackXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((MusicXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MusicTrackXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new Music CreateFromXml(
+        public static new MusicTrack CreateFromXml(
             XElement node,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -108,27 +108,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             XElement node,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Music.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static Music CreateFromXml(
+        public new static MusicTrack CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new Music();
-            ((MusicSetterCommon)((IMusicGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new MusicTrack();
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -136,9 +136,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             string path,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -146,10 +146,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             string path,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -158,10 +158,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -170,9 +170,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             Stream stream,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -180,10 +180,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             Stream stream,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -192,10 +192,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static Music CreateFromXml(
+        public static MusicTrack CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new Music.Mask<R>();
+                var ret = new MusicTrack.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -303,16 +303,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(Music.Mask<bool>? printMask = null)
+            public string ToString(MusicTrack.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, Music.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, MusicTrack.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(Music.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(MusicTrack.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                Music_FieldIndex enu = (Music_FieldIndex)index;
+                MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                Music_FieldIndex enu = (Music_FieldIndex)index;
+                MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                Music_FieldIndex enu = (Music_FieldIndex)index;
+                MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
                     default:
@@ -439,19 +439,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Music_Registration.TriggeringRecordType;
-        public Music(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
+        public MusicTrack(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public Music(IMod mod)
+        public MusicTrack(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public Music(IMod mod, string editorID)
+        public MusicTrack(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -461,31 +461,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MusicBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MusicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new Music CreateFromBinary(MutagenFrame frame)
+        public static new MusicTrack CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static Music CreateFromBinary(
+        public new static MusicTrack CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new Music();
-            ((MusicSetterCommon)((IMusicGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new MusicTrack();
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out Music item,
+            out MusicTrack item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -507,85 +507,85 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicTrackGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((MusicSetterCommon)((IMusicGetter)this).CommonSetterInstance()!).Clear(this);
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new Music GetNew()
+        internal static new MusicTrack GetNew()
         {
-            return new Music();
+            return new MusicTrack();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IMusic :
-        IMusicGetter,
+    public partial interface IMusicTrack :
+        IMusicTrackGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IMusicInternal>
+        ILoquiObjectSetter<IMusicTrackInternal>
     {
     }
 
-    public partial interface IMusicInternal :
+    public partial interface IMusicTrackInternal :
         ISkyrimMajorRecordInternal,
-        IMusic,
-        IMusicGetter
+        IMusicTrack,
+        IMusicTrackGetter
     {
     }
 
-    public partial interface IMusicGetter :
+    public partial interface IMusicTrackGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IMusicGetter>,
+        ILoquiObject<IMusicTrackGetter>,
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Music_Registration.Instance;
+        static ILoquiRegistration Registration => MusicTrack_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class MusicMixIn
+    public static partial class MusicTrackMixIn
     {
-        public static void Clear(this IMusicInternal item)
+        public static void Clear(this IMusicTrackInternal item)
         {
-            ((MusicSetterCommon)((IMusicGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static Music.Mask<bool> GetEqualsMask(
-            this IMusicGetter item,
-            IMusicGetter rhs,
+        public static MusicTrack.Mask<bool> GetEqualsMask(
+            this IMusicTrackGetter item,
+            IMusicTrackGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((MusicCommon)((IMusicGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IMusicGetter item,
+            this IMusicTrackGetter item,
             string? name = null,
-            Music.Mask<bool>? printMask = null)
+            MusicTrack.Mask<bool>? printMask = null)
         {
-            return ((MusicCommon)((IMusicGetter)item).CommonInstance()!).ToString(
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IMusicGetter item,
+            this IMusicTrackGetter item,
             FileGeneration fg,
             string? name = null,
-            Music.Mask<bool>? printMask = null)
+            MusicTrack.Mask<bool>? printMask = null)
         {
-            ((MusicCommon)((IMusicGetter)item).CommonInstance()!).ToString(
+            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -593,86 +593,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IMusicGetter item,
-            Music.Mask<bool?> checkMask)
+            this IMusicTrackGetter item,
+            MusicTrack.Mask<bool?> checkMask)
         {
-            return ((MusicCommon)((IMusicGetter)item).CommonInstance()!).HasBeenSet(
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static Music.Mask<bool> GetHasBeenSetMask(this IMusicGetter item)
+        public static MusicTrack.Mask<bool> GetHasBeenSetMask(this IMusicTrackGetter item)
         {
-            var ret = new Music.Mask<bool>(false);
-            ((MusicCommon)((IMusicGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new MusicTrack.Mask<bool>(false);
+            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IMusicGetter item,
-            IMusicGetter rhs)
+            this IMusicTrackGetter item,
+            IMusicTrackGetter rhs)
         {
-            return ((MusicCommon)((IMusicGetter)item).CommonInstance()!).Equals(
+            return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IMusicInternal lhs,
-            IMusicGetter rhs,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? copyMask = null)
+            this IMusicTrackInternal lhs,
+            IMusicTrackGetter rhs,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((MusicSetterTranslationCommon)((IMusicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MusicTrackSetterTranslationCommon)((IMusicTrackGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = Music.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IMusicInternal lhs,
-            IMusicGetter rhs,
+            this IMusicTrackInternal lhs,
+            IMusicTrackGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((MusicSetterTranslationCommon)((IMusicGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((MusicTrackSetterTranslationCommon)((IMusicTrackGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static Music DeepCopy(
-            this IMusicGetter item,
-            Music.TranslationMask? copyMask = null)
+        public static MusicTrack DeepCopy(
+            this IMusicTrackGetter item,
+            MusicTrack.TranslationMask? copyMask = null)
         {
-            return ((MusicSetterTranslationCommon)((IMusicGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MusicTrackSetterTranslationCommon)((IMusicTrackGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static Music DeepCopy(
-            this IMusicGetter item,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? copyMask = null)
+        public static MusicTrack DeepCopy(
+            this IMusicTrackGetter item,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? copyMask = null)
         {
-            return ((MusicSetterTranslationCommon)((IMusicGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MusicTrackSetterTranslationCommon)((IMusicTrackGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static Music DeepCopy(
-            this IMusicGetter item,
+        public static MusicTrack DeepCopy(
+            this IMusicTrackGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((MusicSetterTranslationCommon)((IMusicGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((MusicTrackSetterTranslationCommon)((IMusicTrackGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -681,9 +681,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             XElement node,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -694,10 +694,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             XElement node,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -705,16 +705,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Music.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((MusicSetterCommon)((IMusicGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -722,9 +722,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             string path,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -734,10 +734,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             string path,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -748,10 +748,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -762,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             Stream stream,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -774,10 +774,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             Stream stream,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null)
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -788,10 +788,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            Music.TranslationMask? translationMask = null)
+            MusicTrack.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -806,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -816,11 +816,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IMusicInternal item,
+            this IMusicTrackInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MusicSetterCommon)((IMusicGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((MusicTrackSetterCommon)((IMusicTrackGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -836,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum Music_FieldIndex
+    public enum MusicTrack_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -848,40 +848,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class Music_Registration : ILoquiRegistration
+    public partial class MusicTrack_Registration : ILoquiRegistration
     {
-        public static readonly Music_Registration Instance = new Music_Registration();
+        public static readonly MusicTrack_Registration Instance = new MusicTrack_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 258,
+            msgID: 450,
             version: 0);
 
-        public const string GUID = "9c2b9533-f2e9-4711-ba07-d85a2b23280f";
+        public const string GUID = "be0b125f-644b-4d58-bcd9-94649f4fa209";
 
         public const ushort AdditionalFieldCount = 0;
 
         public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(Music.Mask<>);
+        public static readonly Type MaskType = typeof(MusicTrack.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Music.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(MusicTrack.ErrorMask);
 
-        public static readonly Type ClassType = typeof(Music);
+        public static readonly Type ClassType = typeof(MusicTrack);
 
-        public static readonly Type GetterType = typeof(IMusicGetter);
+        public static readonly Type GetterType = typeof(IMusicTrackGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IMusic);
+        public static readonly Type SetterType = typeof(IMusicTrack);
 
-        public static readonly Type? InternalSetterType = typeof(IMusicInternal);
+        public static readonly Type? InternalSetterType = typeof(IMusicTrackInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.Music";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.MusicTrack";
 
-        public const string Name = "Music";
+        public const string Name = "MusicTrack";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -900,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -910,7 +910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -920,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -960,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Music_FieldIndex enu = (Music_FieldIndex)index;
+            MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
                 default:
@@ -968,9 +968,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(MusicXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.MUSC;
-        public static readonly Type BinaryWriteTranslation = typeof(MusicBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(MusicTrackXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MUST;
+        public static readonly Type BinaryWriteTranslation = typeof(MusicTrackBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1003,13 +1003,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class MusicSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class MusicTrackSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly MusicSetterCommon Instance = new MusicSetterCommon();
+        public new static readonly MusicTrackSetterCommon Instance = new MusicTrackSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IMusicInternal item)
+        public void Clear(IMusicTrackInternal item)
         {
             ClearPartial();
             base.Clear(item);
@@ -1017,17 +1017,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IMusicInternal)item);
+            Clear(item: (IMusicTrackInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IMusicInternal)item);
+            Clear(item: (IMusicTrackInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    MusicXmlCreateTranslation.FillPublicElementXml(
+                    MusicTrackXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Music)item,
+                item: (MusicTrack)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (Music)item,
+                item: (MusicTrack)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1107,16 +1107,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IMusicInternal>(
+            UtilityTranslation.MajorRecordParse<IMusicTrackInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: MusicBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: MusicBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: MusicTrackBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MusicTrackBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Music)item,
+                item: (MusicTrack)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (Music)item,
+                item: (MusicTrack)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1144,17 +1144,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class MusicCommon : SkyrimMajorRecordCommon
+    public partial class MusicTrackCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly MusicCommon Instance = new MusicCommon();
+        public new static readonly MusicTrackCommon Instance = new MusicTrackCommon();
 
-        public Music.Mask<bool> GetEqualsMask(
-            IMusicGetter item,
-            IMusicGetter rhs,
+        public MusicTrack.Mask<bool> GetEqualsMask(
+            IMusicTrackGetter item,
+            IMusicTrackGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new Music.Mask<bool>(false);
-            ((MusicCommon)((IMusicGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new MusicTrack.Mask<bool>(false);
+            ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1163,9 +1163,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IMusicGetter item,
-            IMusicGetter rhs,
-            Music.Mask<bool> ret,
+            IMusicTrackGetter item,
+            IMusicTrackGetter rhs,
+            MusicTrack.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1173,9 +1173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IMusicGetter item,
+            IMusicTrackGetter item,
             string? name = null,
-            Music.Mask<bool>? printMask = null)
+            MusicTrack.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1187,18 +1187,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IMusicGetter item,
+            IMusicTrackGetter item,
             FileGeneration fg,
             string? name = null,
-            Music.Mask<bool>? printMask = null)
+            MusicTrack.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"Music =>");
+                fg.AppendLine($"MusicTrack =>");
             }
             else
             {
-                fg.AppendLine($"{name} (Music) =>");
+                fg.AppendLine($"{name} (MusicTrack) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1212,9 +1212,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IMusicGetter item,
+            IMusicTrackGetter item,
             FileGeneration fg,
-            Music.Mask<bool>? printMask = null)
+            MusicTrack.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
@@ -1223,8 +1223,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IMusicGetter item,
-            Music.Mask<bool?> checkMask)
+            IMusicTrackGetter item,
+            MusicTrack.Mask<bool?> checkMask)
         {
             return base.HasBeenSet(
                 item: item,
@@ -1232,47 +1232,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IMusicGetter item,
-            Music.Mask<bool> mask)
+            IMusicTrackGetter item,
+            MusicTrack.Mask<bool> mask)
         {
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static Music_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static MusicTrack_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new Music_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new MusicTrack_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Music_FieldIndex)((int)index);
+                    return (MusicTrack_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1280,8 +1280,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IMusicGetter? lhs,
-            IMusicGetter? rhs)
+            IMusicTrackGetter? lhs,
+            IMusicTrackGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1294,8 +1294,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IMusicGetter?)lhs,
-                rhs: rhs as IMusicGetter);
+                lhs: (IMusicTrackGetter?)lhs,
+                rhs: rhs as IMusicTrackGetter);
         }
         
         public override bool Equals(
@@ -1303,11 +1303,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IMusicGetter?)lhs,
-                rhs: rhs as IMusicGetter);
+                lhs: (IMusicTrackGetter?)lhs,
+                rhs: rhs as IMusicTrackGetter);
         }
         
-        public virtual int GetHashCode(IMusicGetter item)
+        public virtual int GetHashCode(IMusicTrackGetter item)
         {
             var hash = new HashCode();
             hash.Add(base.GetHashCode());
@@ -1316,12 +1316,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IMusicGetter)item);
+            return GetHashCode(item: (IMusicTrackGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IMusicGetter)item);
+            return GetHashCode(item: (IMusicTrackGetter)item);
         }
         
         #endregion
@@ -1329,11 +1329,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return Music.GetNew();
+            return MusicTrack.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IMusicGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IMusicTrackGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1342,29 +1342,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IMusicGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(Music obj, Music rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(IMusicTrackGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(MusicTrack obj, MusicTrack rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new Music(getNextFormKey());
-            ret.DeepCopyIn((Music)item);
+            var ret = new MusicTrack(getNextFormKey());
+            ret.DeepCopyIn((MusicTrack)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (Music)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (MusicTrack)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class MusicSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class MusicTrackSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly MusicSetterTranslationCommon Instance = new MusicSetterTranslationCommon();
+        public new static readonly MusicTrackSetterTranslationCommon Instance = new MusicTrackSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IMusicInternal item,
-            IMusicGetter rhs,
+            IMusicTrackInternal item,
+            IMusicTrackGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1376,8 +1376,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IMusic item,
-            IMusicGetter rhs,
+            IMusicTrack item,
+            IMusicTrackGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1395,8 +1395,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IMusicInternal)item,
-                rhs: (IMusicGetter)rhs,
+                item: (IMusicTrackInternal)item,
+                rhs: (IMusicTrackGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1408,8 +1408,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IMusic)item,
-                rhs: (IMusicGetter)rhs,
+                item: (IMusicTrack)item,
+                rhs: (IMusicTrackGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1421,8 +1421,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IMusicInternal)item,
-                rhs: (IMusicGetter)rhs,
+                item: (IMusicTrackInternal)item,
+                rhs: (IMusicTrackGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1434,31 +1434,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IMusic)item,
-                rhs: (IMusicGetter)rhs,
+                item: (IMusicTrack)item,
+                rhs: (IMusicTrackGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public Music DeepCopy(
-            IMusicGetter item,
-            Music.TranslationMask? copyMask = null)
+        public MusicTrack DeepCopy(
+            IMusicTrackGetter item,
+            MusicTrack.TranslationMask? copyMask = null)
         {
-            Music ret = (Music)((MusicCommon)((IMusicGetter)item).CommonInstance()!).GetNew();
+            MusicTrack ret = (MusicTrack)((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public Music DeepCopy(
-            IMusicGetter item,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? copyMask = null)
+        public MusicTrack DeepCopy(
+            IMusicTrackGetter item,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? copyMask = null)
         {
-            Music ret = (Music)((MusicCommon)((IMusicGetter)item).CommonInstance()!).GetNew();
+            MusicTrack ret = (MusicTrack)((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1466,12 +1466,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public Music DeepCopy(
-            IMusicGetter item,
+        public MusicTrack DeepCopy(
+            IMusicTrackGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            Music ret = (Music)((MusicCommon)((IMusicGetter)item).CommonInstance()!).GetNew();
+            MusicTrack ret = (MusicTrack)((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1486,21 +1486,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class Music
+    public partial class MusicTrack
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Music_Registration.Instance;
-        public new static Music_Registration Registration => Music_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
+        public new static MusicTrack_Registration Registration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MusicCommon.Instance;
+        protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return MusicSetterCommon.Instance;
+            return MusicTrackSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MusicSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MusicTrackSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1511,14 +1511,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MusicXmlWriteTranslation :
+    public partial class MusicTrackXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static MusicXmlWriteTranslation Instance = new MusicXmlWriteTranslation();
+        public new readonly static MusicTrackXmlWriteTranslation Instance = new MusicTrackXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IMusicGetter item,
+            IMusicTrackGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1532,16 +1532,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IMusicGetter item,
+            IMusicTrackGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Music");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.MusicTrack");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Music");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.MusicTrack");
             }
             WriteToNodeXml(
                 item: item,
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1597,12 +1597,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class MusicXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class MusicTrackXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static MusicXmlCreateTranslation Instance = new MusicXmlCreateTranslation();
+        public new readonly static MusicTrackXmlCreateTranslation Instance = new MusicTrackXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    MusicXmlCreateTranslation.FillPublicElementXml(
+                    MusicTrackXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1627,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1652,30 +1652,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class MusicXmlTranslationMixIn
+    public static class MusicTrackXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IMusicGetter item,
+            this IMusicTrackGetter item,
             XElement node,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((MusicXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((MusicTrackXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = Music.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = MusicTrack.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IMusicGetter item,
+            this IMusicTrackGetter item,
             string path,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1689,10 +1689,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IMusicGetter item,
+            this IMusicTrackGetter item,
             Stream stream,
-            out Music.ErrorMask errorMask,
-            Music.TranslationMask? translationMask = null,
+            out MusicTrack.ErrorMask errorMask,
+            MusicTrack.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1715,20 +1715,20 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MusicBinaryWriteTranslation :
+    public partial class MusicTrackBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static MusicBinaryWriteTranslation Instance = new MusicBinaryWriteTranslation();
+        public new readonly static MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IMusicGetter item,
+            IMusicTrackGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.MUSC),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.MUST),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -1747,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1758,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1769,20 +1769,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IMusicGetter)item,
+                item: (IMusicTrackGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class MusicBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class MusicTrackBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static MusicBinaryCreateTranslation Instance = new MusicBinaryCreateTranslation();
+        public new readonly static MusicTrackBinaryCreateTranslation Instance = new MusicTrackBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.MUSC;
+        public override RecordType RecordType => RecordTypes.MUST;
         public static void FillBinaryStructs(
-            IMusicInternal item,
+            IMusicTrackInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -1796,7 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class MusicBinaryTranslationMixIn
+    public static class MusicTrackBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1805,34 +1805,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class MusicBinaryOverlay :
+    public partial class MusicTrackBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        IMusicGetter
+        IMusicTrackGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => Music_Registration.Instance;
-        public new static Music_Registration Registration => Music_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => MusicTrack_Registration.Instance;
+        public new static MusicTrack_Registration Registration => MusicTrack_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => MusicCommon.Instance;
+        protected override object CommonInstance() => MusicTrackCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => MusicSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => MusicTrackSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicTrackGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => MusicXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => MusicTrackXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((MusicXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((MusicTrackXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1840,12 +1840,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => MusicBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => MusicTrackBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((MusicBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((MusicTrackBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -1857,7 +1857,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected MusicBinaryOverlay(
+        protected MusicTrackBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1867,13 +1867,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static MusicBinaryOverlay MusicFactory(
+        public static MusicTrackBinaryOverlay MusicTrackFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream);
-            var ret = new MusicBinaryOverlay(
+            var ret = new MusicTrackBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -1892,12 +1892,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static MusicBinaryOverlay MusicFactory(
+        public static MusicTrackBinaryOverlay MusicTrackFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return MusicFactory(
+            return MusicTrackFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            MusicMixIn.ToString(
+            MusicTrackMixIn.ToString(
                 item: this,
                 name: name);
         }

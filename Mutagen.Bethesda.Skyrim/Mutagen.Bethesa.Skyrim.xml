@@ -16,16 +16,16 @@
             Implemented by: [Npc, FormList]
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColors">
+        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColorsCommon">
             <summary>
             Interface for ambient color definitions.
-            Implemented by: [WeatherAmbientColors, CellLighting]
+            Implemented by: [AmbientColors, CellLighting]
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColorsGetter">
+        <member name="T:Mutagen.Bethesda.Skyrim.IAmbientColorsCommonGetter">
             <summary>
             Interface for ambient color definitions.
-            Implemented by: [WeatherAmbientColors, CellLighting]
+            Implemented by: [AmbientColors, CellLighting]
             </summary>
         </member>
         <member name="T:Mutagen.Bethesda.Skyrim.IBoundableEquipment">
@@ -360,6 +360,11 @@
             An abstract class representing a Perk entry point effect.
             Implemented by: [PerkModifyValue, PerkAddRangeToValue, PerkModifyActorValue, PerkAbsoluteValue
             PerkAddLeveledItem, PerkAddActivateChoice, PerkSelectSpell, PerkSelectText, PerkSetText]
+            </summary>
+        </member>
+        <member name="F:Mutagen.Bethesda.Skyrim.MusicType.Flag.DoesNotQueue">
+            <summary>
+            SSE only
             </summary>
         </member>
         <member name="T:Mutagen.Bethesda.Skyrim.NpcConfiguration.Flag">

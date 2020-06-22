@@ -193,9 +193,9 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceObjectBoundsGetter? IWorldspaceGetter.ObjectBounds => this.ObjectBounds;
         #endregion
         #region Music
-        public FormLinkNullable<Music> Music { get; set; } = new FormLinkNullable<Music>();
+        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMusicGetter> IWorldspaceGetter.Music => this.Music;
+        IFormLinkNullable<IMusicTypeGetter> IWorldspaceGetter.Music => this.Music;
         #endregion
         #region CanopyShadow
         public String? CanopyShadow { get; set; }
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single? DistantLodMultiplier { get; set; }
         new Worldspace.Flag Flags { get; set; }
         new WorldspaceObjectBounds? ObjectBounds { get; set; }
-        new FormLinkNullable<Music> Music { get; set; }
+        new FormLinkNullable<MusicType> Music { get; set; }
         new String? CanopyShadow { get; set; }
         new String? WaterNoiseTexture { get; set; }
         new String? HdLodDiffuseTexture { get; set; }
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single? DistantLodMultiplier { get; }
         Worldspace.Flag Flags { get; }
         IWorldspaceObjectBoundsGetter? ObjectBounds { get; }
-        IFormLinkNullable<IMusicGetter> Music { get; }
+        IFormLinkNullable<IMusicTypeGetter> Music { get; }
         String? CanopyShadow { get; }
         String? WaterNoiseTexture { get; }
         String? HdLodDiffuseTexture { get; }
@@ -2758,7 +2758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Worldspace_FieldIndex.ObjectBounds:
                     return typeof(WorldspaceObjectBounds);
                 case Worldspace_FieldIndex.Music:
-                    return typeof(FormLinkNullable<Music>);
+                    return typeof(FormLinkNullable<MusicType>);
                 case Worldspace_FieldIndex.CanopyShadow:
                     return typeof(String);
                 case Worldspace_FieldIndex.WaterNoiseTexture:
@@ -2848,7 +2848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DistantLodMultiplier = default;
             item.Flags = default;
             item.ObjectBounds = null;
-            item.Music = FormLinkNullable<Music>.Null;
+            item.Music = FormLinkNullable<MusicType>.Null;
             item.CanopyShadow = default;
             item.WaterNoiseTexture = default;
             item.HdLodDiffuseTexture = default;
@@ -6104,7 +6104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullable<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region CanopyShadow
         private int? _CanopyShadowLocation;

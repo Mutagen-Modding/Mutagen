@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="SkyrimMajorRecord" GUID="be0b125f-644b-4d58-bcd9-94649f4fa209" ID="450">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

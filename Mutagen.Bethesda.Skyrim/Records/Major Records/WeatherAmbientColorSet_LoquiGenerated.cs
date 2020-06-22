@@ -48,24 +48,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Sunrise
-        public WeatherAmbientColors Sunrise { get; set; } = new WeatherAmbientColors();
+        public AmbientColors Sunrise { get; set; } = new AmbientColors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeatherAmbientColorsGetter IWeatherAmbientColorSetGetter.Sunrise => Sunrise;
+        IAmbientColorsGetter IWeatherAmbientColorSetGetter.Sunrise => Sunrise;
         #endregion
         #region Day
-        public WeatherAmbientColors Day { get; set; } = new WeatherAmbientColors();
+        public AmbientColors Day { get; set; } = new AmbientColors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeatherAmbientColorsGetter IWeatherAmbientColorSetGetter.Day => Day;
+        IAmbientColorsGetter IWeatherAmbientColorSetGetter.Day => Day;
         #endregion
         #region Sunset
-        public WeatherAmbientColors Sunset { get; set; } = new WeatherAmbientColors();
+        public AmbientColors Sunset { get; set; } = new AmbientColors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeatherAmbientColorsGetter IWeatherAmbientColorSetGetter.Sunset => Sunset;
+        IAmbientColorsGetter IWeatherAmbientColorSetGetter.Sunset => Sunset;
         #endregion
         #region Night
-        public WeatherAmbientColors Night { get; set; } = new WeatherAmbientColors();
+        public AmbientColors Night { get; set; } = new AmbientColors();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IWeatherAmbientColorsGetter IWeatherAmbientColorSetGetter.Night => Night;
+        IAmbientColorsGetter IWeatherAmbientColorSetGetter.Night => Night;
         #endregion
 
         #region To String
@@ -236,10 +236,10 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Sunrise = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(initialValue, new WeatherAmbientColors.Mask<TItem>(initialValue));
-                this.Day = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(initialValue, new WeatherAmbientColors.Mask<TItem>(initialValue));
-                this.Sunset = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(initialValue, new WeatherAmbientColors.Mask<TItem>(initialValue));
-                this.Night = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(initialValue, new WeatherAmbientColors.Mask<TItem>(initialValue));
+                this.Sunrise = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.Day = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.Sunset = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.Night = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -248,10 +248,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Sunset,
                 TItem Night)
             {
-                this.Sunrise = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(Sunrise, new WeatherAmbientColors.Mask<TItem>(Sunrise));
-                this.Day = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(Day, new WeatherAmbientColors.Mask<TItem>(Day));
-                this.Sunset = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(Sunset, new WeatherAmbientColors.Mask<TItem>(Sunset));
-                this.Night = new MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>(Night, new WeatherAmbientColors.Mask<TItem>(Night));
+                this.Sunrise = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Sunrise, new AmbientColors.Mask<TItem>(Sunrise));
+                this.Day = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Day, new AmbientColors.Mask<TItem>(Day));
+                this.Sunset = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Sunset, new AmbientColors.Mask<TItem>(Sunset));
+                this.Night = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(Night, new AmbientColors.Mask<TItem>(Night));
             }
 
             #pragma warning disable CS8618
@@ -263,10 +263,10 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>? Sunrise { get; set; }
-            public MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>? Day { get; set; }
-            public MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>? Sunset { get; set; }
-            public MaskItem<TItem, WeatherAmbientColors.Mask<TItem>?>? Night { get; set; }
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Sunrise { get; set; }
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Day { get; set; }
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Sunset { get; set; }
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? Night { get; set; }
             #endregion
 
             #region Equals
@@ -361,10 +361,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Sunrise = this.Sunrise == null ? null : new MaskItem<R, WeatherAmbientColors.Mask<R>?>(eval(this.Sunrise.Overall), this.Sunrise.Specific?.Translate(eval));
-                obj.Day = this.Day == null ? null : new MaskItem<R, WeatherAmbientColors.Mask<R>?>(eval(this.Day.Overall), this.Day.Specific?.Translate(eval));
-                obj.Sunset = this.Sunset == null ? null : new MaskItem<R, WeatherAmbientColors.Mask<R>?>(eval(this.Sunset.Overall), this.Sunset.Specific?.Translate(eval));
-                obj.Night = this.Night == null ? null : new MaskItem<R, WeatherAmbientColors.Mask<R>?>(eval(this.Night.Overall), this.Night.Specific?.Translate(eval));
+                obj.Sunrise = this.Sunrise == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Sunrise.Overall), this.Sunrise.Specific?.Translate(eval));
+                obj.Day = this.Day == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Day.Overall), this.Day.Specific?.Translate(eval));
+                obj.Sunset = this.Sunset == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Sunset.Overall), this.Sunset.Specific?.Translate(eval));
+                obj.Night = this.Night == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.Night.Overall), this.Night.Specific?.Translate(eval));
             }
             #endregion
 
@@ -428,10 +428,10 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>? Sunrise;
-            public MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>? Day;
-            public MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>? Sunset;
-            public MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>? Night;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Sunrise;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Day;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Sunset;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? Night;
             #endregion
 
             #region IErrorMask
@@ -459,16 +459,16 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case WeatherAmbientColorSet_FieldIndex.Sunrise:
-                        this.Sunrise = new MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>(ex, null);
+                        this.Sunrise = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Day:
-                        this.Day = new MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>(ex, null);
+                        this.Day = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Sunset:
-                        this.Sunset = new MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>(ex, null);
+                        this.Sunset = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Night:
-                        this.Night = new MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>(ex, null);
+                        this.Night = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -481,16 +481,16 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case WeatherAmbientColorSet_FieldIndex.Sunrise:
-                        this.Sunrise = (MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>?)obj;
+                        this.Sunrise = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Day:
-                        this.Day = (MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>?)obj;
+                        this.Day = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Sunset:
-                        this.Sunset = (MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>?)obj;
+                        this.Sunset = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
                         break;
                     case WeatherAmbientColorSet_FieldIndex.Night:
-                        this.Night = (MaskItem<Exception?, WeatherAmbientColors.ErrorMask?>?)obj;
+                        this.Night = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -575,19 +575,19 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, WeatherAmbientColors.TranslationMask?> Sunrise;
-            public MaskItem<bool, WeatherAmbientColors.TranslationMask?> Day;
-            public MaskItem<bool, WeatherAmbientColors.TranslationMask?> Sunset;
-            public MaskItem<bool, WeatherAmbientColors.TranslationMask?> Night;
+            public MaskItem<bool, AmbientColors.TranslationMask?> Sunrise;
+            public MaskItem<bool, AmbientColors.TranslationMask?> Day;
+            public MaskItem<bool, AmbientColors.TranslationMask?> Sunset;
+            public MaskItem<bool, AmbientColors.TranslationMask?> Night;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Sunrise = new MaskItem<bool, WeatherAmbientColors.TranslationMask?>(defaultOn, null);
-                this.Day = new MaskItem<bool, WeatherAmbientColors.TranslationMask?>(defaultOn, null);
-                this.Sunset = new MaskItem<bool, WeatherAmbientColors.TranslationMask?>(defaultOn, null);
-                this.Night = new MaskItem<bool, WeatherAmbientColors.TranslationMask?>(defaultOn, null);
+                this.Sunrise = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.Day = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.Sunset = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.Night = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -685,10 +685,10 @@ namespace Mutagen.Bethesda.Skyrim
         IWeatherAmbientColorSetGetter,
         ILoquiObjectSetter<IWeatherAmbientColorSet>
     {
-        new WeatherAmbientColors Sunrise { get; set; }
-        new WeatherAmbientColors Day { get; set; }
-        new WeatherAmbientColors Sunset { get; set; }
-        new WeatherAmbientColors Night { get; set; }
+        new AmbientColors Sunrise { get; set; }
+        new AmbientColors Day { get; set; }
+        new AmbientColors Sunset { get; set; }
+        new AmbientColors Night { get; set; }
     }
 
     public partial interface IWeatherAmbientColorSetGetter :
@@ -704,10 +704,10 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WeatherAmbientColorSet_Registration.Instance;
-        IWeatherAmbientColorsGetter Sunrise { get; }
-        IWeatherAmbientColorsGetter Day { get; }
-        IWeatherAmbientColorsGetter Sunset { get; }
-        IWeatherAmbientColorsGetter Night { get; }
+        IAmbientColorsGetter Sunrise { get; }
+        IAmbientColorsGetter Day { get; }
+        IAmbientColorsGetter Sunset { get; }
+        IAmbientColorsGetter Night { get; }
 
     }
 
@@ -1190,13 +1190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case WeatherAmbientColorSet_FieldIndex.Sunrise:
-                    return typeof(WeatherAmbientColors);
+                    return typeof(AmbientColors);
                 case WeatherAmbientColorSet_FieldIndex.Day:
-                    return typeof(WeatherAmbientColors);
+                    return typeof(AmbientColors);
                 case WeatherAmbientColorSet_FieldIndex.Sunset:
-                    return typeof(WeatherAmbientColors);
+                    return typeof(AmbientColors);
                 case WeatherAmbientColorSet_FieldIndex.Night:
-                    return typeof(WeatherAmbientColors);
+                    return typeof(AmbientColors);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1403,10 +1403,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorSetGetter item,
             WeatherAmbientColorSet.Mask<bool> mask)
         {
-            mask.Sunrise = new MaskItem<bool, WeatherAmbientColors.Mask<bool>?>(true, item.Sunrise?.GetHasBeenSetMask());
-            mask.Day = new MaskItem<bool, WeatherAmbientColors.Mask<bool>?>(true, item.Day?.GetHasBeenSetMask());
-            mask.Sunset = new MaskItem<bool, WeatherAmbientColors.Mask<bool>?>(true, item.Sunset?.GetHasBeenSetMask());
-            mask.Night = new MaskItem<bool, WeatherAmbientColors.Mask<bool>?>(true, item.Night?.GetHasBeenSetMask());
+            mask.Sunrise = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunrise?.GetHasBeenSetMask());
+            mask.Day = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Day?.GetHasBeenSetMask());
+            mask.Sunset = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Sunset?.GetHasBeenSetMask());
+            mask.Night = new MaskItem<bool, AmbientColors.Mask<bool>?>(true, item.Night?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1642,7 +1642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunrise) ?? true))
             {
                 var SunriseItem = item.Sunrise;
-                ((WeatherAmbientColorsXmlWriteTranslation)((IXmlItem)SunriseItem).XmlWriteTranslator).Write(
+                ((AmbientColorsXmlWriteTranslation)((IXmlItem)SunriseItem).XmlWriteTranslator).Write(
                     item: SunriseItem,
                     node: node,
                     name: nameof(item.Sunrise),
@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Day) ?? true))
             {
                 var DayItem = item.Day;
-                ((WeatherAmbientColorsXmlWriteTranslation)((IXmlItem)DayItem).XmlWriteTranslator).Write(
+                ((AmbientColorsXmlWriteTranslation)((IXmlItem)DayItem).XmlWriteTranslator).Write(
                     item: DayItem,
                     node: node,
                     name: nameof(item.Day),
@@ -1664,7 +1664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunset) ?? true))
             {
                 var SunsetItem = item.Sunset;
-                ((WeatherAmbientColorsXmlWriteTranslation)((IXmlItem)SunsetItem).XmlWriteTranslator).Write(
+                ((AmbientColorsXmlWriteTranslation)((IXmlItem)SunsetItem).XmlWriteTranslator).Write(
                     item: SunsetItem,
                     node: node,
                     name: nameof(item.Sunset),
@@ -1675,7 +1675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Night) ?? true))
             {
                 var NightItem = item.Night;
-                ((WeatherAmbientColorsXmlWriteTranslation)((IXmlItem)NightItem).XmlWriteTranslator).Write(
+                ((AmbientColorsXmlWriteTranslation)((IXmlItem)NightItem).XmlWriteTranslator).Write(
                     item: NightItem,
                     node: node,
                     name: nameof(item.Night),
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)WeatherAmbientColorSet_FieldIndex.Sunrise);
                     try
                     {
-                        item.Sunrise = LoquiXmlTranslation<WeatherAmbientColors>.Instance.Parse(
+                        item.Sunrise = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunrise));
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)WeatherAmbientColorSet_FieldIndex.Day);
                     try
                     {
-                        item.Day = LoquiXmlTranslation<WeatherAmbientColors>.Instance.Parse(
+                        item.Day = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Day));
@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)WeatherAmbientColorSet_FieldIndex.Sunset);
                     try
                     {
-                        item.Sunset = LoquiXmlTranslation<WeatherAmbientColors>.Instance.Parse(
+                        item.Sunset = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunset));
@@ -1850,7 +1850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)WeatherAmbientColorSet_FieldIndex.Night);
                     try
                     {
-                        item.Night = LoquiXmlTranslation<WeatherAmbientColors>.Instance.Parse(
+                        item.Night = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Night));
@@ -2040,22 +2040,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorSetGetter item,
             MutagenWriter writer)
         {
-            var SunriseItem = item.Sunrise;
-            ((WeatherAmbientColorsBinaryWriteTranslation)((IBinaryItem)SunriseItem).BinaryWriteTranslator).Write(
-                item: SunriseItem,
-                writer: writer);
-            var DayItem = item.Day;
-            ((WeatherAmbientColorsBinaryWriteTranslation)((IBinaryItem)DayItem).BinaryWriteTranslator).Write(
-                item: DayItem,
-                writer: writer);
-            var SunsetItem = item.Sunset;
-            ((WeatherAmbientColorsBinaryWriteTranslation)((IBinaryItem)SunsetItem).BinaryWriteTranslator).Write(
-                item: SunsetItem,
-                writer: writer);
-            var NightItem = item.Night;
-            ((WeatherAmbientColorsBinaryWriteTranslation)((IBinaryItem)NightItem).BinaryWriteTranslator).Write(
-                item: NightItem,
-                writer: writer);
         }
 
         public void Write(
@@ -2095,10 +2079,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorSet item,
             MutagenFrame frame)
         {
-            item.Sunrise = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Day = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Sunset = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
-            item.Night = Mutagen.Bethesda.Skyrim.WeatherAmbientColors.CreateFromBinary(frame: frame);
         }
 
     }
@@ -2182,10 +2162,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IWeatherAmbientColorsGetter Sunrise => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Day => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x24), _package), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Sunset => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x48), _package), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Night => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x6C), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2212,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x90 + package.MetaData.Constants.SubConstants.HeaderLength;
+            stream.Position += 0x0 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

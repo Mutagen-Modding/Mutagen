@@ -24,7 +24,7 @@
       <Float name="DistantLodMultiplier" recordType="NAMA" />
       <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
       <RefDirect name="ObjectBounds" refName="WorldspaceObjectBounds" />
-      <FormLink name="Music" refName="Music" recordType="ZNAM" />
+      <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
       <String name="CanopyShadow" recordType="NNAM" />
       <String name="WaterNoiseTexture" recordType="XNAM" />
       <String name="HdLodDiffuseTexture" recordType="TNAM" />

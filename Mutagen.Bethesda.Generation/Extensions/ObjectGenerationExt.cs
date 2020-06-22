@@ -183,6 +183,14 @@ namespace Mutagen.Bethesda.Generation
             return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
         }
 
+        public static bool IsVariableLengthStruct(this ObjectGeneration objGen)
+        {
+            var objData = objGen.GetObjectData();
+            return objGen.GetObjectType() == ObjectType.Subrecord
+                && objData.TriggeringSource == null
+                && objData.HasVersioning();
+        }
+
         public static async Task<bool> GetNeedsMasters(this ObjectGeneration objGen)
         {
             if (objGen.GetObjectType() == ObjectType.Group) return true;

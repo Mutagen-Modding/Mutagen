@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Binary
 
         public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)]out T item)
         {
-            item = ParseValue(frame);
+            item = ParseValue(frame.SpawnWithLength(this.ExpectedLength));
             return true;
         }
 

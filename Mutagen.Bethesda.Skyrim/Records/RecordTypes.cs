@@ -116,6 +116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DLBR = new RecordType(0x52424C44);
         public static readonly RecordType DMDL = new RecordType(0x4C444D44);
         public static readonly RecordType DNAM = new RecordType(0x4D414E44);
+        public static readonly RecordType DOBJ = new RecordType(0x4A424F44);
         public static readonly RecordType DODT = new RecordType(0x54444F44);
         public static readonly RecordType DOFT = new RecordType(0x54464F44);
         public static readonly RecordType DOOR = new RecordType(0x524F4F44);
@@ -209,6 +210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType INTV = new RecordType(0x56544E49);
         public static readonly RecordType IPCT = new RecordType(0x54435049);
         public static readonly RecordType IPDS = new RecordType(0x53445049);
+        public static readonly RecordType ITXT = new RecordType(0x54585449);
         public static readonly RecordType JAIL = new RecordType(0x4C49414A);
         public static readonly RecordType JIAD = new RecordType(0x4441494A);
         public static readonly RecordType JNAM = new RecordType(0x4D414E4A);
@@ -268,6 +270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MTNM = new RecordType(0x4D4E544D);
         public static readonly RecordType MTYP = new RecordType(0x5059544D);
         public static readonly RecordType MUSC = new RecordType(0x4353554D);
+        public static readonly RecordType MUST = new RecordType(0x5453554D);
         public static readonly RecordType NAM0 = new RecordType(0x304D414E);
         public static readonly RecordType NAM1 = new RecordType(0x314D414E);
         public static readonly RecordType NAM2 = new RecordType(0x324D414E);

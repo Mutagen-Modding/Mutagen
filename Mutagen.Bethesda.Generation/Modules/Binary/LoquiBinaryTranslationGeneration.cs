@@ -555,6 +555,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"stream: stream");
                     args.Add($"package: {packageAccessor}");
+                    if (loqui.TargetObjectGeneration.IsVariableLengthStruct())
+                    {
+                        args.AddPassArg($"finalPos");
+                    }
                     args.Add($"recordTypeConverter: {converterAccessor}");
                 }
             }

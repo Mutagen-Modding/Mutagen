@@ -162,14 +162,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static WeatherAmbientColorSet GetBinaryDirectionalAmbientLightingColors(MutagenFrame frame)
             {
-                WeatherAmbientColors Parse()
+                AmbientColors Parse()
                 {
                     var subMeta = frame.ReadSubrecord();
                     if (subMeta.RecordType != RecordTypes.DALC)
                     {
                         throw new ArgumentException();
                     }
-                    return WeatherAmbientColors.CreateFromBinary(frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false));
+                    return AmbientColors.CreateFromBinary(frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false));
                 }
 
                 return new WeatherAmbientColorSet()

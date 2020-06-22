@@ -64,5 +64,7 @@ namespace Mutagen.Bethesda.Generation
             }
             return ret;
         }
+
+        public bool HasVersioning() => this.ObjGen.AllFields.Any(f => f is BreakType);
     }
 }

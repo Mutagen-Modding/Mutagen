@@ -40,7 +40,7 @@
   </Object>
   <Object name="RegionSounds" objType="Subrecord" baseClass="RegionData" GUID="190e9555-1844-4c56-9deb-d5877459cfb7" ID="262">
     <Fields>
-      <FormLink name="Music" refName="Music" recordType="RDMO" />
+      <FormLink name="Music" refName="MusicType" recordType="RDMO" />
       <RefList name="Sounds" refName="RegionSound" recordType="RDSA" />
     </Fields>
   </Object>

@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -49,6 +50,164 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region AmbientColor
+        public Color AmbientColor { get; set; } = default;
+        #endregion
+        #region DirectionalColor
+        public Color DirectionalColor { get; set; } = default;
+        #endregion
+        #region FogNearColor
+        public Color FogNearColor { get; set; } = default;
+        #endregion
+        #region FogNear
+        public Single FogNear { get; set; } = default;
+        #endregion
+        #region FogFar
+        public Single FogFar { get; set; } = default;
+        #endregion
+        #region DirectionalRotationXY
+        public Int32 DirectionalRotationXY { get; set; } = default;
+        #endregion
+        #region DirectionalRotationZ
+        public Int32 DirectionalRotationZ { get; set; } = default;
+        #endregion
+        #region DirectionalFade
+        public Single DirectionalFade { get; set; } = default;
+        #endregion
+        #region FogClipDistance
+        public Single FogClipDistance { get; set; } = default;
+        #endregion
+        #region FogPower
+        public Single FogPower { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalXPlus
+        public Color AmbientDirectionalXPlus { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalXMinus
+        public Color AmbientDirectionalXMinus { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalYPlus
+        public Color AmbientDirectionalYPlus { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalYMinus
+        public Color AmbientDirectionalYMinus { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalZPlus
+        public Color AmbientDirectionalZPlus { get; set; } = default;
+        #endregion
+        #region AmbientDirectionalZMinus
+        public Color AmbientDirectionalZMinus { get; set; } = default;
+        #endregion
+        #region AmbientSpecular
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _AmbientSpecular;
+        public Color AmbientSpecular
+        {
+            get => this._AmbientSpecular;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._AmbientSpecular = value;
+            }
+        }
+        #endregion
+        #region AmbientScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _AmbientScale;
+        public Single AmbientScale
+        {
+            get => this._AmbientScale;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this._AmbientScale = value;
+            }
+        }
+        #endregion
+        #region FogFarColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Color _FogFarColor;
+        public Color FogFarColor
+        {
+            get => this._FogFarColor;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._FogFarColor = value;
+            }
+        }
+        #endregion
+        #region FogMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _FogMax;
+        public Single FogMax
+        {
+            get => this._FogMax;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._FogMax = value;
+            }
+        }
+        #endregion
+        #region LightFadeStartDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _LightFadeStartDistance;
+        public Single LightFadeStartDistance
+        {
+            get => this._LightFadeStartDistance;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._LightFadeStartDistance = value;
+            }
+        }
+        #endregion
+        #region LightFadeEndDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _LightFadeEndDistance;
+        public Single LightFadeEndDistance
+        {
+            get => this._LightFadeEndDistance;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._LightFadeEndDistance = value;
+            }
+        }
+        #endregion
+        #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Int32 _Unknown;
+        public Int32 Unknown
+        {
+            get => this._Unknown;
+            set
+            {
+                this.DATADataTypeState &= ~DATADataType.Break0;
+                this.DATADataTypeState &= ~DATADataType.Break1;
+                this._Unknown = value;
+            }
+        }
+        #endregion
+        #region DirectionalAmbientColors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AmbientColors? _DirectionalAmbientColors;
+        public AmbientColors? DirectionalAmbientColors
+        {
+            get => _DirectionalAmbientColors;
+            set => _DirectionalAmbientColors = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAmbientColorsGetter? ILightingTemplateGetter.DirectionalAmbientColors => this.DirectionalAmbientColors;
+        #endregion
+        #region DATADataTypeState
+        public LightingTemplate.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +377,31 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.AmbientColor = initialValue;
+                this.DirectionalColor = initialValue;
+                this.FogNearColor = initialValue;
+                this.FogNear = initialValue;
+                this.FogFar = initialValue;
+                this.DirectionalRotationXY = initialValue;
+                this.DirectionalRotationZ = initialValue;
+                this.DirectionalFade = initialValue;
+                this.FogClipDistance = initialValue;
+                this.FogPower = initialValue;
+                this.AmbientDirectionalXPlus = initialValue;
+                this.AmbientDirectionalXMinus = initialValue;
+                this.AmbientDirectionalYPlus = initialValue;
+                this.AmbientDirectionalYMinus = initialValue;
+                this.AmbientDirectionalZPlus = initialValue;
+                this.AmbientDirectionalZMinus = initialValue;
+                this.AmbientSpecular = initialValue;
+                this.AmbientScale = initialValue;
+                this.FogFarColor = initialValue;
+                this.FogMax = initialValue;
+                this.LightFadeStartDistance = initialValue;
+                this.LightFadeEndDistance = initialValue;
+                this.Unknown = initialValue;
+                this.DirectionalAmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(initialValue, new AmbientColors.Mask<TItem>(initialValue));
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +410,32 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem AmbientColor,
+                TItem DirectionalColor,
+                TItem FogNearColor,
+                TItem FogNear,
+                TItem FogFar,
+                TItem DirectionalRotationXY,
+                TItem DirectionalRotationZ,
+                TItem DirectionalFade,
+                TItem FogClipDistance,
+                TItem FogPower,
+                TItem AmbientDirectionalXPlus,
+                TItem AmbientDirectionalXMinus,
+                TItem AmbientDirectionalYPlus,
+                TItem AmbientDirectionalYMinus,
+                TItem AmbientDirectionalZPlus,
+                TItem AmbientDirectionalZMinus,
+                TItem AmbientSpecular,
+                TItem AmbientScale,
+                TItem FogFarColor,
+                TItem FogMax,
+                TItem LightFadeStartDistance,
+                TItem LightFadeEndDistance,
+                TItem Unknown,
+                TItem DirectionalAmbientColors,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +444,31 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.AmbientColor = AmbientColor;
+                this.DirectionalColor = DirectionalColor;
+                this.FogNearColor = FogNearColor;
+                this.FogNear = FogNear;
+                this.FogFar = FogFar;
+                this.DirectionalRotationXY = DirectionalRotationXY;
+                this.DirectionalRotationZ = DirectionalRotationZ;
+                this.DirectionalFade = DirectionalFade;
+                this.FogClipDistance = FogClipDistance;
+                this.FogPower = FogPower;
+                this.AmbientDirectionalXPlus = AmbientDirectionalXPlus;
+                this.AmbientDirectionalXMinus = AmbientDirectionalXMinus;
+                this.AmbientDirectionalYPlus = AmbientDirectionalYPlus;
+                this.AmbientDirectionalYMinus = AmbientDirectionalYMinus;
+                this.AmbientDirectionalZPlus = AmbientDirectionalZPlus;
+                this.AmbientDirectionalZMinus = AmbientDirectionalZMinus;
+                this.AmbientSpecular = AmbientSpecular;
+                this.AmbientScale = AmbientScale;
+                this.FogFarColor = FogFarColor;
+                this.FogMax = FogMax;
+                this.LightFadeStartDistance = LightFadeStartDistance;
+                this.LightFadeEndDistance = LightFadeEndDistance;
+                this.Unknown = Unknown;
+                this.DirectionalAmbientColors = new MaskItem<TItem, AmbientColors.Mask<TItem>?>(DirectionalAmbientColors, new AmbientColors.Mask<TItem>(DirectionalAmbientColors));
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +477,34 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem AmbientColor;
+            public TItem DirectionalColor;
+            public TItem FogNearColor;
+            public TItem FogNear;
+            public TItem FogFar;
+            public TItem DirectionalRotationXY;
+            public TItem DirectionalRotationZ;
+            public TItem DirectionalFade;
+            public TItem FogClipDistance;
+            public TItem FogPower;
+            public TItem AmbientDirectionalXPlus;
+            public TItem AmbientDirectionalXMinus;
+            public TItem AmbientDirectionalYPlus;
+            public TItem AmbientDirectionalYMinus;
+            public TItem AmbientDirectionalZPlus;
+            public TItem AmbientDirectionalZMinus;
+            public TItem AmbientSpecular;
+            public TItem AmbientScale;
+            public TItem FogFarColor;
+            public TItem FogMax;
+            public TItem LightFadeStartDistance;
+            public TItem LightFadeEndDistance;
+            public TItem Unknown;
+            public MaskItem<TItem, AmbientColors.Mask<TItem>?>? DirectionalAmbientColors { get; set; }
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +518,61 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.AmbientColor, rhs.AmbientColor)) return false;
+                if (!object.Equals(this.DirectionalColor, rhs.DirectionalColor)) return false;
+                if (!object.Equals(this.FogNearColor, rhs.FogNearColor)) return false;
+                if (!object.Equals(this.FogNear, rhs.FogNear)) return false;
+                if (!object.Equals(this.FogFar, rhs.FogFar)) return false;
+                if (!object.Equals(this.DirectionalRotationXY, rhs.DirectionalRotationXY)) return false;
+                if (!object.Equals(this.DirectionalRotationZ, rhs.DirectionalRotationZ)) return false;
+                if (!object.Equals(this.DirectionalFade, rhs.DirectionalFade)) return false;
+                if (!object.Equals(this.FogClipDistance, rhs.FogClipDistance)) return false;
+                if (!object.Equals(this.FogPower, rhs.FogPower)) return false;
+                if (!object.Equals(this.AmbientDirectionalXPlus, rhs.AmbientDirectionalXPlus)) return false;
+                if (!object.Equals(this.AmbientDirectionalXMinus, rhs.AmbientDirectionalXMinus)) return false;
+                if (!object.Equals(this.AmbientDirectionalYPlus, rhs.AmbientDirectionalYPlus)) return false;
+                if (!object.Equals(this.AmbientDirectionalYMinus, rhs.AmbientDirectionalYMinus)) return false;
+                if (!object.Equals(this.AmbientDirectionalZPlus, rhs.AmbientDirectionalZPlus)) return false;
+                if (!object.Equals(this.AmbientDirectionalZMinus, rhs.AmbientDirectionalZMinus)) return false;
+                if (!object.Equals(this.AmbientSpecular, rhs.AmbientSpecular)) return false;
+                if (!object.Equals(this.AmbientScale, rhs.AmbientScale)) return false;
+                if (!object.Equals(this.FogFarColor, rhs.FogFarColor)) return false;
+                if (!object.Equals(this.FogMax, rhs.FogMax)) return false;
+                if (!object.Equals(this.LightFadeStartDistance, rhs.LightFadeStartDistance)) return false;
+                if (!object.Equals(this.LightFadeEndDistance, rhs.LightFadeEndDistance)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.AmbientColor);
+                hash.Add(this.DirectionalColor);
+                hash.Add(this.FogNearColor);
+                hash.Add(this.FogNear);
+                hash.Add(this.FogFar);
+                hash.Add(this.DirectionalRotationXY);
+                hash.Add(this.DirectionalRotationZ);
+                hash.Add(this.DirectionalFade);
+                hash.Add(this.FogClipDistance);
+                hash.Add(this.FogPower);
+                hash.Add(this.AmbientDirectionalXPlus);
+                hash.Add(this.AmbientDirectionalXMinus);
+                hash.Add(this.AmbientDirectionalYPlus);
+                hash.Add(this.AmbientDirectionalYMinus);
+                hash.Add(this.AmbientDirectionalZPlus);
+                hash.Add(this.AmbientDirectionalZMinus);
+                hash.Add(this.AmbientSpecular);
+                hash.Add(this.AmbientScale);
+                hash.Add(this.FogFarColor);
+                hash.Add(this.FogMax);
+                hash.Add(this.LightFadeStartDistance);
+                hash.Add(this.LightFadeEndDistance);
+                hash.Add(this.Unknown);
+                hash.Add(this.DirectionalAmbientColors);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +583,35 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.AmbientColor)) return false;
+                if (!eval(this.DirectionalColor)) return false;
+                if (!eval(this.FogNearColor)) return false;
+                if (!eval(this.FogNear)) return false;
+                if (!eval(this.FogFar)) return false;
+                if (!eval(this.DirectionalRotationXY)) return false;
+                if (!eval(this.DirectionalRotationZ)) return false;
+                if (!eval(this.DirectionalFade)) return false;
+                if (!eval(this.FogClipDistance)) return false;
+                if (!eval(this.FogPower)) return false;
+                if (!eval(this.AmbientDirectionalXPlus)) return false;
+                if (!eval(this.AmbientDirectionalXMinus)) return false;
+                if (!eval(this.AmbientDirectionalYPlus)) return false;
+                if (!eval(this.AmbientDirectionalYMinus)) return false;
+                if (!eval(this.AmbientDirectionalZPlus)) return false;
+                if (!eval(this.AmbientDirectionalZMinus)) return false;
+                if (!eval(this.AmbientSpecular)) return false;
+                if (!eval(this.AmbientScale)) return false;
+                if (!eval(this.FogFarColor)) return false;
+                if (!eval(this.FogMax)) return false;
+                if (!eval(this.LightFadeStartDistance)) return false;
+                if (!eval(this.LightFadeEndDistance)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (DirectionalAmbientColors != null)
+                {
+                    if (!eval(this.DirectionalAmbientColors.Overall)) return false;
+                    if (this.DirectionalAmbientColors.Specific != null && !this.DirectionalAmbientColors.Specific.All(eval)) return false;
+                }
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +620,35 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.AmbientColor)) return true;
+                if (eval(this.DirectionalColor)) return true;
+                if (eval(this.FogNearColor)) return true;
+                if (eval(this.FogNear)) return true;
+                if (eval(this.FogFar)) return true;
+                if (eval(this.DirectionalRotationXY)) return true;
+                if (eval(this.DirectionalRotationZ)) return true;
+                if (eval(this.DirectionalFade)) return true;
+                if (eval(this.FogClipDistance)) return true;
+                if (eval(this.FogPower)) return true;
+                if (eval(this.AmbientDirectionalXPlus)) return true;
+                if (eval(this.AmbientDirectionalXMinus)) return true;
+                if (eval(this.AmbientDirectionalYPlus)) return true;
+                if (eval(this.AmbientDirectionalYMinus)) return true;
+                if (eval(this.AmbientDirectionalZPlus)) return true;
+                if (eval(this.AmbientDirectionalZMinus)) return true;
+                if (eval(this.AmbientSpecular)) return true;
+                if (eval(this.AmbientScale)) return true;
+                if (eval(this.FogFarColor)) return true;
+                if (eval(this.FogMax)) return true;
+                if (eval(this.LightFadeStartDistance)) return true;
+                if (eval(this.LightFadeEndDistance)) return true;
+                if (eval(this.Unknown)) return true;
+                if (DirectionalAmbientColors != null)
+                {
+                    if (eval(this.DirectionalAmbientColors.Overall)) return true;
+                    if (this.DirectionalAmbientColors.Specific != null && this.DirectionalAmbientColors.Specific.Any(eval)) return true;
+                }
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +664,31 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.AmbientColor = eval(this.AmbientColor);
+                obj.DirectionalColor = eval(this.DirectionalColor);
+                obj.FogNearColor = eval(this.FogNearColor);
+                obj.FogNear = eval(this.FogNear);
+                obj.FogFar = eval(this.FogFar);
+                obj.DirectionalRotationXY = eval(this.DirectionalRotationXY);
+                obj.DirectionalRotationZ = eval(this.DirectionalRotationZ);
+                obj.DirectionalFade = eval(this.DirectionalFade);
+                obj.FogClipDistance = eval(this.FogClipDistance);
+                obj.FogPower = eval(this.FogPower);
+                obj.AmbientDirectionalXPlus = eval(this.AmbientDirectionalXPlus);
+                obj.AmbientDirectionalXMinus = eval(this.AmbientDirectionalXMinus);
+                obj.AmbientDirectionalYPlus = eval(this.AmbientDirectionalYPlus);
+                obj.AmbientDirectionalYMinus = eval(this.AmbientDirectionalYMinus);
+                obj.AmbientDirectionalZPlus = eval(this.AmbientDirectionalZPlus);
+                obj.AmbientDirectionalZMinus = eval(this.AmbientDirectionalZMinus);
+                obj.AmbientSpecular = eval(this.AmbientSpecular);
+                obj.AmbientScale = eval(this.AmbientScale);
+                obj.FogFarColor = eval(this.FogFarColor);
+                obj.FogMax = eval(this.FogMax);
+                obj.LightFadeStartDistance = eval(this.LightFadeStartDistance);
+                obj.LightFadeEndDistance = eval(this.LightFadeEndDistance);
+                obj.Unknown = eval(this.Unknown);
+                obj.DirectionalAmbientColors = this.DirectionalAmbientColors == null ? null : new MaskItem<R, AmbientColors.Mask<R>?>(eval(this.DirectionalAmbientColors.Overall), this.DirectionalAmbientColors.Specific?.Translate(eval));
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +711,106 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.AmbientColor ?? true)
+                    {
+                        fg.AppendItem(AmbientColor, "AmbientColor");
+                    }
+                    if (printMask?.DirectionalColor ?? true)
+                    {
+                        fg.AppendItem(DirectionalColor, "DirectionalColor");
+                    }
+                    if (printMask?.FogNearColor ?? true)
+                    {
+                        fg.AppendItem(FogNearColor, "FogNearColor");
+                    }
+                    if (printMask?.FogNear ?? true)
+                    {
+                        fg.AppendItem(FogNear, "FogNear");
+                    }
+                    if (printMask?.FogFar ?? true)
+                    {
+                        fg.AppendItem(FogFar, "FogFar");
+                    }
+                    if (printMask?.DirectionalRotationXY ?? true)
+                    {
+                        fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                    }
+                    if (printMask?.DirectionalRotationZ ?? true)
+                    {
+                        fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                    }
+                    if (printMask?.DirectionalFade ?? true)
+                    {
+                        fg.AppendItem(DirectionalFade, "DirectionalFade");
+                    }
+                    if (printMask?.FogClipDistance ?? true)
+                    {
+                        fg.AppendItem(FogClipDistance, "FogClipDistance");
+                    }
+                    if (printMask?.FogPower ?? true)
+                    {
+                        fg.AppendItem(FogPower, "FogPower");
+                    }
+                    if (printMask?.AmbientDirectionalXPlus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
+                    }
+                    if (printMask?.AmbientDirectionalXMinus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
+                    }
+                    if (printMask?.AmbientDirectionalYPlus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
+                    }
+                    if (printMask?.AmbientDirectionalYMinus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
+                    }
+                    if (printMask?.AmbientDirectionalZPlus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
+                    }
+                    if (printMask?.AmbientDirectionalZMinus ?? true)
+                    {
+                        fg.AppendItem(AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
+                    }
+                    if (printMask?.AmbientSpecular ?? true)
+                    {
+                        fg.AppendItem(AmbientSpecular, "AmbientSpecular");
+                    }
+                    if (printMask?.AmbientScale ?? true)
+                    {
+                        fg.AppendItem(AmbientScale, "AmbientScale");
+                    }
+                    if (printMask?.FogFarColor ?? true)
+                    {
+                        fg.AppendItem(FogFarColor, "FogFarColor");
+                    }
+                    if (printMask?.FogMax ?? true)
+                    {
+                        fg.AppendItem(FogMax, "FogMax");
+                    }
+                    if (printMask?.LightFadeStartDistance ?? true)
+                    {
+                        fg.AppendItem(LightFadeStartDistance, "LightFadeStartDistance");
+                    }
+                    if (printMask?.LightFadeEndDistance ?? true)
+                    {
+                        fg.AppendItem(LightFadeEndDistance, "LightFadeEndDistance");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.DirectionalAmbientColors?.Overall ?? true)
+                    {
+                        DirectionalAmbientColors?.ToString(fg);
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +822,90 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? AmbientColor;
+            public Exception? DirectionalColor;
+            public Exception? FogNearColor;
+            public Exception? FogNear;
+            public Exception? FogFar;
+            public Exception? DirectionalRotationXY;
+            public Exception? DirectionalRotationZ;
+            public Exception? DirectionalFade;
+            public Exception? FogClipDistance;
+            public Exception? FogPower;
+            public Exception? AmbientDirectionalXPlus;
+            public Exception? AmbientDirectionalXMinus;
+            public Exception? AmbientDirectionalYPlus;
+            public Exception? AmbientDirectionalYMinus;
+            public Exception? AmbientDirectionalZPlus;
+            public Exception? AmbientDirectionalZMinus;
+            public Exception? AmbientSpecular;
+            public Exception? AmbientScale;
+            public Exception? FogFarColor;
+            public Exception? FogMax;
+            public Exception? LightFadeStartDistance;
+            public Exception? LightFadeEndDistance;
+            public Exception? Unknown;
+            public MaskItem<Exception?, AmbientColors.ErrorMask?>? DirectionalAmbientColors;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        return AmbientColor;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        return DirectionalColor;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        return FogNearColor;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        return FogNear;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        return FogFar;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        return DirectionalRotationXY;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        return DirectionalRotationZ;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        return DirectionalFade;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        return FogClipDistance;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        return FogPower;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                        return AmbientDirectionalXPlus;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                        return AmbientDirectionalXMinus;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                        return AmbientDirectionalYPlus;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                        return AmbientDirectionalYMinus;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                        return AmbientDirectionalZPlus;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                        return AmbientDirectionalZMinus;
+                    case LightingTemplate_FieldIndex.AmbientSpecular:
+                        return AmbientSpecular;
+                    case LightingTemplate_FieldIndex.AmbientScale:
+                        return AmbientScale;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        return FogFarColor;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        return FogMax;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        return LightFadeStartDistance;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        return LightFadeEndDistance;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        return Unknown;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        return DirectionalAmbientColors;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +916,81 @@ namespace Mutagen.Bethesda.Skyrim
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        this.AmbientColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        this.FogNearColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        this.FogNear = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        this.FogFar = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        this.FogPower = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                        this.AmbientDirectionalXPlus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                        this.AmbientDirectionalXMinus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                        this.AmbientDirectionalYPlus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                        this.AmbientDirectionalYMinus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                        this.AmbientDirectionalZPlus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                        this.AmbientDirectionalZMinus = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientSpecular:
+                        this.AmbientSpecular = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientScale:
+                        this.AmbientScale = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        this.FogFarColor = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        this.FogMax = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        this.LightFadeStartDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        this.LightFadeEndDistance = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        this.DirectionalAmbientColors = new MaskItem<Exception?, AmbientColors.ErrorMask?>(ex, null);
+                        break;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +1002,81 @@ namespace Mutagen.Bethesda.Skyrim
                 LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
                 switch (enu)
                 {
+                    case LightingTemplate_FieldIndex.AmbientColor:
+                        this.AmbientColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalColor:
+                        this.DirectionalColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNearColor:
+                        this.FogNearColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogNear:
+                        this.FogNear = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFar:
+                        this.FogFar = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                        this.DirectionalRotationXY = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                        this.DirectionalRotationZ = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalFade:
+                        this.DirectionalFade = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogClipDistance:
+                        this.FogClipDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogPower:
+                        this.FogPower = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                        this.AmbientDirectionalXPlus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                        this.AmbientDirectionalXMinus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                        this.AmbientDirectionalYPlus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                        this.AmbientDirectionalYMinus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                        this.AmbientDirectionalZPlus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                        this.AmbientDirectionalZMinus = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientSpecular:
+                        this.AmbientSpecular = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.AmbientScale:
+                        this.AmbientScale = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogFarColor:
+                        this.FogFarColor = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.FogMax:
+                        this.FogMax = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                        this.LightFadeStartDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                        this.LightFadeEndDistance = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                        this.DirectionalAmbientColors = (MaskItem<Exception?, AmbientColors.ErrorMask?>?)obj;
+                        break;
+                    case LightingTemplate_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +1086,31 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (AmbientColor != null) return true;
+                if (DirectionalColor != null) return true;
+                if (FogNearColor != null) return true;
+                if (FogNear != null) return true;
+                if (FogFar != null) return true;
+                if (DirectionalRotationXY != null) return true;
+                if (DirectionalRotationZ != null) return true;
+                if (DirectionalFade != null) return true;
+                if (FogClipDistance != null) return true;
+                if (FogPower != null) return true;
+                if (AmbientDirectionalXPlus != null) return true;
+                if (AmbientDirectionalXMinus != null) return true;
+                if (AmbientDirectionalYPlus != null) return true;
+                if (AmbientDirectionalYMinus != null) return true;
+                if (AmbientDirectionalZPlus != null) return true;
+                if (AmbientDirectionalZMinus != null) return true;
+                if (AmbientSpecular != null) return true;
+                if (AmbientScale != null) return true;
+                if (FogFarColor != null) return true;
+                if (FogMax != null) return true;
+                if (LightFadeStartDistance != null) return true;
+                if (LightFadeEndDistance != null) return true;
+                if (Unknown != null) return true;
+                if (DirectionalAmbientColors != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +1146,31 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(AmbientColor, "AmbientColor");
+                fg.AppendItem(DirectionalColor, "DirectionalColor");
+                fg.AppendItem(FogNearColor, "FogNearColor");
+                fg.AppendItem(FogNear, "FogNear");
+                fg.AppendItem(FogFar, "FogFar");
+                fg.AppendItem(DirectionalRotationXY, "DirectionalRotationXY");
+                fg.AppendItem(DirectionalRotationZ, "DirectionalRotationZ");
+                fg.AppendItem(DirectionalFade, "DirectionalFade");
+                fg.AppendItem(FogClipDistance, "FogClipDistance");
+                fg.AppendItem(FogPower, "FogPower");
+                fg.AppendItem(AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
+                fg.AppendItem(AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
+                fg.AppendItem(AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
+                fg.AppendItem(AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
+                fg.AppendItem(AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
+                fg.AppendItem(AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
+                fg.AppendItem(AmbientSpecular, "AmbientSpecular");
+                fg.AppendItem(AmbientScale, "AmbientScale");
+                fg.AppendItem(FogFarColor, "FogFarColor");
+                fg.AppendItem(FogMax, "FogMax");
+                fg.AppendItem(LightFadeStartDistance, "LightFadeStartDistance");
+                fg.AppendItem(LightFadeEndDistance, "LightFadeEndDistance");
+                fg.AppendItem(Unknown, "Unknown");
+                DirectionalAmbientColors?.ToString(fg);
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +1179,31 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.AmbientColor = this.AmbientColor.Combine(rhs.AmbientColor);
+                ret.DirectionalColor = this.DirectionalColor.Combine(rhs.DirectionalColor);
+                ret.FogNearColor = this.FogNearColor.Combine(rhs.FogNearColor);
+                ret.FogNear = this.FogNear.Combine(rhs.FogNear);
+                ret.FogFar = this.FogFar.Combine(rhs.FogFar);
+                ret.DirectionalRotationXY = this.DirectionalRotationXY.Combine(rhs.DirectionalRotationXY);
+                ret.DirectionalRotationZ = this.DirectionalRotationZ.Combine(rhs.DirectionalRotationZ);
+                ret.DirectionalFade = this.DirectionalFade.Combine(rhs.DirectionalFade);
+                ret.FogClipDistance = this.FogClipDistance.Combine(rhs.FogClipDistance);
+                ret.FogPower = this.FogPower.Combine(rhs.FogPower);
+                ret.AmbientDirectionalXPlus = this.AmbientDirectionalXPlus.Combine(rhs.AmbientDirectionalXPlus);
+                ret.AmbientDirectionalXMinus = this.AmbientDirectionalXMinus.Combine(rhs.AmbientDirectionalXMinus);
+                ret.AmbientDirectionalYPlus = this.AmbientDirectionalYPlus.Combine(rhs.AmbientDirectionalYPlus);
+                ret.AmbientDirectionalYMinus = this.AmbientDirectionalYMinus.Combine(rhs.AmbientDirectionalYMinus);
+                ret.AmbientDirectionalZPlus = this.AmbientDirectionalZPlus.Combine(rhs.AmbientDirectionalZPlus);
+                ret.AmbientDirectionalZMinus = this.AmbientDirectionalZMinus.Combine(rhs.AmbientDirectionalZMinus);
+                ret.AmbientSpecular = this.AmbientSpecular.Combine(rhs.AmbientSpecular);
+                ret.AmbientScale = this.AmbientScale.Combine(rhs.AmbientScale);
+                ret.FogFarColor = this.FogFarColor.Combine(rhs.FogFarColor);
+                ret.FogMax = this.FogMax.Combine(rhs.FogMax);
+                ret.LightFadeStartDistance = this.LightFadeStartDistance.Combine(rhs.LightFadeStartDistance);
+                ret.LightFadeEndDistance = this.LightFadeEndDistance.Combine(rhs.LightFadeEndDistance);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DirectionalAmbientColors = this.DirectionalAmbientColors.Combine(rhs.DirectionalAmbientColors, (l, r) => l.Combine(r));
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,14 +1225,96 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool AmbientColor;
+            public bool DirectionalColor;
+            public bool FogNearColor;
+            public bool FogNear;
+            public bool FogFar;
+            public bool DirectionalRotationXY;
+            public bool DirectionalRotationZ;
+            public bool DirectionalFade;
+            public bool FogClipDistance;
+            public bool FogPower;
+            public bool AmbientDirectionalXPlus;
+            public bool AmbientDirectionalXMinus;
+            public bool AmbientDirectionalYPlus;
+            public bool AmbientDirectionalYMinus;
+            public bool AmbientDirectionalZPlus;
+            public bool AmbientDirectionalZMinus;
+            public bool AmbientSpecular;
+            public bool AmbientScale;
+            public bool FogFarColor;
+            public bool FogMax;
+            public bool LightFadeStartDistance;
+            public bool LightFadeEndDistance;
+            public bool Unknown;
+            public MaskItem<bool, AmbientColors.TranslationMask?> DirectionalAmbientColors;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.AmbientColor = defaultOn;
+                this.DirectionalColor = defaultOn;
+                this.FogNearColor = defaultOn;
+                this.FogNear = defaultOn;
+                this.FogFar = defaultOn;
+                this.DirectionalRotationXY = defaultOn;
+                this.DirectionalRotationZ = defaultOn;
+                this.DirectionalFade = defaultOn;
+                this.FogClipDistance = defaultOn;
+                this.FogPower = defaultOn;
+                this.AmbientDirectionalXPlus = defaultOn;
+                this.AmbientDirectionalXMinus = defaultOn;
+                this.AmbientDirectionalYPlus = defaultOn;
+                this.AmbientDirectionalYMinus = defaultOn;
+                this.AmbientDirectionalZPlus = defaultOn;
+                this.AmbientDirectionalZMinus = defaultOn;
+                this.AmbientSpecular = defaultOn;
+                this.AmbientScale = defaultOn;
+                this.FogFarColor = defaultOn;
+                this.FogMax = defaultOn;
+                this.LightFadeStartDistance = defaultOn;
+                this.LightFadeEndDistance = defaultOn;
+                this.Unknown = defaultOn;
+                this.DirectionalAmbientColors = new MaskItem<bool, AmbientColors.TranslationMask?>(defaultOn, null);
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((AmbientColor, null));
+                ret.Add((DirectionalColor, null));
+                ret.Add((FogNearColor, null));
+                ret.Add((FogNear, null));
+                ret.Add((FogFar, null));
+                ret.Add((DirectionalRotationXY, null));
+                ret.Add((DirectionalRotationZ, null));
+                ret.Add((DirectionalFade, null));
+                ret.Add((FogClipDistance, null));
+                ret.Add((FogPower, null));
+                ret.Add((AmbientDirectionalXPlus, null));
+                ret.Add((AmbientDirectionalXMinus, null));
+                ret.Add((AmbientDirectionalYPlus, null));
+                ret.Add((AmbientDirectionalYMinus, null));
+                ret.Add((AmbientDirectionalZPlus, null));
+                ret.Add((AmbientDirectionalZMinus, null));
+                ret.Add((AmbientSpecular, null));
+                ret.Add((AmbientScale, null));
+                ret.Add((FogFarColor, null));
+                ret.Add((FogMax, null));
+                ret.Add((LightFadeStartDistance, null));
+                ret.Add((LightFadeEndDistance, null));
+                ret.Add((Unknown, null));
+                ret.Add((DirectionalAmbientColors?.Overall ?? true, DirectionalAmbientColors?.Specific?.GetCrystal()));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
@@ -457,6 +1337,12 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1,
+            Break1 = 2
+        }
         #endregion
 
         #region Binary Translation
@@ -526,8 +1412,34 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILightingTemplate :
         ILightingTemplateGetter,
         ISkyrimMajorRecord,
+        IAmbientColorsCommon,
         ILoquiObjectSetter<ILightingTemplateInternal>
     {
+        new Color AmbientColor { get; set; }
+        new Color DirectionalColor { get; set; }
+        new Color FogNearColor { get; set; }
+        new Single FogNear { get; set; }
+        new Single FogFar { get; set; }
+        new Int32 DirectionalRotationXY { get; set; }
+        new Int32 DirectionalRotationZ { get; set; }
+        new Single DirectionalFade { get; set; }
+        new Single FogClipDistance { get; set; }
+        new Single FogPower { get; set; }
+        new Color AmbientDirectionalXPlus { get; set; }
+        new Color AmbientDirectionalXMinus { get; set; }
+        new Color AmbientDirectionalYPlus { get; set; }
+        new Color AmbientDirectionalYMinus { get; set; }
+        new Color AmbientDirectionalZPlus { get; set; }
+        new Color AmbientDirectionalZMinus { get; set; }
+        new Color AmbientSpecular { get; set; }
+        new Single AmbientScale { get; set; }
+        new Color FogFarColor { get; set; }
+        new Single FogMax { get; set; }
+        new Single LightFadeStartDistance { get; set; }
+        new Single LightFadeEndDistance { get; set; }
+        new Int32 Unknown { get; set; }
+        new AmbientColors? DirectionalAmbientColors { get; set; }
+        new LightingTemplate.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface ILightingTemplateInternal :
@@ -539,11 +1451,37 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightingTemplateGetter :
         ISkyrimMajorRecordGetter,
+        IAmbientColorsCommonGetter,
         ILoquiObject<ILightingTemplateGetter>,
         IXmlItem,
         IBinaryItem
     {
         static ILoquiRegistration Registration => LightingTemplate_Registration.Instance;
+        Color AmbientColor { get; }
+        Color DirectionalColor { get; }
+        Color FogNearColor { get; }
+        Single FogNear { get; }
+        Single FogFar { get; }
+        Int32 DirectionalRotationXY { get; }
+        Int32 DirectionalRotationZ { get; }
+        Single DirectionalFade { get; }
+        Single FogClipDistance { get; }
+        Single FogPower { get; }
+        Color AmbientDirectionalXPlus { get; }
+        Color AmbientDirectionalXMinus { get; }
+        Color AmbientDirectionalYPlus { get; }
+        Color AmbientDirectionalYMinus { get; }
+        Color AmbientDirectionalZPlus { get; }
+        Color AmbientDirectionalZMinus { get; }
+        Color AmbientSpecular { get; }
+        Single AmbientScale { get; }
+        Color FogFarColor { get; }
+        Single FogMax { get; }
+        Single LightFadeStartDistance { get; }
+        Single LightFadeEndDistance { get; }
+        Int32 Unknown { get; }
+        IAmbientColorsGetter? DirectionalAmbientColors { get; }
+        LightingTemplate.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -844,6 +1782,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        AmbientColor = 6,
+        DirectionalColor = 7,
+        FogNearColor = 8,
+        FogNear = 9,
+        FogFar = 10,
+        DirectionalRotationXY = 11,
+        DirectionalRotationZ = 12,
+        DirectionalFade = 13,
+        FogClipDistance = 14,
+        FogPower = 15,
+        AmbientDirectionalXPlus = 16,
+        AmbientDirectionalXMinus = 17,
+        AmbientDirectionalYPlus = 18,
+        AmbientDirectionalYMinus = 19,
+        AmbientDirectionalZPlus = 20,
+        AmbientDirectionalZMinus = 21,
+        AmbientSpecular = 22,
+        AmbientScale = 23,
+        FogFarColor = 24,
+        FogMax = 25,
+        LightFadeStartDistance = 26,
+        LightFadeEndDistance = 27,
+        Unknown = 28,
+        DirectionalAmbientColors = 29,
+        DATADataTypeState = 30,
     }
     #endregion
 
@@ -861,9 +1824,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "e6740b74-8860-4887-854c-5e668986332a";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 25;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(LightingTemplate.Mask<>);
 
@@ -893,6 +1856,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "AMBIENTCOLOR":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientColor;
+                case "DIRECTIONALCOLOR":
+                    return (ushort)LightingTemplate_FieldIndex.DirectionalColor;
+                case "FOGNEARCOLOR":
+                    return (ushort)LightingTemplate_FieldIndex.FogNearColor;
+                case "FOGNEAR":
+                    return (ushort)LightingTemplate_FieldIndex.FogNear;
+                case "FOGFAR":
+                    return (ushort)LightingTemplate_FieldIndex.FogFar;
+                case "DIRECTIONALROTATIONXY":
+                    return (ushort)LightingTemplate_FieldIndex.DirectionalRotationXY;
+                case "DIRECTIONALROTATIONZ":
+                    return (ushort)LightingTemplate_FieldIndex.DirectionalRotationZ;
+                case "DIRECTIONALFADE":
+                    return (ushort)LightingTemplate_FieldIndex.DirectionalFade;
+                case "FOGCLIPDISTANCE":
+                    return (ushort)LightingTemplate_FieldIndex.FogClipDistance;
+                case "FOGPOWER":
+                    return (ushort)LightingTemplate_FieldIndex.FogPower;
+                case "AMBIENTDIRECTIONALXPLUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalXPlus;
+                case "AMBIENTDIRECTIONALXMINUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalXMinus;
+                case "AMBIENTDIRECTIONALYPLUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalYPlus;
+                case "AMBIENTDIRECTIONALYMINUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalYMinus;
+                case "AMBIENTDIRECTIONALZPLUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalZPlus;
+                case "AMBIENTDIRECTIONALZMINUS":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientDirectionalZMinus;
+                case "AMBIENTSPECULAR":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientSpecular;
+                case "AMBIENTSCALE":
+                    return (ushort)LightingTemplate_FieldIndex.AmbientScale;
+                case "FOGFARCOLOR":
+                    return (ushort)LightingTemplate_FieldIndex.FogFarColor;
+                case "FOGMAX":
+                    return (ushort)LightingTemplate_FieldIndex.FogMax;
+                case "LIGHTFADESTARTDISTANCE":
+                    return (ushort)LightingTemplate_FieldIndex.LightFadeStartDistance;
+                case "LIGHTFADEENDDISTANCE":
+                    return (ushort)LightingTemplate_FieldIndex.LightFadeEndDistance;
+                case "UNKNOWN":
+                    return (ushort)LightingTemplate_FieldIndex.Unknown;
+                case "DIRECTIONALAMBIENTCOLORS":
+                    return (ushort)LightingTemplate_FieldIndex.DirectionalAmbientColors;
+                case "DATADATATYPESTATE":
+                    return (ushort)LightingTemplate_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -903,6 +1916,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                case LightingTemplate_FieldIndex.FogNearColor:
+                case LightingTemplate_FieldIndex.FogNear:
+                case LightingTemplate_FieldIndex.FogFar:
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                case LightingTemplate_FieldIndex.FogPower:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                case LightingTemplate_FieldIndex.AmbientScale:
+                case LightingTemplate_FieldIndex.FogFarColor:
+                case LightingTemplate_FieldIndex.FogMax:
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                case LightingTemplate_FieldIndex.Unknown:
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1952,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                    return true;
+                case LightingTemplate_FieldIndex.AmbientColor:
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                case LightingTemplate_FieldIndex.FogNearColor:
+                case LightingTemplate_FieldIndex.FogNear:
+                case LightingTemplate_FieldIndex.FogFar:
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                case LightingTemplate_FieldIndex.FogPower:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                case LightingTemplate_FieldIndex.AmbientScale:
+                case LightingTemplate_FieldIndex.FogFarColor:
+                case LightingTemplate_FieldIndex.FogMax:
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                case LightingTemplate_FieldIndex.Unknown:
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1989,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                case LightingTemplate_FieldIndex.FogNearColor:
+                case LightingTemplate_FieldIndex.FogNear:
+                case LightingTemplate_FieldIndex.FogFar:
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                case LightingTemplate_FieldIndex.FogPower:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                case LightingTemplate_FieldIndex.AmbientScale:
+                case LightingTemplate_FieldIndex.FogFarColor:
+                case LightingTemplate_FieldIndex.FogMax:
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                case LightingTemplate_FieldIndex.Unknown:
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +2025,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                    return "AmbientColor";
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                    return "DirectionalColor";
+                case LightingTemplate_FieldIndex.FogNearColor:
+                    return "FogNearColor";
+                case LightingTemplate_FieldIndex.FogNear:
+                    return "FogNear";
+                case LightingTemplate_FieldIndex.FogFar:
+                    return "FogFar";
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                    return "DirectionalRotationXY";
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                    return "DirectionalRotationZ";
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                    return "DirectionalFade";
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                    return "FogClipDistance";
+                case LightingTemplate_FieldIndex.FogPower:
+                    return "FogPower";
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                    return "AmbientDirectionalXPlus";
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                    return "AmbientDirectionalXMinus";
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                    return "AmbientDirectionalYPlus";
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                    return "AmbientDirectionalYMinus";
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                    return "AmbientDirectionalZPlus";
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                    return "AmbientDirectionalZMinus";
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                    return "AmbientSpecular";
+                case LightingTemplate_FieldIndex.AmbientScale:
+                    return "AmbientScale";
+                case LightingTemplate_FieldIndex.FogFarColor:
+                    return "FogFarColor";
+                case LightingTemplate_FieldIndex.FogMax:
+                    return "FogMax";
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                    return "LightFadeStartDistance";
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                    return "LightFadeEndDistance";
+                case LightingTemplate_FieldIndex.Unknown:
+                    return "Unknown";
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                    return "DirectionalAmbientColors";
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +2085,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                case LightingTemplate_FieldIndex.FogNearColor:
+                case LightingTemplate_FieldIndex.FogNear:
+                case LightingTemplate_FieldIndex.FogFar:
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                case LightingTemplate_FieldIndex.FogPower:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                case LightingTemplate_FieldIndex.AmbientScale:
+                case LightingTemplate_FieldIndex.FogFarColor:
+                case LightingTemplate_FieldIndex.FogMax:
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                case LightingTemplate_FieldIndex.Unknown:
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +2121,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                case LightingTemplate_FieldIndex.FogNearColor:
+                case LightingTemplate_FieldIndex.FogNear:
+                case LightingTemplate_FieldIndex.FogFar:
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                case LightingTemplate_FieldIndex.FogPower:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                case LightingTemplate_FieldIndex.AmbientScale:
+                case LightingTemplate_FieldIndex.FogFarColor:
+                case LightingTemplate_FieldIndex.FogMax:
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                case LightingTemplate_FieldIndex.Unknown:
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +2157,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             LightingTemplate_FieldIndex enu = (LightingTemplate_FieldIndex)index;
             switch (enu)
             {
+                case LightingTemplate_FieldIndex.AmbientColor:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.DirectionalColor:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.FogNearColor:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.FogNear:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.FogFar:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.DirectionalRotationXY:
+                    return typeof(Int32);
+                case LightingTemplate_FieldIndex.DirectionalRotationZ:
+                    return typeof(Int32);
+                case LightingTemplate_FieldIndex.DirectionalFade:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.FogClipDistance:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.FogPower:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.AmbientDirectionalXPlus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientDirectionalXMinus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientDirectionalYPlus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientDirectionalYMinus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientDirectionalZPlus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientDirectionalZMinus:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientSpecular:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.AmbientScale:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.FogFarColor:
+                    return typeof(Color);
+                case LightingTemplate_FieldIndex.FogMax:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.LightFadeStartDistance:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.LightFadeEndDistance:
+                    return typeof(Single);
+                case LightingTemplate_FieldIndex.Unknown:
+                    return typeof(Int32);
+                case LightingTemplate_FieldIndex.DirectionalAmbientColors:
+                    return typeof(AmbientColors);
+                case LightingTemplate_FieldIndex.DATADataTypeState:
+                    return typeof(LightingTemplate.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +2256,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILightingTemplateInternal item)
         {
             ClearPartial();
+            item.AmbientColor = default;
+            item.DirectionalColor = default;
+            item.FogNearColor = default;
+            item.FogNear = default;
+            item.FogFar = default;
+            item.DirectionalRotationXY = default;
+            item.DirectionalRotationZ = default;
+            item.DirectionalFade = default;
+            item.FogClipDistance = default;
+            item.FogPower = default;
+            item.AmbientDirectionalXPlus = default;
+            item.AmbientDirectionalXMinus = default;
+            item.AmbientDirectionalYPlus = default;
+            item.AmbientDirectionalYMinus = default;
+            item.AmbientDirectionalZPlus = default;
+            item.AmbientDirectionalZMinus = default;
+            item.AmbientSpecular = default;
+            item.AmbientScale = default;
+            item.FogFarColor = default;
+            item.FogMax = default;
+            item.LightFadeStartDistance = default;
+            item.LightFadeEndDistance = default;
+            item.Unknown = default;
+            item.DirectionalAmbientColors = null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1054,6 +2323,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
+                item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -1169,6 +2440,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.AmbientColor = item.AmbientColor.ColorOnlyEquals(rhs.AmbientColor);
+            ret.DirectionalColor = item.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor);
+            ret.FogNearColor = item.FogNearColor.ColorOnlyEquals(rhs.FogNearColor);
+            ret.FogNear = item.FogNear.EqualsWithin(rhs.FogNear);
+            ret.FogFar = item.FogFar.EqualsWithin(rhs.FogFar);
+            ret.DirectionalRotationXY = item.DirectionalRotationXY == rhs.DirectionalRotationXY;
+            ret.DirectionalRotationZ = item.DirectionalRotationZ == rhs.DirectionalRotationZ;
+            ret.DirectionalFade = item.DirectionalFade.EqualsWithin(rhs.DirectionalFade);
+            ret.FogClipDistance = item.FogClipDistance.EqualsWithin(rhs.FogClipDistance);
+            ret.FogPower = item.FogPower.EqualsWithin(rhs.FogPower);
+            ret.AmbientDirectionalXPlus = item.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus);
+            ret.AmbientDirectionalXMinus = item.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus);
+            ret.AmbientDirectionalYPlus = item.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus);
+            ret.AmbientDirectionalYMinus = item.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus);
+            ret.AmbientDirectionalZPlus = item.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus);
+            ret.AmbientDirectionalZMinus = item.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus);
+            ret.AmbientSpecular = item.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular);
+            ret.AmbientScale = item.AmbientScale.EqualsWithin(rhs.AmbientScale);
+            ret.FogFarColor = item.FogFarColor.ColorOnlyEquals(rhs.FogFarColor);
+            ret.FogMax = item.FogMax.EqualsWithin(rhs.FogMax);
+            ret.LightFadeStartDistance = item.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance);
+            ret.LightFadeEndDistance = item.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance);
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.DirectionalAmbientColors = EqualsMaskHelper.EqualsHelper(
+                item.DirectionalAmbientColors,
+                rhs.DirectionalAmbientColors,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +2520,115 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.AmbientColor ?? true)
+            {
+                fg.AppendItem(item.AmbientColor, "AmbientColor");
+            }
+            if (printMask?.DirectionalColor ?? true)
+            {
+                fg.AppendItem(item.DirectionalColor, "DirectionalColor");
+            }
+            if (printMask?.FogNearColor ?? true)
+            {
+                fg.AppendItem(item.FogNearColor, "FogNearColor");
+            }
+            if (printMask?.FogNear ?? true)
+            {
+                fg.AppendItem(item.FogNear, "FogNear");
+            }
+            if (printMask?.FogFar ?? true)
+            {
+                fg.AppendItem(item.FogFar, "FogFar");
+            }
+            if (printMask?.DirectionalRotationXY ?? true)
+            {
+                fg.AppendItem(item.DirectionalRotationXY, "DirectionalRotationXY");
+            }
+            if (printMask?.DirectionalRotationZ ?? true)
+            {
+                fg.AppendItem(item.DirectionalRotationZ, "DirectionalRotationZ");
+            }
+            if (printMask?.DirectionalFade ?? true)
+            {
+                fg.AppendItem(item.DirectionalFade, "DirectionalFade");
+            }
+            if (printMask?.FogClipDistance ?? true)
+            {
+                fg.AppendItem(item.FogClipDistance, "FogClipDistance");
+            }
+            if (printMask?.FogPower ?? true)
+            {
+                fg.AppendItem(item.FogPower, "FogPower");
+            }
+            if (printMask?.AmbientDirectionalXPlus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalXPlus, "AmbientDirectionalXPlus");
+            }
+            if (printMask?.AmbientDirectionalXMinus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalXMinus, "AmbientDirectionalXMinus");
+            }
+            if (printMask?.AmbientDirectionalYPlus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalYPlus, "AmbientDirectionalYPlus");
+            }
+            if (printMask?.AmbientDirectionalYMinus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalYMinus, "AmbientDirectionalYMinus");
+            }
+            if (printMask?.AmbientDirectionalZPlus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalZPlus, "AmbientDirectionalZPlus");
+            }
+            if (printMask?.AmbientDirectionalZMinus ?? true)
+            {
+                fg.AppendItem(item.AmbientDirectionalZMinus, "AmbientDirectionalZMinus");
+            }
+            if (printMask?.AmbientSpecular ?? true)
+            {
+                fg.AppendItem(item.AmbientSpecular, "AmbientSpecular");
+            }
+            if (printMask?.AmbientScale ?? true)
+            {
+                fg.AppendItem(item.AmbientScale, "AmbientScale");
+            }
+            if (printMask?.FogFarColor ?? true)
+            {
+                fg.AppendItem(item.FogFarColor, "FogFarColor");
+            }
+            if (printMask?.FogMax ?? true)
+            {
+                fg.AppendItem(item.FogMax, "FogMax");
+            }
+            if (printMask?.LightFadeStartDistance ?? true)
+            {
+                fg.AppendItem(item.LightFadeStartDistance, "LightFadeStartDistance");
+            }
+            if (printMask?.LightFadeEndDistance ?? true)
+            {
+                fg.AppendItem(item.LightFadeEndDistance, "LightFadeEndDistance");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if ((printMask?.DirectionalAmbientColors?.Overall ?? true)
+                && item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsItem))
+            {
+                DirectionalAmbientColorsItem?.ToString(fg, "DirectionalAmbientColors");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             ILightingTemplateGetter item,
             LightingTemplate.Mask<bool?> checkMask)
         {
+            if (checkMask.DirectionalAmbientColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientColors.Overall.Value != (item.DirectionalAmbientColors != null)) return false;
+            if (checkMask.DirectionalAmbientColors?.Specific != null && (item.DirectionalAmbientColors == null || !item.DirectionalAmbientColors.HasBeenSet(checkMask.DirectionalAmbientColors.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +2638,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightingTemplateGetter item,
             LightingTemplate.Mask<bool> mask)
         {
+            mask.AmbientColor = true;
+            mask.DirectionalColor = true;
+            mask.FogNearColor = true;
+            mask.FogNear = true;
+            mask.FogFar = true;
+            mask.DirectionalRotationXY = true;
+            mask.DirectionalRotationZ = true;
+            mask.DirectionalFade = true;
+            mask.FogClipDistance = true;
+            mask.FogPower = true;
+            mask.AmbientDirectionalXPlus = true;
+            mask.AmbientDirectionalXMinus = true;
+            mask.AmbientDirectionalYPlus = true;
+            mask.AmbientDirectionalYMinus = true;
+            mask.AmbientDirectionalZPlus = true;
+            mask.AmbientDirectionalZMinus = true;
+            mask.AmbientSpecular = true;
+            mask.AmbientScale = true;
+            mask.FogFarColor = true;
+            mask.FogMax = true;
+            mask.LightFadeStartDistance = true;
+            mask.LightFadeEndDistance = true;
+            mask.Unknown = true;
+            var itemDirectionalAmbientColors = item.DirectionalAmbientColors;
+            mask.DirectionalAmbientColors = new MaskItem<bool, AmbientColors.Mask<bool>?>(itemDirectionalAmbientColors != null, itemDirectionalAmbientColors?.GetHasBeenSetMask());
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +2715,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            if (!lhs.FogNearColor.ColorOnlyEquals(rhs.FogNearColor)) return false;
+            if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
+            if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
+            if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
+            if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
+            if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
+            if (!lhs.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus)) return false;
+            if (!lhs.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus)) return false;
+            if (!lhs.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus)) return false;
+            if (!lhs.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus)) return false;
+            if (!lhs.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus)) return false;
+            if (!lhs.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus)) return false;
+            if (!lhs.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular)) return false;
+            if (!lhs.AmbientScale.EqualsWithin(rhs.AmbientScale)) return false;
+            if (!lhs.FogFarColor.ColorOnlyEquals(rhs.FogFarColor)) return false;
+            if (!lhs.FogMax.EqualsWithin(rhs.FogMax)) return false;
+            if (!lhs.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance)) return false;
+            if (!lhs.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance)) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (!object.Equals(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1310,6 +2764,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ILightingTemplateGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.AmbientColor);
+            hash.Add(item.DirectionalColor);
+            hash.Add(item.FogNearColor);
+            hash.Add(item.FogNear);
+            hash.Add(item.FogFar);
+            hash.Add(item.DirectionalRotationXY);
+            hash.Add(item.DirectionalRotationZ);
+            hash.Add(item.DirectionalFade);
+            hash.Add(item.FogClipDistance);
+            hash.Add(item.FogPower);
+            hash.Add(item.AmbientDirectionalXPlus);
+            hash.Add(item.AmbientDirectionalXMinus);
+            hash.Add(item.AmbientDirectionalYPlus);
+            hash.Add(item.AmbientDirectionalYMinus);
+            hash.Add(item.AmbientDirectionalZPlus);
+            hash.Add(item.AmbientDirectionalZMinus);
+            hash.Add(item.AmbientSpecular);
+            hash.Add(item.AmbientScale);
+            hash.Add(item.FogFarColor);
+            hash.Add(item.FogMax);
+            hash.Add(item.LightFadeStartDistance);
+            hash.Add(item.LightFadeEndDistance);
+            hash.Add(item.Unknown);
+            if (item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsitem))
+            {
+                hash.Add(DirectionalAmbientColorsitem);
+            }
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +2868,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
+            {
+                item.AmbientColor = rhs.AmbientColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalColor) ?? true))
+            {
+                item.DirectionalColor = rhs.DirectionalColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearColor) ?? true))
+            {
+                item.FogNearColor = rhs.FogNearColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNear) ?? true))
+            {
+                item.FogNear = rhs.FogNear;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFar) ?? true))
+            {
+                item.FogFar = rhs.FogFar;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                item.DirectionalRotationXY = rhs.DirectionalRotationXY;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                item.DirectionalRotationZ = rhs.DirectionalRotationZ;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalFade) ?? true))
+            {
+                item.DirectionalFade = rhs.DirectionalFade;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogClipDistance) ?? true))
+            {
+                item.FogClipDistance = rhs.FogClipDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogPower) ?? true))
+            {
+                item.FogPower = rhs.FogPower;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus) ?? true))
+            {
+                item.AmbientDirectionalXPlus = rhs.AmbientDirectionalXPlus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus) ?? true))
+            {
+                item.AmbientDirectionalXMinus = rhs.AmbientDirectionalXMinus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus) ?? true))
+            {
+                item.AmbientDirectionalYPlus = rhs.AmbientDirectionalYPlus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus) ?? true))
+            {
+                item.AmbientDirectionalYMinus = rhs.AmbientDirectionalYMinus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus) ?? true))
+            {
+                item.AmbientDirectionalZPlus = rhs.AmbientDirectionalZPlus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus) ?? true))
+            {
+                item.AmbientDirectionalZMinus = rhs.AmbientDirectionalZMinus;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientSpecular) ?? true))
+            {
+                item.AmbientSpecular = rhs.AmbientSpecular;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientScale) ?? true))
+            {
+                item.AmbientScale = rhs.AmbientScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
+            {
+                item.FogFarColor = rhs.FogFarColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogMax) ?? true))
+            {
+                item.FogMax = rhs.FogMax;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeStartDistance) ?? true))
+            {
+                item.LightFadeStartDistance = rhs.LightFadeStartDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeEndDistance) ?? true))
+            {
+                item.LightFadeEndDistance = rhs.LightFadeEndDistance;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
+            {
+                errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                try
+                {
+                    if(rhs.DirectionalAmbientColors.TryGet(out var rhsDirectionalAmbientColors))
+                    {
+                        item.DirectionalAmbientColors = rhsDirectionalAmbientColors.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors));
+                    }
+                    else
+                    {
+                        item.DirectionalAmbientColors = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +3132,246 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientColor),
+                    item: item.AmbientColor,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalColor),
+                    item: item.DirectionalColor,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.DirectionalColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogNearColor),
+                    item: item.FogNearColor,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.FogNearColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNear) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogNear),
+                    item: item.FogNear,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.FogNear,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFar) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogFar),
+                    item: item.FogFar,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.FogFar,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalRotationXY),
+                    item: item.DirectionalRotationXY,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.DirectionalRotationXY,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalRotationZ),
+                    item: item.DirectionalRotationZ,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.DirectionalRotationZ,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalFade) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DirectionalFade),
+                    item: item.DirectionalFade,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.DirectionalFade,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogClipDistance) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogClipDistance),
+                    item: item.FogClipDistance,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.FogClipDistance,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogPower) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FogPower),
+                    item: item.FogPower,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.FogPower,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalXPlus),
+                    item: item.AmbientDirectionalXPlus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalXMinus),
+                    item: item.AmbientDirectionalXMinus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalYPlus),
+                    item: item.AmbientDirectionalYPlus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalYMinus),
+                    item: item.AmbientDirectionalYMinus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalZPlus),
+                    item: item.AmbientDirectionalZPlus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.AmbientDirectionalZMinus),
+                    item: item.AmbientDirectionalZMinus,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus,
+                    errorMask: errorMask);
+            }
+            if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientSpecular) ?? true))
+                {
+                    ColorXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.AmbientSpecular),
+                        item: item.AmbientSpecular,
+                        fieldIndex: (int)LightingTemplate_FieldIndex.AmbientSpecular,
+                        errorMask: errorMask);
+                }
+                if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientScale) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.AmbientScale),
+                        item: item.AmbientScale,
+                        fieldIndex: (int)LightingTemplate_FieldIndex.AmbientScale,
+                        errorMask: errorMask);
+                }
+                if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1))
+                {
+                    if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FogFarColor),
+                            item: item.FogFarColor,
+                            fieldIndex: (int)LightingTemplate_FieldIndex.FogFarColor,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogMax) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.FogMax),
+                            item: item.FogMax,
+                            fieldIndex: (int)LightingTemplate_FieldIndex.FogMax,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeStartDistance) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.LightFadeStartDistance),
+                            item: item.LightFadeStartDistance,
+                            fieldIndex: (int)LightingTemplate_FieldIndex.LightFadeStartDistance,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeEndDistance) ?? true))
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.LightFadeEndDistance),
+                            item: item.LightFadeEndDistance,
+                            fieldIndex: (int)LightingTemplate_FieldIndex.LightFadeEndDistance,
+                            errorMask: errorMask);
+                    }
+                    if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unknown) ?? true))
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            node: node,
+                            name: nameof(item.Unknown),
+                            item: item.Unknown,
+                            fieldIndex: (int)LightingTemplate_FieldIndex.Unknown,
+                            errorMask: errorMask);
+                    }
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasDATADataType"));
+            }
+            if ((item.DirectionalAmbientColors != null)
+                && (translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
+            {
+                if (item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsItem))
+                {
+                    ((AmbientColorsXmlWriteTranslation)((IXmlItem)DirectionalAmbientColorsItem).XmlWriteTranslator).Write(
+                        item: DirectionalAmbientColorsItem,
+                        node: node,
+                        name: nameof(item.DirectionalAmbientColors),
+                        fieldIndex: (int)LightingTemplate_FieldIndex.DirectionalAmbientColors,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<LightingTemplate.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)LightingTemplate_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1635,6 +3479,459 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "AmbientColor":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientColor);
+                    try
+                    {
+                        item.AmbientColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalColor":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalColor);
+                    try
+                    {
+                        item.DirectionalColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogNearColor":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogNearColor);
+                    try
+                    {
+                        item.FogNearColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogNear":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogNear);
+                    try
+                    {
+                        item.FogNear = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogFar":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogFar);
+                    try
+                    {
+                        item.FogFar = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalRotationXY":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalRotationXY);
+                    try
+                    {
+                        item.DirectionalRotationXY = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalRotationZ":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalRotationZ);
+                    try
+                    {
+                        item.DirectionalRotationZ = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalFade":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalFade);
+                    try
+                    {
+                        item.DirectionalFade = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogClipDistance":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogClipDistance);
+                    try
+                    {
+                        item.FogClipDistance = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogPower":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogPower);
+                    try
+                    {
+                        item.FogPower = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalXPlus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus);
+                    try
+                    {
+                        item.AmbientDirectionalXPlus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalXMinus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus);
+                    try
+                    {
+                        item.AmbientDirectionalXMinus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalYPlus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus);
+                    try
+                    {
+                        item.AmbientDirectionalYPlus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalYMinus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus);
+                    try
+                    {
+                        item.AmbientDirectionalYMinus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalZPlus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus);
+                    try
+                    {
+                        item.AmbientDirectionalZPlus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientDirectionalZMinus":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus);
+                    try
+                    {
+                        item.AmbientDirectionalZMinus = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "AmbientSpecular":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientSpecular);
+                    try
+                    {
+                        item.AmbientSpecular = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~LightingTemplate.DATADataType.Break0;
+                    break;
+                case "AmbientScale":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.AmbientScale);
+                    try
+                    {
+                        item.AmbientScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FogFarColor":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogFarColor);
+                    try
+                    {
+                        item.FogFarColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.DATADataTypeState &= ~LightingTemplate.DATADataType.Break1;
+                    break;
+                case "FogMax":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.FogMax);
+                    try
+                    {
+                        item.FogMax = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightFadeStartDistance":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.LightFadeStartDistance);
+                    try
+                    {
+                        item.LightFadeStartDistance = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LightFadeEndDistance":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.LightFadeEndDistance);
+                    try
+                    {
+                        item.LightFadeEndDistance = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = Int32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DirectionalAmbientColors":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                    try
+                    {
+                        item.DirectionalAmbientColors = LoquiXmlTranslation<AmbientColors>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)LightingTemplate_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<LightingTemplate.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +4018,108 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static LightingTemplateBinaryWriteTranslation Instance = new LightingTemplateBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILightingTemplateGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            ILightingTemplateGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientColor);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DirectionalColor);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogNearColor);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogNear);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogFar);
+                writer.Write(item.DirectionalRotationXY);
+                writer.Write(item.DirectionalRotationZ);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.DirectionalFade);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogClipDistance);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FogPower);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalXPlus);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalXMinus);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalYPlus);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalYMinus);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalZPlus);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AmbientDirectionalZMinus);
+                if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0))
+                {
+                    Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.AmbientSpecular);
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.AmbientScale);
+                    if (!item.DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1))
+                    {
+                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FogFarColor);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.FogMax);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.LightFadeStartDistance);
+                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            writer: writer,
+                            item: item.LightFadeEndDistance);
+                        writer.Write(item.Unknown);
+                    }
+                }
+            }
+            if (item.DirectionalAmbientColors.TryGet(out var DirectionalAmbientColorsItem))
+            {
+                using (HeaderExport.Subrecord(writer, RecordTypes.DALC))
+                {
+                    ((AmbientColorsBinaryWriteTranslation)((IBinaryItem)DirectionalAmbientColorsItem).BinaryWriteTranslator).Write(
+                        item: DirectionalAmbientColorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             ILightingTemplateGetter item,
@@ -1731,10 +4130,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.LGTM),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1788,6 +4187,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            ILightingTemplateInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.AmbientColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.DirectionalColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogNearColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DirectionalRotationXY = dataFrame.ReadInt32();
+                    item.DirectionalRotationZ = dataFrame.ReadInt32();
+                    item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogPower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.AmbientDirectionalXPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientDirectionalXMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientDirectionalYPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientDirectionalYMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientDirectionalZPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientDirectionalZMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
+                        return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus);
+                    }
+                    item.AmbientSpecular = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.AmbientScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
+                        return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.AmbientScale);
+                    }
+                    item.FogFarColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
+                    item.FogMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.LightFadeStartDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.LightFadeEndDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Unknown = dataFrame.ReadInt32();
+                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.Unknown);
+                }
+                case RecordTypeInts.DALC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
+                    item.DirectionalAmbientColors = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
         }
 
     }
@@ -1851,6 +4314,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        private int? _DATALocation;
+        public LightingTemplate.DATADataType DATADataTypeState { get; private set; }
+        #region AmbientColor
+        private int _AmbientColorLocation => _DATALocation!.Value;
+        private bool _AmbientColor_IsSet => _DATALocation.HasValue;
+        public Color AmbientColor => _AmbientColor_IsSet ? _data.Slice(_AmbientColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region DirectionalColor
+        private int _DirectionalColorLocation => _DATALocation!.Value + 0x4;
+        private bool _DirectionalColor_IsSet => _DATALocation.HasValue;
+        public Color DirectionalColor => _DirectionalColor_IsSet ? _data.Slice(_DirectionalColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogNearColor
+        private int _FogNearColorLocation => _DATALocation!.Value + 0x8;
+        private bool _FogNearColor_IsSet => _DATALocation.HasValue;
+        public Color FogNearColor => _FogNearColor_IsSet ? _data.Slice(_FogNearColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogNear
+        private int _FogNearLocation => _DATALocation!.Value + 0xC;
+        private bool _FogNear_IsSet => _DATALocation.HasValue;
+        public Single FogNear => _FogNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNearLocation, 4)) : default;
+        #endregion
+        #region FogFar
+        private int _FogFarLocation => _DATALocation!.Value + 0x10;
+        private bool _FogFar_IsSet => _DATALocation.HasValue;
+        public Single FogFar => _FogFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogFarLocation, 4)) : default;
+        #endregion
+        #region DirectionalRotationXY
+        private int _DirectionalRotationXYLocation => _DATALocation!.Value + 0x14;
+        private bool _DirectionalRotationXY_IsSet => _DATALocation.HasValue;
+        public Int32 DirectionalRotationXY => _DirectionalRotationXY_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationXYLocation, 4)) : default;
+        #endregion
+        #region DirectionalRotationZ
+        private int _DirectionalRotationZLocation => _DATALocation!.Value + 0x18;
+        private bool _DirectionalRotationZ_IsSet => _DATALocation.HasValue;
+        public Int32 DirectionalRotationZ => _DirectionalRotationZ_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_DirectionalRotationZLocation, 4)) : default;
+        #endregion
+        #region DirectionalFade
+        private int _DirectionalFadeLocation => _DATALocation!.Value + 0x1C;
+        private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
+        public Single DirectionalFade => _DirectionalFade_IsSet ? SpanExt.GetFloat(_data.Slice(_DirectionalFadeLocation, 4)) : default;
+        #endregion
+        #region FogClipDistance
+        private int _FogClipDistanceLocation => _DATALocation!.Value + 0x20;
+        private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
+        public Single FogClipDistance => _FogClipDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_FogClipDistanceLocation, 4)) : default;
+        #endregion
+        #region FogPower
+        private int _FogPowerLocation => _DATALocation!.Value + 0x24;
+        private bool _FogPower_IsSet => _DATALocation.HasValue;
+        public Single FogPower => _FogPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogPowerLocation, 4)) : default;
+        #endregion
+        #region AmbientDirectionalXPlus
+        private int _AmbientDirectionalXPlusLocation => _DATALocation!.Value + 0x28;
+        private bool _AmbientDirectionalXPlus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalXPlus => _AmbientDirectionalXPlus_IsSet ? _data.Slice(_AmbientDirectionalXPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientDirectionalXMinus
+        private int _AmbientDirectionalXMinusLocation => _DATALocation!.Value + 0x2C;
+        private bool _AmbientDirectionalXMinus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalXMinus => _AmbientDirectionalXMinus_IsSet ? _data.Slice(_AmbientDirectionalXMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientDirectionalYPlus
+        private int _AmbientDirectionalYPlusLocation => _DATALocation!.Value + 0x30;
+        private bool _AmbientDirectionalYPlus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalYPlus => _AmbientDirectionalYPlus_IsSet ? _data.Slice(_AmbientDirectionalYPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientDirectionalYMinus
+        private int _AmbientDirectionalYMinusLocation => _DATALocation!.Value + 0x34;
+        private bool _AmbientDirectionalYMinus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalYMinus => _AmbientDirectionalYMinus_IsSet ? _data.Slice(_AmbientDirectionalYMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientDirectionalZPlus
+        private int _AmbientDirectionalZPlusLocation => _DATALocation!.Value + 0x38;
+        private bool _AmbientDirectionalZPlus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalZPlus => _AmbientDirectionalZPlus_IsSet ? _data.Slice(_AmbientDirectionalZPlusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientDirectionalZMinus
+        private int _AmbientDirectionalZMinusLocation => _DATALocation!.Value + 0x3C;
+        private bool _AmbientDirectionalZMinus_IsSet => _DATALocation.HasValue;
+        public Color AmbientDirectionalZMinus => _AmbientDirectionalZMinus_IsSet ? _data.Slice(_AmbientDirectionalZMinusLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientSpecular
+        private int _AmbientSpecularLocation => _DATALocation!.Value + 0x40;
+        private bool _AmbientSpecular_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Color AmbientSpecular => _AmbientSpecular_IsSet ? _data.Slice(_AmbientSpecularLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region AmbientScale
+        private int _AmbientScaleLocation => _DATALocation!.Value + 0x44;
+        private bool _AmbientScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
+        public Single AmbientScale => _AmbientScale_IsSet ? SpanExt.GetFloat(_data.Slice(_AmbientScaleLocation, 4)) : default;
+        #endregion
+        #region FogFarColor
+        private int _FogFarColorLocation => _DATALocation!.Value + 0x48;
+        private bool _FogFarColor_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Color FogFarColor => _FogFarColor_IsSet ? _data.Slice(_FogFarColorLocation, 4).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region FogMax
+        private int _FogMaxLocation => _DATALocation!.Value + 0x4C;
+        private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Single FogMax => _FogMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogMaxLocation, 4)) : default;
+        #endregion
+        #region LightFadeStartDistance
+        private int _LightFadeStartDistanceLocation => _DATALocation!.Value + 0x50;
+        private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_LightFadeStartDistanceLocation, 4)) : default;
+        #endregion
+        #region LightFadeEndDistance
+        private int _LightFadeEndDistanceLocation => _DATALocation!.Value + 0x54;
+        private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_LightFadeEndDistanceLocation, 4)) : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0x58;
+        private bool _Unknown_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
+        public Int32 Unknown => _Unknown_IsSet ? BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(_UnknownLocation, 4)) : default;
+        #endregion
+        public IAmbientColorsGetter? DirectionalAmbientColors { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +4484,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x40)
+                    {
+                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
+                    }
+                    if (subLen <= 0x48)
+                    {
+                        this.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
+                    }
+                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.Unknown);
+                }
+                case RecordTypeInts.DALC:
+                {
+                    stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
+                    this.DirectionalAmbientColors = AmbientColorsBinaryOverlay.AmbientColorsFactory(
+                        stream: stream,
+                        package: _package,
+                        finalPos: finalPos,
+                        recordTypeConverter: recordTypeConverter);
+                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

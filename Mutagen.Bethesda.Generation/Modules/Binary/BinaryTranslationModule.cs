@@ -2141,6 +2141,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"{nameof(OverlayStream)} stream");
                             args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
+                            if (obj.IsVariableLengthStruct())
+                            {
+                                args.Add($"int finalPos");
+                            }
                             args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
                         }
                     }
@@ -2192,6 +2196,10 @@ namespace Mutagen.Bethesda.Generation
                                     || totalPassedLength.Value == 0)
                                 {
                                     args.Add($"bytes: stream.RemainingMemory");
+                                }
+                                else if (obj.IsVariableLengthStruct())
+                                {
+                                    args.Add($"bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position)");
                                 }
                                 else
                                 {
@@ -2407,9 +2415,31 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else
                         {
+
                             if (obj.IsTypelessStruct())
                             {
-                                if (structPassedAccessor != null)
+                                var breaks = obj.Fields.WhereCastable<TypeGeneration, BreakType>().ToList();
+                                if (breaks.Count > 0)
+                                {
+                                    int breakIndex = 0;
+                                    await foreach (var lengths in IteratePassedLengths(obj,
+                                        forOverlay: true,
+                                        includeBaseClass: true,
+                                        passedLenPrefix: "ret."))
+                                    {
+                                        if (lengths.Field is BreakType breakType)
+                                        {
+                                            fg.AppendLine($"if (ret._data.Length <= {lengths.PassedAccessor})");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                fg.AppendLine($"ret.{VersioningModule.VersioningFieldName} |= {obj.ObjectName}.{VersioningModule.VersioningEnumName}.Break{breakIndex++};");
+                                            }
+                                        }
+                                    }
+                                    // Not advancing stream position, but only because breaks only occur in situations
+                                    // that stream position doesn't matter
+                                }
+                                else if (structPassedAccessor != null)
                                 {
                                     fg.AppendLine($"stream.Position += {structPassedAccessor};");
                                 }
@@ -2544,6 +2574,10 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"stream: new {nameof(OverlayStream)}(slice, package)");
                                 args.AddPassArg("package");
+                                if (obj.IsVariableLengthStruct())
+                                {
+                                    args.Add($"finalPos: slice.Length");
+                                }
                                 args.AddPassArg("recordTypeConverter");
                             }
                         }

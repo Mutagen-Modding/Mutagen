@@ -116,6 +116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int DLBR = 0x52424C44;
         public const int DMDL = 0x4C444D44;
         public const int DNAM = 0x4D414E44;
+        public const int DOBJ = 0x4A424F44;
         public const int DODT = 0x54444F44;
         public const int DOFT = 0x54464F44;
         public const int DOOR = 0x524F4F44;
@@ -209,6 +210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int INTV = 0x56544E49;
         public const int IPCT = 0x54435049;
         public const int IPDS = 0x53445049;
+        public const int ITXT = 0x54585449;
         public const int JAIL = 0x4C49414A;
         public const int JIAD = 0x4441494A;
         public const int JNAM = 0x4D414E4A;
@@ -268,6 +270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int MTNM = 0x4D4E544D;
         public const int MTYP = 0x5059544D;
         public const int MUSC = 0x4353554D;
+        public const int MUST = 0x5453554D;
         public const int NAM0 = 0x304D414E;
         public const int NAM1 = 0x314D414E;
         public const int NAM2 = 0x324D414E;

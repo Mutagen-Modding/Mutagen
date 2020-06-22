@@ -49,7 +49,7 @@
         <FormLink refName="Keyword" />
       </List>
       <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
-      <FormLink name="Music" recordType="NAM1" refName="Music" />
+      <FormLink name="Music" recordType="NAM1" refName="MusicType" />
       <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
       <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
         <Interface>IPlacedSimple</Interface>

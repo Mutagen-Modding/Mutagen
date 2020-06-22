@@ -220,10 +220,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLinkNullable<IEncounterZoneGetter> ICellGetter.EncounterZone => this.EncounterZone;
         #endregion
-        #region MusicType
-        public FormLinkNullable<Music> MusicType { get; set; } = new FormLinkNullable<Music>();
+        #region Music
+        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMusicGetter> ICellGetter.MusicType => this.MusicType;
+        IFormLinkNullable<IMusicTypeGetter> ICellGetter.Music => this.Music;
         #endregion
         #region ImageSpace
         public FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; } = new FormLinkNullable<ImageSpaceAdapter>();
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyAndWeatherFromRegion = initialValue;
                 this.AcousticSpace = initialValue;
                 this.EncounterZone = initialValue;
-                this.MusicType = initialValue;
+                this.Music = initialValue;
                 this.ImageSpace = initialValue;
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(initialValue, new Landscape.Mask<TItem>(initialValue));
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>());
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SkyAndWeatherFromRegion,
                 TItem AcousticSpace,
                 TItem EncounterZone,
-                TItem MusicType,
+                TItem Music,
                 TItem ImageSpace,
                 TItem Landscape,
                 TItem NavigationMeshes,
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyAndWeatherFromRegion = SkyAndWeatherFromRegion;
                 this.AcousticSpace = AcousticSpace;
                 this.EncounterZone = EncounterZone;
-                this.MusicType = MusicType;
+                this.Music = Music;
                 this.ImageSpace = ImageSpace;
                 this.Landscape = new MaskItem<TItem, Landscape.Mask<TItem>?>(Landscape, new Landscape.Mask<TItem>(Landscape));
                 this.NavigationMeshes = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>(NavigationMeshes, Enumerable.Empty<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>());
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem SkyAndWeatherFromRegion;
             public TItem AcousticSpace;
             public TItem EncounterZone;
-            public TItem MusicType;
+            public TItem Music;
             public TItem ImageSpace;
             public MaskItem<TItem, Landscape.Mask<TItem>?>? Landscape { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ANavigationMesh.Mask<TItem>?>>?>? NavigationMeshes;
@@ -669,7 +669,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.SkyAndWeatherFromRegion, rhs.SkyAndWeatherFromRegion)) return false;
                 if (!object.Equals(this.AcousticSpace, rhs.AcousticSpace)) return false;
                 if (!object.Equals(this.EncounterZone, rhs.EncounterZone)) return false;
-                if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
+                if (!object.Equals(this.Music, rhs.Music)) return false;
                 if (!object.Equals(this.ImageSpace, rhs.ImageSpace)) return false;
                 if (!object.Equals(this.Landscape, rhs.Landscape)) return false;
                 if (!object.Equals(this.NavigationMeshes, rhs.NavigationMeshes)) return false;
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.SkyAndWeatherFromRegion);
                 hash.Add(this.AcousticSpace);
                 hash.Add(this.EncounterZone);
-                hash.Add(this.MusicType);
+                hash.Add(this.Music);
                 hash.Add(this.ImageSpace);
                 hash.Add(this.Landscape);
                 hash.Add(this.NavigationMeshes);
@@ -778,7 +778,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.SkyAndWeatherFromRegion)) return false;
                 if (!eval(this.AcousticSpace)) return false;
                 if (!eval(this.EncounterZone)) return false;
-                if (!eval(this.MusicType)) return false;
+                if (!eval(this.Music)) return false;
                 if (!eval(this.ImageSpace)) return false;
                 if (Landscape != null)
                 {
@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.SkyAndWeatherFromRegion)) return true;
                 if (eval(this.AcousticSpace)) return true;
                 if (eval(this.EncounterZone)) return true;
-                if (eval(this.MusicType)) return true;
+                if (eval(this.Music)) return true;
                 if (eval(this.ImageSpace)) return true;
                 if (Landscape != null)
                 {
@@ -982,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.SkyAndWeatherFromRegion = eval(this.SkyAndWeatherFromRegion);
                 obj.AcousticSpace = eval(this.AcousticSpace);
                 obj.EncounterZone = eval(this.EncounterZone);
-                obj.MusicType = eval(this.MusicType);
+                obj.Music = eval(this.Music);
                 obj.ImageSpace = eval(this.ImageSpace);
                 obj.Landscape = this.Landscape == null ? null : new MaskItem<R, Landscape.Mask<R>?>(eval(this.Landscape.Overall), this.Landscape.Specific?.Translate(eval));
                 if (NavigationMeshes != null)
@@ -1167,9 +1167,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(EncounterZone, "EncounterZone");
                     }
-                    if (printMask?.MusicType ?? true)
+                    if (printMask?.Music ?? true)
                     {
-                        fg.AppendItem(MusicType, "MusicType");
+                        fg.AppendItem(Music, "Music");
                     }
                     if (printMask?.ImageSpace ?? true)
                     {
@@ -1306,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? SkyAndWeatherFromRegion;
             public Exception? AcousticSpace;
             public Exception? EncounterZone;
-            public Exception? MusicType;
+            public Exception? Music;
             public Exception? ImageSpace;
             public MaskItem<Exception?, Landscape.ErrorMask?>? Landscape;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>? NavigationMeshes;
@@ -1370,8 +1370,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return AcousticSpace;
                     case Cell_FieldIndex.EncounterZone:
                         return EncounterZone;
-                    case Cell_FieldIndex.MusicType:
-                        return MusicType;
+                    case Cell_FieldIndex.Music:
+                        return Music;
                     case Cell_FieldIndex.ImageSpace:
                         return ImageSpace;
                     case Cell_FieldIndex.Landscape:
@@ -1470,8 +1470,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.EncounterZone:
                         this.EncounterZone = ex;
                         break;
-                    case Cell_FieldIndex.MusicType:
-                        this.MusicType = ex;
+                    case Cell_FieldIndex.Music:
+                        this.Music = ex;
                         break;
                     case Cell_FieldIndex.ImageSpace:
                         this.ImageSpace = ex;
@@ -1583,8 +1583,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case Cell_FieldIndex.EncounterZone:
                         this.EncounterZone = (Exception?)obj;
                         break;
-                    case Cell_FieldIndex.MusicType:
-                        this.MusicType = (Exception?)obj;
+                    case Cell_FieldIndex.Music:
+                        this.Music = (Exception?)obj;
                         break;
                     case Cell_FieldIndex.ImageSpace:
                         this.ImageSpace = (Exception?)obj;
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (SkyAndWeatherFromRegion != null) return true;
                 if (AcousticSpace != null) return true;
                 if (EncounterZone != null) return true;
-                if (MusicType != null) return true;
+                if (Music != null) return true;
                 if (ImageSpace != null) return true;
                 if (Landscape != null) return true;
                 if (NavigationMeshes != null) return true;
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(SkyAndWeatherFromRegion, "SkyAndWeatherFromRegion");
                 fg.AppendItem(AcousticSpace, "AcousticSpace");
                 fg.AppendItem(EncounterZone, "EncounterZone");
-                fg.AppendItem(MusicType, "MusicType");
+                fg.AppendItem(Music, "Music");
                 fg.AppendItem(ImageSpace, "ImageSpace");
                 Landscape?.ToString(fg);
                 if (NavigationMeshes.TryGet(out var NavigationMeshesItem))
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.SkyAndWeatherFromRegion = this.SkyAndWeatherFromRegion.Combine(rhs.SkyAndWeatherFromRegion);
                 ret.AcousticSpace = this.AcousticSpace.Combine(rhs.AcousticSpace);
                 ret.EncounterZone = this.EncounterZone.Combine(rhs.EncounterZone);
-                ret.MusicType = this.MusicType.Combine(rhs.MusicType);
+                ret.Music = this.Music.Combine(rhs.Music);
                 ret.ImageSpace = this.ImageSpace.Combine(rhs.ImageSpace);
                 ret.Landscape = this.Landscape.Combine(rhs.Landscape, (l, r) => l.Combine(r));
                 ret.NavigationMeshes = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ANavigationMesh.ErrorMask?>>?>(ExceptionExt.Combine(this.NavigationMeshes?.Overall, rhs.NavigationMeshes?.Overall), ExceptionExt.Combine(this.NavigationMeshes?.Specific, rhs.NavigationMeshes?.Specific));
@@ -1901,7 +1901,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool SkyAndWeatherFromRegion;
             public bool AcousticSpace;
             public bool EncounterZone;
-            public bool MusicType;
+            public bool Music;
             public bool ImageSpace;
             public MaskItem<bool, Landscape.TranslationMask?> Landscape;
             public MaskItem<bool, ANavigationMesh.TranslationMask?> NavigationMeshes;
@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.SkyAndWeatherFromRegion = defaultOn;
                 this.AcousticSpace = defaultOn;
                 this.EncounterZone = defaultOn;
-                this.MusicType = defaultOn;
+                this.Music = defaultOn;
                 this.ImageSpace = defaultOn;
                 this.Landscape = new MaskItem<bool, Landscape.TranslationMask?>(defaultOn, null);
                 this.NavigationMeshes = new MaskItem<bool, ANavigationMesh.TranslationMask?>(defaultOn, null);
@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((SkyAndWeatherFromRegion, null));
                 ret.Add((AcousticSpace, null));
                 ret.Add((EncounterZone, null));
-                ret.Add((MusicType, null));
+                ret.Add((Music, null));
                 ret.Add((ImageSpace, null));
                 ret.Add((Landscape?.Overall ?? true, Landscape?.Specific?.GetCrystal()));
                 ret.Add((NavigationMeshes?.Overall ?? true, NavigationMeshes?.Specific?.GetCrystal()));
@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<Region> SkyAndWeatherFromRegion { get; set; }
         new FormLinkNullable<AcousticSpace> AcousticSpace { get; set; }
         new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
-        new FormLinkNullable<Music> MusicType { get; set; }
+        new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
         new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
@@ -2190,7 +2190,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IRegionGetter> SkyAndWeatherFromRegion { get; }
         IFormLinkNullable<IAcousticSpaceGetter> AcousticSpace { get; }
         IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
-        IFormLinkNullable<IMusicGetter> MusicType { get; }
+        IFormLinkNullable<IMusicTypeGetter> Music { get; }
         IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
         ILandscapeGetter? Landscape { get; }
         IReadOnlyList<IANavigationMeshGetter> NavigationMeshes { get; }
@@ -2557,7 +2557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         SkyAndWeatherFromRegion = 25,
         AcousticSpace = 26,
         EncounterZone = 27,
-        MusicType = 28,
+        Music = 28,
         ImageSpace = 29,
         Landscape = 30,
         NavigationMeshes = 31,
@@ -2662,8 +2662,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Cell_FieldIndex.AcousticSpace;
                 case "ENCOUNTERZONE":
                     return (ushort)Cell_FieldIndex.EncounterZone;
-                case "MUSICTYPE":
-                    return (ushort)Cell_FieldIndex.MusicType;
+                case "MUSIC":
+                    return (ushort)Cell_FieldIndex.Music;
                 case "IMAGESPACE":
                     return (ushort)Cell_FieldIndex.ImageSpace;
                 case "LANDSCAPE":
@@ -2722,7 +2722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.SkyAndWeatherFromRegion:
                 case Cell_FieldIndex.AcousticSpace:
                 case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.Music:
                 case Cell_FieldIndex.ImageSpace:
                 case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.Timestamp:
@@ -2769,7 +2769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.SkyAndWeatherFromRegion:
                 case Cell_FieldIndex.AcousticSpace:
                 case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.Music:
                 case Cell_FieldIndex.ImageSpace:
                 case Cell_FieldIndex.Timestamp:
                 case Cell_FieldIndex.UnknownGroupData:
@@ -2810,7 +2810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.SkyAndWeatherFromRegion:
                 case Cell_FieldIndex.AcousticSpace:
                 case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.Music:
                 case Cell_FieldIndex.ImageSpace:
                 case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.NavigationMeshes:
@@ -2877,8 +2877,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "AcousticSpace";
                 case Cell_FieldIndex.EncounterZone:
                     return "EncounterZone";
-                case Cell_FieldIndex.MusicType:
-                    return "MusicType";
+                case Cell_FieldIndex.Music:
+                    return "Music";
                 case Cell_FieldIndex.ImageSpace:
                     return "ImageSpace";
                 case Cell_FieldIndex.Landscape:
@@ -2933,7 +2933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.SkyAndWeatherFromRegion:
                 case Cell_FieldIndex.AcousticSpace:
                 case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.Music:
                 case Cell_FieldIndex.ImageSpace:
                 case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.NavigationMeshes:
@@ -2978,7 +2978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.SkyAndWeatherFromRegion:
                 case Cell_FieldIndex.AcousticSpace:
                 case Cell_FieldIndex.EncounterZone:
-                case Cell_FieldIndex.MusicType:
+                case Cell_FieldIndex.Music:
                 case Cell_FieldIndex.ImageSpace:
                 case Cell_FieldIndex.Landscape:
                 case Cell_FieldIndex.NavigationMeshes:
@@ -3045,8 +3045,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<AcousticSpace>);
                 case Cell_FieldIndex.EncounterZone:
                     return typeof(FormLinkNullable<EncounterZone>);
-                case Cell_FieldIndex.MusicType:
-                    return typeof(FormLinkNullable<Music>);
+                case Cell_FieldIndex.Music:
+                    return typeof(FormLinkNullable<MusicType>);
                 case Cell_FieldIndex.ImageSpace:
                     return typeof(FormLinkNullable<ImageSpaceAdapter>);
                 case Cell_FieldIndex.Landscape:
@@ -3140,7 +3140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SkyAndWeatherFromRegion = FormLinkNullable<Region>.Null;
             item.AcousticSpace = FormLinkNullable<AcousticSpace>.Null;
             item.EncounterZone = FormLinkNullable<EncounterZone>.Null;
-            item.MusicType = FormLinkNullable<Music>.Null;
+            item.Music = FormLinkNullable<MusicType>.Null;
             item.ImageSpace = FormLinkNullable<ImageSpaceAdapter>.Null;
             item.Landscape = null;
             item.NavigationMeshes.Clear();
@@ -3373,7 +3373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.SkyAndWeatherFromRegion = object.Equals(item.SkyAndWeatherFromRegion, rhs.SkyAndWeatherFromRegion);
             ret.AcousticSpace = object.Equals(item.AcousticSpace, rhs.AcousticSpace);
             ret.EncounterZone = object.Equals(item.EncounterZone, rhs.EncounterZone);
-            ret.MusicType = object.Equals(item.MusicType, rhs.MusicType);
+            ret.Music = object.Equals(item.Music, rhs.Music);
             ret.ImageSpace = object.Equals(item.ImageSpace, rhs.ImageSpace);
             ret.Landscape = EqualsMaskHelper.EqualsHelper(
                 item.Landscape,
@@ -3571,10 +3571,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(EncounterZoneItem, "EncounterZone");
             }
-            if ((printMask?.MusicType ?? true)
-                && item.MusicType.TryGet(out var MusicTypeItem))
+            if ((printMask?.Music ?? true)
+                && item.Music.TryGet(out var MusicItem))
             {
-                fg.AppendItem(MusicTypeItem, "MusicType");
+                fg.AppendItem(MusicItem, "Music");
             }
             if ((printMask?.ImageSpace ?? true)
                 && item.ImageSpace.TryGet(out var ImageSpaceItem))
@@ -3694,7 +3694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.SkyAndWeatherFromRegion.HasValue && checkMask.SkyAndWeatherFromRegion.Value != (item.SkyAndWeatherFromRegion.FormKey != null)) return false;
             if (checkMask.AcousticSpace.HasValue && checkMask.AcousticSpace.Value != (item.AcousticSpace.FormKey != null)) return false;
             if (checkMask.EncounterZone.HasValue && checkMask.EncounterZone.Value != (item.EncounterZone.FormKey != null)) return false;
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != (item.MusicType.FormKey != null)) return false;
+            if (checkMask.Music.HasValue && checkMask.Music.Value != (item.Music.FormKey != null)) return false;
             if (checkMask.ImageSpace.HasValue && checkMask.ImageSpace.Value != (item.ImageSpace.FormKey != null)) return false;
             if (checkMask.Landscape?.Overall.HasValue ?? false && checkMask.Landscape.Overall.Value != (item.Landscape != null)) return false;
             if (checkMask.Landscape?.Specific != null && (item.Landscape == null || !item.Landscape.HasBeenSet(checkMask.Landscape.Specific))) return false;
@@ -3733,7 +3733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.SkyAndWeatherFromRegion = (item.SkyAndWeatherFromRegion.FormKey != null);
             mask.AcousticSpace = (item.AcousticSpace.FormKey != null);
             mask.EncounterZone = (item.EncounterZone.FormKey != null);
-            mask.MusicType = (item.MusicType.FormKey != null);
+            mask.Music = (item.Music.FormKey != null);
             mask.ImageSpace = (item.ImageSpace.FormKey != null);
             var itemLandscape = item.Landscape;
             mask.Landscape = new MaskItem<bool, Landscape.Mask<bool>?>(itemLandscape != null, itemLandscape?.GetHasBeenSetMask());
@@ -3822,7 +3822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion)) return false;
             if (!lhs.AcousticSpace.Equals(rhs.AcousticSpace)) return false;
             if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
-            if (!lhs.MusicType.Equals(rhs.MusicType)) return false;
+            if (!lhs.Music.Equals(rhs.Music)) return false;
             if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
             if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
             if (!lhs.NavigationMeshes.SequenceEqual(rhs.NavigationMeshes)) return false;
@@ -3937,9 +3937,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(EncounterZoneitem);
             }
-            if (item.MusicType.TryGet(out var MusicTypeitem))
+            if (item.Music.TryGet(out var Musicitem))
             {
-                hash.Add(MusicTypeitem);
+                hash.Add(Musicitem);
             }
             if (item.ImageSpace.TryGet(out var ImageSpaceitem))
             {
@@ -4026,9 +4026,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return EncounterZoneKey;
             }
-            if (obj.MusicType.FormKey.TryGet(out var MusicTypeKey))
+            if (obj.Music.FormKey.TryGet(out var MusicKey))
             {
-                yield return MusicTypeKey;
+                yield return MusicKey;
             }
             if (obj.ImageSpace.FormKey.TryGet(out var ImageSpaceKey))
             {
@@ -4441,9 +4441,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.EncounterZone = rhs.EncounterZone.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
-                item.MusicType = rhs.MusicType.FormKey;
+                item.Music = rhs.Music.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
             {
@@ -4952,14 +4952,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Cell_FieldIndex.EncounterZone,
                     errorMask: errorMask);
             }
-            if ((item.MusicType.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.MusicType) ?? true))
+            if ((item.Music.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.MusicType),
-                    item: item.MusicType.FormKey,
-                    fieldIndex: (int)Cell_FieldIndex.MusicType,
+                    name: nameof(item.Music),
+                    item: item.Music.FormKey,
+                    fieldIndex: (int)Cell_FieldIndex.Music,
                     errorMask: errorMask);
             }
             if ((item.ImageSpace.FormKey != null)
@@ -5617,11 +5617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MusicType":
-                    errorMask?.PushIndex((int)Cell_FieldIndex.MusicType);
+                case "Music":
+                    errorMask?.PushIndex((int)Cell_FieldIndex.Music);
                     try
                     {
-                        item.MusicType = FormKeyXmlTranslation.Instance.Parse(
+                        item.Music = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -6092,7 +6092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XEZN));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.MusicType,
+                item: item.Music,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCMO));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -6341,10 +6341,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XCMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
                 }
                 case RecordTypeInts.XCIM:
                 {
@@ -6541,10 +6541,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public bool EncounterZone_IsSet => _EncounterZoneLocation.HasValue;
         public IFormLinkNullable<IEncounterZoneGetter> EncounterZone => _EncounterZoneLocation.HasValue ? new FormLinkNullable<IEncounterZoneGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _EncounterZoneLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEncounterZoneGetter>.Null;
         #endregion
-        #region MusicType
-        private int? _MusicTypeLocation;
-        public bool MusicType_IsSet => _MusicTypeLocation.HasValue;
-        public IFormLinkNullable<IMusicGetter> MusicType => _MusicTypeLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        #region Music
+        private int? _MusicLocation;
+        public bool Music_IsSet => _MusicLocation.HasValue;
+        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region ImageSpace
         private int? _ImageSpaceLocation;
@@ -6749,8 +6749,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XCMO:
                 {
-                    _MusicTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MusicType);
+                    _MusicLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
                 }
                 case RecordTypeInts.XCIM:
                 {

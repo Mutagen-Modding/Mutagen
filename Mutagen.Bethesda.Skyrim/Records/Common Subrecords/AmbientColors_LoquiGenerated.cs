@@ -33,14 +33,14 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class WeatherAmbientColors :
-        IWeatherAmbientColors,
-        ILoquiObjectSetter<WeatherAmbientColors>,
-        IEquatable<WeatherAmbientColors>,
+    public partial class AmbientColors :
+        IAmbientColors,
+        ILoquiObjectSetter<AmbientColors>,
+        IEquatable<AmbientColors>,
         IEqualsMask
     {
         #region Ctor
-        public WeatherAmbientColors()
+        public AmbientColors()
         {
             CustomCtor();
         }
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Versioning
-        public WeatherAmbientColors.VersioningBreaks Versioning { get; set; } = default;
+        public AmbientColors.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region DirectionalXPlus
         public Color DirectionalXPlus { get; set; } = default;
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            WeatherAmbientColorsMixIn.ToString(
+            AmbientColorsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -91,22 +91,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherAmbientColorsGetter rhs)) return false;
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IAmbientColorsGetter rhs)) return false;
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(WeatherAmbientColors? obj)
+        public bool Equals(AmbientColors? obj)
         {
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => WeatherAmbientColorsXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => AmbientColorsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((WeatherAmbientColorsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -124,9 +124,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             XElement node,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -135,27 +135,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             XElement node,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherAmbientColors.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AmbientColors.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new WeatherAmbientColors();
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new AmbientColors();
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -163,9 +163,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             string path,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -173,10 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             string path,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -185,10 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -197,9 +197,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             Stream stream,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -207,10 +207,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             Stream stream,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -219,10 +219,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static WeatherAmbientColors CreateFromXml(
+        public static AmbientColors CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new WeatherAmbientColors.Mask<R>();
+                var ret = new AmbientColors.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -394,16 +394,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(WeatherAmbientColors.Mask<bool>? printMask = null)
+            public string ToString(AmbientColors.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, WeatherAmbientColors.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, AmbientColors.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(WeatherAmbientColors.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(AmbientColors.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -482,26 +482,26 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+                AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Versioning:
+                    case AmbientColors_FieldIndex.Versioning:
                         return Versioning;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                    case AmbientColors_FieldIndex.DirectionalXPlus:
                         return DirectionalXPlus;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                    case AmbientColors_FieldIndex.DirectionalXMinus:
                         return DirectionalXMinus;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                    case AmbientColors_FieldIndex.DirectionalYPlus:
                         return DirectionalYPlus;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                    case AmbientColors_FieldIndex.DirectionalYMinus:
                         return DirectionalYMinus;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                    case AmbientColors_FieldIndex.DirectionalZPlus:
                         return DirectionalZPlus;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                    case AmbientColors_FieldIndex.DirectionalZMinus:
                         return DirectionalZMinus;
-                    case WeatherAmbientColors_FieldIndex.Specular:
+                    case AmbientColors_FieldIndex.Specular:
                         return Specular;
-                    case WeatherAmbientColors_FieldIndex.Scale:
+                    case AmbientColors_FieldIndex.Scale:
                         return Scale;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -510,34 +510,34 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+                AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Versioning:
+                    case AmbientColors_FieldIndex.Versioning:
                         this.Versioning = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                    case AmbientColors_FieldIndex.DirectionalXPlus:
                         this.DirectionalXPlus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                    case AmbientColors_FieldIndex.DirectionalXMinus:
                         this.DirectionalXMinus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                    case AmbientColors_FieldIndex.DirectionalYPlus:
                         this.DirectionalYPlus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                    case AmbientColors_FieldIndex.DirectionalYMinus:
                         this.DirectionalYMinus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                    case AmbientColors_FieldIndex.DirectionalZPlus:
                         this.DirectionalZPlus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                    case AmbientColors_FieldIndex.DirectionalZMinus:
                         this.DirectionalZMinus = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Specular:
+                    case AmbientColors_FieldIndex.Specular:
                         this.Specular = ex;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Scale:
+                    case AmbientColors_FieldIndex.Scale:
                         this.Scale = ex;
                         break;
                     default:
@@ -547,34 +547,34 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+                AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
                 switch (enu)
                 {
-                    case WeatherAmbientColors_FieldIndex.Versioning:
+                    case AmbientColors_FieldIndex.Versioning:
                         this.Versioning = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                    case AmbientColors_FieldIndex.DirectionalXPlus:
                         this.DirectionalXPlus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                    case AmbientColors_FieldIndex.DirectionalXMinus:
                         this.DirectionalXMinus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                    case AmbientColors_FieldIndex.DirectionalYPlus:
                         this.DirectionalYPlus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                    case AmbientColors_FieldIndex.DirectionalYMinus:
                         this.DirectionalYMinus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                    case AmbientColors_FieldIndex.DirectionalZPlus:
                         this.DirectionalZPlus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                    case AmbientColors_FieldIndex.DirectionalZMinus:
                         this.DirectionalZMinus = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Specular:
+                    case AmbientColors_FieldIndex.Specular:
                         this.Specular = (Exception?)obj;
                         break;
-                    case WeatherAmbientColors_FieldIndex.Scale:
+                    case AmbientColors_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
                         break;
                     default:
@@ -736,33 +736,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => WeatherAmbientColorsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => AmbientColorsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((WeatherAmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static WeatherAmbientColors CreateFromBinary(MutagenFrame frame)
+        public static AmbientColors CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static WeatherAmbientColors CreateFromBinary(
+        public static AmbientColors CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new WeatherAmbientColors();
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AmbientColors();
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out WeatherAmbientColors item,
+            out AmbientColors item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -784,28 +784,28 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherAmbientColorsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmbientColorsGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static WeatherAmbientColors GetNew()
+        internal static AmbientColors GetNew()
         {
-            return new WeatherAmbientColors();
+            return new AmbientColors();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IWeatherAmbientColors :
-        IWeatherAmbientColorsGetter,
-        IAmbientColors,
-        ILoquiObjectSetter<IWeatherAmbientColors>
+    public partial interface IAmbientColors :
+        IAmbientColorsGetter,
+        IAmbientColorsCommon,
+        ILoquiObjectSetter<IAmbientColors>
     {
-        new WeatherAmbientColors.VersioningBreaks Versioning { get; set; }
+        new AmbientColors.VersioningBreaks Versioning { get; set; }
         new Color DirectionalXPlus { get; set; }
         new Color DirectionalXMinus { get; set; }
         new Color DirectionalYPlus { get; set; }
@@ -816,10 +816,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Scale { get; set; }
     }
 
-    public partial interface IWeatherAmbientColorsGetter :
+    public partial interface IAmbientColorsGetter :
         ILoquiObject,
-        IAmbientColorsGetter,
-        ILoquiObject<IWeatherAmbientColorsGetter>,
+        IAmbientColorsCommonGetter,
+        ILoquiObject<IAmbientColorsGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -829,8 +829,8 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => WeatherAmbientColors_Registration.Instance;
-        WeatherAmbientColors.VersioningBreaks Versioning { get; }
+        static ILoquiRegistration Registration => AmbientColors_Registration.Instance;
+        AmbientColors.VersioningBreaks Versioning { get; }
         Color DirectionalXPlus { get; }
         Color DirectionalXMinus { get; }
         Color DirectionalYPlus { get; }
@@ -845,42 +845,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class WeatherAmbientColorsMixIn
+    public static partial class AmbientColorsMixIn
     {
-        public static void Clear(this IWeatherAmbientColors item)
+        public static void Clear(this IAmbientColors item)
         {
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static WeatherAmbientColors.Mask<bool> GetEqualsMask(
-            this IWeatherAmbientColorsGetter item,
-            IWeatherAmbientColorsGetter rhs,
+        public static AmbientColors.Mask<bool> GetEqualsMask(
+            this IAmbientColorsGetter item,
+            IAmbientColorsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             string? name = null,
-            WeatherAmbientColors.Mask<bool>? printMask = null)
+            AmbientColors.Mask<bool>? printMask = null)
         {
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).ToString(
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherAmbientColors.Mask<bool>? printMask = null)
+            AmbientColors.Mask<bool>? printMask = null)
         {
-            ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).ToString(
+            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -888,37 +888,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IWeatherAmbientColorsGetter item,
-            WeatherAmbientColors.Mask<bool?> checkMask)
+            this IAmbientColorsGetter item,
+            AmbientColors.Mask<bool?> checkMask)
         {
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).HasBeenSet(
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static WeatherAmbientColors.Mask<bool> GetHasBeenSetMask(this IWeatherAmbientColorsGetter item)
+        public static AmbientColors.Mask<bool> GetHasBeenSetMask(this IAmbientColorsGetter item)
         {
-            var ret = new WeatherAmbientColors.Mask<bool>(false);
-            ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new AmbientColors.Mask<bool>(false);
+            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IWeatherAmbientColorsGetter item,
-            IWeatherAmbientColorsGetter rhs)
+            this IAmbientColorsGetter item,
+            IAmbientColorsGetter rhs)
         {
-            return ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).Equals(
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IWeatherAmbientColors lhs,
-            IWeatherAmbientColorsGetter rhs)
+            this IAmbientColors lhs,
+            IAmbientColorsGetter rhs)
         {
-            ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -926,11 +926,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IWeatherAmbientColors lhs,
-            IWeatherAmbientColorsGetter rhs,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+            this IAmbientColors lhs,
+            IAmbientColorsGetter rhs,
+            AmbientColors.TranslationMask? copyMask = null)
         {
-            ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -938,59 +938,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IWeatherAmbientColors lhs,
-            IWeatherAmbientColorsGetter rhs,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+            this IAmbientColors lhs,
+            IAmbientColorsGetter rhs,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = WeatherAmbientColors.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AmbientColors.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IWeatherAmbientColors lhs,
-            IWeatherAmbientColorsGetter rhs,
+            this IAmbientColors lhs,
+            IAmbientColorsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static WeatherAmbientColors DeepCopy(
-            this IWeatherAmbientColorsGetter item,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+        public static AmbientColors DeepCopy(
+            this IAmbientColorsGetter item,
+            AmbientColors.TranslationMask? copyMask = null)
         {
-            return ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static WeatherAmbientColors DeepCopy(
-            this IWeatherAmbientColorsGetter item,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+        public static AmbientColors DeepCopy(
+            this IAmbientColorsGetter item,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? copyMask = null)
         {
-            return ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static WeatherAmbientColors DeepCopy(
-            this IWeatherAmbientColorsGetter item,
+        public static AmbientColors DeepCopy(
+            this IAmbientColorsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((WeatherAmbientColorsSetterTranslationCommon)((IWeatherAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AmbientColorsSetterTranslationCommon)((IAmbientColorsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -999,9 +999,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             XElement node,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -1012,10 +1012,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             XElement node,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -1023,16 +1023,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherAmbientColors.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AmbientColors.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1040,9 +1040,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             string path,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1052,10 +1052,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             string path,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1066,10 +1066,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             string path,
             ErrorMaskBuilder? errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1080,9 +1080,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             Stream stream,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1092,10 +1092,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             Stream stream,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1106,10 +1106,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1134,11 +1134,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IWeatherAmbientColors item,
+            this IAmbientColors item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((WeatherAmbientColorsSetterCommon)((IWeatherAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AmbientColorsSetterCommon)((IAmbientColorsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum WeatherAmbientColors_FieldIndex
+    public enum AmbientColors_FieldIndex
     {
         Versioning = 0,
         DirectionalXPlus = 1,
@@ -1169,9 +1169,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class WeatherAmbientColors_Registration : ILoquiRegistration
+    public partial class AmbientColors_Registration : ILoquiRegistration
     {
-        public static readonly WeatherAmbientColors_Registration Instance = new WeatherAmbientColors_Registration();
+        public static readonly AmbientColors_Registration Instance = new AmbientColors_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -1186,23 +1186,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 9;
 
-        public static readonly Type MaskType = typeof(WeatherAmbientColors.Mask<>);
+        public static readonly Type MaskType = typeof(AmbientColors.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(WeatherAmbientColors.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AmbientColors.ErrorMask);
 
-        public static readonly Type ClassType = typeof(WeatherAmbientColors);
+        public static readonly Type ClassType = typeof(AmbientColors);
 
-        public static readonly Type GetterType = typeof(IWeatherAmbientColorsGetter);
+        public static readonly Type GetterType = typeof(IAmbientColorsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IWeatherAmbientColors);
+        public static readonly Type SetterType = typeof(IAmbientColors);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.WeatherAmbientColors";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.AmbientColors";
 
-        public const string Name = "WeatherAmbientColors";
+        public const string Name = "AmbientColors";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1215,23 +1215,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "VERSIONING":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Versioning;
+                    return (ushort)AmbientColors_FieldIndex.Versioning;
                 case "DIRECTIONALXPLUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalXPlus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalXPlus;
                 case "DIRECTIONALXMINUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalXMinus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalXMinus;
                 case "DIRECTIONALYPLUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalYPlus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalYPlus;
                 case "DIRECTIONALYMINUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalYMinus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalYMinus;
                 case "DIRECTIONALZPLUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalZPlus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalZPlus;
                 case "DIRECTIONALZMINUS":
-                    return (ushort)WeatherAmbientColors_FieldIndex.DirectionalZMinus;
+                    return (ushort)AmbientColors_FieldIndex.DirectionalZMinus;
                 case "SPECULAR":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Specular;
+                    return (ushort)AmbientColors_FieldIndex.Specular;
                 case "SCALE":
-                    return (ushort)WeatherAmbientColors_FieldIndex.Scale;
+                    return (ushort)AmbientColors_FieldIndex.Scale;
                 default:
                     return null;
             }
@@ -1239,18 +1239,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
-                case WeatherAmbientColors_FieldIndex.Specular:
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1259,18 +1259,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
-                case WeatherAmbientColors_FieldIndex.Specular:
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1279,18 +1279,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
-                case WeatherAmbientColors_FieldIndex.Specular:
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1299,26 +1299,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.Versioning:
                     return "Versioning";
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
                     return "DirectionalXPlus";
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
                     return "DirectionalXMinus";
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
                     return "DirectionalYPlus";
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
                     return "DirectionalYMinus";
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
                     return "DirectionalZPlus";
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
                     return "DirectionalZMinus";
-                case WeatherAmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Specular:
                     return "Specular";
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Scale:
                     return "Scale";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1327,18 +1327,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
-                case WeatherAmbientColors_FieldIndex.Specular:
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1347,18 +1347,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
-                case WeatherAmbientColors_FieldIndex.Specular:
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Versioning:
+                case AmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Scale:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1367,34 +1367,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            WeatherAmbientColors_FieldIndex enu = (WeatherAmbientColors_FieldIndex)index;
+            AmbientColors_FieldIndex enu = (AmbientColors_FieldIndex)index;
             switch (enu)
             {
-                case WeatherAmbientColors_FieldIndex.Versioning:
-                    return typeof(WeatherAmbientColors.VersioningBreaks);
-                case WeatherAmbientColors_FieldIndex.DirectionalXPlus:
+                case AmbientColors_FieldIndex.Versioning:
+                    return typeof(AmbientColors.VersioningBreaks);
+                case AmbientColors_FieldIndex.DirectionalXPlus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.DirectionalXMinus:
+                case AmbientColors_FieldIndex.DirectionalXMinus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.DirectionalYPlus:
+                case AmbientColors_FieldIndex.DirectionalYPlus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.DirectionalYMinus:
+                case AmbientColors_FieldIndex.DirectionalYMinus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.DirectionalZPlus:
+                case AmbientColors_FieldIndex.DirectionalZPlus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.DirectionalZMinus:
+                case AmbientColors_FieldIndex.DirectionalZMinus:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.Specular:
+                case AmbientColors_FieldIndex.Specular:
                     return typeof(Color);
-                case WeatherAmbientColors_FieldIndex.Scale:
+                case AmbientColors_FieldIndex.Scale:
                     return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(WeatherAmbientColorsXmlWriteTranslation);
-        public static readonly Type BinaryWriteTranslation = typeof(WeatherAmbientColorsBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(AmbientColorsXmlWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(AmbientColorsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1427,13 +1427,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class WeatherAmbientColorsSetterCommon
+    public partial class AmbientColorsSetterCommon
     {
-        public static readonly WeatherAmbientColorsSetterCommon Instance = new WeatherAmbientColorsSetterCommon();
+        public static readonly AmbientColorsSetterCommon Instance = new AmbientColorsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IWeatherAmbientColors item)
+        public void Clear(IAmbientColors item)
         {
             ClearPartial();
             item.Versioning = default;
@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IWeatherAmbientColors item,
+            IAmbientColors item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeatherAmbientColorsXmlCreateTranslation.FillPublicElementXml(
+                    AmbientColorsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IWeatherAmbientColors item,
+            IAmbientColors item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1485,23 +1485,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: WeatherAmbientColorsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: AmbientColorsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class WeatherAmbientColorsCommon
+    public partial class AmbientColorsCommon
     {
-        public static readonly WeatherAmbientColorsCommon Instance = new WeatherAmbientColorsCommon();
+        public static readonly AmbientColorsCommon Instance = new AmbientColorsCommon();
 
-        public WeatherAmbientColors.Mask<bool> GetEqualsMask(
-            IWeatherAmbientColorsGetter item,
-            IWeatherAmbientColorsGetter rhs,
+        public AmbientColors.Mask<bool> GetEqualsMask(
+            IAmbientColorsGetter item,
+            IAmbientColorsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new WeatherAmbientColors.Mask<bool>(false);
-            ((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AmbientColors.Mask<bool>(false);
+            ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1510,9 +1510,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IWeatherAmbientColorsGetter item,
-            IWeatherAmbientColorsGetter rhs,
-            WeatherAmbientColors.Mask<bool> ret,
+            IAmbientColorsGetter item,
+            IAmbientColorsGetter rhs,
+            AmbientColors.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1528,9 +1528,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             string? name = null,
-            WeatherAmbientColors.Mask<bool>? printMask = null)
+            AmbientColors.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1542,18 +1542,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             FileGeneration fg,
             string? name = null,
-            WeatherAmbientColors.Mask<bool>? printMask = null)
+            AmbientColors.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"WeatherAmbientColors =>");
+                fg.AppendLine($"AmbientColors =>");
             }
             else
             {
-                fg.AppendLine($"{name} (WeatherAmbientColors) =>");
+                fg.AppendLine($"{name} (AmbientColors) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1567,9 +1567,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             FileGeneration fg,
-            WeatherAmbientColors.Mask<bool>? printMask = null)
+            AmbientColors.Mask<bool>? printMask = null)
         {
             if (printMask?.Versioning ?? true)
             {
@@ -1610,15 +1610,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IWeatherAmbientColorsGetter item,
-            WeatherAmbientColors.Mask<bool?> checkMask)
+            IAmbientColorsGetter item,
+            AmbientColors.Mask<bool?> checkMask)
         {
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IWeatherAmbientColorsGetter item,
-            WeatherAmbientColors.Mask<bool> mask)
+            IAmbientColorsGetter item,
+            AmbientColors.Mask<bool> mask)
         {
             mask.Versioning = true;
             mask.DirectionalXPlus = true;
@@ -1633,8 +1633,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IWeatherAmbientColorsGetter? lhs,
-            IWeatherAmbientColorsGetter? rhs)
+            IAmbientColorsGetter? lhs,
+            IAmbientColorsGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return true;
         }
         
-        public virtual int GetHashCode(IWeatherAmbientColorsGetter item)
+        public virtual int GetHashCode(IAmbientColorsGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Versioning);
@@ -1670,64 +1670,64 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return WeatherAmbientColors.GetNew();
+            return AmbientColors.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IWeatherAmbientColorsGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IAmbientColorsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IWeatherAmbientColorsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IAmbientColorsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class WeatherAmbientColorsSetterTranslationCommon
+    public partial class AmbientColorsSetterTranslationCommon
     {
-        public static readonly WeatherAmbientColorsSetterTranslationCommon Instance = new WeatherAmbientColorsSetterTranslationCommon();
+        public static readonly AmbientColorsSetterTranslationCommon Instance = new AmbientColorsSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IWeatherAmbientColors item,
-            IWeatherAmbientColorsGetter rhs,
+            IAmbientColors item,
+            IAmbientColorsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Versioning) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Versioning) ?? true))
             {
                 item.Versioning = rhs.Versioning;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXPlus) ?? true))
             {
                 item.DirectionalXPlus = rhs.DirectionalXPlus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXMinus) ?? true))
             {
                 item.DirectionalXMinus = rhs.DirectionalXMinus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYPlus) ?? true))
             {
                 item.DirectionalYPlus = rhs.DirectionalYPlus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYMinus) ?? true))
             {
                 item.DirectionalYMinus = rhs.DirectionalYMinus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZPlus) ?? true))
             {
                 item.DirectionalZPlus = rhs.DirectionalZPlus;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
             {
                 item.DirectionalZMinus = rhs.DirectionalZMinus;
             }
-            if (rhs.Versioning.HasFlag(WeatherAmbientColors.VersioningBreaks.Break0)) return;
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Specular) ?? true))
+            if (rhs.Versioning.HasFlag(AmbientColors.VersioningBreaks.Break0)) return;
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
             {
                 item.Specular = rhs.Specular;
             }
-            if ((copyMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Scale) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
             {
                 item.Scale = rhs.Scale;
             }
@@ -1735,23 +1735,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public WeatherAmbientColors DeepCopy(
-            IWeatherAmbientColorsGetter item,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+        public AmbientColors DeepCopy(
+            IAmbientColorsGetter item,
+            AmbientColors.TranslationMask? copyMask = null)
         {
-            WeatherAmbientColors ret = (WeatherAmbientColors)((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).GetNew();
+            AmbientColors ret = (AmbientColors)((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public WeatherAmbientColors DeepCopy(
-            IWeatherAmbientColorsGetter item,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? copyMask = null)
+        public AmbientColors DeepCopy(
+            IAmbientColorsGetter item,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? copyMask = null)
         {
-            WeatherAmbientColors ret = (WeatherAmbientColors)((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).GetNew();
+            AmbientColors ret = (AmbientColors)((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1759,12 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public WeatherAmbientColors DeepCopy(
-            IWeatherAmbientColorsGetter item,
+        public AmbientColors DeepCopy(
+            IAmbientColorsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            WeatherAmbientColors ret = (WeatherAmbientColors)((WeatherAmbientColorsCommon)((IWeatherAmbientColorsGetter)item).CommonInstance()!).GetNew();
+            AmbientColors ret = (AmbientColors)((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1779,27 +1779,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class WeatherAmbientColors
+    public partial class AmbientColors
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColors_Registration.Instance;
-        public static WeatherAmbientColors_Registration Registration => WeatherAmbientColors_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
+        public static AmbientColors_Registration Registration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => WeatherAmbientColorsCommon.Instance;
+        protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return WeatherAmbientColorsSetterCommon.Instance;
+            return AmbientColorsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => WeatherAmbientColorsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AmbientColorsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IWeatherAmbientColorsGetter.CommonInstance() => this.CommonInstance();
+        object IAmbientColorsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IWeatherAmbientColorsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IAmbientColorsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IWeatherAmbientColorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IAmbientColorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1810,111 +1810,111 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class WeatherAmbientColorsXmlWriteTranslation : IXmlWriteTranslator
+    public partial class AmbientColorsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static WeatherAmbientColorsXmlWriteTranslation Instance = new WeatherAmbientColorsXmlWriteTranslation();
+        public readonly static AmbientColorsXmlWriteTranslation Instance = new AmbientColorsXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Versioning) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Versioning) ?? true))
             {
-                EnumXmlTranslation<WeatherAmbientColors.VersioningBreaks>.Instance.Write(
+                EnumXmlTranslation<AmbientColors.VersioningBreaks>.Instance.Write(
                     node: node,
                     name: nameof(item.Versioning),
                     item: item.Versioning,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Versioning,
+                    fieldIndex: (int)AmbientColors_FieldIndex.Versioning,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXPlus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalXPlus),
                     item: item.DirectionalXPlus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalXPlus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalXPlus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXMinus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalXMinus),
                     item: item.DirectionalXMinus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalXMinus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalXMinus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYPlus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalYPlus),
                     item: item.DirectionalYPlus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalYPlus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalYPlus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYMinus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalYMinus),
                     item: item.DirectionalYMinus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalYMinus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalYMinus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZPlus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalZPlus),
                     item: item.DirectionalZPlus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalZPlus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalZPlus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.DirectionalZMinus),
                     item: item.DirectionalZMinus,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.DirectionalZMinus,
+                    fieldIndex: (int)AmbientColors_FieldIndex.DirectionalZMinus,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Specular) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
             {
                 ColorXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Specular),
                     item: item.Specular,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Specular,
+                    fieldIndex: (int)AmbientColors_FieldIndex.Specular,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)WeatherAmbientColors_FieldIndex.Scale) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Scale),
                     item: item.Scale,
-                    fieldIndex: (int)WeatherAmbientColors_FieldIndex.Scale,
+                    fieldIndex: (int)AmbientColors_FieldIndex.Scale,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WeatherAmbientColors");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.AmbientColors");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WeatherAmbientColors");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.AmbientColors");
             }
             WriteToNodeXml(
                 item: item,
@@ -1931,7 +1931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IWeatherAmbientColorsGetter)item,
+                item: (IAmbientColorsGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IWeatherAmbientColorsGetter)item,
+                    item: (IAmbientColorsGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1969,12 +1969,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class WeatherAmbientColorsXmlCreateTranslation
+    public partial class AmbientColorsXmlCreateTranslation
     {
-        public readonly static WeatherAmbientColorsXmlCreateTranslation Instance = new WeatherAmbientColorsXmlCreateTranslation();
+        public readonly static AmbientColorsXmlCreateTranslation Instance = new AmbientColorsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IWeatherAmbientColors item,
+            IAmbientColors item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    WeatherAmbientColorsXmlCreateTranslation.FillPublicElementXml(
+                    AmbientColorsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IWeatherAmbientColors item,
+            IAmbientColors item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2008,10 +2008,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Versioning":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Versioning);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.Versioning);
                     try
                     {
-                        item.Versioning = EnumXmlTranslation<WeatherAmbientColors.VersioningBreaks>.Instance.Parse(
+                        item.Versioning = EnumXmlTranslation<AmbientColors.VersioningBreaks>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalXPlus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalXPlus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalXPlus);
                     try
                     {
                         item.DirectionalXPlus = ColorXmlTranslation.Instance.Parse(
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalXMinus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalXMinus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalXMinus);
                     try
                     {
                         item.DirectionalXMinus = ColorXmlTranslation.Instance.Parse(
@@ -2062,7 +2062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalYPlus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalYPlus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalYPlus);
                     try
                     {
                         item.DirectionalYPlus = ColorXmlTranslation.Instance.Parse(
@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalYMinus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalYMinus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalYMinus);
                     try
                     {
                         item.DirectionalYMinus = ColorXmlTranslation.Instance.Parse(
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalZPlus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalZPlus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalZPlus);
                     try
                     {
                         item.DirectionalZPlus = ColorXmlTranslation.Instance.Parse(
@@ -2116,7 +2116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "DirectionalZMinus":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.DirectionalZMinus);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.DirectionalZMinus);
                     try
                     {
                         item.DirectionalZMinus = ColorXmlTranslation.Instance.Parse(
@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Specular":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Specular);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.Specular);
                     try
                     {
                         item.Specular = ColorXmlTranslation.Instance.Parse(
@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Scale":
-                    errorMask?.PushIndex((int)WeatherAmbientColors_FieldIndex.Scale);
+                    errorMask?.PushIndex((int)AmbientColors_FieldIndex.Scale);
                     try
                     {
                         item.Scale = FloatXmlTranslation.Instance.Parse(
@@ -2180,30 +2180,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class WeatherAmbientColorsXmlTranslationMixIn
+    public static class AmbientColorsXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             XElement node,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((WeatherAmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = WeatherAmbientColors.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AmbientColors.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             string path,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -2234,10 +2234,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             Stream stream,
-            out WeatherAmbientColors.ErrorMask errorMask,
-            WeatherAmbientColors.TranslationMask? translationMask = null,
+            out AmbientColors.ErrorMask errorMask,
+            AmbientColors.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -2268,13 +2268,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((WeatherAmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2283,12 +2283,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             XElement node,
             string? name = null,
-            WeatherAmbientColors.TranslationMask? translationMask = null)
+            AmbientColors.TranslationMask? translationMask = null)
         {
-            ((WeatherAmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2297,12 +2297,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((WeatherAmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2312,12 +2312,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((WeatherAmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2336,12 +2336,12 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class WeatherAmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class AmbientColorsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static WeatherAmbientColorsBinaryWriteTranslation Instance = new WeatherAmbientColorsBinaryWriteTranslation();
+        public readonly static AmbientColorsBinaryWriteTranslation Instance = new AmbientColorsBinaryWriteTranslation();
 
         public static void WriteEmbedded(
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             MutagenWriter writer)
         {
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
@@ -2362,7 +2362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalZMinus);
-            if (!item.Versioning.HasFlag(WeatherAmbientColors.VersioningBreaks.Break0))
+            if (!item.Versioning.HasFlag(AmbientColors.VersioningBreaks.Break0))
             {
                 Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
                     writer: writer,
@@ -2375,7 +2375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IWeatherAmbientColorsGetter item,
+            IAmbientColorsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -2389,19 +2389,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IWeatherAmbientColorsGetter)item,
+                item: (IAmbientColorsGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class WeatherAmbientColorsBinaryCreateTranslation
+    public partial class AmbientColorsBinaryCreateTranslation
     {
-        public readonly static WeatherAmbientColorsBinaryCreateTranslation Instance = new WeatherAmbientColorsBinaryCreateTranslation();
+        public readonly static AmbientColorsBinaryCreateTranslation Instance = new AmbientColorsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IWeatherAmbientColors item,
+            IAmbientColors item,
             MutagenFrame frame)
         {
             item.DirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
@@ -2412,7 +2412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DirectionalZMinus = frame.ReadColor(ColorBinaryType.Alpha);
             if (frame.Complete)
             {
-                item.Versioning |= WeatherAmbientColors.VersioningBreaks.Break0;
+                item.Versioning |= AmbientColors.VersioningBreaks.Break0;
                 return;
             }
             item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
@@ -2425,13 +2425,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class WeatherAmbientColorsBinaryTranslationMixIn
+    public static class AmbientColorsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IWeatherAmbientColorsGetter item,
+            this IAmbientColorsGetter item,
             MutagenWriter writer)
         {
-            ((WeatherAmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((AmbientColorsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2444,33 +2444,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class WeatherAmbientColorsBinaryOverlay :
+    public partial class AmbientColorsBinaryOverlay :
         BinaryOverlay,
-        IWeatherAmbientColorsGetter
+        IAmbientColorsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => WeatherAmbientColors_Registration.Instance;
-        public static WeatherAmbientColors_Registration Registration => WeatherAmbientColors_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AmbientColors_Registration.Instance;
+        public static AmbientColors_Registration Registration => AmbientColors_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => WeatherAmbientColorsCommon.Instance;
+        protected object CommonInstance() => AmbientColorsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => WeatherAmbientColorsSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => AmbientColorsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IWeatherAmbientColorsGetter.CommonInstance() => this.CommonInstance();
+        object IAmbientColorsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IWeatherAmbientColorsGetter.CommonSetterInstance() => null;
+        object? IAmbientColorsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IWeatherAmbientColorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IAmbientColorsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWeatherAmbientColorsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAmbientColorsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => WeatherAmbientColorsXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => AmbientColorsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2479,7 +2479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((WeatherAmbientColorsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AmbientColorsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2487,20 +2487,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => WeatherAmbientColorsBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => AmbientColorsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((WeatherAmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AmbientColorsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public WeatherAmbientColors.VersioningBreaks Versioning { get; private set; }
+        public AmbientColors.VersioningBreaks Versioning { get; private set; }
         public Color DirectionalXPlus => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalXMinus => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalYPlus => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
@@ -2515,7 +2515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected WeatherAmbientColorsBinaryOverlay(
+        protected AmbientColorsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2525,16 +2525,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static WeatherAmbientColorsBinaryOverlay WeatherAmbientColorsFactory(
+        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
+            int finalPos,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new WeatherAmbientColorsBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x20),
+            var ret = new AmbientColorsBinaryOverlay(
+                bytes: stream.RemainingMemory.Slice(0, finalPos - stream.Position),
                 package: package);
             int offset = stream.Position;
-            stream.Position += 0x20;
+            if (ret._data.Length <= 0x18)
+            {
+                ret.Versioning |= AmbientColors.VersioningBreaks.Break0;
+            }
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
@@ -2542,14 +2546,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static WeatherAmbientColorsBinaryOverlay WeatherAmbientColorsFactory(
+        public static AmbientColorsBinaryOverlay AmbientColorsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return WeatherAmbientColorsFactory(
+            return AmbientColorsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
+                finalPos: slice.Length,
                 recordTypeConverter: recordTypeConverter);
         }
 
@@ -2559,7 +2564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            WeatherAmbientColorsMixIn.ToString(
+            AmbientColorsMixIn.ToString(
                 item: this,
                 name: name);
         }

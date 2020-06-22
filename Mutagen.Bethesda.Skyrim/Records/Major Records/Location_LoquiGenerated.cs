@@ -299,9 +299,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
         #region Music
-        public FormLinkNullable<Music> Music { get; set; } = new FormLinkNullable<Music>();
+        public FormLinkNullable<MusicType> Music { get; set; } = new FormLinkNullable<MusicType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IMusicGetter> ILocationGetter.Music => this.Music;
+        IFormLinkNullable<IMusicTypeGetter> ILocationGetter.Music => this.Music;
         #endregion
         #region UnreportedCrimeFaction
         public FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<Faction>();
@@ -2821,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Location> ParentLocation { get; set; }
-        new FormLinkNullable<Music> Music { get; set; }
+        new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; }
         new FormLinkNullable<IPlacedSimple> WorldLocationMarkerRef { get; set; }
         new Single? WorldLocationRadius { get; set; }
@@ -2865,7 +2865,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? Name { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         IFormLinkNullable<ILocationGetter> ParentLocation { get; }
-        IFormLinkNullable<IMusicGetter> Music { get; }
+        IFormLinkNullable<IMusicTypeGetter> Music { get; }
         IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
         IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         Single? WorldLocationRadius { get; }
@@ -3586,7 +3586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Location_FieldIndex.ParentLocation:
                     return typeof(FormLinkNullable<Location>);
                 case Location_FieldIndex.Music:
-                    return typeof(FormLinkNullable<Music>);
+                    return typeof(FormLinkNullable<MusicType>);
                 case Location_FieldIndex.UnreportedCrimeFaction:
                     return typeof(FormLinkNullable<Faction>);
                 case Location_FieldIndex.WorldLocationMarkerRef:
@@ -3665,7 +3665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = default;
             item.Keywords = null;
             item.ParentLocation = FormLinkNullable<Location>.Null;
-            item.Music = FormLinkNullable<Music>.Null;
+            item.Music = FormLinkNullable<MusicType>.Null;
             item.UnreportedCrimeFaction = FormLinkNullable<Faction>.Null;
             item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimple>.Null;
             item.WorldLocationRadius = default;
@@ -7324,7 +7324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Music
         private int? _MusicLocation;
         public bool Music_IsSet => _MusicLocation.HasValue;
-        public IFormLinkNullable<IMusicGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicGetter>.Null;
+        public IFormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;

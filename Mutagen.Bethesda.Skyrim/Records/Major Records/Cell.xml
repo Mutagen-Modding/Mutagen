@@ -48,7 +48,7 @@
       <FormLink name="SkyAndWeatherFromRegion" refName="Region" recordType="XCCM" />
       <FormLink name="AcousticSpace" refName="AcousticSpace" recordType="XCAS" />
       <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
-      <FormLink name="MusicType" refName="Music" recordType="XCMO" />
+      <FormLink name="Music" refName="MusicType" recordType="XCMO" />
       <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="XCIM" />
       <RefDirect name="Landscape" binary="NoGeneration" refName="Landscape" />
       <RefList name="NavigationMeshes" binary="NoGeneration" refName="ANavigationMesh" />
@@ -73,7 +73,7 @@
     </Fields>
   </Object>
   <Object name="CellLighting" objType="Subrecord" recordType="XCLL" GUID="ee8cc403-808a-41cb-81c4-e94fd1fca22d" ID="284">
-    <Interface>IAmbientColors</Interface>
+    <Interface>IAmbientColorsCommon</Interface>
     <Fields>
       <Color name="AmbientColor" binaryType="Alpha" />
       <Color name="DirectionalColor" binaryType="Alpha" />

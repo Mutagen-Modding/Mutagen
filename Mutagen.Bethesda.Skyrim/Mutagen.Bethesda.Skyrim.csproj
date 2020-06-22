@@ -47,7 +47,7 @@
     <Compile Include="Enums\WeaponAnimationType.cs" />
     <Compile Include="Interfaces\EmotionType.cs" />
     <Compile Include="Interfaces\IAliasVoiceType.cs" />
-    <Compile Include="Interfaces\IAmbientColors.cs" />
+    <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Interfaces\IDialog.cs" />
     <Compile Include="Interfaces\IEffectRecord.cs" />
@@ -939,6 +939,9 @@
     <Compile Include="Records\Major Records\LightData_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LightingTemplate.cs">
+      <DependentUpon>LightingTemplate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LightingTemplate_LoquiGenerated.cs">
       <DependentUpon>LightingTemplate.xml</DependentUpon>
     </Compile>
@@ -1071,6 +1074,12 @@
     <Compile Include="Records\Major Records\MaterialType_LoquiGenerated.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Message.cs">
+      <DependentUpon>Message.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MessageButton.cs">
+      <DependentUpon>Message.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Message_LoquiGenerated.cs">
       <DependentUpon>Message.xml</DependentUpon>
     </Compile>
@@ -1095,8 +1104,8 @@
     <Compile Include="Records\Major Records\MovementType_LoquiGenerated.cs">
       <DependentUpon>MovementType.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Music_LoquiGenerated.cs">
-      <DependentUpon>Music.xml</DependentUpon>
+    <Compile Include="Records\Major Records\MusicType.cs">
+      <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NavigationDoorLink_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
@@ -1665,10 +1674,10 @@
     <Compile Include="Records\Major Records\WeatherAlpha_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherAmbientColorSet_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\WeatherAmbientColorSet.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherAmbientColors_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\WeatherAmbientColorSet_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WeatherColor_LoquiGenerated.cs">
@@ -1905,6 +1914,27 @@
     </Compile>
     <Compile Include="Records\Major Records\LocationCellEnablePoint_LoquiGenerated.cs">
       <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MessageButton_LoquiGenerated.cs">
+      <DependentUpon>Message.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultObjectManager_LoquiGenerated.cs">
+      <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DefaultObject_LoquiGenerated.cs">
+      <DependentUpon>DefaultObjectManager.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\AmbientColors_LoquiGenerated.cs">
+      <DependentUpon>AmbientColors.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MusicTrack_LoquiGenerated.cs">
+      <DependentUpon>MusicTrack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MusicType_LoquiGenerated.cs">
+      <DependentUpon>MusicType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MusicTypeData_LoquiGenerated.cs">
+      <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
