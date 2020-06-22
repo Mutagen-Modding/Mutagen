@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float? Point => _PointLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _PointLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2018,11 +2018,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static SubspaceBinaryOverlay SubspaceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new SubspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2048,13 +2048,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SubspaceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

@@ -2054,17 +2054,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region EffectInitial
         partial void EffectInitialCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        private IEffectDataGetter? _Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        private IEffectDataGetter? _Data => _DataLocation.HasValue ? EffectDataBinaryOverlay.EffectDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public IEffectDataGetter Data => _Data ?? new EffectData();
         #endregion
         public IScriptEffectGetter? ScriptEffect { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static EffectBinaryOverlay EffectFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2103,13 +2103,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return EffectFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

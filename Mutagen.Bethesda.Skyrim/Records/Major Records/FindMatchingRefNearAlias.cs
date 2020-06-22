@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
             int? _aliasIndexLoc;
             public Int16? GetAliasIndexCustom() => _aliasIndexLoc == null ? default(short?) : checked((short)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _aliasIndexLoc.Value, _package.MetaData.Constants)));
 
-            partial void AliasIndexCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void AliasIndexCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _aliasIndexLoc = stream.Position - offset;
             }

@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region AliasIndex
         partial void AliasIndexCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public Int16? AliasIndex => GetAliasIndexCustom();
@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static FindMatchingRefNearAliasBinaryOverlay FindMatchingRefNearAliasFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1991,13 +1991,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return FindMatchingRefNearAliasFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

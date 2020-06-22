@@ -2928,7 +2928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
         public IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2944,11 +2944,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static LandscapeBinaryOverlay LandscapeFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new LandscapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2974,13 +2974,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return LandscapeFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -3033,7 +3033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.VTEX:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Textures = BinaryOverlayList<IFormLink<ILandTextureGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

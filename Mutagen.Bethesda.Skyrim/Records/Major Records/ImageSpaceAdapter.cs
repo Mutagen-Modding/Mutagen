@@ -128,19 +128,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ImageSpaceAdapterBinaryOverlay
         {
-            partial void Counts1CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void Counts1CustomParse(OverlayStream stream, int offset)
             {
                 // Don't care about counts, currently
                 stream.Position += 192;
             }
 
-            partial void Counts2CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void Counts2CustomParse(OverlayStream stream, int offset)
             {
                 // Don't care about counts, currently
                 stream.Position += 12;
             }
 
-            partial void Counts3CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void Counts3CustomParse(OverlayStream stream, int offset)
             {
                 // Don't care about counts, currently
                 stream.Position += 16;

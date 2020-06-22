@@ -2778,27 +2778,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public IAIPackageDataGetter? Data => _DataLocation.HasValue ? AIPackageDataBinaryOverlay.AIPackageDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Location
         private RangeInt32? _LocationLocation;
-        public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new BinaryMemoryReadStream(_data.Slice(_LocationLocation!.Value.Min)), _package) : default;
+        public IAIPackageLocationGetter? Location => _LocationLocation.HasValue ? AIPackageLocationBinaryOverlay.AIPackageLocationFactory(new OverlayStream(_data.Slice(_LocationLocation!.Value.Min), _package), _package) : default;
         public bool Location_IsSet => _LocationLocation.HasValue;
         #endregion
         #region Schedule
         private RangeInt32? _ScheduleLocation;
-        public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new BinaryMemoryReadStream(_data.Slice(_ScheduleLocation!.Value.Min)), _package) : default;
+        public IAIPackageScheduleGetter? Schedule => _ScheduleLocation.HasValue ? AIPackageScheduleBinaryOverlay.AIPackageScheduleFactory(new OverlayStream(_data.Slice(_ScheduleLocation!.Value.Min), _package), _package) : default;
         public bool Schedule_IsSet => _ScheduleLocation.HasValue;
         #endregion
         #region Target
         private RangeInt32? _TargetLocation;
-        public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new BinaryMemoryReadStream(_data.Slice(_TargetLocation!.Value.Min)), _package) : default;
+        public IAIPackageTargetGetter? Target => _TargetLocation.HasValue ? AIPackageTargetBinaryOverlay.AIPackageTargetFactory(new OverlayStream(_data.Slice(_TargetLocation!.Value.Min), _package), _package) : default;
         public bool Target_IsSet => _TargetLocation.HasValue;
         #endregion
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2814,11 +2814,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static AIPackageBinaryOverlay AIPackageFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new AIPackageBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2844,13 +2844,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AIPackageFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2887,7 +2887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

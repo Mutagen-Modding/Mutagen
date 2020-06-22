@@ -83,10 +83,10 @@ namespace Mutagen.Bethesda.Skyrim
             TranslatedString ITranslatedNamedRequiredGetter.Name => this.Name ?? string.Empty;
             #endregion
 
-            partial void DataMarkerCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void DataMarkerCustomParse(OverlayStream stream, int offset)
             {
                 // Skip marker
-                _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                stream.ReadSubrecordFrame();
             }
         }
     }

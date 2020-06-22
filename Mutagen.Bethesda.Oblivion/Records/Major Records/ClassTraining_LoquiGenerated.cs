@@ -1952,7 +1952,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte MaximumTrainingLevel => _data.Span[0x1];
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ClassTrainingBinaryOverlay ClassTrainingFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ClassTrainingFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

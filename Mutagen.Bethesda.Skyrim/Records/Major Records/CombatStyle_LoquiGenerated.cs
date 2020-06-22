@@ -3862,12 +3862,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Melee
         private RangeInt32? _MeleeLocation;
-        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(new BinaryMemoryReadStream(_data.Slice(_MeleeLocation!.Value.Min)), _package) : default;
+        public ICombatStyleMeleeGetter? Melee => _MeleeLocation.HasValue ? CombatStyleMeleeBinaryOverlay.CombatStyleMeleeFactory(new OverlayStream(_data.Slice(_MeleeLocation!.Value.Min), _package), _package) : default;
         public bool Melee_IsSet => _MeleeLocation.HasValue;
         #endregion
         #region CloseRange
         private RangeInt32? _CloseRangeLocation;
-        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(new BinaryMemoryReadStream(_data.Slice(_CloseRangeLocation!.Value.Min)), _package) : default;
+        public ICombatStyleCloseRangeGetter? CloseRange => _CloseRangeLocation.HasValue ? CombatStyleCloseRangeBinaryOverlay.CombatStyleCloseRangeFactory(new OverlayStream(_data.Slice(_CloseRangeLocation!.Value.Min), _package), _package) : default;
         public bool CloseRange_IsSet => _CloseRangeLocation.HasValue;
         #endregion
         #region LongRangeStrafeMult
@@ -3876,7 +3876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flight
         private RangeInt32? _FlightLocation;
-        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(new BinaryMemoryReadStream(_data.Slice(_FlightLocation!.Value.Min)), _package) : default;
+        public ICombatStyleFlightGetter? Flight => _FlightLocation.HasValue ? CombatStyleFlightBinaryOverlay.CombatStyleFlightFactory(new OverlayStream(_data.Slice(_FlightLocation!.Value.Min), _package), _package) : default;
         public bool Flight_IsSet => _FlightLocation.HasValue;
         #endregion
         #region Flags
@@ -3884,7 +3884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public CombatStyle.Flag? Flags => _FlagsLocation.HasValue ? (CombatStyle.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CombatStyle.Flag?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3900,11 +3900,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CombatStyleBinaryOverlay CombatStyleFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new CombatStyleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -3930,13 +3930,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CombatStyleFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

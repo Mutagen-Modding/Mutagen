@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static MagicEffectWerewolfArchetypeBinaryOverlay MagicEffectWerewolfArchetypeFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return MagicEffectWerewolfArchetypeFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

@@ -1953,7 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single From => SpanExt.GetFloat(_data.Slice(0x2, 0x4));
         public Single To => SpanExt.GetFloat(_data.Slice(0x6, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkAddRangeToValueBinaryOverlay PerkAddRangeToValueFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkAddRangeToValueFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

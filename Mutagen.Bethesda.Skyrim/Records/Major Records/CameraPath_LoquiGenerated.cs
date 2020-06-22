@@ -2871,7 +2871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Conditions
         partial void ConditionsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
@@ -2880,14 +2880,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IFormLink<ICameraPathGetter>> RelatedPaths { get; private set; } = ListExt.Empty<IFormLink<ICameraPathGetter>>();
         #region Zoom
         partial void ZoomCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public CameraPath.ZoomType Zoom => GetZoomCustom();
         #endregion
         public IReadOnlyList<IFormLink<ICameraShotGetter>> Shots { get; private set; } = ListExt.Empty<IFormLink<ICameraShotGetter>>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2903,11 +2903,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CameraPathBinaryOverlay CameraPathFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new CameraPathBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2933,13 +2933,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CameraPathFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2961,7 +2961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.RelatedPaths = BinaryOverlayList<IFormLink<ICameraPathGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

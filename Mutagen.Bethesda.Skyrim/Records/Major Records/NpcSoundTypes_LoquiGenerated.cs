@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<INpcSoundTypeGetter> Types { get; private set; } = ListExt.Empty<NpcSoundTypeBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NpcSoundTypesBinaryOverlay NpcSoundTypesFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1967,13 +1967,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NpcSoundTypesFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public PerkScriptFlag.Flag Flags => (PerkScriptFlag.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public UInt16 FragmentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkScriptFlagBinaryOverlay PerkScriptFlagFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkScriptFlagFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

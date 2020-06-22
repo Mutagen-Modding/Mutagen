@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IRegionSoundGetter>? Sounds { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static RegionSoundsBinaryOverlay RegionSoundsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2122,13 +2122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RegionSoundsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.RDSA:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Sounds = BinaryOverlayList<RegionSoundBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

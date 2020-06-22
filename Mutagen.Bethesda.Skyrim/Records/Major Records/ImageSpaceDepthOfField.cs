@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             bool _sky;
             public Boolean GetSkyCustom(int location) => _sky;
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (this.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0)) return;
                 ImageSpaceDepthOfFieldBinaryCreateTranslation.ParseSkyBlurRadius(

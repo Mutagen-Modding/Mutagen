@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class APackageTargetBinaryOverlay
         {
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 throw new NotImplementedException();
             }

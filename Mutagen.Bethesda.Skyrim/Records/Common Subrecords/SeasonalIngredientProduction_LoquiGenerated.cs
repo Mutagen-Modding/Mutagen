@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Fall => _data.Span[0x2];
         public Byte Winter => _data.Span[0x3];
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static SeasonalIngredientProductionBinaryOverlay SeasonalIngredientProductionFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SeasonalIngredientProductionFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

@@ -1771,12 +1771,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region DataParse
         partial void DataParseCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         public Int32 CountOrDistance => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 

@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
             private int? _faceFxPhonemesLoc;
             public IFaceFxPhonemesGetter FaceFxPhonemes => GetFaceFx();
 
-            partial void ExtraNAM2CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void ExtraNAM2CustomParse(OverlayStream stream, int offset)
             {
             }
 
@@ -189,18 +189,18 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            void BipedObjectNamesCustomParse(BinaryMemoryReadStream stream, int finalPos, int offset)
+            void BipedObjectNamesCustomParse(OverlayStream stream, int finalPos, int offset)
             {
                 _bipedObjectNamesLoc = (ushort)(stream.Position - offset);
                 UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
             }
 
-            partial void FaceFxPhonemesListingParsingCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
             {
                 FaceFxPhonemesRawParsingCustomParse(stream, offset);
             }
 
-            partial void FaceFxPhonemesRawParsingCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void FaceFxPhonemesRawParsingCustomParse(OverlayStream stream, int offset)
             {
                 if (_faceFxPhonemesLoc == null)
                 {

@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class GameSettingBinaryOverlay
         {
             public static GameSettingBinaryOverlay GameSettingFactory(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {

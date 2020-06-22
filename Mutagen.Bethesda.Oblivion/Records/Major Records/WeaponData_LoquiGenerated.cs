@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1C, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2430,7 +2430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static WeaponDataBinaryOverlay WeaponDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2453,7 +2453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeaponDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlyMemorySlice<Byte>? Hashes => _HashesLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HashesLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ModelBinaryOverlay ModelFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2069,13 +2069,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ModelFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

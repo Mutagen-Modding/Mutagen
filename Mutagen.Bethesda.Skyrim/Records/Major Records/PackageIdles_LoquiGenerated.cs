@@ -2188,21 +2188,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TimerSetting
         partial void TimerSettingCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public Single TimerSetting => GetTimerSettingCustom();
         #endregion
         #region Animations
         partial void AnimationsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
             int? lastParsed);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2218,7 +2218,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PackageIdlesBinaryOverlay PackageIdlesFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2241,13 +2241,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PackageIdlesFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

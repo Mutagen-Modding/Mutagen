@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte Personality => _data.Span[0x6];
         public Byte Luck => _data.Span[0x7];
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2404,7 +2404,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static RaceStatsBinaryOverlay RaceStatsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2426,7 +2426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RaceStatsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

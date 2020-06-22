@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
@@ -3265,14 +3265,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<Byte> DataInputIndices { get; private set; } = ListExt.Empty<Byte>();
         #region FlagsOverride
         partial void FlagsOverrideCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public IPackageFlagsOverrideGetter? FlagsOverride => GetFlagsOverrideCustom();
         #endregion
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> Unknown { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3288,7 +3288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PackageBranchBinaryOverlay PackageBranchFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3311,13 +3311,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PackageBranchFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

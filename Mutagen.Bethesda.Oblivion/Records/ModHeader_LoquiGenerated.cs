@@ -2923,7 +2923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region Stats
         private RangeInt32? _StatsLocation;
-        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(new BinaryMemoryReadStream(_data.Slice(_StatsLocation!.Value.Min)), _package) : default;
+        private IModStatsGetter? _Stats => _StatsLocation.HasValue ? ModStatsBinaryOverlay.ModStatsFactory(new OverlayStream(_data.Slice(_StatsLocation!.Value.Min), _package), _package) : default;
         public IModStatsGetter Stats => _Stats ?? new ModStats();
         #endregion
         #region TypeOffsets
@@ -2948,7 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt64? VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VestigialDataLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2964,7 +2964,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ModHeaderBinaryOverlay ModHeaderFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2993,13 +2993,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ModHeaderFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

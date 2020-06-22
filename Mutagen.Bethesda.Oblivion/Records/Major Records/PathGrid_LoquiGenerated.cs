@@ -2810,7 +2810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region PointToPointConnections
         partial void PointToPointConnectionsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
@@ -2819,7 +2819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; private set; }
         public IReadOnlyList<IPointToReferenceMappingGetter> PointToReferenceMappings { get; private set; } = ListExt.Empty<PointToReferenceMappingBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2835,11 +2835,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static PathGridBinaryOverlay PathGridFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new PathGridBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2865,13 +2865,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PathGridFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2893,7 +2893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.PGRI:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.InterCellConnections = BinaryOverlayList<InterCellPointBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -2909,7 +2909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => PointToReferenceMappingBinaryOverlay.PointToReferenceMappingFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => PointToReferenceMappingBinaryOverlay.PointToReferenceMappingFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

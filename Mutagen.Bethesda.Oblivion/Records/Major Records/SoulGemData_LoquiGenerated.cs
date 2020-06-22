@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static SoulGemDataBinaryOverlay SoulGemDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1915,7 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SoulGemDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

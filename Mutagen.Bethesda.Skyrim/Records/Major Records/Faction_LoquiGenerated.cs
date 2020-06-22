@@ -4297,7 +4297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
-        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new BinaryMemoryReadStream(_data.Slice(_CrimeValuesLocation!.Value.Min)), _package) : default;
+        public ICrimeValuesGetter? CrimeValues => _CrimeValuesLocation.HasValue ? CrimeValuesBinaryOverlay.CrimeValuesFactory(new OverlayStream(_data.Slice(_CrimeValuesLocation!.Value.Min), _package), _package) : default;
         public bool CrimeValues_IsSet => _CrimeValuesLocation.HasValue;
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
@@ -4313,20 +4313,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
-        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new BinaryMemoryReadStream(_data.Slice(_VendorValuesLocation!.Value.Min)), _package) : default;
+        public IVendorValuesGetter? VendorValues => _VendorValuesLocation.HasValue ? VendorValuesBinaryOverlay.VendorValuesFactory(new OverlayStream(_data.Slice(_VendorValuesLocation!.Value.Min), _package), _package) : default;
         public bool VendorValues_IsSet => _VendorValuesLocation.HasValue;
         #endregion
         public ILocationTargetRadiusGetter? VendorLocation { get; private set; }
         #region Conditions
         partial void ConditionsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
             int? lastParsed);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -4342,11 +4342,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static FactionBinaryOverlay FactionFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new FactionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -4372,13 +4372,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return FactionFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -4399,7 +4399,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => RelationBinaryOverlay.RelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

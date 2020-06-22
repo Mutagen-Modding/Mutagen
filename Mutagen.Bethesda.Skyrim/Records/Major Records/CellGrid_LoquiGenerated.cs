@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P2Int Point => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
         public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CellGridBinaryOverlay CellGridFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CellGridFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

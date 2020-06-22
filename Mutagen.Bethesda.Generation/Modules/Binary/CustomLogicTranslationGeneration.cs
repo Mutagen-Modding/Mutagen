@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"partial void {typeGen.Name}CustomParse"))
                 {
-                    args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                    args.Add($"{nameof(OverlayStream)} stream");
                     args.Add($"long finalPos");
                     args.Add($"int offset");
                 }
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"partial void {(typeGen.Name == null ? typeGen.GetFieldData().RecordType?.ToString() : typeGen.Name)}CustomParse"))
             {
-                args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                args.Add($"{nameof(OverlayStream)} stream");
                 args.Add($"int offset");
             }
         }

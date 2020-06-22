@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IPhonemeGetter? W => throw new NotImplementedException();
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 throw new NotImplementedException();
             }

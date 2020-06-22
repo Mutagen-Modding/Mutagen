@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCount(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int itemLength,
             int countLength,
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCountPerItem(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int countLength,
             ICollectionGetter<RecordType> subrecordType,
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCountPerItem(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int countLength,
             RecordType subrecordType,
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCountPerItem(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int itemLength,
             int countLength,
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IReadOnlyList<T> FactoryByCount(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             uint count,
             BinaryOverlay.StreamFactory<T> getter)
@@ -357,7 +357,7 @@ namespace Mutagen.Bethesda.Binary
                 (m, p) =>
                 {
                     var ret = new List<T>();
-                    using (var stream = new BinaryMemoryReadStream(m))
+                    using (var stream = new OverlayStream(m, package))
                     {
                         while (!stream.Complete)
                         {

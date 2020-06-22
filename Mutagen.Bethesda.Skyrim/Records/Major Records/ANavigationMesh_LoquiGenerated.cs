@@ -2282,12 +2282,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region LengthLogic
         partial void LengthLogicCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region DataLogic
         partial void DataLogicCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region ONAM
@@ -2303,7 +2303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? NNAM => _NNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2320,7 +2320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

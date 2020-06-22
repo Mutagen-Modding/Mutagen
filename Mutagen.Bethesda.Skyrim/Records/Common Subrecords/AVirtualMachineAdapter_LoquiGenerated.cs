@@ -2118,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomScriptsEndPos();
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 

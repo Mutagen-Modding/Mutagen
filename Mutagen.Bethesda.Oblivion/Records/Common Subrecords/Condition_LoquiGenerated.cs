@@ -2451,7 +2451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region InitialParser
         partial void InitialParserCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x1, 0x3).ToArray();
@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         public Int32 ThirdParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2477,7 +2477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ConditionBinaryOverlay ConditionFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2512,7 +2512,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ConditionFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

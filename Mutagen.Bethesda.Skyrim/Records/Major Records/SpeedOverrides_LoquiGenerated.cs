@@ -2688,7 +2688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single RotateRun => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
         public Single Unknown => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2704,7 +2704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static SpeedOverridesBinaryOverlay SpeedOverridesFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2727,7 +2727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SpeedOverridesFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

@@ -3366,12 +3366,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLink<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
         partial void ParentParseLogicCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         protected int ParentParseLogicEndingPos;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3387,7 +3387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NavigationMapInfoBinaryOverlay NavigationMapInfoFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3413,7 +3413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NavigationMapInfoFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

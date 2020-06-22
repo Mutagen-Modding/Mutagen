@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
             public abstract char TypeChar { get; }
 
             public static GlobalBinaryOverlay GlobalFactory(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {

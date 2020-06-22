@@ -2182,12 +2182,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IWeatherAmbientColorsGetter Sunrise => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x0)), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Day => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x24)), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Sunset => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x48)), _package, default(RecordTypeConverter));
-        public IWeatherAmbientColorsGetter Night => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new BinaryMemoryReadStream(_data.Slice(0x6C)), _package, default(RecordTypeConverter));
+        public IWeatherAmbientColorsGetter Sunrise => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(RecordTypeConverter));
+        public IWeatherAmbientColorsGetter Day => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x24), _package), _package, default(RecordTypeConverter));
+        public IWeatherAmbientColorsGetter Sunset => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x48), _package), _package, default(RecordTypeConverter));
+        public IWeatherAmbientColorsGetter Night => WeatherAmbientColorsBinaryOverlay.WeatherAmbientColorsFactory(new OverlayStream(_data.Slice(0x6C), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeatherAmbientColorSetBinaryOverlay WeatherAmbientColorSetFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2226,7 +2226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherAmbientColorSetFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

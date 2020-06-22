@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt32 EnchantCost => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         public Enchantment.Flag Flags => (Enchantment.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static EnchantmentDataBinaryOverlay EnchantmentDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return EnchantmentDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

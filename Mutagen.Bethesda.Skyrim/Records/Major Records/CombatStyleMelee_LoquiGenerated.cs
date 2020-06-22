@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single BashPowerAttackMult => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         public Single SpecialAttackMult => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2534,7 +2534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CombatStyleMeleeBinaryOverlay CombatStyleMeleeFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2560,7 +2560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CombatStyleMeleeFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

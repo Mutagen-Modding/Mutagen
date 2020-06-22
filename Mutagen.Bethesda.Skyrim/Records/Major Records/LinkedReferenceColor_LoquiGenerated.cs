@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Start => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color End => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1895,7 +1895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static LinkedReferenceColorBinaryOverlay LinkedReferenceColorFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return LinkedReferenceColorFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

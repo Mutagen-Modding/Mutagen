@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single Time => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
         public Single Value => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static KeyFrameBinaryOverlay KeyFrameFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return KeyFrameFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

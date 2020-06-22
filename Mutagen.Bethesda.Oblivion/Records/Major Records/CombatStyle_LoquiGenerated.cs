@@ -2200,16 +2200,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public ICombatStyleDataGetter? Data => _DataLocation.HasValue ? CombatStyleDataBinaryOverlay.CombatStyleDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Advanced
         private RangeInt32? _AdvancedLocation;
-        public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new BinaryMemoryReadStream(_data.Slice(_AdvancedLocation!.Value.Min)), _package) : default;
+        public ICombatStyleAdvancedGetter? Advanced => _AdvancedLocation.HasValue ? CombatStyleAdvancedBinaryOverlay.CombatStyleAdvancedFactory(new OverlayStream(_data.Slice(_AdvancedLocation!.Value.Min), _package), _package) : default;
         public bool Advanced_IsSet => _AdvancedLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2225,11 +2225,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static CombatStyleBinaryOverlay CombatStyleFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new CombatStyleBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2255,13 +2255,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CombatStyleFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

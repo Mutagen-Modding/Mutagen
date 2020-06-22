@@ -2053,16 +2053,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private RangeInt32? _DataLocation;
-        public ILeveledSpellEntryDataGetter? Data => _DataLocation.HasValue ? LeveledSpellEntryDataBinaryOverlay.LeveledSpellEntryDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public ILeveledSpellEntryDataGetter? Data => _DataLocation.HasValue ? LeveledSpellEntryDataBinaryOverlay.LeveledSpellEntryDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ExtraData
         private RangeInt32? _ExtraDataLocation;
-        public IExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_ExtraDataLocation!.Value.Min)), _package) : default;
+        public IExtraDataGetter? ExtraData => _ExtraDataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new OverlayStream(_data.Slice(_ExtraDataLocation!.Value.Min), _package), _package) : default;
         public bool ExtraData_IsSet => _ExtraDataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2078,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static LeveledSpellEntryBinaryOverlay LeveledSpellEntryFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2101,13 +2101,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return LeveledSpellEntryFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

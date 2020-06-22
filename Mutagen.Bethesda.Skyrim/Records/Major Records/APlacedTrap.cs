@@ -103,9 +103,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class APlacedTrapBinaryOverlay
         {
-            partial void TrapFormCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void TrapFormCustomParse(OverlayStream stream, int offset)
             {
-                var subRec = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var subRec = stream.ReadSubrecordFrame();
                 if (subRec.Content.Length != 4)
                 {
                     throw new ArgumentException("Unexpected length");

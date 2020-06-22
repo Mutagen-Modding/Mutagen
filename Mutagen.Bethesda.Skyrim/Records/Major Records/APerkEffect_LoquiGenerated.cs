@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _PRKELocation;
         public APerkEffect.PRKEDataType PRKEDataTypeState { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

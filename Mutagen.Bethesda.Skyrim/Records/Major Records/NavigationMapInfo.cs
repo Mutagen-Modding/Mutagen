@@ -84,11 +84,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (_data[LinkedDoorsEndingPos] > 0)
                 {
-                    using var islandStream = new BinaryMemoryReadStream(_data.Slice(LinkedDoorsEndingPos + 1));
+                    using var islandStream = new OverlayStream(_data.Slice(LinkedDoorsEndingPos + 1), stream.MetaData);
                     this._island =  IslandDataBinaryOverlay.IslandDataFactory(
                         islandStream,
                         _package);

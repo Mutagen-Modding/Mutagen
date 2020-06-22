@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IMorphGetter? Lip => morphs.Lip;
 
-            partial void ParseCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void ParseCustomParse(OverlayStream stream, int offset)
             {
                 morphs = new AvailableMorphs();
                 AvailableMorphsBinaryCreateTranslation.FillBinaryParse(

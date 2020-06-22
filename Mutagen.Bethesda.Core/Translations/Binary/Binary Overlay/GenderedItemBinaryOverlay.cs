@@ -47,9 +47,9 @@ namespace Mutagen.Bethesda.Binary
     public static class GenderedItemBinaryOverlay
     {
         public static IGenderedItemGetter<T?> Factory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter femaleRecordConverter,
             RecordTypeConverter maleRecordConverter)
             where T : class
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static GenderedItemBinaryOverlay<T> FactorySkipMarkers<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
@@ -122,11 +122,11 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class
         {
@@ -168,12 +168,12 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
             RecordType marker,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter? recordTypeConverter = null,
             RecordTypeConverter? femaleRecordConverter = null)
             where T : class
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static GenderedItemBinaryOverlay<T?> Factory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static GenderedItemBinaryOverlay<T> Factory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,

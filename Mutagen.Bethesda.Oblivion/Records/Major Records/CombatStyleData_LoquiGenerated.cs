@@ -5103,11 +5103,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single RushingAttackDistanceMult => SpanExt.GetFloat(_data.Slice(0x74, 0x4));
         #region SecondaryFlags
         partial void SecondaryFlagsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -5123,7 +5123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static CombatStyleDataBinaryOverlay CombatStyleDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -5165,7 +5165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CombatStyleDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

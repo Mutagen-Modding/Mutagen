@@ -2045,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Sunset => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Night => _data.Slice(0xC, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeatherColorBinaryOverlay WeatherColorFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherColorFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

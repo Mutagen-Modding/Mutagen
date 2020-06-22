@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IImpactDataGetter> Impacts { get; private set; } = ListExt.Empty<ImpactDataBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2186,11 +2186,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ImpactDataSetBinaryOverlay ImpactDataSetFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new ImpactDataSetBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2216,13 +2216,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ImpactDataSetFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => ImpactDataBinaryOverlay.ImpactDataFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ImpactDataBinaryOverlay.ImpactDataFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -407,32 +407,32 @@ namespace Mutagen.Bethesda.Skyrim
                 return marker;
             }
 
-            partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
             {
-                var subFrame = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var subFrame = stream.ReadSubrecordFrame();
                 // Read flags like normal
                 _flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
             }
 
-            partial void Flags2CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void Flags2CustomParse(OverlayStream stream, int offset)
             {
                 this._flags = FurnitureBinaryCreateTranslation.FillBinaryFlags2(
-                    new MutagenInterfaceReadStream(stream, _package.MetaData),
+                    stream,
                     this.GetNthMarker,
                     this._flags);
             }
 
-            partial void DisabledMarkersCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void DisabledMarkersCustomParse(OverlayStream stream, int offset)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryDisabledMarkers(
-                    new MutagenInterfaceReadStream(stream, _package.MetaData),
+                    stream,
                     this.GetNthMarker);
             }
 
-            partial void MarkersCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void MarkersCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 FurnitureBinaryCreateTranslation.FillBinaryMarkers(
-                    new MutagenInterfaceReadStream(stream, _package.MetaData),
+                    stream,
                     this.GetNthMarker);
             }
         }

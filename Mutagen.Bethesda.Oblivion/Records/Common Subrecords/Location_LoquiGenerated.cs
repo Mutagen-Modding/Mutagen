@@ -1864,7 +1864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static LocationBinaryOverlay LocationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1902,7 +1902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return LocationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

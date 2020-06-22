@@ -9212,7 +9212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region CloudTexturesParse
         partial void CloudTexturesParseCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         protected int CloudTexturesParseEndingPos;
         #endregion
@@ -9252,7 +9252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Clouds
         partial void CloudsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
@@ -9260,17 +9260,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CloudXSpeeds
         partial void CloudXSpeedsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region CloudColors
         partial void CloudColorsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region CloudAlphas
         partial void CloudAlphasCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         private int? _NAM0Location;
@@ -9278,103 +9278,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkyUpperColor
         private int _SkyUpperColorLocation => _NAM0Location!.Value;
         private bool _SkyUpperColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SkyUpperColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SkyUpperColor => _SkyUpperColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyUpperColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyUpperColor => _SkyUpperColor ?? new WeatherColor();
         #endregion
         #region FogNearColor
         private int _FogNearColorLocation => _NAM0Location!.Value + 0x10;
         private bool _FogNearColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _FogNearColor => _FogNearColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_FogNearColorLocation)), _package) : default;
+        private IWeatherColorGetter? _FogNearColor => _FogNearColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogNearColorLocation), _package), _package) : default;
         public IWeatherColorGetter FogNearColor => _FogNearColor ?? new WeatherColor();
         #endregion
         #region UnknownColor
         private int _UnknownColorLocation => _NAM0Location!.Value + 0x20;
         private bool _UnknownColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _UnknownColor => _UnknownColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_UnknownColorLocation)), _package) : default;
+        private IWeatherColorGetter? _UnknownColor => _UnknownColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_UnknownColorLocation), _package), _package) : default;
         public IWeatherColorGetter UnknownColor => _UnknownColor ?? new WeatherColor();
         #endregion
         #region AmbientColor
         private int _AmbientColorLocation => _NAM0Location!.Value + 0x30;
         private bool _AmbientColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _AmbientColor => _AmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_AmbientColorLocation)), _package) : default;
+        private IWeatherColorGetter? _AmbientColor => _AmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_AmbientColorLocation), _package), _package) : default;
         public IWeatherColorGetter AmbientColor => _AmbientColor ?? new WeatherColor();
         #endregion
         #region SunlightColor
         private int _SunlightColorLocation => _NAM0Location!.Value + 0x40;
         private bool _SunlightColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SunlightColor => _SunlightColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SunlightColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SunlightColor => _SunlightColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunlightColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunlightColor => _SunlightColor ?? new WeatherColor();
         #endregion
         #region SunColor
         private int _SunColorLocation => _NAM0Location!.Value + 0x50;
         private bool _SunColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SunColor => _SunColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SunColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SunColor => _SunColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunColor => _SunColor ?? new WeatherColor();
         #endregion
         #region StarsColor
         private int _StarsColorLocation => _NAM0Location!.Value + 0x60;
         private bool _StarsColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _StarsColor => _StarsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_StarsColorLocation)), _package) : default;
+        private IWeatherColorGetter? _StarsColor => _StarsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_StarsColorLocation), _package), _package) : default;
         public IWeatherColorGetter StarsColor => _StarsColor ?? new WeatherColor();
         #endregion
         #region SkyLowerColor
         private int _SkyLowerColorLocation => _NAM0Location!.Value + 0x70;
         private bool _SkyLowerColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _SkyLowerColor => _SkyLowerColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SkyLowerColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SkyLowerColor => _SkyLowerColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyLowerColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyLowerColor => _SkyLowerColor ?? new WeatherColor();
         #endregion
         #region HorizonColor
         private int _HorizonColorLocation => _NAM0Location!.Value + 0x80;
         private bool _HorizonColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _HorizonColor => _HorizonColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_HorizonColorLocation)), _package) : default;
+        private IWeatherColorGetter? _HorizonColor => _HorizonColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_HorizonColorLocation), _package), _package) : default;
         public IWeatherColorGetter HorizonColor => _HorizonColor ?? new WeatherColor();
         #endregion
         #region EffectLightingColor
         private int _EffectLightingColorLocation => _NAM0Location!.Value + 0x90;
         private bool _EffectLightingColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_EffectLightingColorLocation)), _package) : default;
+        private IWeatherColorGetter? _EffectLightingColor => _EffectLightingColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_EffectLightingColorLocation), _package), _package) : default;
         public IWeatherColorGetter EffectLightingColor => _EffectLightingColor ?? new WeatherColor();
         #endregion
         #region CloudLodDiffuseColor
         private int _CloudLodDiffuseColorLocation => _NAM0Location!.Value + 0xA0;
         private bool _CloudLodDiffuseColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_CloudLodDiffuseColorLocation)), _package) : default;
+        private IWeatherColorGetter? _CloudLodDiffuseColor => _CloudLodDiffuseColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodDiffuseColorLocation), _package), _package) : default;
         public IWeatherColorGetter CloudLodDiffuseColor => _CloudLodDiffuseColor ?? new WeatherColor();
         #endregion
         #region CloudLodAmbientColor
         private int _CloudLodAmbientColorLocation => _NAM0Location!.Value + 0xB0;
         private bool _CloudLodAmbientColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_CloudLodAmbientColorLocation)), _package) : default;
+        private IWeatherColorGetter? _CloudLodAmbientColor => _CloudLodAmbientColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_CloudLodAmbientColorLocation), _package), _package) : default;
         public IWeatherColorGetter CloudLodAmbientColor => _CloudLodAmbientColor ?? new WeatherColor();
         #endregion
         #region FogFarColor
         private int _FogFarColorLocation => _NAM0Location!.Value + 0xC0;
         private bool _FogFarColor_IsSet => _NAM0Location.HasValue;
-        private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_FogFarColorLocation)), _package) : default;
+        private IWeatherColorGetter? _FogFarColor => _FogFarColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_FogFarColorLocation), _package), _package) : default;
         public IWeatherColorGetter FogFarColor => _FogFarColor ?? new WeatherColor();
         #endregion
         #region SkyStaticsColor
         private int _SkyStaticsColorLocation => _NAM0Location!.Value + 0xD0;
         private bool _SkyStaticsColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break0);
-        private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SkyStaticsColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SkyStaticsColor => _SkyStaticsColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SkyStaticsColorLocation), _package), _package) : default;
         public IWeatherColorGetter SkyStaticsColor => _SkyStaticsColor ?? new WeatherColor();
         #endregion
         #region WaterMultiplierColor
         private int _WaterMultiplierColorLocation => _NAM0Location!.Value + 0xE0;
         private bool _WaterMultiplierColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_WaterMultiplierColorLocation)), _package) : default;
+        private IWeatherColorGetter? _WaterMultiplierColor => _WaterMultiplierColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_WaterMultiplierColorLocation), _package), _package) : default;
         public IWeatherColorGetter WaterMultiplierColor => _WaterMultiplierColor ?? new WeatherColor();
         #endregion
         #region SunGlareColor
         private int _SunGlareColorLocation => _NAM0Location!.Value + 0xF0;
         private bool _SunGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_SunGlareColorLocation)), _package) : default;
+        private IWeatherColorGetter? _SunGlareColor => _SunGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_SunGlareColorLocation), _package), _package) : default;
         public IWeatherColorGetter SunGlareColor => _SunGlareColor ?? new WeatherColor();
         #endregion
         #region MoonGlareColor
         private int _MoonGlareColorLocation => _NAM0Location!.Value + 0x100;
         private bool _MoonGlareColor_IsSet => _NAM0Location.HasValue && !NAM0DataTypeState.HasFlag(Weather.NAM0DataType.Break1);
-        private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new BinaryMemoryReadStream(_data.Slice(_MoonGlareColorLocation)), _package) : default;
+        private IWeatherColorGetter? _MoonGlareColor => _MoonGlareColor_IsSet ? WeatherColorBinaryOverlay.WeatherColorFactory(new OverlayStream(_data.Slice(_MoonGlareColorLocation), _package), _package) : default;
         public IWeatherColorGetter MoonGlareColor => _MoonGlareColor ?? new WeatherColor();
         #endregion
         private int? _FNAMLocation;
@@ -9503,19 +9503,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DisabledCloudLayers
         partial void DisabledCloudLayersCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
         public IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLink<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
-        public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new BinaryMemoryReadStream(_data.Slice(_ImageSpacesLocation!.Value.Min)), _package) : default;
+        public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
         public bool ImageSpaces_IsSet => _ImageSpacesLocation.HasValue;
         #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors => GetDirectionalAmbientLightingColorsCustom();
@@ -9530,7 +9530,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IModelGetter? Aurora { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -9546,11 +9546,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeatherBinaryOverlay WeatherFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new WeatherBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -9576,13 +9576,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -9700,7 +9700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

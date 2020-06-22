@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return (WeaponData.Flag)flags;
             }
 
-            partial void Flags2CustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void Flags2CustomParse(OverlayStream stream, int offset)
             {
                 stream.Position += 4;
             }

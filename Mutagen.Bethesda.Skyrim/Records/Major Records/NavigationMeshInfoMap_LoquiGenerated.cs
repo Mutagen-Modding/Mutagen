@@ -2555,7 +2555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; private set; } = ListExt.Empty<NavigationMapInfoBinaryOverlay>();
         #region PreferredPathing
         private RangeInt32? _PreferredPathingLocation;
-        public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new BinaryMemoryReadStream(_data.Slice(_PreferredPathingLocation!.Value.Min)), _package) : default;
+        public IPreferredPathingGetter? PreferredPathing => _PreferredPathingLocation.HasValue ? PreferredPathingBinaryOverlay.PreferredPathingFactory(new OverlayStream(_data.Slice(_PreferredPathingLocation!.Value.Min), _package), _package) : default;
         public bool PreferredPathing_IsSet => _PreferredPathingLocation.HasValue;
         #endregion
         #region NVSI
@@ -2563,7 +2563,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? NVSI => _NVSILocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NVSILocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2579,11 +2579,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NavigationMeshInfoMapBinaryOverlay NavigationMeshInfoMapFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new NavigationMeshInfoMapBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2609,13 +2609,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NavigationMeshInfoMapFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2636,7 +2636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => NavigationMapInfoBinaryOverlay.NavigationMapInfoFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => NavigationMapInfoBinaryOverlay.NavigationMapInfoFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

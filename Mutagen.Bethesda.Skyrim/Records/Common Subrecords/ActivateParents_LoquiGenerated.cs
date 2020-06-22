@@ -2082,7 +2082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<IActivateParentGetter> Parents { get; private set; } = ListExt.Empty<ActivateParentBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ActivateParentsBinaryOverlay ActivateParentsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2121,13 +2121,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ActivateParentsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => ActivateParentBinaryOverlay.ActivateParentFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ActivateParentBinaryOverlay.ActivateParentFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -41,16 +41,16 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
 
-            partial void PatrolScriptMarkerCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void PatrolScriptMarkerCustomParse(OverlayStream stream, int offset)
             {
-                if (_package.MetaData.Constants.ReadSubrecordFrame(stream).Content.Length != 0)
+                if (stream.ReadSubrecordFrame().Content.Length != 0)
                 {
                     throw new ArgumentException($"Marker had unexpected length.");
                 }
             }
 
             partial void TopicsCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 long finalPos,
                 int offset,
                 RecordType type,
@@ -58,8 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(
-                        new MutagenFrame(
-                            new MutagenInterfaceReadStream(stream, _package.MetaData))));
+                        new MutagenFrame(stream)));
             }
         }
     }

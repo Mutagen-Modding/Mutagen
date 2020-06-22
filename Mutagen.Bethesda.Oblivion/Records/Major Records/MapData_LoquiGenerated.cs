@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1984,7 +1984,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static MapDataBinaryOverlay MapDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2007,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return MapDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

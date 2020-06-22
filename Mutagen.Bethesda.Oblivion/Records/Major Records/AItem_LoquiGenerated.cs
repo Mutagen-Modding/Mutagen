@@ -1839,7 +1839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 

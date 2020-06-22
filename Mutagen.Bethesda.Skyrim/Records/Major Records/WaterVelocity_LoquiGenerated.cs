@@ -2065,7 +2065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Angle => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x1C, 0x14).ToArray();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WaterVelocityBinaryOverlay WaterVelocityFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2104,7 +2104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WaterVelocityFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

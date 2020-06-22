@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IIndexedScriptFragmentGetter> Fragments { get; private set; } = null!;
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position = FileNameEndingPos;
                 Fragments = BinaryOverlayList<IIndexedScriptFragmentGetter>.FactoryByCount(

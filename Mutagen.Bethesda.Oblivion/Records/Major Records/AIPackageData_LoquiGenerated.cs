@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public AIPackage.Flag Flags => GetFlagsCustom(location: 0x0);
         public AIPackage.Types Type => GetTypeCustom(location: 0x4);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static AIPackageDataBinaryOverlay AIPackageDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AIPackageDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

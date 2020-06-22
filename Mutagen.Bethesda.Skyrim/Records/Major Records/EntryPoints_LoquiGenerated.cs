@@ -1866,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Furniture.AnimationType Type => (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public Furniture.Entry Points => (Furniture.Entry)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static EntryPointsBinaryOverlay EntryPointsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1904,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return EntryPointsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte ResponseNumber => _data.Span[0xC];
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2168,7 +2168,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static DialogResponseDataBinaryOverlay DialogResponseDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return DialogResponseDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

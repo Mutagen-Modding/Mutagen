@@ -3448,7 +3448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ClothingFlags
         private RangeInt32? _ClothingFlagsLocation;
-        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new BinaryMemoryReadStream(_data.Slice(_ClothingFlagsLocation!.Value.Min)), _package) : default;
+        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new OverlayStream(_data.Slice(_ClothingFlagsLocation!.Value.Min), _package), _package) : default;
         public bool ClothingFlags_IsSet => _ClothingFlagsLocation.HasValue;
         #endregion
         public IModelGetter? MaleBipedModel { get; private set; }
@@ -3464,7 +3464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleIconLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3481,7 +3481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

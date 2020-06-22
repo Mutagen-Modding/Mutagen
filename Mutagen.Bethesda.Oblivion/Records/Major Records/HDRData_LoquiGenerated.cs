@@ -2958,7 +2958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single GrassDimmer => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
         public Single TreeDimmer => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2974,7 +2974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static HDRDataBinaryOverlay HDRDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2997,7 +2997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return HDRDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

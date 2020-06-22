@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
             public int Count => this.RecordCache.Count;
 
             partial void CustomFactoryEnd(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 int finalPos,
                 int offset)
             {

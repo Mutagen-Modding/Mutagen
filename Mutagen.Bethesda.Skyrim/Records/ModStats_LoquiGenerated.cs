@@ -1964,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ModStatsBinaryOverlay ModStatsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ModStatsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

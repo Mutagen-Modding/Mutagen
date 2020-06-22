@@ -277,11 +277,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public int Unknown => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
@@ -294,9 +294,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Responses = BinaryOverlayList<IDialogResponsesGetter>.FactoryByArray(
                     contentSpan,
                     _package,
-                    getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new BinaryMemoryReadStream(s), p),
+                    getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),
                     locs: ParseRecordLocations(
-                        stream: new BinaryMemoryReadStream(contentSpan),
+                        stream: new OverlayStream(contentSpan, _package),
                         finalPos: contentSpan.Length,
                         trigger: DialogResponses_Registration.TriggeringRecordType,
                         constants: GameConstants.Skyrim.MajorConstants,

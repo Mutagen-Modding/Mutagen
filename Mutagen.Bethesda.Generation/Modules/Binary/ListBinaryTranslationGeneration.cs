@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"partial void {typeGen.Name}CustomParse"))
                         {
-                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"{nameof(OverlayStream)} stream");
                             args.Add($"long finalPos");
                             args.Add($"int offset");
                             args.Add($"{nameof(RecordType)} type");
@@ -739,7 +739,7 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
-                                args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p, recConv)");
+                                args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Generation
                     }
                     break;
                 case ListBinaryType.Trigger:
-                    fg.AppendLine($"var subMeta = _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.ReadSubrecord(stream);");
+                    fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
                     fg.AppendLine("var subLen = subMeta.ContentLength;");
                     if (expectedLen.HasValue)
                     {
@@ -957,7 +957,7 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                             args.AddPassArg("finalPos");
                             args.Add($"recordTypeConverter: {converterAccessor}");
-                            args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p, recConv)");
+                            args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add("skipHeader: false");
                         }
                     }

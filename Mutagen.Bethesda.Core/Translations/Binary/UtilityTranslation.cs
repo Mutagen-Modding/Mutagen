@@ -330,9 +330,9 @@ namespace Mutagen.Bethesda
             return slice;
         }
 
-        public static BinaryMemoryReadStream DecompressStream(BinaryMemoryReadStream stream, GameConstants meta)
+        public static OverlayStream DecompressStream(OverlayStream stream)
         {
-            var majorMeta = meta.GetMajorRecord(stream);
+            var majorMeta = stream.GetMajorRecord();
             if (majorMeta.IsCompressed)
             {
                 uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(stream.RemainingSpan.Slice(majorMeta.HeaderLength));
@@ -342,14 +342,14 @@ namespace Mutagen.Bethesda
                 // Set length bytes
                 BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
                 using (var compessionStream = new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                 {
                     compessionStream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
-                stream = new BinaryMemoryReadStream(buf);
+                stream = new OverlayStream(buf, stream.MetaData);
             }
             return stream;
         }
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda
 
         public static int HandleOverlayRecordOverflow(
             int? existingLoc,
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset,
             ReadOnlySpan<byte> data,
             GameConstants constants)

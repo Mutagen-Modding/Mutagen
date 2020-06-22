@@ -1889,11 +1889,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package) : default;
+        public ILayerHeaderGetter? Header => _HeaderLocation.HasValue ? LayerHeaderBinaryOverlay.LayerHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
         public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static BaseLayerBinaryOverlay BaseLayerFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1932,13 +1932,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return BaseLayerFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

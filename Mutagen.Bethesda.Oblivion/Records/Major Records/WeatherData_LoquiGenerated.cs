@@ -2849,7 +2849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Weather.WeatherClassification Classification => (Weather.WeatherClassification)_data.Span.Slice(0xB, 0x1)[0];
         public Color LightningColor => _data.Slice(0xC, 0x3).ReadColor(ColorBinaryType.NoAlpha);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2865,7 +2865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static WeatherDataBinaryOverlay WeatherDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2888,7 +2888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

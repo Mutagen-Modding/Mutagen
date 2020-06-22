@@ -8496,17 +8496,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Configuration
         private RangeInt32? _ConfigurationLocation;
-        private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new BinaryMemoryReadStream(_data.Slice(_ConfigurationLocation!.Value.Min)), _package) : default;
+        private INpcConfigurationGetter? _Configuration => _ConfigurationLocation.HasValue ? NpcConfigurationBinaryOverlay.NpcConfigurationFactory(new OverlayStream(_data.Slice(_ConfigurationLocation!.Value.Min), _package), _package) : default;
         public INpcConfigurationGetter Configuration => _Configuration ?? new NpcConfiguration();
         #endregion
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
@@ -8572,7 +8572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IContainerEntryGetter>? Items { get; private set; }
         #region AIData
         private RangeInt32? _AIDataLocation;
-        private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new BinaryMemoryReadStream(_data.Slice(_AIDataLocation!.Value.Min)), _package) : default;
+        private IAIDataGetter? _AIData => _AIDataLocation.HasValue ? AIDataBinaryOverlay.AIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
         public IAIDataGetter AIData => _AIData ?? new AIData();
         #endregion
         public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
@@ -8592,12 +8592,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DataMarker
         partial void DataMarkerCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region PlayerSkills
         private RangeInt32? _PlayerSkillsLocation;
-        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new BinaryMemoryReadStream(_data.Slice(_PlayerSkillsLocation!.Value.Min)), _package) : default;
+        public IPlayerSkillsGetter? PlayerSkills => _PlayerSkillsLocation.HasValue ? PlayerSkillsBinaryOverlay.PlayerSkillsFactory(new OverlayStream(_data.Slice(_PlayerSkillsLocation!.Value.Min), _package), _package) : default;
         public bool PlayerSkills_IsSet => _PlayerSkillsLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; private set; } = ListExt.Empty<IFormLink<IHeadPartGetter>>();
@@ -8664,17 +8664,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FaceMorph
         private RangeInt32? _FaceMorphLocation;
-        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new BinaryMemoryReadStream(_data.Slice(_FaceMorphLocation!.Value.Min)), _package) : default;
+        public INpcFaceMorphGetter? FaceMorph => _FaceMorphLocation.HasValue ? NpcFaceMorphBinaryOverlay.NpcFaceMorphFactory(new OverlayStream(_data.Slice(_FaceMorphLocation!.Value.Min), _package), _package) : default;
         public bool FaceMorph_IsSet => _FaceMorphLocation.HasValue;
         #endregion
         #region FaceParts
         private RangeInt32? _FacePartsLocation;
-        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new BinaryMemoryReadStream(_data.Slice(_FacePartsLocation!.Value.Min)), _package) : default;
+        public INpcFacePartsGetter? FaceParts => _FacePartsLocation.HasValue ? NpcFacePartsBinaryOverlay.NpcFacePartsFactory(new OverlayStream(_data.Slice(_FacePartsLocation!.Value.Min), _package), _package) : default;
         public bool FaceParts_IsSet => _FacePartsLocation.HasValue;
         #endregion
         public IReadOnlyList<ITintLayerGetter> TintLayers { get; private set; } = ListExt.Empty<TintLayerBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -8690,11 +8690,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NpcBinaryOverlay NpcFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new NpcBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -8720,13 +8720,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NpcFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -8757,7 +8757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -8881,7 +8881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.COCT,
                         finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
                 }

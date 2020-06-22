@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Byte? Chance => _ChanceLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceLocation.Value, _package.MetaData.Constants)[0] : default(Byte?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static SoundItemBinaryOverlay SoundItemFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1993,13 +1993,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SoundItemFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

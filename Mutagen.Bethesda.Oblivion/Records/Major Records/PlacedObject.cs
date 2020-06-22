@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private int? _OpenByDefaultLocation;
             public bool GetOpenByDefaultCustom() => _OpenByDefaultLocation.HasValue;
-            partial void OpenByDefaultCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void OpenByDefaultCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _OpenByDefaultLocation = (ushort)(stream.Position - offset);
             }

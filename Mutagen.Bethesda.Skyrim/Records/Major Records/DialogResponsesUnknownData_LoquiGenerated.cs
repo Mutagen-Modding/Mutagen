@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Boolean NEXT => _NEXTLocation.HasValue ? true : default;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2083,7 +2083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static DialogResponsesUnknownDataBinaryOverlay DialogResponsesUnknownDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2106,13 +2106,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return DialogResponsesUnknownDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

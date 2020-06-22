@@ -71,16 +71,16 @@ namespace Mutagen.Bethesda.Skyrim
             private IPackageFlagsOverrideGetter? _flagsOverride;
             public IPackageFlagsOverrideGetter? GetFlagsOverrideCustom() => _flagsOverride;
 
-            partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayCountedList(stream, _package);
             }
 
-            partial void FlagsOverrideCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void FlagsOverrideCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _flagsOverride = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
                     new MutagenInterfaceReadStream(stream, _package.MetaData)));
-                if (_package.MetaData.Constants.TryGetSubrecord(stream, RecordTypes.PFO2, out var rec))
+                if (stream.TryGetSubrecord(RecordTypes.PFO2, out var rec))
                 {
                     FlagsOverrideUnused = PackageFlagsOverride.CreateFromBinary(new MutagenFrame(
                         new MutagenInterfaceReadStream(stream, _package.MetaData)));

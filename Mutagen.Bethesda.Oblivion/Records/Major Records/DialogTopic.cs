@@ -102,11 +102,11 @@ namespace Mutagen.Bethesda.Oblivion
 
             public IReadOnlyList<IDialogItemGetter> Items { get; private set; } = ListExt.Empty<IDialogItemGetter>();
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup) return;
                 if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
@@ -119,9 +119,9 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Items = BinaryOverlayList<IDialogItemGetter>.FactoryByArray(
                     contentSpan,
                     _package,
-                    getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new BinaryMemoryReadStream(s), p),
+                    getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),
                     locs: ParseRecordLocations(
-                        stream: new BinaryMemoryReadStream(contentSpan),
+                        stream: new OverlayStream(contentSpan, _package),
                         finalPos: contentSpan.Length,
                         trigger: DialogItem_Registration.TriggeringRecordType,
                         constants: GameConstants.Oblivion.MajorConstants,

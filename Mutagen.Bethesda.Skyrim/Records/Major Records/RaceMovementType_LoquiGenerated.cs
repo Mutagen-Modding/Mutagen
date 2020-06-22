@@ -2002,11 +2002,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;
-        public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new BinaryMemoryReadStream(_data.Slice(_OverridesLocation!.Value.Min)), _package) : default;
+        public ISpeedOverridesGetter? Overrides => _OverridesLocation.HasValue ? SpeedOverridesBinaryOverlay.SpeedOverridesFactory(new OverlayStream(_data.Slice(_OverridesLocation!.Value.Min), _package), _package) : default;
         public bool Overrides_IsSet => _OverridesLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2022,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static RaceMovementTypeBinaryOverlay RaceMovementTypeFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2045,13 +2045,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RaceMovementTypeFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

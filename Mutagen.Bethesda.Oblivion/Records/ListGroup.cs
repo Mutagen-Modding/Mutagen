@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
             public IReadOnlyList<T> Records => _Records!;
 
             partial void CustomFactoryEnd(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 int finalPos,
                 int offset)
             {

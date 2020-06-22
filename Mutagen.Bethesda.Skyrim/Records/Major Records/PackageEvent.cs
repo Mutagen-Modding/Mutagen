@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IATopicReferenceGetter> Topics { get; private set; } = ListExt.Empty<IATopicReferenceGetter>();
 
             partial void TopicsCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 long finalPos,
                 int offset,
                 RecordType type,
@@ -37,8 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 Topics = new List<IATopicReferenceGetter>(
                     ATopicReferenceBinaryCreateTranslation.Factory(
-                        new MutagenFrame(
-                            new MutagenInterfaceReadStream(stream, _package.MetaData))));
+                        new MutagenFrame(stream)));
             }
         }
     }

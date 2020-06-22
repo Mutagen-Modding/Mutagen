@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public NavmeshTriangle.Flag Flags => (NavmeshTriangle.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0xC, 0x2));
         public UInt16 CoverFlags => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2318,7 +2318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NavmeshTriangleBinaryOverlay NavmeshTriangleFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2340,7 +2340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NavmeshTriangleFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

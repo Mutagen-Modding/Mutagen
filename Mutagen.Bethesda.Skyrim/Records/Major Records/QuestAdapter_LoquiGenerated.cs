@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Unknown => _data.Span[ScriptsEndingPos + 0x0];
         #region FragmentCount
         partial void FragmentCountCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region FileName
@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomAliasesEndPos();
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2543,7 +2543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static QuestAdapterBinaryOverlay QuestAdapterFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2572,7 +2572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return QuestAdapterFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

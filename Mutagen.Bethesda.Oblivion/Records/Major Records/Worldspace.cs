@@ -164,19 +164,19 @@ namespace Mutagen.Bethesda.Oblivion
             private ReadOnlyMemorySlice<byte>? _grupData;
 
             private int? _RoadLocation;
-            public IRoadGetter? Road => _RoadLocation.HasValue ? RoadBinaryOverlay.RoadFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_RoadLocation!.Value)), _package) : default;
+            public IRoadGetter? Road => _RoadLocation.HasValue ? RoadBinaryOverlay.RoadFactory(new OverlayStream(_grupData!.Value.Slice(_RoadLocation!.Value), _package), _package) : default;
 
             private int? _TopCellLocation;
-            public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_TopCellLocation!.Value)), _package) : default;
+            public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new OverlayStream(_grupData!.Value.Slice(_TopCellLocation!.Value), _package), _package) : default;
 
             public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
                 if (stream.Complete) return;
-                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
                 if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
@@ -185,13 +185,13 @@ namespace Mutagen.Bethesda.Oblivion
                 }
 
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                stream = new BinaryMemoryReadStream(this._grupData.Value);
+                stream = new OverlayStream(this._grupData.Value, stream.MetaData);
                 stream.Position += groupMeta.HeaderLength;
 
                 for (int i = 0; i < 3; i++)
                 {
                     if (stream.Complete) return;
-                    var varMeta = _package.MetaData.Constants.GetNextRecordVariableMeta(stream);
+                    var varMeta = stream.GetNextRecordVariableMeta();
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x44414F52: // "ROAD":
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
                             stream.Position += checked((int)varMeta.TotalLength);
                             if (!stream.Complete)
                             {
-                                var subCellGroup = this._package.MetaData.Constants.GetGroup(stream);
+                                var subCellGroup = stream.GetGroup();
                                 if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
                                 {
                                     stream.Position += checked((int)subCellGroup.TotalLength);
@@ -214,9 +214,9 @@ namespace Mutagen.Bethesda.Oblivion
                             this.SubCells = BinaryOverlayList<IWorldspaceBlockGetter>.FactoryByArray(
                                 stream.RemainingMemory,
                                 _package,
-                                getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new BinaryMemoryReadStream(s), p),
+                                getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),
                                 locs: ParseRecordLocations(
-                                    stream: new BinaryMemoryReadStream(stream.RemainingMemory),
+                                    stream: new OverlayStream(stream.RemainingMemory, _package),
                                     finalPos: stream.Length,
                                     trigger: WorldspaceBlock_Registration.TriggeringRecordType,
                                     constants: GameConstants.Oblivion.GroupConstants,

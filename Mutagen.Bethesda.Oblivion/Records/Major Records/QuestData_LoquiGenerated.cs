@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Quest.Flag Flags => (Quest.Flag)_data.Span.Slice(0x0, 0x1)[0];
         public Byte Priority => _data.Span[0x1];
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static QuestDataBinaryOverlay QuestDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return QuestDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

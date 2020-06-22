@@ -2690,7 +2690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Escape => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
         public UInt16 Werewolf => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CrimeValuesBinaryOverlay CrimeValuesFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2736,7 +2736,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CrimeValuesFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

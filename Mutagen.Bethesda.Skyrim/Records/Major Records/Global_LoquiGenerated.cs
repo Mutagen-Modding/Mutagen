@@ -1876,11 +1876,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region TypeChar
         partial void TypeCharCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

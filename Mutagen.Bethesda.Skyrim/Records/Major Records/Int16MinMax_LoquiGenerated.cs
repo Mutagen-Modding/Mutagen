@@ -1860,7 +1860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int16 Min => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Max => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1876,7 +1876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static Int16MinMaxBinaryOverlay Int16MinMaxFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1898,7 +1898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return Int16MinMaxFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

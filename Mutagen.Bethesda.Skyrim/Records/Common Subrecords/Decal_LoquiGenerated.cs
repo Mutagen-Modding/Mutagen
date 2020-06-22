@@ -2686,7 +2686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));
         public Color Color => _data.Slice(0x20, 0x4).ReadColor(ColorBinaryType.Alpha);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2702,7 +2702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static DecalBinaryOverlay DecalFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2725,7 +2725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return DecalFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

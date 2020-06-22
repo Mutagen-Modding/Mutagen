@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Skyrim
             private Condition.Flag GetFlagsCustom(int location) => ConditionBinaryCreateTranslation.GetFlag(_data.Span[location]);
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
-            public static ConditionBinaryOverlay ConditionFactory(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var subRecMeta = package.MetaData.Constants.GetSubrecordFrame(stream);
                 if (subRecMeta.Header.RecordType != RecordTypes.CTDA)
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var counterMeta = package.MetaData.Constants.ReadSubrecordFrame(stream);
                 if (counterMeta.Header.RecordType != RecordTypes.CITC
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return ret;
             }
 
-            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayList(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var span = stream.RemainingMemory;
                 var pos = stream.Position;
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
                     mem: span,
                     package: package,
-                    getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new BinaryMemoryReadStream(s), p),
+                    getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),
                     locs: recordLocs);
             }
         }
@@ -335,15 +335,15 @@ namespace Mutagen.Bethesda.Skyrim
                 var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
                 {
-                    return GetEventDataBinaryOverlay.GetEventDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                    return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
                 }
                 else
                 {
-                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
                 }
             }
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position = offset;
                 _data = stream.RemainingMemory;
@@ -357,15 +357,15 @@ namespace Mutagen.Bethesda.Skyrim
                 var functionIndex = BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(location));
                 if (functionIndex == ConditionBinaryCreateTranslation.EventFunctionIndex)
                 {
-                    return GetEventDataBinaryOverlay.GetEventDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                    return GetEventDataBinaryOverlay.GetEventDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
                 }
                 else
                 {
-                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new BinaryMemoryReadStream(_data.Slice(location)), _package);
+                    return FunctionConditionDataBinaryOverlay.FunctionConditionDataFactory(new OverlayStream(_data.Slice(location), _package), _package);
                 }
             }
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position = offset;
                 _data = stream.RemainingMemory;
@@ -398,12 +398,12 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ParameterTwoString_IsSet { get; private set; }
             public string? ParameterTwoString => ParameterTwoString_IsSet ? BinaryStringUtility.ProcessWholeToZString(_stringParamData2) : null;
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position -= 0x4;
                 _data2 = stream.RemainingMemory.Slice(4, 0x14);
                 stream.Position += 0x18;
-                if (stream.Complete || !_package.MetaData.Constants.TryGetSubrecord(stream, out var subFrame)) return;
+                if (stream.Complete || !stream.TryGetSubrecord(out var subFrame)) return;
                 switch (subFrame.RecordTypeInt)
                 {
                     case 0x31534943: // CIS1

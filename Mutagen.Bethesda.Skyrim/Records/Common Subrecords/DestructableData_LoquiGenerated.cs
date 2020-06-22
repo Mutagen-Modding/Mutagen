@@ -2050,7 +2050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Boolean VATSTargetable => _data.Slice(0x5, 0x1)[0] == 1;
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static DestructableDataBinaryOverlay DestructableDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return DestructableDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

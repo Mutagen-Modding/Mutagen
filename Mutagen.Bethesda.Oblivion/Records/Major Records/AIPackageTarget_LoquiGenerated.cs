@@ -1965,7 +1965,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Int32 Object => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public Int32 Count => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static AIPackageTargetBinaryOverlay AIPackageTargetFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2004,7 +2004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AIPackageTargetFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

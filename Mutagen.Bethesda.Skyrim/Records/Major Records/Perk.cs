@@ -537,20 +537,19 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IReadOnlyList<IAPerkEffectGetter> Effects { get; private set; } = ListExt.Empty<IAPerkEffectGetter>();
 
-            partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
             partial void EffectsCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 long finalPos,
                 int offset,
                 RecordType type,
                 int? lastParsed)
             {
-                Effects = PerkBinaryCreateTranslation.ParseEffects(
-                    new MutagenInterfaceReadStream(stream, _package.MetaData))
+                Effects = PerkBinaryCreateTranslation.ParseEffects(stream)
                     .ToList();
             }
         }

@@ -6026,7 +6026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; private set; } = ListExt.Empty<WorldspaceGridReferenceBinaryOverlay>();
         #region MaxHeight
         private RangeInt32? _MaxHeightLocation;
-        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new BinaryMemoryReadStream(_data.Slice(_MaxHeightLocation!.Value.Min)), _package) : default;
+        public IWorldspaceMaxHeightGetter? MaxHeight => _MaxHeightLocation.HasValue ? WorldspaceMaxHeightBinaryOverlay.WorldspaceMaxHeightFactory(new OverlayStream(_data.Slice(_MaxHeightLocation!.Value.Min), _package), _package) : default;
         public bool MaxHeight_IsSet => _MaxHeightLocation.HasValue;
         #endregion
         #region Name
@@ -6074,7 +6074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LandDefaults
         private RangeInt32? _LandDefaultsLocation;
-        public IWorldspaceLandDefaultsGetter? LandDefaults => _LandDefaultsLocation.HasValue ? WorldspaceLandDefaultsBinaryOverlay.WorldspaceLandDefaultsFactory(new BinaryMemoryReadStream(_data.Slice(_LandDefaultsLocation!.Value.Min)), _package) : default;
+        public IWorldspaceLandDefaultsGetter? LandDefaults => _LandDefaultsLocation.HasValue ? WorldspaceLandDefaultsBinaryOverlay.WorldspaceLandDefaultsFactory(new OverlayStream(_data.Slice(_LandDefaultsLocation!.Value.Min), _package), _package) : default;
         public bool LandDefaults_IsSet => _LandDefaultsLocation.HasValue;
         #endregion
         #region MapImage
@@ -6084,12 +6084,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? CloudModel { get; private set; }
         #region MapData
         private RangeInt32? _MapDataLocation;
-        public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(new BinaryMemoryReadStream(_data.Slice(_MapDataLocation!.Value.Min)), _package) : default;
+        public IWorldspaceMapGetter? MapData => _MapDataLocation.HasValue ? WorldspaceMapBinaryOverlay.WorldspaceMapFactory(new OverlayStream(_data.Slice(_MapDataLocation!.Value.Min), _package), _package) : default;
         public bool MapData_IsSet => _MapDataLocation.HasValue;
         #endregion
         #region MapOffset
         private RangeInt32? _MapOffsetLocation;
-        private IWorldspaceMapOffsetGetter? _MapOffset => _MapOffsetLocation.HasValue ? WorldspaceMapOffsetBinaryOverlay.WorldspaceMapOffsetFactory(new BinaryMemoryReadStream(_data.Slice(_MapOffsetLocation!.Value.Min)), _package) : default;
+        private IWorldspaceMapOffsetGetter? _MapOffset => _MapOffsetLocation.HasValue ? WorldspaceMapOffsetBinaryOverlay.WorldspaceMapOffsetFactory(new OverlayStream(_data.Slice(_MapOffsetLocation!.Value.Min), _package), _package) : default;
         public IWorldspaceMapOffsetGetter MapOffset => _MapOffset ?? new WorldspaceMapOffset();
         #endregion
         #region DistantLodMultiplier
@@ -6135,11 +6135,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypes.XXXX);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
         partial void CustomEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -6155,12 +6155,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WorldspaceBinaryOverlay WorldspaceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var origStream = stream;
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new WorldspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -6190,13 +6190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WorldspaceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -6212,7 +6212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => WorldspaceGridReferenceBinaryOverlay.WorldspaceGridReferenceFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WorldspaceGridReferenceBinaryOverlay.WorldspaceGridReferenceFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (short)HeaderTranslation.ExtractSubrecordSpan(_data.Span, _DataLocation!.Value, _package.MetaData.Constants).GetFloat();
             }
-            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _DataLocation = (ushort)(stream.Position - offset);
             }

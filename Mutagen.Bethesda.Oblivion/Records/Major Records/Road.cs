@@ -119,14 +119,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public IReadOnlyList<IRoadPointGetter>? Points { get; private set; }
 
-        partial void PointsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+        partial void PointsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
             if (stream.Complete) return;
-            var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+            var subMeta = stream.GetSubrecord();
             if (subMeta.RecordType != RecordTypes.PGRP) return;
             stream.Position += subMeta.HeaderLength;
             var pointBytes = stream.ReadMemory(subMeta.ContentLength);
-            subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+            subMeta = stream.GetSubrecord();
             switch (subMeta.RecordTypeInt)
             {
                 case 0x52524750: // "PGRR":

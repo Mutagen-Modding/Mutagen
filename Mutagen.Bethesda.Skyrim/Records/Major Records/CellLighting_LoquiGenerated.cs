@@ -3868,7 +3868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single LightFadeEnd => SpanExt.GetFloat(_data.Slice(0x54, 0x4));
         public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3884,7 +3884,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static CellLightingBinaryOverlay CellLightingFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3910,7 +3910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CellLightingFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

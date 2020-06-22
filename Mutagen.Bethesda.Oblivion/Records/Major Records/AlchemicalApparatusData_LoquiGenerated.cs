@@ -2058,7 +2058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Weight => SpanExt.GetFloat(_data.Slice(0x5, 0x4));
         public Single Quality => SpanExt.GetFloat(_data.Slice(0x9, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2074,7 +2074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static AlchemicalApparatusDataBinaryOverlay AlchemicalApparatusDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2097,7 +2097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AlchemicalApparatusDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

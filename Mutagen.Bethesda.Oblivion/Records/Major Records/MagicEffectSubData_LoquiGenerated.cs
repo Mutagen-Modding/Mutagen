@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
         public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2371,7 +2371,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static MagicEffectSubDataBinaryOverlay MagicEffectSubDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2393,7 +2393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return MagicEffectSubDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

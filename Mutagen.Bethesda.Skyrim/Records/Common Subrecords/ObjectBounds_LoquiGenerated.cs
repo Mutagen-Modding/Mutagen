@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Int16 First => P3Int16BinaryTranslation.Read(_data.Slice(0x0, 0x6));
         public P3Int16 Second => P3Int16BinaryTranslation.Read(_data.Slice(0x6, 0x6));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ObjectBoundsBinaryOverlay ObjectBoundsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ObjectBoundsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

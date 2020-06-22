@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
             private int? _DataLocation;
             bool GetDataIsSetCustom() => _DataLocation.HasValue;
             bool GetDataCustom() => _DataLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _DataLocation.Value, _package.MetaData.Constants)) != 0 : default;
-            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _DataLocation = (ushort)(stream.Position - offset);
             }

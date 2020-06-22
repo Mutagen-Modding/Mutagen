@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"partial void CustomFactoryEnd"))
                     {
-                        args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                        args.Add($"{nameof(OverlayStream)} stream");
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                         args.Add($"int offset");
                     }
@@ -1966,7 +1966,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"partial void CustomEnd"))
                         {
-                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"{nameof(OverlayStream)} stream");
                             args.Add($"int finalPos");
                             args.Add($"int offset");
                         }
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         else
                         {
-                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"{nameof(OverlayStream)} stream");
                             args.Add($"{nameof(BinaryOverlayFactoryPackage)} package");
                             args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
                         }
@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 fg.AppendLine("var origStream = stream;");
                             }
-                            fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream, package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)});");
+                            fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream);");
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                args.Add($"stream: new {nameof(BinaryMemoryReadStream)}(slice)");
+                                args.Add($"stream: new {nameof(OverlayStream)}(slice, package)");
                                 args.AddPassArg("package");
                                 args.AddPassArg("recordTypeConverter");
                             }
@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new FunctionWrapper(fg,
                         $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
                     {
-                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(BinaryMemoryReadStream))} stream");
+                        args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(OverlayStream))} stream");
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
                         args.Add($"int offset");
                         args.Add("RecordType type");

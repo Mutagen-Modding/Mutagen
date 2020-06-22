@@ -4088,7 +4088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x24, 0x4));
         #region Flags2
         partial void Flags2CustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         public Single AnimationAttackMult => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
@@ -4113,7 +4113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
         public Single Stagger => SpanExt.GetFloat(_data.Slice(0x60, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -4129,7 +4129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeaponDataBinaryOverlay WeaponDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -4152,7 +4152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeaponDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

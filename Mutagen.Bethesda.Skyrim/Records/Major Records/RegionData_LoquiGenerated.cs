@@ -2002,12 +2002,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Header
         private RangeInt32? _HeaderLocation;
-        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new BinaryMemoryReadStream(_data.Slice(_HeaderLocation!.Value.Min)), _package) : default;
+        public IRegionDataHeaderGetter? Header => _HeaderLocation.HasValue ? RegionDataHeaderBinaryOverlay.RegionDataHeaderFactory(new OverlayStream(_data.Slice(_HeaderLocation!.Value.Min), _package), _package) : default;
         public bool Header_IsSet => _HeaderLocation.HasValue;
         #endregion
         public IIconsGetter? Icons { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 
         public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

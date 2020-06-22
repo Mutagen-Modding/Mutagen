@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region AttackData
         private RangeInt32? _AttackDataLocation;
-        public IAttackDataGetter? AttackData => _AttackDataLocation.HasValue ? AttackDataBinaryOverlay.AttackDataFactory(new BinaryMemoryReadStream(_data.Slice(_AttackDataLocation!.Value.Min)), _package) : default;
+        public IAttackDataGetter? AttackData => _AttackDataLocation.HasValue ? AttackDataBinaryOverlay.AttackDataFactory(new OverlayStream(_data.Slice(_AttackDataLocation!.Value.Min), _package), _package) : default;
         public bool AttackData_IsSet => _AttackDataLocation.HasValue;
         #endregion
         #region AttackEvent
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? AttackEvent => _AttackEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AttackEventLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static AttackBinaryOverlay AttackFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2048,13 +2048,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AttackFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

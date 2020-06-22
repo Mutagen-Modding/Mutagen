@@ -1991,7 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLink<IWorldspaceGetter> Indirect => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 GridPoint => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2007,7 +2007,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static LoadScreenLocationBinaryOverlay LoadScreenLocationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return LoadScreenLocationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

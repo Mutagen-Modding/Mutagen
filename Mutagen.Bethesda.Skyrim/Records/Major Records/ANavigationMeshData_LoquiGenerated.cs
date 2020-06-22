@@ -3434,7 +3434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt32 Magic => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         #region ParentLogic
         partial void ParentLogicCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region Vertices
@@ -3455,12 +3455,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region CoverTrianglesLogic
         partial void CoverTrianglesLogicCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         protected int CoverTrianglesLogicEndingPos;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 

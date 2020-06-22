@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Width => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
         public Single Height => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static DimensionsBinaryOverlay DimensionsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1917,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return DimensionsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

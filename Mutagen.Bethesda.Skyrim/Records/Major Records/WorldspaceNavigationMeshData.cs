@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
                 BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(12)),
                 BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(14)));
 
-            partial void CustomFactoryEnd(BinaryMemoryReadStream stream, int finalPos, int offset)
+            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 CustomLogic();
             }

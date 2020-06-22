@@ -1942,20 +1942,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Min
         partial void MinCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public P2Float Min => GetMinCustom();
         #endregion
         #region Max
         partial void MaxCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public P2Float Max => GetMaxCustom();
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1971,7 +1971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WorldspaceObjectBoundsBinaryOverlay WorldspaceObjectBoundsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1994,13 +1994,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WorldspaceObjectBoundsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

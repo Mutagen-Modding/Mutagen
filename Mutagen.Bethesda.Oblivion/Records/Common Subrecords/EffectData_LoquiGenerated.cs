@@ -2251,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Effect.EffectType Type => (Effect.EffectType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x10, 0x4));
         public ActorValueExtended ActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x14, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static EffectDataBinaryOverlay EffectDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2290,7 +2290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return EffectDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

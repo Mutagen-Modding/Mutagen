@@ -2646,9 +2646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlyMemorySlice<ActorValue> SecondaryAttributes => BinaryOverlayArrayHelper.EnumSliceFromFixedSize<ActorValue>(_data.Slice(0xC), amount: 7, enumLength: 4);
         public ClassFlag Flags => (ClassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x28, 0x4));
         public ClassService ClassServices => (ClassService)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2C, 0x4));
-        public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new BinaryMemoryReadStream(_data.Slice(0x30)), _package, default(RecordTypeConverter));
+        public IClassTrainingGetter Training => ClassTrainingBinaryOverlay.ClassTrainingFactory(new OverlayStream(_data.Slice(0x30), _package), _package, default(RecordTypeConverter));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2664,7 +2664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ClassDataBinaryOverlay ClassDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2690,7 +2690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ClassDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

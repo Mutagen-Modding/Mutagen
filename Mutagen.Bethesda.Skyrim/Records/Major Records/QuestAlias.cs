@@ -102,14 +102,14 @@ namespace Mutagen.Bethesda.Skyrim
             public uint ID { get; private set; }
             public QuestAlias.TypeEnum Type { get; private set; }
 
-            partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void IDParseCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void IDParseCustomParse(OverlayStream stream, int offset)
             {
-                var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                var subMeta = stream.ReadSubrecord();
                 this.Type = subMeta.RecordTypeInt switch
                 {
                     // ALST
@@ -121,9 +121,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ID = stream.ReadUInt32();
             }
 
-            partial void EndCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void EndCustomParse(OverlayStream stream, int offset)
             {
-                _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                stream.ReadSubrecordFrame();
             }
         }
     }    

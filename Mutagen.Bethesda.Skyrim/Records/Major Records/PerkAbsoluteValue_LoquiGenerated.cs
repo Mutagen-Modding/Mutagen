@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Boolean Negative => _data.Slice(0x2, 0x1)[0] == 1;
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkAbsoluteValueBinaryOverlay PerkAbsoluteValueFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkAbsoluteValueFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

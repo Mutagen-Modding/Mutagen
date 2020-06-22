@@ -2140,7 +2140,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected int FragmentNameEndingPos;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2156,7 +2156,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static IndexedScriptFragmentBinaryOverlay IndexedScriptFragmentFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return IndexedScriptFragmentFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

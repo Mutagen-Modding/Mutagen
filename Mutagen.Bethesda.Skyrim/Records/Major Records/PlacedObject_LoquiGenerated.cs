@@ -9932,7 +9932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region Base
@@ -9946,7 +9946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Primitive
         private RangeInt32? _PrimitiveLocation;
-        public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(new BinaryMemoryReadStream(_data.Slice(_PrimitiveLocation!.Value.Min)), _package) : default;
+        public IPlacedPrimitiveGetter? Primitive => _PrimitiveLocation.HasValue ? PlacedPrimitiveBinaryOverlay.PlacedPrimitiveFactory(new OverlayStream(_data.Slice(_PrimitiveLocation!.Value.Min), _package), _package) : default;
         public bool Primitive_IsSet => _PrimitiveLocation.HasValue;
         #endregion
         #region XORD
@@ -9958,7 +9958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IPlacementGetter? RoomPortal { get; private set; }
         #region BoundData
         partial void BoundDataCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region MultiBoundPrimitive
@@ -9986,17 +9986,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LightData
         private RangeInt32? _LightDataLocation;
-        public ILightDataGetter? LightData => _LightDataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new BinaryMemoryReadStream(_data.Slice(_LightDataLocation!.Value.Min)), _package) : default;
+        public ILightDataGetter? LightData => _LightDataLocation.HasValue ? LightDataBinaryOverlay.LightDataFactory(new OverlayStream(_data.Slice(_LightDataLocation!.Value.Min), _package), _package) : default;
         public bool LightData_IsSet => _LightDataLocation.HasValue;
         #endregion
         #region Alpha
         private RangeInt32? _AlphaLocation;
-        public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(new BinaryMemoryReadStream(_data.Slice(_AlphaLocation!.Value.Min)), _package) : default;
+        public IAlphaGetter? Alpha => _AlphaLocation.HasValue ? AlphaBinaryOverlay.AlphaFactory(new OverlayStream(_data.Slice(_AlphaLocation!.Value.Min), _package), _package) : default;
         public bool Alpha_IsSet => _AlphaLocation.HasValue;
         #endregion
         #region TeleportDestination
         private RangeInt32? _TeleportDestinationLocation;
-        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new BinaryMemoryReadStream(_data.Slice(_TeleportDestinationLocation!.Value.Min)), _package) : default;
+        public ITeleportDestinationGetter? TeleportDestination => _TeleportDestinationLocation.HasValue ? TeleportDestinationBinaryOverlay.TeleportDestinationFactory(new OverlayStream(_data.Slice(_TeleportDestinationLocation!.Value.Min), _package), _package) : default;
         public bool TeleportDestination_IsSet => _TeleportDestinationLocation.HasValue;
         #endregion
         #region TeleportMessageBox
@@ -10019,7 +10019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WaterVelocity
         private RangeInt32? _WaterVelocityLocation;
-        public IWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? WaterVelocityBinaryOverlay.WaterVelocityFactory(new BinaryMemoryReadStream(_data.Slice(_WaterVelocityLocation!.Value.Min)), _package) : default;
+        public IWaterVelocityGetter? WaterVelocity => _WaterVelocityLocation.HasValue ? WaterVelocityBinaryOverlay.WaterVelocityFactory(new OverlayStream(_data.Slice(_WaterVelocityLocation!.Value.Min), _package), _package) : default;
         public bool WaterVelocity_IsSet => _WaterVelocityLocation.HasValue;
         #endregion
         #region XCVL
@@ -10070,7 +10070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Lock
         private RangeInt32? _LockLocation;
-        public ILockDataGetter? Lock => _LockLocation.HasValue ? LockDataBinaryOverlay.LockDataFactory(new BinaryMemoryReadStream(_data.Slice(_LockLocation!.Value.Min)), _package) : default;
+        public ILockDataGetter? Lock => _LockLocation.HasValue ? LockDataBinaryOverlay.LockDataFactory(new OverlayStream(_data.Slice(_LockLocation!.Value.Min), _package), _package) : default;
         public bool Lock_IsSet => _LockLocation.HasValue;
         #endregion
         #region EncounterZone
@@ -10080,7 +10080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NavigationDoorLink
         private RangeInt32? _NavigationDoorLinkLocation;
-        public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new BinaryMemoryReadStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min)), _package) : default;
+        public INavigationDoorLinkGetter? NavigationDoorLink => _NavigationDoorLinkLocation.HasValue ? NavigationDoorLinkBinaryOverlay.NavigationDoorLinkFactory(new OverlayStream(_data.Slice(_NavigationDoorLinkLocation!.Value.Min), _package), _package) : default;
         public bool NavigationDoorLink_IsSet => _NavigationDoorLinkLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<ILocationReferenceTypeGetter>>? LocationRefTypes { get; private set; }
@@ -10104,7 +10104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region EnableParent
         private RangeInt32? _EnableParentLocation;
-        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new BinaryMemoryReadStream(_data.Slice(_EnableParentLocation!.Value.Min)), _package) : default;
+        public IEnableParentGetter? EnableParent => _EnableParentLocation.HasValue ? EnableParentBinaryOverlay.EnableParentFactory(new OverlayStream(_data.Slice(_EnableParentLocation!.Value.Min), _package), _package) : default;
         public bool EnableParent_IsSet => _EnableParentLocation.HasValue;
         #endregion
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
@@ -10148,7 +10148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -10164,11 +10164,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PlacedObjectBinaryOverlay PlacedObjectFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new PlacedObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -10194,13 +10194,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PlacedObjectFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -10246,7 +10246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XPOD:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Portals = BinaryOverlayList<PortalBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -10298,7 +10298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => WaterReflectionBinaryOverlay.WaterReflectionFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WaterReflectionBinaryOverlay.WaterReflectionFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,
@@ -10442,7 +10442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XLRT:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.LocationRefTypes = BinaryOverlayList<IFormLink<ILocationReferenceTypeGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -10492,7 +10492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => LinkedReferencesBinaryOverlay.LinkedReferencesFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

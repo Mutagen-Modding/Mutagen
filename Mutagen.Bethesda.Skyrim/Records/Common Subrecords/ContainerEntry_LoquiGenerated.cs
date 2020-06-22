@@ -2013,16 +2013,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Item
         private RangeInt32? _ItemLocation;
-        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(new BinaryMemoryReadStream(_data.Slice(_ItemLocation!.Value.Min)), _package) : default;
+        private IContainerItemGetter? _Item => _ItemLocation.HasValue ? ContainerItemBinaryOverlay.ContainerItemFactory(new OverlayStream(_data.Slice(_ItemLocation!.Value.Min), _package), _package) : default;
         public IContainerItemGetter Item => _Item ?? new ContainerItem();
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public IExtraDataGetter? Data => _DataLocation.HasValue ? ExtraDataBinaryOverlay.ExtraDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2038,7 +2038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ContainerEntryBinaryOverlay ContainerEntryFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2061,13 +2061,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ContainerEntryFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

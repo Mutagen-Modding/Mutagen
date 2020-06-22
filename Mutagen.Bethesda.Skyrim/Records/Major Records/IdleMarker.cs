@@ -95,17 +95,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class IdleMarkerBinaryOverlay
         {
-            partial void AnimationCountCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void AnimationCountCustomParse(OverlayStream stream, int offset)
             {
                 // Skip. Don't care
-                _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                stream.ReadSubrecordFrame();
             }
 
             public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? Animations { get; private set; }
 
-            partial void AnimationsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
-                var subHeader = _package.MetaData.Constants.ReadSubrecord(stream);
+                var subHeader = stream.ReadSubrecord();
                 Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
                     mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
                     package: _package,

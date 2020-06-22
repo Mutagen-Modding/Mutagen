@@ -538,11 +538,11 @@ namespace Mutagen.Bethesda.Skyrim
             public IFormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 int finalPos,
                 int offset)
             {
-                var pkcu = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var pkcu = stream.ReadSubrecordFrame();
                 var count = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcu.Content));
                 _packageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcu.Content.Slice(4), _package.MetaData.MasterReferences!);
                 DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcu.Content.Slice(8));
@@ -551,9 +551,9 @@ namespace Mutagen.Bethesda.Skyrim
                     new MutagenInterfaceReadStream(stream, _package.MetaData), count, _packageData);
             }
 
-            partial void XnamMarkerCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void XnamMarkerCustomParse(OverlayStream stream, long finalPos, int offset)
             {
-                var xnam = _package.MetaData.Constants.ReadSubrecordMemoryFrame(stream);
+                var xnam = stream.ReadSubrecordMemoryFrame();
                 _xnam = xnam.Content;
                 this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
                     stream: stream,
@@ -564,7 +564,7 @@ namespace Mutagen.Bethesda.Skyrim
                     new MutagenInterfaceReadStream(stream, _package.MetaData), _packageData);
             }
 
-            partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }

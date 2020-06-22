@@ -2739,7 +2739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int16 HealthOffset => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x14, 0x2));
         public Int16 BleedoutOverride => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x16, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2755,7 +2755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2778,7 +2778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NpcConfigurationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

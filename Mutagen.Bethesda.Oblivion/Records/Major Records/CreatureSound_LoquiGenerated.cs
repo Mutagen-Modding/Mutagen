@@ -2103,7 +2103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<ISoundItemGetter> Sounds { get; private set; } = ListExt.Empty<SoundItemBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static CreatureSoundBinaryOverlay CreatureSoundFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2142,13 +2142,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CreatureSoundFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 CalcMin => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
         public UInt16 CalcMax => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xE, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2333,7 +2333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static NpcConfigurationBinaryOverlay NpcConfigurationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2356,7 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return NpcConfigurationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

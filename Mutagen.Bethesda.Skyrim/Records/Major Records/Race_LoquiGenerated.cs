@@ -11312,7 +11312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BodyTemplate
         private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new BinaryMemoryReadStream(_data.Slice(_BodyTemplateLocation!.Value.Min)), _package) : default;
+        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
         public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
@@ -11321,43 +11321,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkillBoost0
         private int _SkillBoost0Location => _DATALocation!.Value;
         private bool _SkillBoost0_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost0Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost0 => _SkillBoost0_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost0Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost0 => _SkillBoost0 ?? new SkillBoost();
         #endregion
         #region SkillBoost1
         private int _SkillBoost1Location => _DATALocation!.Value + 0x2;
         private bool _SkillBoost1_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost1Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost1 => _SkillBoost1_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost1Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost1 => _SkillBoost1 ?? new SkillBoost();
         #endregion
         #region SkillBoost2
         private int _SkillBoost2Location => _DATALocation!.Value + 0x4;
         private bool _SkillBoost2_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost2Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost2 => _SkillBoost2_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost2Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost2 => _SkillBoost2 ?? new SkillBoost();
         #endregion
         #region SkillBoost3
         private int _SkillBoost3Location => _DATALocation!.Value + 0x6;
         private bool _SkillBoost3_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost3Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost3 => _SkillBoost3_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost3Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost3 => _SkillBoost3 ?? new SkillBoost();
         #endregion
         #region SkillBoost4
         private int _SkillBoost4Location => _DATALocation!.Value + 0x8;
         private bool _SkillBoost4_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost4Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost4 => _SkillBoost4_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost4Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost4 => _SkillBoost4 ?? new SkillBoost();
         #endregion
         #region SkillBoost5
         private int _SkillBoost5Location => _DATALocation!.Value + 0xA;
         private bool _SkillBoost5_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost5Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost5 => _SkillBoost5_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost5Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost5 => _SkillBoost5 ?? new SkillBoost();
         #endregion
         #region SkillBoost6
         private int _SkillBoost6Location => _DATALocation!.Value + 0xC;
         private bool _SkillBoost6_IsSet => _DATALocation.HasValue;
-        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(_SkillBoost6Location)), _package) : default;
+        private ISkillBoostGetter? _SkillBoost6 => _SkillBoost6_IsSet ? SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(_SkillBoost6Location), _package), _package) : default;
         public ISkillBoostGetter SkillBoost6 => _SkillBoost6 ?? new SkillBoost();
         #endregion
         #region Unknown
@@ -11497,13 +11497,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags2
         partial void Flags2CustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region MountData
         private int _MountDataLocation => _DATALocation!.Value + 0x80;
         private bool _MountData_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Race.DATADataType.Break0);
-        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new BinaryMemoryReadStream(_data.Slice(_MountDataLocation)), _package) : default;
+        private IMountDataGetter? _MountData => _MountData_IsSet ? MountDataBinaryOverlay.MountDataFactory(new OverlayStream(_data.Slice(_MountDataLocation), _package), _package) : default;
         public IMountDataGetter MountData => _MountData ?? new MountData();
         #endregion
         #region SkeletalModel
@@ -11584,7 +11584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ExtraNAM2
         partial void ExtraNAM2CustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         protected int ExtraNAM2EndingPos;
         #endregion
@@ -11630,12 +11630,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FaceFxPhonemesListingParsing
         partial void FaceFxPhonemesListingParsingCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region FaceFxPhonemesRawParsing
         partial void FaceFxPhonemesRawParsingCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region BaseMovementDefaultWalk
@@ -11673,7 +11673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -11689,11 +11689,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static RaceBinaryOverlay RaceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new RaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -11719,13 +11719,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RaceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -11878,7 +11878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Hairs = BinaryOverlayList<IFormLink<IHairGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -11890,7 +11890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ENAM:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Eyes = BinaryOverlayList<IFormLink<IEyesGetter>>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         partial void CustomPhaseLengthEndPos();
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ClimateDataBinaryOverlay ClimateDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2483,7 +2483,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ClimateDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

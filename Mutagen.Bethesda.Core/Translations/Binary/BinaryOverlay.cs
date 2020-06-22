@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Binary
     public abstract class BinaryOverlay
     {
         public delegate TryGet<int?> RecordTypeFillWrapper(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void FillMajorRecords(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordTypeConverter? recordTypeConverter,
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                MajorRecordHeader majorMeta = _package.MetaData.Constants.MajorRecord(stream.RemainingSpan);
+                MajorRecordHeader majorMeta = stream.GetMajorRecord();
                 var minimumFinalPos = stream.Position + majorMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void FillGroupRecordsForWrapper(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordTypeConverter? recordTypeConverter,
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                GroupHeader groupMeta = _package.MetaData.Constants.Group(stream.RemainingSpan);
+                GroupHeader groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup)
                 {
                     throw new DataMisalignedException();
@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void FillSubrecordTypes(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordTypeConverter? recordTypeConverter,
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubrecordHeader subMeta = _package.MetaData.Constants.Subrecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = stream.GetSubrecord();
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void FillTypelessSubrecordTypes(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordTypeConverter? recordTypeConverter,
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                SubrecordHeader subMeta = _package.MetaData.Constants.Subrecord(stream.RemainingSpan);
+                SubrecordHeader subMeta = stream.GetSubrecord();
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             RecordType trigger,
             RecordHeaderConstants constants,
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             ICollectionGetter<RecordType> triggers,
             RecordHeaderConstants constants,
@@ -257,7 +257,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             ICollectionGetter<RecordType> triggers,
             ICollectionGetter<RecordType> includeTriggers,
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             RecordType trigger,
             ICollectionGetter<RecordType> includeTriggers,
@@ -335,7 +335,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocationsByCount(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             uint count,
             RecordType trigger,
             RecordHeaderConstants constants,
@@ -380,7 +380,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="skipHeader">Whether to skip the header in the return location values</param>
         /// <returns>Array of located positions relative to the stream's position at the start</returns>
         public static int[] ParseRecordLocationsByCount(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             uint count,
             ICollectionGetter<RecordType> trigger,
             RecordHeaderConstants constants,
@@ -428,7 +428,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             ICollectionGetter<RecordType> triggers,
             RecordType includeTrigger,
@@ -467,7 +467,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static int[] ParseRecordLocations(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             RecordType trigger,
             RecordType includeTrigger,
@@ -506,20 +506,20 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public delegate T Factory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package);
 
         public delegate T ConverterFactory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate T StreamFactory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package);
 
         public delegate T StreamTypedFactory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             RecordType recordType,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter);
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             ICollectionGetter<RecordType> trigger,
             StreamTypedFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+                var subMeta = stream.GetSubrecord();
                 var recType = subMeta.RecordType;
                 if (!trigger.Contains(recType)) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             ICollectionGetter<RecordType> trigger,
             ConverterFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             RecordType trigger,
             StreamTypedFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+                var subMeta = stream.GetSubrecord();
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             RecordType trigger,
             SpanRecordFactory<T> factory,
             RecordTypeConverter? recordTypeConverter,
@@ -600,7 +600,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<T>();
             while (!stream.Complete)
             {
-                var subMeta = _package.MetaData.Constants.GetSubrecord(stream);
+                var subMeta = stream.GetSubrecord();
                 var recType = subMeta.RecordType;
                 if (trigger != recType) break;
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public IReadOnlyList<T> ParseRepeatedTypelessSubrecord<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             RecordType trigger,
             ConverterFactory<T> factory,
             RecordTypeConverter? recordTypeConverter)

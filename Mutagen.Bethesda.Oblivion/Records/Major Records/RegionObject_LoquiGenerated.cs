@@ -3231,7 +3231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(0x28, 0x6));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x2E, 0x6).ToArray();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static RegionObjectBinaryOverlay RegionObjectFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3269,7 +3269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RegionObjectFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

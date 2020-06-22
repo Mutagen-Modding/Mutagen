@@ -2071,7 +2071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IReadOnlyList<P2Float>? RegionPoints { get; private set; }
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2087,7 +2087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static RegionAreaBinaryOverlay RegionAreaFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2110,13 +2110,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RegionAreaFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2135,7 +2135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RPLD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return TryGet<int?>.Failure;
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.RegionPoints = BinaryOverlayList<P2Float>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

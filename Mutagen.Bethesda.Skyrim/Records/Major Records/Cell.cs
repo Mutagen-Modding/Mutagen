@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Skyrim
             public int UnknownGroupData => _grupData.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData.Value.Slice(20)) : default;
 
             private int? _landscapeLocation;
-            public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new BinaryMemoryReadStream(_grupData!.Value.Slice(_landscapeLocation!.Value)), _package) : default;
+            public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
 
             public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
 
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             int? _flagsLoc;
 
-            public static int[] ParseRecordLocations(BinaryMemoryReadStream stream, BinaryOverlayFactoryPackage package)
+            public static int[] ParseRecordLocations(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 List<int> ret = new List<int>();
                 var startingPos = stream.Position;
@@ -420,12 +420,12 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public static CellBinaryOverlay CellFactory(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 BinaryOverlayFactoryPackage package,
                 bool insideWorldspace)
             {
                 var origStream = stream;
-                stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+                stream = UtilityTranslation.DecompressStream(stream);
                 var ret = new CellBinaryOverlay(
                     bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                     package: package)
@@ -452,11 +452,11 @@ namespace Mutagen.Bethesda.Skyrim
                 return ret;
             }
 
-            partial void CustomEnd(BinaryMemoryReadStream stream, int finalPos, int _)
+            partial void CustomEnd(OverlayStream stream, int finalPos, int _)
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = this._package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup) return;
                 var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
@@ -471,13 +471,13 @@ namespace Mutagen.Bethesda.Skyrim
                     return;
                 }
                 this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                stream = new BinaryMemoryReadStream(this._grupData.Value);
+                stream = new OverlayStream(this._grupData.Value, stream.MetaData);
                 finalPos = stream.Length;
                 stream.Position += groupMeta.HeaderLength;
                 while (!stream.Complete)
                 {
                     var subGroupLocation = stream.Position;
-                    var subGroupMeta = this._package.MetaData.Constants.ReadGroup(stream);
+                    var subGroupMeta = stream.ReadGroup();
                     if (!subGroupMeta.IsGroup)
                     {
                         throw new ArgumentException();
@@ -491,25 +491,25 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (majorMeta.RecordType.TypeInt)
                         {
                             case 0x52484341: // "ACHR":
-                                return PlacedNpcBinaryOverlay.PlacedNpcFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, package), package);
                             case 0x52464552: // "REFR":
-                                return PlacedObjectBinaryOverlay.PlacedObjectFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, package), package);
                             case 0x57524150: // "PARW":
-                                return PlacedArrowBinaryOverlay.PlacedArrowFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedArrowBinaryOverlay.PlacedArrowFactory(new OverlayStream(span, package), package);
                             case 0x52414250: // "PBAR":
-                                return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedBarrierBinaryOverlay.PlacedBarrierFactory(new OverlayStream(span, package), package);
                             case 0x41454250: // "PBEA":
-                                return PlacedBeamBinaryOverlay.PlacedBeamFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedBeamBinaryOverlay.PlacedBeamFactory(new OverlayStream(span, package), package);
                             case 0x4E4F4350: // "PCON":
-                                return PlacedConeBinaryOverlay.PlacedConeFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedConeBinaryOverlay.PlacedConeFactory(new OverlayStream(span, package), package);
                             case 0x414C4650: // "PFLA":
-                                return PlacedFlameBinaryOverlay.PlacedFlameFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedFlameBinaryOverlay.PlacedFlameFactory(new OverlayStream(span, package), package);
                             case 0x445A4850: // "PHZD":
-                                return PlacedHazardBinaryOverlay.PlacedHazardFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedHazardBinaryOverlay.PlacedHazardFactory(new OverlayStream(span, package), package);
                             case 0x53494D50: // "PMIS":
-                                return PlacedMissileBinaryOverlay.PlacedMissileFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedMissileBinaryOverlay.PlacedMissileFactory(new OverlayStream(span, package), package);
                             case 0x45524750: // "PGRE":
-                                return PlacedTrapBinaryOverlay.PlacedTrapFactory(new BinaryMemoryReadStream(span), package);
+                                return PlacedTrapBinaryOverlay.PlacedTrapFactory(new OverlayStream(span, package), package);
                             default:
                                 throw new NotImplementedException();
                         }
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     _package,
                                     getter: TypicalGetter,
                                     locs: ParseRecordLocations(
-                                        stream: new BinaryMemoryReadStream(contentSpan),
+                                        stream: new OverlayStream(contentSpan, _package),
                                         finalPos: subGroupLocation + subGroupMeta.TotalLength,
                                         triggers: TypicalPlacedTypes,
                                         constants: GameConstants.Skyrim.MajorConstants,
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 var contentSpan = stream.GetMemory(checked((int)subGroupMeta.ContentLength));
                                 while (stream.Position < endPos)
                                 {
-                                    var majorMeta = _package.MetaData.Constants.GetMajorRecord(stream);
+                                    var majorMeta = stream.GetMajorRecord();
                                     var recType = majorMeta.RecordType;
                                     if (TypicalPlacedTypes.Contains(recType))
                                     {
@@ -608,7 +608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _flagsLoc = (stream.Position - offset);
             }

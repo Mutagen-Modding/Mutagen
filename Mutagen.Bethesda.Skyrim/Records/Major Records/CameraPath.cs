@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 
-            partial void ConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void ConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 Conditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public bool ZoomMustHaveCameraShots => _zoomLoc.HasValue && HeaderTranslation.ExtractSubrecordSpan(_data, _zoomLoc.Value, _package.MetaData.Constants)[0] < 128;
 
-            partial void ZoomCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void ZoomCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _zoomLoc = stream.Position - offset;
             }

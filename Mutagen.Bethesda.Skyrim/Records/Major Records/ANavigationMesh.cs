@@ -119,22 +119,22 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected ReadOnlyMemorySlice<byte>? _dataSpan;
 
-            partial void LengthLogicCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void LengthLogicCustomParse(OverlayStream stream, int offset)
             {
-                var xxxxHeader = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var xxxxHeader = stream.ReadSubrecordFrame();
                 if (xxxxHeader.Content.Length != 4)
                 {
                     throw new ArgumentException("Unexpected length");
                 }
                 var len = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(xxxxHeader.Content));
-                _package.MetaData.Constants.ReadSubrecord(stream);
+                stream.ReadSubrecord();
                 _dataSpan = _data.Slice(stream.Position - offset, len);
                 stream.Position += checked((int)len);
             }
 
-            partial void DataLogicCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void DataLogicCustomParse(OverlayStream stream, int offset)
             {
-                var subHeader = _package.MetaData.Constants.ReadSubrecord(stream);
+                var subHeader = stream.ReadSubrecord();
                 var contentLength = subHeader.ContentLength;
                 _dataSpan = _data.Slice(stream.Position - offset, contentLength);
                 stream.Position += contentLength;

@@ -2505,7 +2505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single DirectionalFade => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         public Single FogClipDistance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2521,7 +2521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static CellLightingBinaryOverlay CellLightingFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2544,7 +2544,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return CellLightingFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

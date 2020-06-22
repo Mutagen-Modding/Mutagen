@@ -2875,7 +2875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public ISoulGemDataGetter? Data => _DataLocation.HasValue ? SoulGemDataBinaryOverlay.SoulGemDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public ISoulGemDataGetter? Data => _DataLocation.HasValue ? SoulGemDataBinaryOverlay.SoulGemDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region ContainedSoul
@@ -2887,7 +2887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2903,11 +2903,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static SoulGemBinaryOverlay SoulGemFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new SoulGemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2933,13 +2933,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return SoulGemFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

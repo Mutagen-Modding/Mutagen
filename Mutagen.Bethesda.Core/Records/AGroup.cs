@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
                     slice = new MemorySlice<byte>(buf);
                 }
                 return LoquiBinaryOverlayTranslation<T>.Create(
-                   stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
+                   stream: new OverlayStream(this._data.Slice(pos), _package),
                    package: _package,
                    recordTypeConverter: null);
             }

@@ -2785,18 +2785,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Data
         partial void DataCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset);
         public IWaterDataGetter? Data => GetDataCustom();
         #endregion
         #region RelatedWaters
         private RangeInt32? _RelatedWatersLocation;
-        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new BinaryMemoryReadStream(_data.Slice(_RelatedWatersLocation!.Value.Min)), _package) : default;
+        public IRelatedWatersGetter? RelatedWaters => _RelatedWatersLocation.HasValue ? RelatedWatersBinaryOverlay.RelatedWatersFactory(new OverlayStream(_data.Slice(_RelatedWatersLocation!.Value.Min), _package), _package) : default;
         public bool RelatedWaters_IsSet => _RelatedWatersLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2812,11 +2812,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static WaterBinaryOverlay WaterFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new WaterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2842,13 +2842,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WaterFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

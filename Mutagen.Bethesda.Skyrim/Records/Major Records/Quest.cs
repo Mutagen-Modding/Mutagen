@@ -140,14 +140,14 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<IConditionGetter> DialogConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
             public IReadOnlyList<IConditionGetter> UnusedConditions { get; private set; } = ListExt.Empty<IConditionGetter>();
 
-            partial void DialogConditionsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
+            partial void DialogConditionsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 DialogConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void UnusedConditionsLogicCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
             {
-                var nextHeader = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var nextHeader = stream.ReadSubrecordFrame();
                 if (nextHeader.Header.RecordType != RecordTypes.NEXT
                     || nextHeader.Content.Length != 0)
                 {
@@ -156,9 +156,9 @@ namespace Mutagen.Bethesda.Skyrim
                 UnusedConditions = ConditionBinaryOverlay.ConstructBinayOverlayList(stream, _package);
             }
 
-            partial void NextAliasIDCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void NextAliasIDCustomParse(OverlayStream stream, int offset)
             {
-                _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                stream.ReadSubrecordFrame();
             }
         }
     }

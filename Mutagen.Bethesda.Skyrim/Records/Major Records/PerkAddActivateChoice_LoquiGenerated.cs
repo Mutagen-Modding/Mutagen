@@ -2163,11 +2163,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private RangeInt32? _FlagsLocation;
-        private IPerkScriptFlagGetter? _Flags => _FlagsLocation.HasValue ? PerkScriptFlagBinaryOverlay.PerkScriptFlagFactory(new BinaryMemoryReadStream(_data.Slice(_FlagsLocation!.Value.Min)), _package) : default;
+        private IPerkScriptFlagGetter? _Flags => _FlagsLocation.HasValue ? PerkScriptFlagBinaryOverlay.PerkScriptFlagFactory(new OverlayStream(_data.Slice(_FlagsLocation!.Value.Min), _package), _package) : default;
         public IPerkScriptFlagGetter Flags => _Flags ?? new PerkScriptFlag();
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2183,7 +2183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkAddActivateChoiceBinaryOverlay PerkAddActivateChoiceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2206,13 +2206,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkAddActivateChoiceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

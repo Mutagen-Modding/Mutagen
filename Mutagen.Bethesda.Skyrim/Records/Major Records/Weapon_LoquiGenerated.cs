@@ -5885,12 +5885,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region VirtualMachineAdapter
         private RangeInt32? _VirtualMachineAdapterLocation;
-        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new BinaryMemoryReadStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min)), _package) : default;
+        public IVirtualMachineAdapterGetter? VirtualMachineAdapter => _VirtualMachineAdapterLocation.HasValue ? VirtualMachineAdapterBinaryOverlay.VirtualMachineAdapterFactory(new OverlayStream(_data.Slice(_VirtualMachineAdapterLocation!.Value.Min), _package), _package) : default;
         public bool VirtualMachineAdapter_IsSet => _VirtualMachineAdapterLocation.HasValue;
         #endregion
         #region ObjectBounds
         private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new BinaryMemoryReadStream(_data.Slice(_ObjectBoundsLocation!.Value.Min)), _package) : default;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
         public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
         #endregion
         #region Name
@@ -5991,17 +5991,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region BasicStats
         private RangeInt32? _BasicStatsLocation;
-        public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new BinaryMemoryReadStream(_data.Slice(_BasicStatsLocation!.Value.Min)), _package) : default;
+        public IWeaponBasicStatsGetter? BasicStats => _BasicStatsLocation.HasValue ? WeaponBasicStatsBinaryOverlay.WeaponBasicStatsFactory(new OverlayStream(_data.Slice(_BasicStatsLocation!.Value.Min), _package), _package) : default;
         public bool BasicStats_IsSet => _BasicStatsLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public IWeaponDataGetter? Data => _DataLocation.HasValue ? WeaponDataBinaryOverlay.WeaponDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region Critical
         private RangeInt32? _CriticalLocation;
-        public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new BinaryMemoryReadStream(_data.Slice(_CriticalLocation!.Value.Min)), _package) : default;
+        public ICriticalDataGetter? Critical => _CriticalLocation.HasValue ? CriticalDataBinaryOverlay.CriticalDataFactory(new OverlayStream(_data.Slice(_CriticalLocation!.Value.Min), _package), _package) : default;
         public bool Critical_IsSet => _CriticalLocation.HasValue;
         #endregion
         #region DetectionSoundLevel
@@ -6014,7 +6014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullable<IWeaponGetter> Template => _TemplateLocation.HasValue ? new FormLinkNullable<IWeaponGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TemplateLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWeaponGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -6030,11 +6030,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeaponBinaryOverlay WeaponFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new WeaponBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -6060,13 +6060,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeaponFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

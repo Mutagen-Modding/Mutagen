@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Single GetTimerSettingCustom() => _timerSetting;
 
             partial void AnimationsCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 long finalPos,
                 int offset,
                 RecordType type,
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
                 byte? count = null;
                 for (int i = 0; i < 3; i++)
                 {
-                    var subRecord = _package.MetaData.Constants.GetSubrecordFrame(stream);
+                    var subRecord = stream.GetSubrecordFrame();
                     if (subRecord.Header.RecordType == RecordTypes.IDLC)
                     {
                         // Counter start
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         else
                         {
-                            var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                            var subMeta = stream.ReadSubrecord();
                             var subLen = subMeta.ContentLength;
                             this.Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
                                 mem: stream.RemainingMemory.Slice(0, subLen),

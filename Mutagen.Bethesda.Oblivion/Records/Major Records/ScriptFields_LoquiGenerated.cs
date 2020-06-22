@@ -2654,12 +2654,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region MetadataSummaryOld
         partial void MetadataSummaryOldCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region MetadataSummary
         private RangeInt32? _MetadataSummaryLocation;
-        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummaryLocation.HasValue ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new BinaryMemoryReadStream(_data.Slice(_MetadataSummaryLocation!.Value.Min)), _package) : default;
+        private IScriptMetaSummaryGetter? _MetadataSummary => _MetadataSummaryLocation.HasValue ? ScriptMetaSummaryBinaryOverlay.ScriptMetaSummaryFactory(new OverlayStream(_data.Slice(_MetadataSummaryLocation!.Value.Min), _package), _package) : default;
         public IScriptMetaSummaryGetter MetadataSummary => _MetadataSummary ?? new ScriptMetaSummary();
         #endregion
         #region CompiledScript
@@ -2673,7 +2673,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<ILocalVariableGetter> LocalVariables { get; private set; } = ListExt.Empty<LocalVariableBinaryOverlay>();
         public IReadOnlyList<IAScriptReferenceGetter> References { get; private set; } = ListExt.Empty<AScriptReferenceBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2689,7 +2689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static ScriptFieldsBinaryOverlay ScriptFieldsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2712,13 +2712,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ScriptFieldsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

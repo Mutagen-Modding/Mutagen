@@ -57,19 +57,19 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 return ret;
             }
-            partial void FlagsCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void FlagsCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _FlagsLocation = (ushort)(stream.Position - offset);
             }
 
-            partial void VestigialCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void VestigialCustomParse(OverlayStream stream, int offset)
             {
-                var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                var subMeta = stream.ReadSubrecord();
                 if (subMeta.ContentLength != 1)
                 {
                     throw new ArgumentException($"Unexpected length: {subMeta.ContentLength}");
                 }
-                if (stream.ReadByte() > 0)
+                if (stream.ReadUInt8() > 0)
                 {
                     this._vestigialMarker = true;
                 }

@@ -128,52 +128,52 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class RegionBinaryOverlay : IRegionGetter
         {
             private ReadOnlyMemorySlice<byte>? _ObjectsSpan;
-            public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new BinaryMemoryReadStream(_ObjectsSpan.Value), _package) : default;
+            public IRegionObjectsGetter? Objects => _ObjectsSpan.HasValue ? RegionObjectsBinaryOverlay.RegionObjectsFactory(new OverlayStream(_ObjectsSpan.Value, _package), _package) : default;
 
             private ReadOnlyMemorySlice<byte>? _WeatherSpan;
-            public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new BinaryMemoryReadStream(_WeatherSpan.Value), _package) : default;
+            public IRegionWeatherGetter? Weather => _WeatherSpan.HasValue ? RegionWeatherBinaryOverlay.RegionWeatherFactory(new OverlayStream(_WeatherSpan.Value, _package), _package) : default;
 
             private ReadOnlyMemorySlice<byte>? _MapSpan;
-            public IRegionMapGetter? Map => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new BinaryMemoryReadStream(_MapSpan.Value), _package) : default;
+            public IRegionMapGetter? Map => _MapSpan.HasValue ? RegionMapBinaryOverlay.RegionMapFactory(new OverlayStream(_MapSpan.Value, _package), _package) : default;
 
             private ReadOnlyMemorySlice<byte>? _GrassesSpan;
-            public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new BinaryMemoryReadStream(_GrassesSpan.Value), _package) : default;
+            public IRegionGrassesGetter? Grasses => _GrassesSpan.HasValue ? RegionGrassesBinaryOverlay.RegionGrassesFactory(new OverlayStream(_GrassesSpan.Value, _package), _package) : default;
 
             private ReadOnlyMemorySlice<byte>? _SoundsSpan;
-            public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new BinaryMemoryReadStream(_SoundsSpan.Value), _package) : default;
+            public IRegionSoundsGetter? Sounds => _SoundsSpan.HasValue ? RegionSoundsBinaryOverlay.RegionSoundsFactory(new OverlayStream(_SoundsSpan.Value, _package), _package) : default;
 
             private ReadOnlyMemorySlice<byte>? _LandSpan;
-            public IRegionLandGetter? Land => _LandSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new BinaryMemoryReadStream(_LandSpan.Value), _package) : default;
+            public IRegionLandGetter? Land => _LandSpan.HasValue ? RegionLandBinaryOverlay.RegionLandFactory(new OverlayStream(_LandSpan.Value, _package), _package) : default;
 
             partial void RegionAreaLogicCustomParse(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 int offset)
             {
-                var rdat = this._package.MetaData.Constants.GetSubrecord(stream);
+                var rdat = stream.GetSubrecord();
                 while (rdat.RecordType.Equals(RecordTypes.RDAT))
                 {
                     ParseRegionData(stream, offset);
                     if (stream.Complete) break;
-                    rdat = this._package.MetaData.Constants.GetSubrecord(stream);
+                    rdat = stream.GetSubrecord();
                 }
             }
 
-            private void ParseRegionData(BinaryMemoryReadStream stream, int offset)
+            private void ParseRegionData(OverlayStream stream, int offset)
             {
                 int loc = stream.Position - offset;
-                var rdatFrame = this._package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var rdatFrame = stream.ReadSubrecordFrame();
                 RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
                 var len = rdatFrame.Header.TotalLength;
                 if (!stream.Complete)
                 {
-                    var contentMeta = this._package.MetaData.Constants.GetSubrecord(stream);
+                    var contentMeta = stream.GetSubrecord();
                     var recType = contentMeta.RecordType;
                     if (recType == RecordTypes.ICON)
                     {
                         var totalLen = contentMeta.TotalLength;
                         len += totalLen;
                         // Skip icon subrecord for now
-                        contentMeta = this._package.MetaData.Constants.GetSubrecord(stream, offset: rdatFrame.Header.TotalLength + totalLen);
+                        contentMeta = stream.GetSubrecord(offset: rdatFrame.Header.TotalLength + totalLen);
                     }
                     if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
                     {
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
                         _LandSpan = this._data.Slice(loc, len);
                         break;
                     case RegionData.RegionDataType.Sound:
-                        if (this._package.MetaData.Constants.TryGetSubrecord(stream, out var nextRec)
+                        if (stream.TryGetSubrecord(out var nextRec)
                             && (nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDSA)
                                 || nextRec.RecordType.Equals(RegionBinaryCreateTranslation.RDMO)))
                         {

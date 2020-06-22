@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected int TextEndingPos;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkSelectTextBinaryOverlay PerkSelectTextFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkSelectTextFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

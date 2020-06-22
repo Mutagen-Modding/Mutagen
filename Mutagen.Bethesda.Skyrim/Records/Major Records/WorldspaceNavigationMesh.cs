@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     if (!_dataSpan.HasValue) return null;
                     return WorldspaceNavigationMeshDataBinaryOverlay.WorldspaceNavigationMeshDataFactory(
-                        new BinaryMemoryReadStream(_dataSpan.Value),
+                        new OverlayStream(_dataSpan.Value, _package),
                         _package);
                 }
             }

@@ -14,5 +14,15 @@ namespace Mutagen.Bethesda.Binary
         {
             this.MetaData = metaData;
         }
+
+        public static implicit operator ParsingBundle(BinaryOverlayFactoryPackage package)
+        {
+            return package.MetaData;
+        }
+
+        public static implicit operator GameConstants(BinaryOverlayFactoryPackage package)
+        {
+            return package.MetaData.Constants;
+        }
     }
 }

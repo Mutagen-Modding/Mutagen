@@ -272,17 +272,17 @@ namespace Mutagen.Bethesda.Skyrim
             int? _imageSpaceLoc;
             public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace => _imageSpaceLoc.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _imageSpaceLoc.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
 
-            partial void BoundDataCustomParse(BinaryMemoryReadStream stream, int offset)
+            partial void BoundDataCustomParse(OverlayStream stream, int offset)
             {
                 _boundDataLoc = stream.Position - offset;
-                var header = _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var header = stream.ReadSubrecordFrame();
                 if (header.Content.Length != 4)
                 {
                     throw new ArgumentException($"Unexpected data header length: {header.Content.Length} != 4");
                 }
                 var roomCount = header.Content[0];
                 var flags = header.Content[1];
-                while (_package.MetaData.Constants.TryGetSubrecord(stream, out var subHeader))
+                while (stream.TryGetSubrecord(out var subHeader))
                 {
                     switch (subHeader.RecordTypeInt)
                     {

@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
             public IReadOnlyList<T> Records => _Records!;
 
             partial void CustomFactoryEnd(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 int finalPos,
                 int offset)
             {

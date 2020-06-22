@@ -3265,22 +3265,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IWeatherColorsGetter>? Colors { get; private set; }
         #region FogDistance
         private RangeInt32? _FogDistanceLocation;
-        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new BinaryMemoryReadStream(_data.Slice(_FogDistanceLocation!.Value.Min)), _package) : default;
+        public IFogDistanceGetter? FogDistance => _FogDistanceLocation.HasValue ? FogDistanceBinaryOverlay.FogDistanceFactory(new OverlayStream(_data.Slice(_FogDistanceLocation!.Value.Min), _package), _package) : default;
         public bool FogDistance_IsSet => _FogDistanceLocation.HasValue;
         #endregion
         #region HDRData
         private RangeInt32? _HDRDataLocation;
-        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new BinaryMemoryReadStream(_data.Slice(_HDRDataLocation!.Value.Min)), _package) : default;
+        public IHDRDataGetter? HDRData => _HDRDataLocation.HasValue ? HDRDataBinaryOverlay.HDRDataFactory(new OverlayStream(_data.Slice(_HDRDataLocation!.Value.Min), _package), _package) : default;
         public bool HDRData_IsSet => _HDRDataLocation.HasValue;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
-        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public IWeatherDataGetter? Data => _DataLocation.HasValue ? WeatherDataBinaryOverlay.WeatherDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -3296,11 +3296,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static WeatherBinaryOverlay WeatherFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new WeatherBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -3326,13 +3326,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -3362,7 +3362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.NAM0:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.Colors = BinaryOverlayList<WeatherColorsBinaryOverlay>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),
@@ -3393,7 +3393,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => WeatherSoundBinaryOverlay.WeatherSoundFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
                             finalPos: finalPos,

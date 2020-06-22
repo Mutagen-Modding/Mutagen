@@ -2941,13 +2941,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x0)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x2)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x4)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x6)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0x8)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0xA)), _package, default(RecordTypeConverter));
-        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new BinaryMemoryReadStream(_data.Slice(0xC)), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost0 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x0), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost1 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x2), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost2 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x4), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost3 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x6), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost4 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0x8), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost5 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xA), _package), _package, default(RecordTypeConverter));
+        public ISkillBoostGetter SkillBoost6 => SkillBoostBinaryOverlay.SkillBoostFactory(new OverlayStream(_data.Slice(0xC), _package), _package, default(RecordTypeConverter));
         public Int32 Unused => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xE, 0x4));
         #region Height
         public IGenderedItemGetter<Single> Height
@@ -2975,7 +2975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public Race.Flag Flags => (Race.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x22, 0x2));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2991,7 +2991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static RaceDataBinaryOverlay RaceDataFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3014,7 +3014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return RaceDataFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

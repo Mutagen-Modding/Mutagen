@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             public CompareOperator CompareOperator => ConditionBinaryCreateTranslation.GetCompareOperator(_data.Span[0]);
 
             static ConditionBinaryOverlay CustomRecordTypeTrigger(
-                BinaryMemoryReadStream stream,
+                OverlayStream stream,
                 RecordType recordType,
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter? recordTypeConverter)
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
                 newBytes[4] = 0x18;
                 newBytes[3] = (byte)'A';
                 return ConditionBinaryOverlay.ConditionFactory(
-                    stream: new BinaryMemoryReadStream(newBytes),
+                    stream: new OverlayStream(newBytes, package),
                     package: package,
                     recordTypeConverter: recordTypeConverter);
             }

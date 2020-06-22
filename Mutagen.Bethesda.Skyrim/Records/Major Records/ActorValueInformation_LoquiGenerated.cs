@@ -2780,12 +2780,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Skill
         private RangeInt32? _SkillLocation;
-        public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(new BinaryMemoryReadStream(_data.Slice(_SkillLocation!.Value.Min)), _package) : default;
+        public IActorValueSkillGetter? Skill => _SkillLocation.HasValue ? ActorValueSkillBinaryOverlay.ActorValueSkillFactory(new OverlayStream(_data.Slice(_SkillLocation!.Value.Min), _package), _package) : default;
         public bool Skill_IsSet => _SkillLocation.HasValue;
         #endregion
         public IReadOnlyList<IActorValuePerkNodeGetter> PerkTree { get; private set; } = ListExt.Empty<ActorValuePerkNodeBinaryOverlay>();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2801,11 +2801,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ActorValueInformationBinaryOverlay ActorValueInformationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new ActorValueInformationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2831,13 +2831,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ActorValueInformationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

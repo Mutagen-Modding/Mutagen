@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Single Scale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2526,7 +2526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static WeatherAmbientColorsBinaryOverlay WeatherAmbientColorsFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return WeatherAmbientColorsFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

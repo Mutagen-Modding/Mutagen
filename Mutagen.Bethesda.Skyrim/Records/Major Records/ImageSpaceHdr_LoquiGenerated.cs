@@ -2508,7 +2508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single SkyScale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
         public Single EyeAdaptStrength => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2524,7 +2524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ImageSpaceHdrBinaryOverlay ImageSpaceHdrFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2547,7 +2547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ImageSpaceHdrFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

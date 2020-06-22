@@ -5594,7 +5594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region IDParse
         partial void IDParseCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         #region Name
@@ -5631,7 +5631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; private set; }
         #region Conditions
         partial void ConditionsCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             long finalPos,
             int offset,
             RecordType type,
@@ -5674,11 +5674,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region End
         partial void EndCustomParse(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int offset);
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -5694,7 +5694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static QuestAliasBinaryOverlay QuestAliasFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -5717,13 +5717,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return QuestAliasFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -5851,7 +5851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.COCT,
                         finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new BinaryMemoryReadStream(s), p, recConv),
+                        getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
                     return TryGet<int?>.Succeed((int)QuestAlias_FieldIndex.Items);
                 }

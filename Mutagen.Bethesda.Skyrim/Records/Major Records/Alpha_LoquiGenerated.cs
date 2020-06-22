@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte Cutoff => _data.Span[0x0];
         public Byte Base => _data.Span[0x1];
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static AlphaBinaryOverlay AlphaFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return AlphaFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

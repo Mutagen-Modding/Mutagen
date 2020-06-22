@@ -2713,16 +2713,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<UInt32>? SpeedTreeSeeds { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
-        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new BinaryMemoryReadStream(_data.Slice(_DataLocation!.Value.Min)), _package) : default;
+        public ITreeDataGetter? Data => _DataLocation.HasValue ? TreeDataBinaryOverlay.TreeDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
         public bool Data_IsSet => _DataLocation.HasValue;
         #endregion
         #region BillboardDimensions
         private RangeInt32? _BillboardDimensionsLocation;
-        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new BinaryMemoryReadStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min)), _package) : default;
+        public IDimensionsGetter? BillboardDimensions => _BillboardDimensionsLocation.HasValue ? DimensionsBinaryOverlay.DimensionsFactory(new OverlayStream(_data.Slice(_BillboardDimensionsLocation!.Value.Min), _package), _package) : default;
         public bool BillboardDimensions_IsSet => _BillboardDimensionsLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2738,11 +2738,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static TreeBinaryOverlay TreeFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new TreeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2768,13 +2768,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return TreeFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
@@ -2799,7 +2799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    var subMeta = _package.MetaData.Constants.ReadSubrecord(stream);
+                    var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.SpeedTreeSeeds = BinaryOverlayList<UInt32>.FactoryByStartIndex(
                         mem: stream.RemainingMemory.Slice(0, subLen),

@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public ReadOnlyMemorySlice<Byte> Data => _data.Span.Slice(0x0, 0x20).ToArray();
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static MorphBinaryOverlay MorphFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1815,7 +1815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return MorphFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

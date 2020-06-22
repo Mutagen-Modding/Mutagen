@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected int TextEndingPos;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1888,7 +1888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static PerkSetTextBinaryOverlay PerkSetTextFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1913,7 +1913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return PerkSetTextFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

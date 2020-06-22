@@ -74,12 +74,12 @@ namespace Mutagen.Bethesda.Skyrim
                     SpanExt.GetFloat(_data.Slice(_maxLoc.Value + 10)) / 4096f)
                 : default;
 
-            partial void MinCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void MinCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 this._minLoc = stream.Position - offset;
             }
 
-            partial void MaxCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void MaxCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 this._maxLoc = stream.Position - offset;
             }

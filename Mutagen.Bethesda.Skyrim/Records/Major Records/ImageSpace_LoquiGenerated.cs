@@ -2630,26 +2630,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Hdr
         private RangeInt32? _HdrLocation;
-        public IImageSpaceHdrGetter? Hdr => _HdrLocation.HasValue ? ImageSpaceHdrBinaryOverlay.ImageSpaceHdrFactory(new BinaryMemoryReadStream(_data.Slice(_HdrLocation!.Value.Min)), _package) : default;
+        public IImageSpaceHdrGetter? Hdr => _HdrLocation.HasValue ? ImageSpaceHdrBinaryOverlay.ImageSpaceHdrFactory(new OverlayStream(_data.Slice(_HdrLocation!.Value.Min), _package), _package) : default;
         public bool Hdr_IsSet => _HdrLocation.HasValue;
         #endregion
         #region Cinematic
         private RangeInt32? _CinematicLocation;
-        public IImageSpaceCinematicGetter? Cinematic => _CinematicLocation.HasValue ? ImageSpaceCinematicBinaryOverlay.ImageSpaceCinematicFactory(new BinaryMemoryReadStream(_data.Slice(_CinematicLocation!.Value.Min)), _package) : default;
+        public IImageSpaceCinematicGetter? Cinematic => _CinematicLocation.HasValue ? ImageSpaceCinematicBinaryOverlay.ImageSpaceCinematicFactory(new OverlayStream(_data.Slice(_CinematicLocation!.Value.Min), _package), _package) : default;
         public bool Cinematic_IsSet => _CinematicLocation.HasValue;
         #endregion
         #region Tint
         private RangeInt32? _TintLocation;
-        public IImageSpaceTintGetter? Tint => _TintLocation.HasValue ? ImageSpaceTintBinaryOverlay.ImageSpaceTintFactory(new BinaryMemoryReadStream(_data.Slice(_TintLocation!.Value.Min)), _package) : default;
+        public IImageSpaceTintGetter? Tint => _TintLocation.HasValue ? ImageSpaceTintBinaryOverlay.ImageSpaceTintFactory(new OverlayStream(_data.Slice(_TintLocation!.Value.Min), _package), _package) : default;
         public bool Tint_IsSet => _TintLocation.HasValue;
         #endregion
         #region DepthOfField
         private RangeInt32? _DepthOfFieldLocation;
-        public IImageSpaceDepthOfFieldGetter? DepthOfField => _DepthOfFieldLocation.HasValue ? ImageSpaceDepthOfFieldBinaryOverlay.ImageSpaceDepthOfFieldFactory(new BinaryMemoryReadStream(_data.Slice(_DepthOfFieldLocation!.Value.Min)), _package) : default;
+        public IImageSpaceDepthOfFieldGetter? DepthOfField => _DepthOfFieldLocation.HasValue ? ImageSpaceDepthOfFieldBinaryOverlay.ImageSpaceDepthOfFieldFactory(new OverlayStream(_data.Slice(_DepthOfFieldLocation!.Value.Min), _package), _package) : default;
         public bool DepthOfField_IsSet => _DepthOfFieldLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2665,11 +2665,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ImageSpaceBinaryOverlay ImageSpaceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream, package.MetaData.Constants);
+            stream = UtilityTranslation.DecompressStream(stream);
             var ret = new ImageSpaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2695,13 +2695,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ImageSpaceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public override TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,

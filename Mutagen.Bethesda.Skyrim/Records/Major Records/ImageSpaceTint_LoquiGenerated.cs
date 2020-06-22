@@ -1880,7 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Single Amount => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
         public Color Color => _data.Slice(0x4, 0xC).ReadColor(ColorBinaryType.NoAlphaFloat);
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ImageSpaceTintBinaryOverlay ImageSpaceTintFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return ImageSpaceTintFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

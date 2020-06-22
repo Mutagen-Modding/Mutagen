@@ -1986,7 +1986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0x10, 0xC));
         partial void CustomFactoryEnd(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset);
 
@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static TeleportDestinationBinaryOverlay TeleportDestinationFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return TeleportDestinationFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }

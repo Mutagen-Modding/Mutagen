@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             private WaterData? _waterData;
 
-            partial void DataCustomParse(BinaryMemoryReadStream stream, long finalPos, int offset)
+            partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 this._waterData = WaterBinaryCreateTranslation.CreateCustom(new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)));
             }
