@@ -4887,7 +4887,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -4903,7 +4902,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p, recConv) => RaceRelationBinaryOverlay.RaceRelationFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));

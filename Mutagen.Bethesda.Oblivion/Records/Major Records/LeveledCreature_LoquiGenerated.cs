@@ -2805,7 +2805,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p, recConv) => LeveledEntryBinaryOverlay<IANpcSpawnGetter>.LeveledEntryFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));

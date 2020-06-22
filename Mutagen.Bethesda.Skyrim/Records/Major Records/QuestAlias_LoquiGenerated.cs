@@ -5849,7 +5849,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countLength: 4,
                         subrecordType: RecordTypes.CNTO,
                         countType: RecordTypes.COCT,
-                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
@@ -5888,7 +5887,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -5903,7 +5901,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IFactionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -5918,7 +5915,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

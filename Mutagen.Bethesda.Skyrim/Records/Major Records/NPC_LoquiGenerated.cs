@@ -8760,7 +8760,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p, recConv) => RankPlacementBinaryOverlay.RankPlacementFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
@@ -8795,7 +8794,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        finalPos: finalPos,
                         subrecordType: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Npc_FieldIndex.ActorEffect);
@@ -8864,7 +8862,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x8,
                         countLength: 4,
                         countType: RecordTypes.PRKZ,
-                        finalPos: finalPos,
                         subrecordType: RecordTypes.PRKR,
                         getter: (s, p) => PerkPlacementBinaryOverlay.PerkPlacementFactory(s, p),
                         skipHeader: false);
@@ -8879,7 +8876,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countLength: 4,
                         subrecordType: RecordTypes.CNTO,
                         countType: RecordTypes.COCT,
-                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
@@ -8898,7 +8894,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -8953,7 +8948,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

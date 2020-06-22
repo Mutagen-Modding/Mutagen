@@ -297,7 +297,6 @@ namespace Mutagen.Bethesda.Skyrim
                     getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),
                     locs: ParseRecordLocations(
                         stream: new OverlayStream(contentSpan, _package),
-                        finalPos: contentSpan.Length,
                         trigger: DialogResponses_Registration.TriggeringRecordType,
                         constants: GameConstants.Skyrim.MajorConstants,
                         skipHeader: false));

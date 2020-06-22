@@ -2929,7 +2929,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

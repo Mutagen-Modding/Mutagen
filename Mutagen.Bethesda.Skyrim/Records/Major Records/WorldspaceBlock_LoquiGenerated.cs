@@ -2616,7 +2616,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p, recConv) => WorldspaceSubBlockBinaryOverlay.WorldspaceSubBlockFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.MetaData.Constants.GroupConstants,
                             skipHeader: false));

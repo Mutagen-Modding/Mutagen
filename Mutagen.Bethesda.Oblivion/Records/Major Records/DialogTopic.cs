@@ -122,7 +122,6 @@ namespace Mutagen.Bethesda.Oblivion
                     getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),
                     locs: ParseRecordLocations(
                         stream: new OverlayStream(contentSpan, _package),
-                        finalPos: contentSpan.Length,
                         trigger: DialogItem_Registration.TriggeringRecordType,
                         constants: GameConstants.Oblivion.MajorConstants,
                         skipHeader: false));

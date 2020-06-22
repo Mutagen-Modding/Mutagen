@@ -2919,7 +2919,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         getter: (s, p) => new FormLink<IQuestGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

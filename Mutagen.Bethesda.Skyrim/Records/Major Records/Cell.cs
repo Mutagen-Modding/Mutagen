@@ -528,7 +528,6 @@ namespace Mutagen.Bethesda.Skyrim
                                     getter: TypicalGetter,
                                     locs: ParseRecordLocations(
                                         stream: new OverlayStream(contentSpan, _package),
-                                        finalPos: subGroupLocation + subGroupMeta.TotalLength,
                                         triggers: TypicalPlacedTypes,
                                         constants: GameConstants.Skyrim.MajorConstants,
                                         skipHeader: false));
@@ -563,7 +562,6 @@ namespace Mutagen.Bethesda.Skyrim
                                                         getter: (s, p) => WorldspaceNavigationMeshBinaryOverlay.WorldspaceNavigationMeshFactory(s, p),
                                                         locs: ParseRecordLocations(
                                                             stream: stream,
-                                                            finalPos: finalPos,
                                                             constants: _package.MetaData.Constants.MajorConstants,
                                                             trigger: recType,
                                                             skipHeader: false));
@@ -576,7 +574,6 @@ namespace Mutagen.Bethesda.Skyrim
                                                         getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
                                                         locs: ParseRecordLocations(
                                                             stream: stream,
-                                                            finalPos: finalPos,
                                                             constants: _package.MetaData.Constants.MajorConstants,
                                                             trigger: recType,
                                                             skipHeader: false));

@@ -2872,7 +2872,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countLength: 4,
                         subrecordType: RecordTypes.CNTO,
                         countType: RecordTypes.COCT,
-                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);

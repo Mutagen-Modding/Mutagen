@@ -746,7 +746,6 @@ namespace Mutagen.Bethesda.Generation
                                         $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
-                                        subArgs.AddPassArg("finalPos");
                                         subArgs.Add("trigger: type");
                                         switch (loqui.TargetObjectGeneration.GetObjectType())
                                         {
@@ -783,7 +782,6 @@ namespace Mutagen.Bethesda.Generation
                                     $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.AddPassArg("finalPos");
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
@@ -806,7 +804,6 @@ namespace Mutagen.Bethesda.Generation
                                     $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.AddPassArg("finalPos");
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: false");
@@ -897,7 +894,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                             if (subData.HasTrigger)
                             {
-                                args.AddPassArg($"finalPos");
                                 args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             }
                             else
@@ -955,7 +951,6 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"countLength: {counterLen}");
                             args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
-                            args.AddPassArg("finalPos");
                             args.Add($"recordTypeConverter: {converterAccessor}");
                             args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                             args.Add("skipHeader: false");

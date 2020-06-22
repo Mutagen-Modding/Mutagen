@@ -8627,7 +8627,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,

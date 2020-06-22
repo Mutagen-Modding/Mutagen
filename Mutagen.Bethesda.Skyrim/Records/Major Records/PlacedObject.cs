@@ -309,7 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
                                 (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                                 locs: ParseRecordLocations(
                                     stream: stream,
-                                    finalPos: stream.Length,
                                     constants: _package.MetaData.Constants.SubConstants,
                                     trigger: subHeader.RecordType,
                                     skipHeader: true));

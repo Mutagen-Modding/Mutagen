@@ -145,7 +145,6 @@ namespace Mutagen.Bethesda.Skyrim
                                 getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                                 locs: ParseRecordLocations(
                                     stream: stream,
-                                    finalPos: finalPos,
                                     constants: _package.MetaData.Constants.SubConstants,
                                     trigger: type,
                                     skipHeader: true));

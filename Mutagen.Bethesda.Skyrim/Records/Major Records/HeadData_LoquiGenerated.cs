@@ -3755,7 +3755,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -3771,7 +3770,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IColorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,
@@ -3787,7 +3785,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

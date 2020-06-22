@@ -11754,7 +11754,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
-                        finalPos: finalPos,
                         subrecordType: RecordTypes.SPLO,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return TryGet<int?>.Succeed((int)Race_FieldIndex.ActorEffect);
@@ -11812,7 +11811,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: false,
@@ -11973,7 +11971,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             constants: _package.MetaData.Constants.SubConstants,
                             trigger: type,
                             skipHeader: true,

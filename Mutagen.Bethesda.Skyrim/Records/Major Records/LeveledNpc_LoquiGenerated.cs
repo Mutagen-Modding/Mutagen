@@ -2896,7 +2896,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countLength: 1,
                         subrecordType: LeveledNpcEntry_Registration.TriggeringRecordTypes,
                         countType: RecordTypes.LLCT,
-                        finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledNpcEntryBinaryOverlay.LeveledNpcEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);

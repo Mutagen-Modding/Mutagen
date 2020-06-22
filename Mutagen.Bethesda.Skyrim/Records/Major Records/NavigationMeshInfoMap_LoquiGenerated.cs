@@ -2639,7 +2639,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         getter: (s, p, recConv) => NavigationMapInfoBinaryOverlay.NavigationMapInfoFactory(new OverlayStream(s, p), p, recConv),
                         locs: ParseRecordLocations(
                             stream: stream,
-                            finalPos: finalPos,
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));

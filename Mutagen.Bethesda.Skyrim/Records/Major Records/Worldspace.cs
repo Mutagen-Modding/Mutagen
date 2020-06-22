@@ -245,7 +245,6 @@ namespace Mutagen.Bethesda.Skyrim
                                 getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),
                                 locs: ParseRecordLocations(
                                     stream: new OverlayStream(stream.RemainingMemory, _package),
-                                    finalPos: stream.Length,
                                     trigger: WorldspaceBlock_Registration.TriggeringRecordType,
                                     constants: GameConstants.Oblivion.GroupConstants,
                                     skipHeader: false));

@@ -118,7 +118,6 @@ namespace Mutagen.Bethesda.Binary
             int countLength,
             ICollectionGetter<RecordType> subrecordType,
             RecordType countType,
-            int finalPos,
             RecordTypeConverter? recordTypeConverter,
             BinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
@@ -156,7 +155,6 @@ namespace Mutagen.Bethesda.Binary
                     getter: getter,
                     locs: BinaryOverlay.ParseRecordLocations(
                         stream: stream,
-                        finalPos: finalPos,
                         constants: package.MetaData.Constants.SubConstants,
                         triggers: subrecordType,
                         skipHeader: skipHeader,
@@ -170,7 +168,6 @@ namespace Mutagen.Bethesda.Binary
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            int finalPos,
             RecordTypeConverter? recordTypeConverter,
             BinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
@@ -209,7 +206,6 @@ namespace Mutagen.Bethesda.Binary
                     getter: getter,
                     locs: BinaryOverlay.ParseRecordLocations(
                         stream: stream,
-                        finalPos: finalPos,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
                         skipHeader: skipHeader,
@@ -224,7 +220,6 @@ namespace Mutagen.Bethesda.Binary
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            int finalPos,
             BinaryOverlay.SpanFactory<T> getter,
             bool skipHeader = true)
         {
@@ -260,7 +255,6 @@ namespace Mutagen.Bethesda.Binary
                     getter: getter,
                     locs: BinaryOverlay.ParseRecordLocations(
                         stream: stream,
-                        finalPos: finalPos,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
                         skipHeader: true));

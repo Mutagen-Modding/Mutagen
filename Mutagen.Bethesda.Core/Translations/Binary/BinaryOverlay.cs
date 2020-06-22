@@ -118,24 +118,20 @@ namespace Mutagen.Bethesda.Binary
             int? lastParsed = null;
             while (!stream.Complete && stream.Position < finalPos)
             {
-                GroupHeader groupMeta = stream.GetGroup();
-                if (!groupMeta.IsGroup)
+                if (!stream.TryGetGroup(out var groupMeta))
                 {
                     throw new DataMisalignedException();
                 }
-                var minimumFinalPos = stream.Position + groupMeta.TotalLength;
+                var subStream = new OverlayStream(stream.RemainingMemory.Slice(0, finalPos - stream.Position), stream.MetaData);
                 var parsed = fill(
-                    stream: stream,
-                    finalPos: finalPos,
-                    offset: offset,
+                    stream: subStream,
+                    finalPos: subStream.Length,
+                    offset: 0, // unused 
                     type: groupMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
+                stream.Position += subStream.Position;
                 if (parsed.Failed) break;
-                if (minimumFinalPos > stream.Position)
-                {
-                    stream.Position = checked((int)minimumFinalPos);
-                }
                 lastParsed = parsed.Value;
             }
         }
@@ -154,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
                 var minimumFinalPos = stream.Position + subMeta.TotalLength;
                 var parsed = fill(
                     stream: stream,
-                    finalPos: finalPos,
+                    finalPos: minimumFinalPos,
                     offset: offset,
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
@@ -198,7 +194,6 @@ namespace Mutagen.Bethesda.Binary
 
         public static int[] ParseRecordLocations(
             OverlayStream stream,
-            long finalPos,
             RecordType trigger,
             RecordHeaderConstants constants,
             bool skipHeader,
@@ -206,7 +201,7 @@ namespace Mutagen.Bethesda.Binary
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
-            while (!stream.Complete && stream.Position < finalPos)
+            while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
@@ -228,7 +223,6 @@ namespace Mutagen.Bethesda.Binary
 
         public static int[] ParseRecordLocations(
             OverlayStream stream,
-            long finalPos,
             ICollectionGetter<RecordType> triggers,
             RecordHeaderConstants constants,
             bool skipHeader,
@@ -236,7 +230,7 @@ namespace Mutagen.Bethesda.Binary
         {
             List<int> ret = new List<int>();
             var startingPos = stream.Position;
-            while (!stream.Complete && stream.Position < finalPos)
+            while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = recordTypeConverter.ConvertToStandard(varMeta.RecordType);
