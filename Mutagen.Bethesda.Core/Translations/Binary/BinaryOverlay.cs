@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 stream.Position = min;
                 var size = checked((int)(max - min));
-                if (stream is BinaryMemoryReadStream memReadStream)
+                if (stream.IsPersistantBacking)
                 {
                     return stream.ReadMemory(size);
                 }

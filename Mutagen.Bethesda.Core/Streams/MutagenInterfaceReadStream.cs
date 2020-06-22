@@ -50,6 +50,8 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public ReadOnlyMemorySlice<byte> RemainingMemory => _readStream.RemainingMemory;
 
+        public bool IsPersistantBacking => _readStream.IsPersistantBacking;
+
         /// <inheritdoc />
         public void Dispose() => _readStream.Dispose();
 

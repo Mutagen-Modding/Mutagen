@@ -74,6 +74,8 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public ParsingBundle MetaData => this.Reader.MetaData;
 
+        public bool IsPersistantBacking => Reader.IsPersistantBacking;
+
         /// <summary>
         /// Constructs new frame around current reader position until its completion
         /// </summary>
