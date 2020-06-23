@@ -37,7 +37,19 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration targetGen, TypeGeneration typeGen, Accessor readerAccessor, AsyncMode asyncMode, Accessor retAccessor, Accessor outItemAccessor, Accessor errorMaskAccessor, Accessor translationAccessor, Accessor converterAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration targetGen, 
+            TypeGeneration typeGen,
+            Accessor readerAccessor,
+            AsyncMode asyncMode,
+            Accessor retAccessor,
+            Accessor outItemAccessor,
+            Accessor errorMaskAccessor, 
+            Accessor translationAccessor,
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }

@@ -64,6 +64,11 @@ namespace Mutagen.Bethesda.Binary
                     {
                         w.Write(c, ColorBinaryType.NoAlphaFloat);
                     };
+                case ColorBinaryType.AlphaFloat:
+                    return (w, c) =>
+                    {
+                        w.Write(c, ColorBinaryType.AlphaFloat);
+                    };
                 default:
                     throw new NotImplementedException();
             }

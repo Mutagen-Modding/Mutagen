@@ -13,9 +13,11 @@ namespace Mutagen.Bethesda.Generation
 {
     class Program
     {
+        public static string[] Args;
+
         static void AttachDebugInspector()
         {
-            string testString = "f ((item.Model != null)";
+            string testString = "return Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Pa";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -27,13 +29,20 @@ namespace Mutagen.Bethesda.Generation
 
         static void Main(string[] args)
         {
+            Args = args;
 #if DEBUG
             AttachDebugInspector();
 #endif
             GenerateRecords();
             GenerateTester();
         }
-         
+ 
+        static bool ShouldRun(string key)
+        {
+            if (Args.Length == 0) return true;
+            return Args.Contains(key, StringComparer.OrdinalIgnoreCase);
+        }
+
         static void GenerateRecords()
         { 
             LoquiGenerator gen = new LoquiGenerator(typical: false)
@@ -52,6 +61,7 @@ namespace Mutagen.Bethesda.Generation
             xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
             xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
+            xmlGen.AddTypeAssociation<RecordTypeType>(new PrimitiveXmlTranslationGeneration<RecordType>());
             xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
             xmlGen.AddTypeAssociation<Loqui.Generation.StringType>(new StringXmlTranslationGeneration(), overrideExisting: true);
@@ -64,13 +74,13 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");
             gen.AddTypeAssociation<ModKeyType>("ModKey");
+            gen.AddTypeAssociation<RecordTypeType>("RecordType");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
             gen.AddTypeAssociation<CustomLogic>("CustomLogic");
             gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
-            gen.AddTypeAssociation<SpecialParseType>("SpecialParse");
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
@@ -79,7 +89,9 @@ namespace Mutagen.Bethesda.Generation
             gen.ReplaceTypeAssociation<Loqui.Generation.FloatType, Mutagen.Bethesda.Generation.FloatType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.PercentType, Mutagen.Bethesda.Generation.PercentType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.DictType, Mutagen.Bethesda.Generation.DictType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.BoolType, Mutagen.Bethesda.Generation.BoolType>();
 
+            // Always run core
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
@@ -91,33 +103,41 @@ namespace Mutagen.Bethesda.Generation
             bethesdaProto.AddProjectToModify(
                 new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
 
-            var oblivProto = gen.AddProtocol(
+            if (ShouldRun("Oblivion"))
+            {
+                var oblivProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Oblivion"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Oblivion"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Oblivion/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 });
-            oblivProto.AddProjectToModify(
-                new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
+                oblivProto.AddProjectToModify(
+                    new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Oblivion.csproj")));
+            }
 
-            var skyrimProto = gen.AddProtocol(
+
+            if (ShouldRun("Skyrim"))
+            {
+                var skyrimProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Skyrim"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Skyrim"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Skyrim/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Skyrim",
                 });
-            skyrimProto.AddProjectToModify(
-                new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
+                skyrimProto.AddProjectToModify(
+                    new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
+            }
 
             gen.Generate().Wait();
         }
 
         static void GenerateTester()
         {
+            if (!ShouldRun("Test")) return;
             LoquiGenerator gen = new LoquiGenerator()
             {
                 NotifyingDefault = NotifyingType.None,

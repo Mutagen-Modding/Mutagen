@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EncounterZone" objType="Record" recordType="ECZN" baseClass="SkyrimMajorRecord" GUID="d3b68196-d8aa-4fe4-b9c0-10a7b96c98ea" ID="289">
+    <Fields>
+      <Data>
+        <Fields>
+          <FormLink name="Owner" objType="Record" >
+            <Interface>IOwner</Interface>
+          </FormLink>
+          <FormLink name="Location" refName="Location" />
+          <Break />
+          <Int8 name="Rank" />
+          <Int8 name="MinLevel" />
+          <Enum name="Flags" enumName="EncounterZone.Flag" byteLength="1" />
+          <Int8 name="MaxLevel" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ArmorAddon" recordType="ARMA" baseClass="SkyrimMajorRecord" objType="Record" GUID="4b6db51f-a0b8-4378-8e8b-8103dfdcd353" ID="153">
+    <Fields>
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <FormLink name="Race" recordType="RNAM" refName="Race" />
+      <Data recordType="DNAM" >
+        <Fields>
+          <Gendered name="Priority" >
+            <Fields>
+              <UInt8 />
+            </Fields>
+          </Gendered>
+          <Gendered name="WeightSliderEnabled" binary="Custom" byteLength="2" >
+            <Fields>
+              <Bool />
+            </Fields>
+          </Gendered>
+          <UInt16 name="Unknown" />
+          <UInt8 name="DetectionSoundValue" />
+          <UInt8 name="Unknown2" />
+          <Float name="WeaponAdjust" />
+        </Fields>
+      </Data>
+      <Gendered name="WorldModel">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODT" To="MO2T" />
+          <Mapping From="MODS" To="MO2S" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODT" To="MO3T" />
+          <Mapping From="MODS" To="MO3S" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <Gendered name="FirstPersonModel">
+        <MaleTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODT" To="MO4T" />
+          <Mapping From="MODS" To="MO4S" />
+        </MaleTypeOverrides>
+        <FemaleTypeOverrides>
+          <Mapping From="MODL" To="MOD5" />
+          <Mapping From="MODT" To="MO5T" />
+          <Mapping From="MODS" To="MO5S" />
+        </FemaleTypeOverrides>
+        <Fields>
+          <RefDirect refName="Model" />
+        </Fields>
+      </Gendered>
+      <Gendered name="SkinTexture" maleMarker="NAM0" femaleMarker="NAM1" >
+        <Fields>
+          <FormLink refName="TextureSet" />
+        </Fields>
+      </Gendered>
+      <Gendered name="TextureSwapList" maleMarker="NAM2" femaleMarker="NAM3" >
+        <Fields>
+          <FormLink refName="FormList" />
+        </Fields>
+      </Gendered>
+      <List name="AdditionalRaces" >
+        <FormLink recordType="MODL" refName="Race" />
+      </List>
+      <FormLink name="FootstepSound" refName="FootstepSet" recordType="SNDD" />
+      <FormLink name="ArtObject" refName="ArtObject" recordType="ONAM" />
+    </Fields>
+  </Object>
+</Loqui>

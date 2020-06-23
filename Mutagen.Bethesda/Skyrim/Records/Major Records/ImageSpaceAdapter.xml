@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="ImageSpaceAdapter" objType="Record" recordType="IMAD" baseClass="SkyrimMajorRecord" GUID="b65ec92e-e1e5-4524-91a3-9dc25d0cafed" ID="113">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

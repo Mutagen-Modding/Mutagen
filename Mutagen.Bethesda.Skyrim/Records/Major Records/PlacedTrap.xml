@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="APlacedTrap" baseClass="SkyrimMajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="29f40f03-4046-4b2d-b061-b0c5c48d253b" ID="294">
+    <Interface>IPlaced</Interface>
+    <Interface>IPlacedThing</Interface>
+    <Interface>ILinkedReference</Interface>
+    <Interface>IPositionRotation</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <CustomLogic name="TrapForm" byteLength="4" recordType="NAME" />
+      <FormLink name="EncounterZone" refName="EncounterZone" recordType="XEZN" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <Float name="HeadTrackingWeight" recordType="XHTW" />
+      <Float name="FavorCost" recordType="XFVC" />
+      <RefList name="Reflections" refName="WaterReflection" />
+      <RefList name="LinkedReferences" refName="LinkedReferences" />
+      <RefDirect name="ActivateParents" refName="ActivateParents" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="Emittance" recordType="XEMI">
+        <Interface>IEmittance</Interface>
+      </FormLink>
+      <FormLink name="MultiBoundReference" refName="PlacedObject" recordType="XMBR" />
+      <ByteArray name="IgnoredBySandbox" recordType="XIS2" />
+      <List name="LocationRefTypes" recordType="XLRT">
+        <FormLink refName="LocationReferenceType" />
+      </List>
+      <FormLink name="LocationReference" recordType="XLRL">
+        <Interface>ILocationRecord</Interface>
+      </FormLink>
+      <List name="DistantLodData" recordType="XLOD">
+        <Float />
+      </List>
+      <Float name="Scale" recordType="XSCL" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="PlacedArrow" recordType="PARW" baseClass="APlacedTrap" objType="Record" GUID="0262d5fe-f5c8-4fcb-97ed-f717b2f6eb23" ID="327">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedBeam" recordType="PBEA" baseClass="APlacedTrap" objType="Record" GUID="4c6ab90f-1298-4a29-b319-02ae02b8aa9e" ID="328">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedFlame" recordType="PFLA" baseClass="APlacedTrap" objType="Record" GUID="6e83f0da-1196-42e8-912d-391ffc9f29d4" ID="329">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedCone" recordType="PCON" baseClass="APlacedTrap" objType="Record" GUID="d47fa3a7-a572-4e76-a7c7-3553dbceebc4" ID="330">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedBarrier" recordType="PBAR" baseClass="APlacedTrap" objType="Record" GUID="c6cf5a32-3f69-4e44-bb80-952421c5da98" ID="331">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedTrap" recordType="PGRE" baseClass="APlacedTrap" objType="Record" GUID="749c1994-8e26-46a8-89ea-d8280923f181" ID="332">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedHazard" recordType="PHZD" baseClass="APlacedTrap" objType="Record" GUID="9860c96e-43b5-4c99-ab73-ab397da96919" ID="333">
+    <Fields>
+      <FormLink name="Hazard" refName="Hazard" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PlacedMissile" recordType="PMIS" baseClass="APlacedTrap" objType="Record" GUID="4f87f015-99ec-480e-8ea4-d616708b989e" ID="334">
+    <Fields>
+      <FormLink name="Projectile" refName="Projectile" binary="NoGeneration" />
+    </Fields>
+  </Object>
+</Loqui>

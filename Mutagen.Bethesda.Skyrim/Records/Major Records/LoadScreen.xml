@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LoadScreen" objType="Record" recordType="LSCR" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="8703704e-090f-4c39-a94f-343b5e1efe7d" ID="399">
+    <Interface>IHasIcons</Interface>
+    <Fields>
+      <RefDirect name="Icons" refName="Icons" />
+      <String name="Description" recordType="DESC" translated="DL" hasBeenSet="False" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <FormLink name="LoadingScreenNif" recordType="NNAM" refName="Static" hasBeenSet="False" />
+      <Float name="InitialScale" recordType="SNAM" />
+      <P3Int16 name="InitialRotation" recordType="RNAM" />
+      <RefDirect name="RotationOffsetConstraints" refName="Int16MinMax" recordType="ONAM" />
+      <P3Float name="InitialTranslationOffset" recordType="XNAM" />
+      <String name="CameraPath" recordType="MOD2" />
+    </Fields>
+  </Object>
+  <Object name="Int16MinMax" objType="Subrecord" GUID="9995601d-590f-4c49-ab44-b7adcff80f3d" ID="400">
+    <Fields>
+      <Int16 name="Min" />
+      <Int16 name="Max" />
+    </Fields>
+  </Object>
+</Loqui>

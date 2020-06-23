@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Patrol" objType="Subrecord" GUID="45767f39-c2cf-4ba6-98b0-f63df2d4ff70" ID="315">
+    <Fields>
+      <Float name="IdleTime" recordType="XPRD" hasBeenSet="False" />
+      <CustomLogic name="PatrolScriptMarker" recordType="XPPA" />
+      <FormLink name="Idle" recordType="INAM" refName="IdleAnimation" hasBeenSet="False" />
+      <ByteArray name="SCHR" recordType="SCHR" hasBeenSet="True" />
+      <ByteArray name="SCTX" recordType="SCTX" hasBeenSet="True" />
+      <RefList name="Topics" refName="ATopicReference" binary="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

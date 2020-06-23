@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Net.WebSockets;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -111,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
                     $"{this.Namespace}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
-                    args.Add($"items: {itemAccessor.PropertyOrDirectAccess}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
+                    args.Add($"items: {itemAccessor}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
                     if (binaryType == DictBinaryType.Trigger)
                     {
                         args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
@@ -198,7 +199,7 @@ namespace Mutagen.Bethesda.Generation
                     default:
                         throw new NotImplementedException();
                 }
-                args.Add($"item: {itemAccessor.PropertyAccess}");
+                args.Add($"item: {itemAccessor}");
                 var subGenTypes = subData.GenerationTypes.ToList();
                 var subGen = this.Module.GetTypeGeneration(dict.ValueTypeGen.GetType());
                 if (subGenTypes.Count <= 1
@@ -235,9 +236,10 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: "return ",
                                             outItemAccessor: new Accessor("dictSubItem"),
                                             translationAccessor: "dictTranslMask",
-                                            asyncMode: AsyncMode.Direct,
+                                            asyncMode: AsyncMode.Off,
                                             errorMaskAccessor: null,
-                                            converterAccessor: null);
+                                            converterAccessor: null,
+                                            inline: true);
                                     }
                                 }
                                 gen.AppendLine("default:");
@@ -253,23 +255,20 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add((gen) =>
                     {
-                        gen.AppendLine($"transl: (MutagenFrame r{(isAsync ? null : $", out {dict.ValueTypeGen.TypeName(getter: false)} dictSubItem")}) =>");
-                        using (new BraceWrapper(gen))
-                        {
-                            LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
-                            subGen.GenerateCopyInRet(
-                                fg: gen,
-                                objGen: objGen,
-                                targetGen: dict.ValueTypeGen,
-                                typeGen: targetLoqui,
-                                readerAccessor: "r",
-                                retAccessor: "return ",
-                                outItemAccessor: new Accessor("dictSubItem"),
-                                translationAccessor: "dictTranslMask",
-                                asyncMode: AsyncMode.Direct,
-                                errorMaskAccessor: null,
-                                converterAccessor: null);
-                        }
+                        LoquiType targetLoqui = dict.ValueTypeGen as LoquiType;
+                        subGen.GenerateCopyInRet(
+                            fg: gen,
+                            objGen: objGen,
+                            targetGen: dict.ValueTypeGen,
+                            typeGen: targetLoqui,
+                            readerAccessor: "r",
+                            retAccessor: "transl: ",
+                            outItemAccessor: new Accessor("dictSubItem"),
+                            translationAccessor: "dictTranslMask",
+                            asyncMode: AsyncMode.Off,
+                            errorMaskAccessor: null,
+                            converterAccessor: null,
+                            inline: true);
                     });
                 }
             }
@@ -286,7 +285,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"public IReadOnlyDictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}> {typeGen.Name} => DictBinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse<{dict.KeyTypeGen.TypeName(false)}>"))
             {
-                args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.Meta, _package.MasterReferences))");
+                args.Add($"new {nameof(MutagenFrame)}(new {nameof(MutagenMemoryReadStream)}({dataAccessor}{(posStr == null ? null : $".Slice({posStr})")}, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}))");
                 args.Add($"new Dictionary<{dict.KeyTypeGen.TypeName(getter: true)}, {dict.ValueTypeGen.TypeName(getter: true)}>()");
                 args.Add($"{subTransl.GetTranslatorInstance(dict.ValueTypeGen, getter: true)}.Parse");
             }

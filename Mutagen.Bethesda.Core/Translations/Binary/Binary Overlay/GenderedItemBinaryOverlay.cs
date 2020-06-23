@@ -12,22 +12,25 @@ namespace Mutagen.Bethesda.Binary
     {
         private int? _male;
         private int? _female;
+        private T _fallback;
         private Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> _creator;
 
-        public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : default!;
-        public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : default!;
+        public T Male => _male.HasValue ? _creator(_data.Slice(_male.Value), _package) : _fallback;
+        public T Female => _female.HasValue ? _creator(_data.Slice(_female.Value), _package) : _fallback;
 
         public GenderedItemBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package,
             int? male,
             int? female,
-            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
             : base(bytes, package)
         {
             this._male = male;
             this._female = female;
             this._creator = creator;
+            this._fallback = fallback;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -44,9 +47,9 @@ namespace Mutagen.Bethesda.Binary
     public static class GenderedItemBinaryOverlay
     {
         public static IGenderedItemGetter<T?> Factory<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter femaleRecordConverter,
             RecordTypeConverter maleRecordConverter)
             where T : class
@@ -55,7 +58,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
-                var subHeader = package.Meta.GetSubrecord(stream);
+                var subHeader = package.MetaData.Constants.GetSubrecord(stream);
                 var recType = subHeader.RecordType;
                 if (maleRecordConverter.ToConversions.TryGetValue(recType, out var _))
                 {
@@ -75,18 +78,19 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static GenderedItemBinaryOverlay<T> FactorySkipMarkers<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
             int offset,
-            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
         {
             var initialPos = stream.Position;
             int? maleLoc = null, femaleLoc = null;
             for (int i = 0; i < 2; i++)
             {
-                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 stream.Position += markerLen;
                 if (recType == male)
                 {
@@ -100,7 +104,7 @@ namespace Mutagen.Bethesda.Binary
                 {
                     break;
                 }
-                HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var recLen);
+                HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var recLen);
                 stream.Position += recLen;
             }
             var readLen = stream.Position - initialPos;
@@ -113,15 +117,16 @@ namespace Mutagen.Bethesda.Binary
                 package,
                 maleLoc,
                 femaleLoc,
-                creator);
+                creator,
+                fallback);
         }
 
         public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class
         {
@@ -129,7 +134,7 @@ namespace Mutagen.Bethesda.Binary
             T? maleObj = null, femaleObj = null;
             for (int i = 0; i < 2; i++)
             {
-                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 stream.Position += markerLen;
                 if (recType == male)
                 {
@@ -163,12 +168,12 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static IGenderedItemGetter<T?> FactorySkipMarkersPreRead<T>(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
             RecordType marker,
-            Func<BinaryMemoryReadStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
+            Func<OverlayStream, BinaryOverlayFactoryPackage, RecordTypeConverter?, T> creator,
             RecordTypeConverter? recordTypeConverter = null,
             RecordTypeConverter? femaleRecordConverter = null)
             where T : class
@@ -178,12 +183,12 @@ namespace Mutagen.Bethesda.Binary
             for (int i = 0; i < 2; i++)
             {
                 // Skip marker
-                var recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out var markerLen);
+                var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
                 if (recType != marker) break;
                 stream.Position += markerLen;
 
                 // Read and skip gender marker
-                recType = HeaderTranslation.ReadNextRecordType(stream, package.Meta.SubConstants.LengthLength, out markerLen);
+                recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out markerLen);
                 stream.Position += markerLen;
                 if (recType == male)
                 {
@@ -206,15 +211,46 @@ namespace Mutagen.Bethesda.Binary
             return new GenderedItem<T?>(maleObj, femaleObj);
         }
 
-        public static GenderedItemBinaryOverlay<T> Factory<T>(
-            BinaryMemoryReadStream stream,
+        public static GenderedItemBinaryOverlay<T?> Factory<T>(
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordType male,
             RecordType female,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator)
+            where T : class
         {
             int? maleLoc = null, femaleLoc = null;
-            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.Meta, out var lenParsed, male, female);
+            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
+            if (find[0] != null)
+            {
+                maleLoc = find[0];
+            }
+            if (find[1] != null)
+            {
+                femaleLoc = find[1];
+            }
+            var ret = new GenderedItemBinaryOverlay<T?>(
+                stream.RemainingMemory.Slice(0, lenParsed),
+                package,
+                maleLoc,
+                femaleLoc,
+                creator,
+                default);
+            stream.Position += lenParsed;
+            return ret;
+        }
+
+        public static GenderedItemBinaryOverlay<T> Factory<T>(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordType male,
+            RecordType female,
+            Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, T> creator,
+            T fallback)
+            where T : notnull
+        {
+            int? maleLoc = null, femaleLoc = null;
+            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingSpan, package.MetaData.Constants, out var lenParsed, male, female);
             if (find[0] != null)
             {
                 maleLoc = find[0];
@@ -228,7 +264,8 @@ namespace Mutagen.Bethesda.Binary
                 package,
                 maleLoc,
                 femaleLoc,
-                creator);
+                creator,
+                fallback);
             stream.Position += lenParsed;
             return ret;
         }

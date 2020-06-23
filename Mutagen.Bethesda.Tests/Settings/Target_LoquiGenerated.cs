@@ -54,13 +54,7 @@ namespace Mutagen.Bethesda.Tests
         public Mutagen.Bethesda.GameMode GameMode { get; set; } = default;
         #endregion
         #region ExpectedBaseGroupCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Byte? _ExpectedBaseGroupCount;
-        public Byte? ExpectedBaseGroupCount
-        {
-            get => this._ExpectedBaseGroupCount;
-            set => this._ExpectedBaseGroupCount = value;
-        }
+        public Byte? ExpectedBaseGroupCount { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Byte? ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
         #endregion
@@ -95,7 +89,7 @@ namespace Mutagen.Bethesda.Tests
             return ((TargetCommon)((ITargetGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(Target obj)
+        public bool Equals(Target? obj)
         {
             return ((TargetCommon)((ITargetGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -108,7 +102,6 @@ namespace Mutagen.Bethesda.Tests
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -161,7 +154,7 @@ namespace Mutagen.Bethesda.Tests
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Do, rhs.Do)) return false;

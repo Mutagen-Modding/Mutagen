@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Perk" recordType="PERK" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="dd36c48f-42dc-4b8d-82d7-4e1b3eb9dc3c" ID="114">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IHasIcons</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="PerkAdapter" recordType="VMAD" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Description" recordType="DESC" translated="DL" hasBeenSet="False" />
+      <RefDirect name="Icons" refName="Icons" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <Data>
+        <Fields>
+          <Bool name="Trait" />
+          <UInt8 name="Level" />
+          <UInt8 name="NumRanks" />
+          <Bool name="Playable" />
+          <Bool name="Hidden" />
+        </Fields>
+      </Data>
+      <FormLink name="NextPerk" refName="Perk" recordType="NNAM" />
+      <RefList name="Effects" refName="APerkEffect" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="APerkEffect" objType="Subrecord" abstract="true" endMarkerType="PRKF" GUID="ca92253c-f8d1-4417-ad3a-024af6646d9f" ID="412">
+    <Fields>
+      <Data recordType="PRKE">
+        <Fields>
+          <UInt8 name="Rank" binary="NoGeneration" />
+          <UInt8 name="Priority" binary="NoGeneration" />
+        </Fields>
+      </Data>
+      <RefList name="Conditions" refName="PerkCondition" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="PerkQuestEffect" objType="Subrecord" baseClass="APerkEffect" GUID="ae6ec977-c3ed-40d6-b91f-429796f69ec6" ID="413">
+    <Fields>
+      <FormLink name="Quest" refName="Quest" />
+      <UInt8 name="Stage" />
+      <ByteArray name="Unknown" byteLength="3" hasBeenSet="False" />
+    </Fields>
+  </Object>
+  <Object name="PerkAbilityEffect" objType="Subrecord" baseClass="APerkEffect" GUID="47de8f15-63d9-4d19-aec8-73bcbb9db6c9" ID="414">
+    <Fields>
+      <FormLink name="Ability" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="APerkEntryPointEffect" objType="Subrecord" abstract="true" baseClass="APerkEffect" GUID="e1dd9360-79b5-43f6-bac0-d7eb2b3cb6f7" ID="415">
+    <Fields>
+      <Enum name="EntryPoint" enumName="APerkEntryPointEffect.EntryType" byteLength="1" />
+      <UInt8 name="PerkConditionTabCount" />
+      <CustomLogic name="FunctionParameters" recordType="EPFT" />
+    </Fields>
+  </Object>
+  <Object name="PerkModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="1d49c96a-ffbd-42f5-8420-24ced8b5991e" ID="417">
+    <Fields>
+      <Enum name="Modification" enumName="PerkModifyValue.ModificationType" />
+      <Float name="Value" recordType="EPFD" hasBeenSet="False" />
+    </Fields>
+  </Object>
+  <Object name="PerkAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="a626d85f-ad59-47fc-b686-15e424b8ec6f" ID="418">
+    <Fields>
+      <Float name="From" />
+      <Float name="To" />
+    </Fields>
+  </Object>
+  <Object name="PerkModifyActorValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="31a6011e-e36a-4837-954e-60ee728f750e" ID="419">
+    <Fields>
+      <Enum name="ActorValue" enumName="ActorValueExtended" />
+      <Float name="Value" />
+      <Enum name="Modification" enumName="PerkModifyActorValue.ModificationType" />
+    </Fields>
+  </Object>
+  <Object name="PerkAbsoluteValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="65b0c2f1-c39b-412e-b77c-2294758f498b" ID="420">
+    <Fields>
+      <Bool name="Negative" />
+    </Fields>
+  </Object>
+  <Object name="PerkAddLeveledItem" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="f3687450-00d1-45e0-9645-140c7a5deead" ID="421">
+    <Fields>
+      <FormLink name="Item" refName="LeveledItem" />
+    </Fields>
+  </Object>
+  <Object name="PerkAddActivateChoice" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="628923c0-a9a0-489d-a73e-934ee88f5351" ID="422">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" hasBeenSet="True" />
+      <String name="ButtonLabel" translated="Normal" recordType="EPF2" hasBeenSet="True" />
+      <RefDirect name="Flags" refName="PerkScriptFlag" hasBeenSet="False" />
+    </Fields>
+  </Object>
+  <Object name="PerkSelectSpell" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="753005d8-0132-4c41-9b39-3fc1b63a0e44" ID="423">
+    <Fields>
+      <FormLink name="Spell" refName="Spell" />
+    </Fields>
+  </Object>
+  <Object name="PerkSelectText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="2fd6a5c4-2007-450b-8505-5af44523b46a" ID="424">
+    <Fields>
+      <String name="Text" />
+    </Fields>
+  </Object>
+  <Object name="PerkSetText" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="d22ea2b4-5063-4bc9-9a70-29081a7e9650" ID="425">
+    <Fields>
+      <String name="Text" translated="Normal" />
+    </Fields>
+  </Object>
+  <Object name="PerkCondition" objType="Subrecord" GUID="7285d8f7-190a-41a1-886f-476554337e90" ID="416">
+    <Fields>
+      <UInt8 name="RunOnTabIndex" hasBeenSet="False" recordType="PRKC" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="PerkScriptFlag" objType="Subrecord" recordType="EPF3" GUID="2eef81ee-00f4-466e-9b42-aab9ab42b981" ID="426">
+    <Fields>
+      <Enum name="Flags" enumName="PerkScriptFlag.Flag" byteLength="2" />
+      <UInt16 name="FragmentIndex" />
+    </Fields>
+  </Object>
+  <Object name="PerkAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="14284d41-1d41-4699-8c5f-e6b7925ef990" ID="429">
+    <Fields>
+      <RefDirect name="ScriptFragments" refName="PerkScriptFragments" binary="Custom" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="PerkScriptFragments" objType="Subrecord" GUID="111c1431-8ddc-44ab-83e1-8acac57ea4f2" ID="430">
+    <Fields>
+      <Int8 name="Unknown" />
+      <String name="FileName" binaryType="PrependLengthUShort" />
+      <RefList name="Fragments" refName="IndexedScriptFragment" counterLength="2" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

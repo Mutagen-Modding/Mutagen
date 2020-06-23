@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType stringBinaryType,
             bool parseWhole = true)
         {
-            if (frame.StringsLookup != null)
+            if (frame.MetaData.StringsLookup != null)
             {
                 if (frame.Remaining != 4)
                 {
@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 uint key = frame.ReadUInt32();
                 if (key == 0) return string.Empty;
-                return frame.StringsLookup.CreateString(source, key);
+                return frame.MetaData.StringsLookup.CreateString(source, key);
             }
             else
             {
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 writer.Write(
                     item,
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
             if (item == null) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 writer.Write(
                     item,
@@ -165,18 +165,31 @@ namespace Mutagen.Bethesda.Binary
             StringBinaryType binaryType,
             StringsSource source)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                if (writer.StringsWriter == null)
-                {
-                    writer.Write(
-                        item.String,
-                        binaryType: binaryType);
-                }
-                else
-                {
-                    writer.Write(writer.StringsWriter.Register(item, source));
-                }
+                Write(
+                    writer,
+                    item,
+                    binaryType,
+                    source);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            ITranslatedStringGetter item,
+            StringBinaryType binaryType,
+            StringsSource source)
+        {
+            if (writer.MetaData.StringsWriter == null)
+            {
+                writer.Write(
+                    item.String,
+                    binaryType: binaryType);
+            }
+            else
+            {
+                writer.Write(writer.MetaData.StringsWriter.Register(item, source));
             }
         }
 
@@ -188,9 +201,9 @@ namespace Mutagen.Bethesda.Binary
             StringsSource source)
         {
             if (item == null) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
-                if (writer.StringsWriter == null)
+                if (writer.MetaData.StringsWriter == null)
                 {
                     writer.Write(
                         item.String,
@@ -198,7 +211,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 else
                 {
-                    writer.Write(writer.StringsWriter.Register(item, source));
+                    writer.Write(writer.MetaData.StringsWriter.Register(item, source));
                 }
             }
         }

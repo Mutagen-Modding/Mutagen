@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Tests
             return ((RecordInterestCommon)((IRecordInterestGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(RecordInterest obj)
+        public bool Equals(RecordInterest? obj)
         {
             return ((RecordInterestCommon)((IRecordInterestGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -107,7 +107,6 @@ namespace Mutagen.Bethesda.Tests
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -144,7 +143,7 @@ namespace Mutagen.Bethesda.Tests
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.InterestingTypes, rhs.InterestingTypes)) return false;

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Climate" recordType="CLMT" objType="Record" baseClass="SkyrimMajorRecord" GUID="5e6ece21-de78-4014-a7f0-4ea69c8655c9" ID="256">
+    <Interface>IModeled</Interface>
+    <Fields>
+      <RefList name="WeatherTypes" refName="WeatherType" recordType="WLST" />
+      <String name="SunTexture" recordType="FNAM" />
+      <String name="SunGlareTexture" recordType="GNAM" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="TNAM">
+        <Fields>
+          <UInt8 name="SunriseBeginRaw" />
+          <UInt8 name="SunriseEndRaw" />
+          <UInt8 name="SunsetBeginRaw" />
+          <UInt8 name="SunsetEndRaw" />
+          <UInt8 name="Volatility" />
+          <CustomLogic name="MoonAndPhaseLength" />
+          <Enum name="Moons" enumName="Climate.Moon" binary="NoGeneration" />
+          <UInt8 name="PhaseLength" min="0" max="64" binary="NoGeneration" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

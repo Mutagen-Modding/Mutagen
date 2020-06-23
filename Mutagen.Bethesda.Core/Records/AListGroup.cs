@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
             private T ConstructWrapper(int pos)
             {
                 ReadOnlyMemorySlice<byte> slice = this._data.Slice(pos);
-                var majorMeta = _package.Meta.MajorRecord(slice);
+                var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
                 if (majorMeta.IsCompressed)
                 {
                     uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda
                     // Set length bytes
                     BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Mutagen.Bethesda.Internals.Constants.HeaderLength), uncompressedLength);
                     // Remove compression flag
-                    BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.Meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Mutagen.Bethesda.Internals.Constants.CompressedFlag);
+                    BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Mutagen.Bethesda.Internals.Constants.CompressedFlag);
                     // Copy uncompressed data over
                     using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                     {
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
                     slice = new MemorySlice<byte>(buf);
                 }
                 return LoquiBinaryOverlayTranslation<T>.Create(
-                   stream: new BinaryMemoryReadStream(slice),
+                   stream: new OverlayStream(slice, _package),
                    package: _package,
                    recordTypeConverter: null);
             }
@@ -67,14 +67,14 @@ namespace Mutagen.Bethesda
             {
                 List<int> locations = new List<int>();
 
-                stream.Position -= package.Meta.GroupConstants.HeaderLength;
-                var groupMeta = package.Meta.GetGroup(stream);
+                stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
+                var groupMeta = package.MetaData.Constants.GetGroup(stream);
                 var finalPos = stream.Position + groupMeta.TotalLength;
-                stream.Position += package.Meta.GroupConstants.HeaderLength;
+                stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
                 // Parse locations
                 while (stream.Position < finalPos)
                 {
-                    VariableHeader meta = package.Meta.Constants(objectType).VariableMeta(stream.RemainingSpan);
+                    VariableHeader meta = package.MetaData.Constants.Constants(objectType).VariableMeta(stream.RemainingSpan);
                     locations.Add(checked((int)stream.Position - offset));
                     stream.Position += checked((int)meta.TotalLength);
                 }

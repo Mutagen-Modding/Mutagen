@@ -141,29 +141,89 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public GroupHeader Group(ReadOnlySpan<byte> span) => new GroupHeader(this, span);
-        public GroupFrame GroupRecordFrame(ReadOnlySpan<byte> span) => new GroupFrame(this, span);
-        public GroupMemoryFrame GroupRecordMemoryFrame(ReadOnlyMemorySlice<byte> span) => new GroupMemoryFrame(this, span);
+        public GroupFrame GroupFrame(ReadOnlySpan<byte> span) => new GroupFrame(this, span);
+        public GroupMemoryFrame GroupMemoryFrame(ReadOnlyMemorySlice<byte> span) => new GroupMemoryFrame(this, span);
         public GroupHeader GetGroup(IBinaryReadStream stream, int offset = 0) => new GroupHeader(this, stream.GetSpan(this.GroupConstants.HeaderLength, offset));
-        public GroupFrame GetGroupRecordFrame(IBinaryReadStream stream, int offset = 0)
+        public bool TryGetGroup(IBinaryReadStream stream, out GroupHeader meta, int offset = 0, bool checkIsGroup = true)
+        {
+            if (stream.Remaining < GroupConstants.HeaderLength + offset)
+            {
+                meta = default;
+                return false;
+            }
+            meta = GetGroup(stream, offset);
+            return !checkIsGroup || meta.IsGroup;
+        }
+        public GroupFrame GetGroupFrame(IBinaryReadStream stream, int offset = 0)
         {
             var meta = GetGroup(stream, offset);
             return new GroupFrame(meta, stream.GetSpan(checked((int)meta.TotalLength), offset: offset));
         }
-        public GroupMemoryFrame GetGroupRecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        public bool TryGetGroupFrame(IBinaryReadStream stream, out GroupFrame frame, int offset = 0, bool checkIsGroup = true)
+        {
+            if (!TryGetGroup(stream, out var meta, offset: offset, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupFrame(meta, stream.GetSpan(checked((int)meta.TotalLength)));
+            return true;
+        }
+        public GroupMemoryFrame GetGroupMemoryFrame(IBinaryReadStream stream, int offset = 0, bool readSafe = false)
         {
             var meta = GetGroup(stream, offset);
-            return new GroupMemoryFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset));
+            return new GroupMemoryFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
+        }
+        public bool TryGetGroupMemoryFrame(IBinaryReadStream stream, out GroupMemoryFrame frame, int offset = 0, bool checkIsGroup = true, bool readSafe = false)
+        {
+            if (!TryGetGroup(stream, out var meta, offset: offset, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupMemoryFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+            return true;
         }
         public GroupHeader ReadGroup(IBinaryReadStream stream, int offset = 0) => new GroupHeader(this, stream.ReadSpan(this.GroupConstants.HeaderLength, offset));
-        public GroupFrame ReadGroupRecordFrame(IBinaryReadStream stream)
+        public bool TryReadGroup(IBinaryReadStream stream, out GroupHeader header, bool checkIsGroup = true)
+        {
+            if (stream.Remaining < GroupConstants.HeaderLength)
+            {
+                header = default;
+                return false;
+            }
+            header = ReadGroup(stream);
+            return !checkIsGroup || header.IsGroup;
+        }
+        public GroupFrame ReadGroupFrame(IBinaryReadStream stream)
         {
             var meta = GetGroup(stream);
             return new GroupFrame(meta, stream.ReadSpan(checked((int)meta.TotalLength)));
         }
-        public GroupMemoryFrame ReadGroupRecordMemoryFrame(BinaryMemoryReadStream stream)
+        public bool TryReadGroupFrame(IBinaryReadStream stream, out GroupFrame frame, bool checkIsGroup = true)
+        {
+            if (!TryGetGroup(stream, out var meta, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupFrame(meta, stream.ReadSpan(checked((int)meta.TotalLength)));
+            return true;
+        }
+        public GroupMemoryFrame ReadGroupMemoryFrame(IBinaryReadStream stream, bool readSafe = true)
         {
             var meta = GetGroup(stream);
-            return new GroupMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength)));
+            return new GroupMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe));
+        }
+        public bool TryReadGroupMemoryFrame(IBinaryReadStream stream, out GroupMemoryFrame frame, bool checkIsGroup = true, bool readSafe = true)
+        {
+            if (!TryGetGroup(stream, out var meta, checkIsGroup: checkIsGroup))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new GroupMemoryFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe));
+            return true;
         }
 
         public MajorRecordHeader MajorRecord(ReadOnlySpan<byte> span) => new MajorRecordHeader(this, span);
@@ -260,10 +320,30 @@ namespace Mutagen.Bethesda.Binary
             frame = new SubrecordFrame(meta, stream.GetSpan(meta.TotalLength));
             return true;
         }
-        public SubrecordMemoryFrame GetSubrecordMemoryFrame(BinaryMemoryReadStream stream, int offset = 0)
+        public SubrecordMemoryFrame GetSubrecordMemoryFrame(IBinaryReadStream stream, int offset = 0, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, offset);
-            return new SubrecordMemoryFrame(meta, stream.GetMemory(meta.TotalLength, offset: offset));
+            return new SubrecordMemoryFrame(meta, stream.GetMemory(meta.TotalLength, offset: offset, readSafe));
+        }
+        public bool TryGetSubrecordMemoryFrame(IBinaryReadStream stream, out SubrecordMemoryFrame frame, bool readSafe = true)
+        {
+            if (!TryGetSubrecord(stream, out var meta))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new SubrecordMemoryFrame(meta, stream.GetMemory(meta.TotalLength, readSafe));
+            return true;
+        }
+        public bool TryGetSubrecordMemoryFrame(IBinaryReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame, bool readSafe = true)
+        {
+            if (!TryGetSubrecord(stream, targetType, out var meta))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new SubrecordMemoryFrame(meta, stream.GetMemory(meta.TotalLength, readSafe));
+            return true;
         }
         public SubrecordHeader ReadSubrecord(IBinaryReadStream stream) => new SubrecordHeader(this, stream.ReadSpan(this.SubConstants.HeaderLength));
         public SubrecordHeader ReadSubrecord(IBinaryReadStream stream, RecordType targetType)
@@ -334,38 +414,38 @@ namespace Mutagen.Bethesda.Binary
             frame = new SubrecordFrame(meta, stream.ReadSpan(meta.TotalLength));
             return true;
         }
-        public SubrecordMemoryFrame ReadSubrecordMemoryFrame(IBinaryReadStream stream)
+        public SubrecordMemoryFrame ReadSubrecordMemoryFrame(IBinaryReadStream stream, bool readSafe = false)
         {
             var meta = GetSubrecord(stream);
-            return new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength));
+            return new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
         }
-        public SubrecordMemoryFrame ReadSubrecordMemoryFrame(IBinaryReadStream stream, RecordType targetType)
+        public SubrecordMemoryFrame ReadSubrecordMemoryFrame(IBinaryReadStream stream, RecordType targetType, bool readSafe = false)
         {
             var meta = GetSubrecord(stream);
             if (meta.RecordType != targetType)
             {
                 throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
             }
-            return new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength));
+            return new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
         }
-        public bool TryReadSubrecordMemoryFrame(IBinaryReadStream stream, out SubrecordMemoryFrame frame)
+        public bool TryReadSubrecordMemoryFrame(IBinaryReadStream stream, out SubrecordMemoryFrame frame, bool readSafe = false)
         {
             if (!TryGetSubrecord(stream, out var meta))
             {
                 frame = default;
                 return false;
             }
-            frame = new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength));
+            frame = new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
-        public bool TryReadSubrecordMemoryFrame(IBinaryReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame)
+        public bool TryReadSubrecordMemoryFrame(IBinaryReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame, bool readSafe = false)
         {
             if (!TryGetSubrecord(stream, targetType, out var meta))
             {
                 frame = default;
                 return false;
             }
-            frame = new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength));
+            frame = new SubrecordMemoryFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
             return true;
         }
 
@@ -454,42 +534,53 @@ namespace Mutagen.Bethesda.Binary
 
     public static class GameConstantsExt
     {
-        public static ModHeader GetMod(this IMutagenReadStream stream) => stream.MetaData.GetMod(stream);
-        public static ModHeader ReadMod(this IMutagenReadStream stream) => stream.MetaData.ReadMod(stream);
-        public static bool TryGetMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.TryGetMod(stream, out header);
-        public static bool TryReadMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.TryReadMod(stream, out header);
+        public static ModHeader GetMod(this IMutagenReadStream stream) => stream.MetaData.Constants.GetMod(stream);
+        public static ModHeader ReadMod(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadMod(stream);
+        public static bool TryGetMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.Constants.TryGetMod(stream, out header);
+        public static bool TryReadMod(this IMutagenReadStream stream, out ModHeader header) => stream.MetaData.Constants.TryReadMod(stream, out header);
 
-        public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroup(stream, offset);
-        public static GroupFrame GetGroupRecordFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetGroupRecordFrame(stream, offset);
-        public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.ReadGroup(stream, offset);
-        public static GroupFrame ReadGroupRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadGroupRecordFrame(stream);
+        public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetGroup(stream, offset);
+        public static bool TryGetGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool checkIsGroup = true) => stream.MetaData.Constants.TryGetGroup(stream, out header, offset, checkIsGroup);
+        public static GroupFrame GetGroupFrame(IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetGroupFrame(stream, offset);
+        public static bool TryGetGroupFrame(this IMutagenReadStream stream, out GroupFrame header, int offset = 0, bool checkIsGroup = true) => stream.MetaData.Constants.TryGetGroupFrame(stream, out header, offset, checkIsGroup);
+        public static GroupMemoryFrame GetGroupMemoryFrame(IMutagenReadStream stream, int offset = 0, bool readSafe = false) => stream.MetaData.Constants.GetGroupMemoryFrame(stream, offset, readSafe);
+        public static bool TryGetGroupMemoryFrame(this IMutagenReadStream stream, out GroupMemoryFrame header, int offset = 0, bool checkIsGroup = true, bool readSafe = false) => stream.MetaData.Constants.TryGetGroupMemoryFrame(stream, out header, offset, checkIsGroup, readSafe);
+        public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.ReadGroup(stream, offset);
+        public static bool TryReadGroup(this IMutagenReadStream stream, out GroupHeader header, bool checkIsGroup = true) => stream.MetaData.Constants.TryReadGroup(stream, out header, checkIsGroup);
+        public static GroupFrame ReadGroupFrame(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadGroupFrame(stream);
+        public static bool TryReadGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, bool checkIsGroup = true) => stream.MetaData.Constants.TryReadGroupFrame(stream, out frame, checkIsGroup);
+        public static GroupMemoryFrame ReadGroupMemoryFrame(this IMutagenReadStream stream, bool readSafe = false) => stream.MetaData.Constants.ReadGroupMemoryFrame(stream, readSafe);
+        public static bool TryReadGroupMemoryFrame(this IMutagenReadStream stream, out GroupMemoryFrame frame, bool checkIsGroup = true, bool readSafe = false) => stream.MetaData.Constants.TryReadGroupMemoryFrame(stream, out frame, checkIsGroup, readSafe);
 
-        public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetMajorRecord(stream, offset);
-        public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetMajorRecordFrame(stream, offset);
-        public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecord(stream);
-        public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadMajorRecordFrame(stream);
-        public static MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(this IMutagenReadStream stream, bool readSafe = false) => stream.MetaData.ReadMajorRecordMemoryFrame(stream, readSafe: readSafe);
+        public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetMajorRecord(stream, offset);
+        public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetMajorRecordFrame(stream, offset);
+        public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadMajorRecord(stream);
+        public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadMajorRecordFrame(stream);
+        public static MajorRecordMemoryFrame ReadMajorRecordMemoryFrame(this IMutagenReadStream stream, bool readSafe = false) => stream.MetaData.Constants.ReadMajorRecordMemoryFrame(stream, readSafe: readSafe);
 
-        public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubrecord(stream, offset);
-        public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta, int offset = 0) => stream.MetaData.TryGetSubrecord(stream, out meta, offset);
-        public static bool TryGetSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.TryGetSubrecord(stream, targetType, out meta);
-        public static SubrecordFrame GetSubrecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.GetSubrecordFrame(stream, offset);
-        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.TryGetSubrecordFrame(stream, out frame);
-        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.TryGetSubrecordFrame(stream, targetType, out frame);
-        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream) => stream.MetaData.ReadSubrecord(stream);
-        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, RecordType targetType) => stream.MetaData.ReadSubrecord(stream, targetType);
-        public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta) => stream.MetaData.TryReadSubrecord(stream, out meta);
-        public static bool TryReadSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.TryReadSubrecord(stream, targetType, out meta);
-        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream) => stream.MetaData.ReadSubrecordFrame(stream);
-        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType) => stream.MetaData.ReadSubrecordFrame(stream, targetType);
-        public static SubrecordMemoryFrame ReadSubrecordMemoryFrame(this IMutagenReadStream stream) => stream.MetaData.ReadSubrecordMemoryFrame(stream);
-        public static SubrecordMemoryFrame ReadSubrecordMemoryFrame(this IMutagenReadStream stream, RecordType targetType) => stream.MetaData.ReadSubrecordMemoryFrame(stream, targetType);
-        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.TryReadSubrecordFrame(stream, out frame);
-        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.TryReadSubrecordFrame(stream, targetType, out frame);
-        public static bool TryReadSubrecordMemoryFrame(this IMutagenReadStream stream, out SubrecordMemoryFrame frame) => stream.MetaData.TryReadSubrecordMemoryFrame(stream, out frame);
-        public static bool TryReadSubrecordMemoryFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame) => stream.MetaData.TryReadSubrecordMemoryFrame(stream, targetType, out frame);
+        public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetSubrecord(stream, offset);
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta, int offset = 0) => stream.MetaData.Constants.TryGetSubrecord(stream, out meta, offset);
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.Constants.TryGetSubrecord(stream, targetType, out meta);
+        public static SubrecordFrame GetSubrecordFrame(this IMutagenReadStream stream, int offset = 0) => stream.MetaData.Constants.GetSubrecordFrame(stream, offset);
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.Constants.TryGetSubrecordFrame(stream, out frame);
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.Constants.TryGetSubrecordFrame(stream, targetType, out frame);
+        public static SubrecordMemoryFrame GetSubrecordMemoryFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = false) => stream.MetaData.Constants.GetSubrecordMemoryFrame(stream, offset, readSafe);
+        public static bool TryGetSubrecordMemoryFrame(this IMutagenReadStream stream, out SubrecordMemoryFrame frame, bool readSafe = false) => stream.MetaData.Constants.TryGetSubrecordMemoryFrame(stream, out frame, readSafe);
+        public static bool TryGetSubrecordMemoryFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame, bool readSafe = false) => stream.MetaData.Constants.TryGetSubrecordMemoryFrame(stream, targetType, out frame, readSafe);
+        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadSubrecord(stream);
+        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, RecordType targetType) => stream.MetaData.Constants.ReadSubrecord(stream, targetType);
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubrecordHeader meta) => stream.MetaData.Constants.TryReadSubrecord(stream, out meta);
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader meta) => stream.MetaData.Constants.TryReadSubrecord(stream, targetType, out meta);
+        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadSubrecordFrame(stream);
+        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType) => stream.MetaData.Constants.ReadSubrecordFrame(stream, targetType);
+        public static SubrecordMemoryFrame ReadSubrecordMemoryFrame(this IMutagenReadStream stream, bool readSafe = false) => stream.MetaData.Constants.ReadSubrecordMemoryFrame(stream, readSafe);
+        public static SubrecordMemoryFrame ReadSubrecordMemoryFrame(this IMutagenReadStream stream, RecordType targetType, bool readSafe = false) => stream.MetaData.Constants.ReadSubrecordMemoryFrame(stream, targetType, readSafe);
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame) => stream.MetaData.Constants.TryReadSubrecordFrame(stream, out frame);
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame) => stream.MetaData.Constants.TryReadSubrecordFrame(stream, targetType, out frame);
+        public static bool TryReadSubrecordMemoryFrame(this IMutagenReadStream stream, out SubrecordMemoryFrame frame, bool readSafe = false) => stream.MetaData.Constants.TryReadSubrecordMemoryFrame(stream, out frame, readSafe: readSafe);
+        public static bool TryReadSubrecordMemoryFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordMemoryFrame frame, bool readSafe = false) => stream.MetaData.Constants.TryReadSubrecordMemoryFrame(stream, targetType, out frame, readSafe: readSafe);
 
-        public static VariableHeader GetNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.GetNextRecordVariableMeta(stream);
-        public static VariableHeader ReadNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.ReadNextRecordVariableMeta(stream);
+        public static VariableHeader GetNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.Constants.GetNextRecordVariableMeta(stream);
+        public static VariableHeader ReadNextRecordVariableMeta(this IMutagenReadStream stream) => stream.MetaData.Constants.ReadNextRecordVariableMeta(stream);
     }
 }

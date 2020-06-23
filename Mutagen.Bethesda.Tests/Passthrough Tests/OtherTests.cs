@@ -30,13 +30,13 @@ namespace Mutagen.Bethesda.Tests
             using var tmp = new TempFolder("Mutagen_Oblivion_Binary_GroupMask_Import");
             var oblivionOutputPath = Path.Combine(tmp.Dir.Path, TestingConstants.OBLIVION_ESM);
             mod.WriteToBinary(oblivionOutputPath);
-            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, meta: GameConstants.Get(GameMode.Oblivion));
+            var fileLocs = RecordLocator.GetFileLocations(oblivionOutputPath, constants: GameConstants.Get(GameMode.Oblivion));
             using var reader = new BinaryReadStream(oblivionOutputPath);
             foreach (var rec in fileLocs.ListedRecords.Keys)
             {
                 reader.Position = rec;
                 var t = HeaderTranslation.ReadNextRecordType(reader);
-                if (!t.Equals(Npc_Registration.NPC__HEADER))
+                if (!t.Equals(Oblivion.Internals.RecordTypes.NPC_))
                 {
                     throw new ArgumentException("Exported a non-NPC record.");
                 }
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 reader.Position = rec;
                 var t = HeaderTranslation.ReadNextRecordType(reader);
-                if (!t.Equals(Npc_Registration.NPC__HEADER))
+                if (!t.Equals(Oblivion.Internals.RecordTypes.NPC_))
                 {
                     throw new ArgumentException("Exported a non-NPC record.");
                 }

@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class ByteArrayBinaryTranslation : TypicalBinaryTranslation<byte[]>
+    public class ByteArrayBinaryTranslation : TypicalBinaryTranslation<MemorySlice<byte>>
     {
         public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
 
-        public override void Write(MutagenWriter writer, byte[] item)
+        public override void Write(MutagenWriter writer, MemorySlice<byte> item)
         {
             writer.Write(item);
         }
 
-        protected override Byte[] ParseValue(MutagenFrame frame)
+        protected override MemorySlice<byte> ParseValue(MutagenFrame frame)
         {
             return frame.Reader.ReadBytes(checked((int)frame.Remaining));
         }
 
-        protected override byte[] ParseBytes(byte[] bytes)
+        protected override MemorySlice<byte> ParseBytes(MemorySlice<byte> bytes)
         {
             return bytes;
         }
@@ -43,9 +43,36 @@ namespace Mutagen.Bethesda.Binary
             RecordType header)
         {
             if (!item.HasValue) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, header))
             {
                 Write(writer, item.Value.Span);
+            }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            ReadOnlyMemorySlice<byte>? item,
+            RecordType header,
+            RecordType overflowRecord)
+        {
+            if (!item.HasValue) return;
+            if (item.Value.Length > ushort.MaxValue)
+            {
+                using (HeaderExport.Subrecord(writer, overflowRecord))
+                {
+                    writer.Write(item.Value.Length);
+                }
+                using (HeaderExport.Subrecord(writer, header))
+                {
+                }
+                Write(writer, item.Value.Span);
+            }
+            else
+            {
+                using (HeaderExport.Subrecord(writer, header))
+                {
+                    Write(writer, item.Value.Span);
+                }
             }
         }
     }

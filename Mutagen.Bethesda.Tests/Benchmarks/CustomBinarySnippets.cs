@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 stream.Position = 0xCF614B;
                 PathGridBytes = stream.ReadBytes(0x14C7);
             }
-            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, GameMode.Oblivion);
+            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, new ParsingBundle(GameMode.Oblivion));
         }
 
         [GlobalCleanup]
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             PathGridReader.Position = 0;
             var pathGrid = new PathGrid(FormKey.Null);
-            PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustomPublic(
+            PathGridBinaryCreateTranslation.FillBinaryPointToPointConnections(
                 new Binary.MutagenFrame(PathGridReader),
                 pathGrid);
             return pathGrid;

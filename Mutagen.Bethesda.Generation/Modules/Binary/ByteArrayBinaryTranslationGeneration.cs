@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Noggog;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationMaskAccessor,
             Accessor converterAccessor)
         {
-            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+            var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
@@ -43,6 +44,10 @@ namespace Mutagen.Bethesda.Generation
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                }
+                if (data.OverflowRecordType.HasValue)
+                {
+                    args.Add($"overflowRecord: {objGen.RecordTypeHeaderName(data.OverflowRecordType.Value)}");
                 }
             }
         }
@@ -59,7 +64,21 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+            }
+
+            string framePass;
+            if (data.HasTrigger)
+            {
+                framePass = $"{frameAccessor}.SpawnWithLength(contentLength)";
+            }
+            else if (data.Length.HasValue)
+            {
+                framePass = $"{frameAccessor}.SpawnWithLength({data.Length.Value})";
+            }
+            else
+            {
+                framePass = frameAccessor.ToString();
             }
 
             TranslationGeneration.WrapParseCall(
@@ -71,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({data.Length.Value})")}".Single(),
+                    ExtraArgs = $"frame: {framePass}".Single(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -87,8 +106,14 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
+            if (inline)
+            {
+                fg.AppendLine($"transl: {this.GetTranslatorInstance(typeGen, getter: false)}.Parse");
+                return;
+            }
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
@@ -118,7 +143,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            Accessor dataAccessor, 
+            Accessor dataAccessor,
             int? currentPosition,
             string passedLengthAccessor,
             DataType dataType = null)
@@ -128,7 +153,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 case BinaryGenerationType.Normal:
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
@@ -151,7 +175,21 @@ namespace Mutagen.Bethesda.Generation
             if (data.RecordType.HasValue)
             {
                 if (dataType != null) throw new ArgumentException();
-                fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}(_data, _{typeGen.Name}Location.Value, _package.Meta).ToArray() : {(typeGen.HasBeenSet ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
+                if (data.OverflowRecordType.HasValue)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ReadByteArrayWithOverflow)}"))
+                    {
+                        args.Add(dataAccessor.ToString());
+                        args.Add($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
+                        args.Add($"_{typeGen.Name}Location");
+                        args.Add(objGen.RecordTypeHeaderName(data.OverflowRecordType.Value));
+                    }
+                }
+                else
+                {
+                    fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}Location.HasValue ? {nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordMemory)}(_data, _{typeGen.Name}Location.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}) : {(typeGen.HasBeenSet ? $"default(ReadOnlyMemorySlice<byte>?)" : "UtilityTranslation.Zeros.Slice(0, 0)")};");
+                }
             }
             else
             {
@@ -159,16 +197,20 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (typeGen.HasBeenSet)
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({currentPosition}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Length >= {(currentPosition + (await this.ExpectedLength(objGen, typeGen)).Value)} ? {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, {data.Length.Value}).ToArray() : default(ReadOnlyMemorySlice<byte>?);");
+                    }
+                    else if (data.Length.HasValue)
+                    {
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice({passedLengthAccessor ?? "0x0"}, 0x{data.Length.Value:X}).ToArray();");
                     }
                     else
                     {
-                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span.Slice(0x{currentPosition:X}, 0x{data.Length.Value:X}).ToArray();");
+                        fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => {dataAccessor}.Span{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}.ToArray();");
                     }
                 }
                 else
                 {
-                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
+                    DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
                     fg.AppendLine($"public {typeGen.TypeName(getter: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => _{typeGen.Name}_IsSet ? {dataAccessor}.Span.Slice(_{typeGen.Name}Location, {(await this.ExpectedLength(objGen, typeGen)).Value}).ToArray() : default(ReadOnlyMemorySlice<byte>{(typeGen.HasBeenSet ? "?" : null)});");
                 }
             }
@@ -179,7 +221,11 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             if (!data.RecordType.HasValue)
             {
-                return checked((int)data.Length.Value);
+                if (data.Length.HasValue)
+                {
+                    return checked((int)data.Length.Value);
+                }
+                return null;
             }
             else
             {
@@ -191,6 +237,43 @@ namespace Mutagen.Bethesda.Generation
         {
             ByteArrayType bType = typeGen as ByteArrayType;
             return bType.Length;
+        }
+
+        public override async Task GenerateWrapperRecordTypeParse(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor locationAccessor,
+            Accessor packageAccessor,
+            Accessor converterAccessor)
+        {
+            var data = typeGen.GetFieldData();
+            if (data.OverflowRecordType.HasValue
+                && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"_{typeGen.Name}Location = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.HandleOverlayRecordOverflow)}"))
+                {
+                    args.Add($"existingLoc: _{typeGen.Name}Location");
+                    args.AddPassArg("stream");
+                    args.AddPassArg("offset");
+                    args.Add($"data: _data");
+                    args.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
+                }
+            }
+            else
+            {
+                await base.GenerateWrapperRecordTypeParse(fg, objGen, typeGen, locationAccessor, packageAccessor, converterAccessor);
+            }
+        }
+
+        public override string GenerateForTypicalWrapper(
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            Accessor dataAccessor,
+            Accessor packageAccessor)
+        {
+            return dataAccessor.ToString();
         }
     }
 }

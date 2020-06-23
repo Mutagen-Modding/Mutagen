@@ -1,7 +1,0 @@
-[*.cs]
-
-# IDE0060: // Remove unused parameter
-dotnet_diagnostic.IDE0060.severity = silent
-
-# CS1066: // Optional parameter has no effect
-dotnet_diagnostic.CS1066.severity = silent

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MagicEffect" objType="Record" recordType="MGEF" baseClass="SkyrimMajorRecord" GUID="6f4b3983-51e3-47e9-894e-9c442948e6d1" ID="90">
+    <Interface>ITranslatedNamed</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="MagicEffect.Flag" byteLength="4" />
+          <Float name="BaseCost" />
+          <CustomLogic name="AssociatedItem" byteLength="4" />
+          <Enum name="MagicSkill" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <Enum name="ResistValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <UInt16 name="CounterEffectCount" />
+          <UInt16 name="Unknown1" />
+          <FormLink name="CastingLight" refName="Light" />
+          <Float name="TaperWeight" />
+          <FormLink name="HitShader" refName="EffectShader" />
+          <FormLink name="EnchantShader" refName="EffectShader" />
+          <UInt32 name="MinimumSkillLevel" />
+          <UInt32 name="SpellmakingArea" />
+          <Float name="SpellmakingCastingTime" />
+          <Float name="TaperCurve" />
+          <Float name="TaperDuration" />
+          <Float name="SecondActorValueWeight" />
+          <RefDirect name="Archetype" binary="Custom" refName="MagicEffectArchetype" byteLength="8" />
+          <!-- Actor Value parsed by above custom logic -->
+          <FormLink name="Projectile" refName="Projectile" />
+          <FormLink name="Explosion" refName="Explosion" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <Enum name="SecondActorValue" enumName="ActorValueExtended" byteLength="4" default="ActorValueExtended.None" />
+          <FormLink name="CastingArt" refName="ArtObject" />
+          <FormLink name="HitEffectArt" refName="ArtObject" />
+          <FormLink name="ImpactData" refName="ImpactDataSet" />
+          <Float name="SkillUsageMultiplier" />
+          <FormLink name="DualCastArt" refName="DualCastData" />
+          <Float name="DualCastScale" />
+          <FormLink name="EnchantArt" refName="ArtObject" />
+          <FormLink name="Unknown2" refName="SkyrimMajorRecord" />
+          <FormLink name="Unknown3" refName="SkyrimMajorRecord" />
+          <FormLink name="EquipAbility" refName="Spell" />
+          <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" />
+          <FormLink name="PerkToApply" refName="Perk" />
+          <Enum name="CastingSoundLevel" enumName="SoundLevel" byteLength="4" />
+          <Float name="ScriptEffectAIScore" />
+          <Float name="ScriptEffectAIDelayTime" />
+        </Fields>
+      </Data>
+      <List name="CounterEffects">
+        <FormLink refName="MagicEffect" recordType="ESCE" />
+      </List>
+      <RefList name="Sounds" refName="MagicEffectSound" recordType="SNDD" />
+      <String name="Description" recordType="DNAM" translated="Normal" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSound" objType="Subrecord" GUID="7e828ddb-2b33-49b7-ba04-0a01c3a5fbb6" ID="116">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffect.SoundType" byteLength="4" />
+      <FormLink name="Sound" refName="SoundDescriptor" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectArchetype" objType="Subrecord" GUID="4a9ea74b-5a0a-4630-96f8-cb34dc5b1207" ID="108" ctorPermission="noGeneration">
+    <Fields>
+      <Enum name="Type" enumName="MagicEffectArchetype.TypeEnum" binary="NoGeneration" internalSetInterface="true" />
+      <FormKey name="AssociationKey" generateClassMembers="false" binary="NoGeneration" />
+      <Enum name="ActorValue" enumName="ActorValueExtended" generateClassMembers="false" binary="NoGeneration" default="ActorValueExtended.None" />
+    </Fields>
+  </Object>
+  <Object name="MagicEffectLightArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="6705b341-5add-4696-8844-027e4134ad64" ID="110">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectBoundArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="8171be2d-44b1-433b-8f43-3b86ef6bd2ed" ID="117">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectNpcArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="c51eb111-5b35-4955-941d-91d3a8a00692" ID="118">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectGuideArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="ab6820d2-0b6e-46bb-b163-f00eaada140c" ID="125">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSpawnHazardArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="7b80473b-7d84-4a2d-a105-45bf6cc22f81" ID="126">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectSpellArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="bcdbf09b-cdf0-4674-a8a7-4569bae2271e" ID="120">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectWerewolfArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="92d865d2-52c8-478c-9f36-9eda9540c7c8" ID="121">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectVampireArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="39e7d9cb-f468-4b96-a58a-5c5b749a1c40" ID="127">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectEnchantmentArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="10181691-291f-48d7-8b14-3b46a2670c64" ID="122">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="MagicEffectKeywordArchetype" objType="Subrecord" baseClass="MagicEffectArchetype" ctorPermission="noGeneration" GUID="3675b91e-c3b8-491e-a449-d3891f88c467" ID="123">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Faction" recordType="FACT" objType="Record" baseClass="SkyrimMajorRecord" GUID="db110917-5be4-4ea2-b679-55c8ac5b6179" ID="27">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IRelatable</Interface>
+    <Interface>IObjectId</Interface>
+    <Interface>IOwner</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefList name="Relations" refName="Relation" />
+      <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="4" hasBeenSet="False" />
+      <FormLink name="ExteriorJailMarker" recordType="JAIL" refName="PlacedObject" />
+      <FormLink name="FollowerWaitMarker" recordType="WAIT" refName="PlacedObject" />
+      <FormLink name="StolenGoodsContainer" recordType="STOL" refName="PlacedObject" />
+      <FormLink name="PlayerInventoryContainer" recordType="PLCN" refName="PlacedObject" />
+      <FormLink name="SharedCrimeFactionList" recordType="CRGR" refName="FormList" />
+      <FormLink name="JailOutfit" recordType="JOUT" refName="Outfit" />
+      <RefDirect name="CrimeValues" refName="CrimeValues" />
+      <RefList name="Ranks" refName="Rank" />
+      <FormLink name="VendorBuySellList" recordType="VEND" refName="FormList" />
+      <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
+      <RefDirect name="VendorValues" refName="VendorValues" />
+      <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="CrimeValues" objType="Subrecord" recordType="CRVA" GUID="7bd6c4ae-2666-4f6f-a7a0-f459a05b7787" ID="132">
+    <Fields>
+      <Bool name="Arrest" byteLength="1" />
+      <Bool name="AttackOnSight" byteLength="1" />
+      <UInt16 name="Murder" />
+      <UInt16 name="Assault" />
+      <UInt16 name="Trespass" />
+      <UInt16 name="Pickpocket" />
+      <UInt16 name="Unknown" />
+      <Break />
+      <Float name="StealMult" />
+      <Break />
+      <UInt16 name="Escape" />
+      <UInt16 name="Werewolf" />
+    </Fields>
+  </Object>
+  <Object name="VendorValues" objType="Subrecord" recordType="VENV" GUID="31dd7308-ffd1-4311-a69c-f6c0bed71382" ID="34">
+    <Fields>
+      <UInt16 name="StartHour" />
+      <UInt16 name="EndHour" />
+      <UInt16 name="Radius" />
+      <UInt16 name="Unknown"/>
+      <Bool name="OnlyBuysStolenItems" byteLength="1" />
+      <Bool name="NotSellBuy" byteLength="1" />
+      <UInt16 name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="Rank" objType="Subrecord" GUID="168a7e1e-9304-4604-b927-7b61cfa16730" ID="32">
+    <Fields>
+      <UInt32 name="RankNumber" recordType="RNAM" />
+      <String name="MaleRankTitle" recordType="MNAM" />
+      <String name="FemaleRankTitle" recordType="FNAM" />
+      <String name="Insignia" recordType="INAM" />
+    </Fields>
+  </Object>
+</Loqui>

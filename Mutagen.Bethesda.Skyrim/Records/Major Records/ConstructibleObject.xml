@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ConstructibleObject" recordType="COBJ" objType="Record" baseClass="SkyrimMajorRecord" GUID="5fae010b-21e8-4528-b78f-1a4efb2cdd60" ID="237">
+    <Fields>
+      <RefList name="Items" counterRecType="COCT" refName="ContainerEntry" />
+      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <FormLink name="CreatedObject" refName="SkyrimMajorRecord" recordType="CNAM" />
+      <FormLink name="WorkbenchKeyword" refName="Keyword" recordType="BNAM" />
+      <UInt16 name="CreatedObjectCount" recordType="NAM1" />
+    </Fields>
+  </Object>
+</Loqui>

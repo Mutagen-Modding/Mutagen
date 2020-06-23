@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Miscellaneous" objType="Record" baseClass="AItem" recordType="MISC" GUID="b894fd9b-01a7-4f5c-803f-44167e7d5b71" ID="77">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <RefDirect name="Data" refName="MiscellaneousData" />
+    </Fields>
+  </Object>
+  <Object name="MiscellaneousData" objType="Subrecord" recordType="DATA" GUID="e7daacc4-40a3-4e42-93ed-69d7e30e0f16" ID="197">
+    <Fields>
+      <Int32 name="Value" />
+      <Float name="Weight" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Eye" recordType="EYES" objType="Record" baseClass="OblivionMajorRecord" GUID="adf54439-4091-4d26-ae99-171e4b211def" ID="29">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <String name="Icon" recordType="ICON" hasBeenSet="True" />
+      <Enum name="Flags" enumName="Eye.Flag" byteLength="1" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

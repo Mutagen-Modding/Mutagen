@@ -72,15 +72,12 @@ namespace Mutagen.Bethesda
         public static M MajorRecordParse<M>(
             M record,
             MutagenFrame frame,
-            RecordType recType,
             RecordTypeConverter? recordTypeConverter,
             RecordStructFill<M> fillStructs,
             RecordTypeFill<M> fillTyped)
             where M : IMajorRecordCommonGetter
         {
-            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
-                frame.Reader,
-                recType));
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(frame.Reader));
             fillStructs(
                 record: record,
                 frame: frame);
@@ -333,9 +330,9 @@ namespace Mutagen.Bethesda
             return slice;
         }
 
-        public static BinaryMemoryReadStream DecompressStream(BinaryMemoryReadStream stream, GameConstants meta)
+        public static OverlayStream DecompressStream(OverlayStream stream)
         {
-            var majorMeta = meta.GetMajorRecord(stream);
+            var majorMeta = stream.GetMajorRecord();
             if (majorMeta.IsCompressed)
             {
                 uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(stream.RemainingSpan.Slice(majorMeta.HeaderLength));
@@ -345,14 +342,14 @@ namespace Mutagen.Bethesda
                 // Set length bytes
                 BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                 // Copy uncompressed data over
                 using (var compessionStream = new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                 {
                     compessionStream.Read(buf, majorMeta.HeaderLength, checked((int)uncompressedLength));
                 }
                 stream.Position += checked((int)majorMeta.TotalLength);
-                stream = new BinaryMemoryReadStream(buf);
+                stream = new OverlayStream(buf, stream.MetaData);
             }
             return stream;
         }
@@ -504,7 +501,7 @@ namespace Mutagen.Bethesda
         /// <returns>Array of found record locations</returns>
         public static int?[] FindNextSubrecords(
             ReadOnlySpan<byte> data,
-            GameConstants meta, 
+            GameConstants meta,
             out int lenParsed,
             bool stopOnAlreadyEncounteredRecord,
             params RecordType[] recordTypes)
@@ -560,7 +557,7 @@ namespace Mutagen.Bethesda
             ReadOnlySpan<byte> data,
             GameConstants meta,
             RecordType recordType,
-            bool navigateToContent = false, 
+            bool navigateToContent = false,
             int? offset = null)
         {
             int loc = offset ?? 0;
@@ -578,6 +575,84 @@ namespace Mutagen.Bethesda
                 loc += subMeta.TotalLength;
             }
             return null;
+        }
+
+        public static int? FindFirstSubrecord(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            ICollectionGetter<RecordType> recordTypes,
+            bool navigateToContent = false,
+            int? offset = null)
+        {
+            int loc = offset ?? 0;
+            while (data.Length > loc)
+            {
+                var subMeta = meta.Subrecord(data.Slice(loc));
+                if (recordTypes.Contains(subMeta.RecordType))
+                {
+                    if (navigateToContent)
+                    {
+                        loc += meta.SubConstants.HeaderLength;
+                    }
+                    return loc;
+                }
+                loc += subMeta.TotalLength;
+            }
+            return null;
+        }
+
+        public static int[] FindAllOfSubrecord(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            RecordType recordType,
+            bool navigateToContent = false)
+        {
+            List<int> ret = new List<int>();
+            int lenParsed = 0;
+            while (data.Length > lenParsed)
+            {
+                var subMeta = meta.Subrecord(data.Slice(lenParsed));
+                if (subMeta.RecordType == recordType)
+                {
+                    if (navigateToContent)
+                    {
+                        ret.Add(subMeta.HeaderLength + lenParsed);
+                    }
+                    else
+                    {
+                        ret.Add(lenParsed);
+                    }
+                }
+                lenParsed += subMeta.TotalLength;
+            }
+            return ret.ToArray();
+        }
+
+        public static int[] FindAllOfSubrecords(
+            ReadOnlySpan<byte> data,
+            GameConstants meta,
+            ICollectionGetter<RecordType> recordTypes,
+            bool navigateToContent = false)
+        {
+            List<int> ret = new List<int>();
+            int lenParsed = 0;
+            while (data.Length > lenParsed)
+            {
+                var subMeta = meta.Subrecord(data.Slice(lenParsed));
+                if (recordTypes.Contains(subMeta.RecordType))
+                {
+                    if (navigateToContent)
+                    {
+                        ret.Add(subMeta.HeaderLength + lenParsed);
+                    }
+                    else
+                    {
+                        ret.Add(lenParsed);
+                    }
+                }
+                lenParsed += subMeta.TotalLength;
+            }
+            return ret.ToArray();
         }
 
         public static async Task CompileStreamsInto(IEnumerable<Task<IEnumerable<Stream>>> inStreams, Stream outStream)
@@ -650,9 +725,64 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public static int SkipPastAll(ReadOnlySpan<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
+        {
+            var pos = 0;
+            numRecordsPassed = 0;
+            while (pos < data.Length)
+            {
+                var subHeader = constants.Subrecord(data.Slice(pos));
+                if (subHeader.RecordType != toSkip) break;
+                pos += subHeader.TotalLength;
+                numRecordsPassed++;
+            }
+            return pos;
+        }
+
         public static RecordType GetRecordType<T>()
         {
             return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember).GetValue(null);
+        }
+
+        public static ReadOnlyMemorySlice<byte>? ReadByteArrayWithOverflow(
+            ReadOnlyMemorySlice<byte> bytes,
+            GameConstants constants,
+            int? loc,
+            RecordType overflowType)
+        {
+            if (!loc.HasValue) return null;
+            var header = constants.SubrecordMemoryFrame(bytes[loc.Value..]);
+            if (header.Header.RecordType == overflowType)
+            {
+                return bytes.Slice(
+                    loc.Value + header.Header.TotalLength + header.Header.HeaderLength,
+                    checked((int)BinaryPrimitives.ReadUInt32LittleEndian(header.Content)));
+            }
+            else
+            {
+                return header.Content;
+            }
+        }
+
+        public static int HandleOverlayRecordOverflow(
+            int? existingLoc,
+            OverlayStream stream,
+            int offset,
+            ReadOnlySpan<byte> data,
+            GameConstants constants)
+        {
+            if (existingLoc.HasValue)
+            {
+                var overflowHeader = constants.SubrecordFrame(data.Slice(existingLoc.Value));
+                var len = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
+                // Need to skip the data record, which doesn't have a proper length
+                stream.Position += constants.SubConstants.HeaderLength + len;
+                return existingLoc.Value;
+            }
+            else
+            {
+                return stream.Position - offset;
+            }
         }
     }
 }

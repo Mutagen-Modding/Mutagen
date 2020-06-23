@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Spell" recordType="SPEL" objType="Record" baseClass="ASpell" GUID="9bc07114-08cb-4a62-8819-b3edc36ab87e" ID="115">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IEffectRecord</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
+    <Fields>
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="MenuDisplayObject" refName="Static" recordType="MDOB" />
+      <FormLink name="EquipmentType" refName="EquipType" recordType="ETYP" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <Data recordType="SPIT">
+        <Fields>
+          <UInt32 name="BaseCost" />
+          <Enum name="Flags" enumName="SpellDataFlag" byteLength="4" />
+          <Enum name="Type" enumName="SpellType" byteLength="4" />
+          <Float name="ChargeTime" />
+          <Enum name="CastType" enumName="CastType" byteLength="4" />
+          <Enum name="TargetType" enumName="TargetType" byteLength="4" />
+          <Float name="CastDuration" />
+          <Float name="Range" />
+          <FormLink name="HalfCostPerk" refName="Perk" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" hasBeenSet="False" />
+    </Fields>
+  </Object>
+</Loqui>

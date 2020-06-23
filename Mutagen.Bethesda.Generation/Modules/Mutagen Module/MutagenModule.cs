@@ -19,10 +19,8 @@ namespace Mutagen.Bethesda.Generation
         {
             this.SubModules.Add(new TriggeringRecordModule());
             this.SubModules.Add(new GenericsModule());
-            this.SubModules.Add(new SpecialParseModule());
             this.SubModules.Add(new VersioningModule());
             this.SubModules.Add(new RecordTypeConverterModule());
-            this.SubModules.Add(new NumFieldsModule());
             this.SubModules.Add(new CorrectnessModule());
             this.SubModules.Add(new ModModule());
             this.SubModules.Add(new ColorTypeModule());
@@ -67,7 +65,11 @@ namespace Mutagen.Bethesda.Generation
             await base.PostFieldLoad(obj, field, node);
             data.Length = node.GetAttribute<int?>(Constants.ByteLength, null);
             if (data.Length.HasValue) return;
-            if (field.IntegrateField && !FieldFilter(field) && field.GetFieldData().Binary == BinaryGenerationType.Normal)
+            var index = obj.Fields.IndexOf(field);
+            if (field.IntegrateField 
+                && !FieldFilter(field)
+                && field.GetFieldData().Binary == BinaryGenerationType.Normal
+                && index != (obj.Fields.Count - 1))
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }

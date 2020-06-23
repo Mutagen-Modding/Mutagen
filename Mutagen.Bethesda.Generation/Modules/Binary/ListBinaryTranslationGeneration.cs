@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.TryGetFieldData(out var data)
                 && data.MarkerType.HasValue)
             {
-                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)}, Mutagen.Bethesda.Binary.ObjectType.Subrecord)) {{ }}");
+                fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
             }
 
             var subData = list.SubTypeGeneration.GetFieldData();
@@ -275,34 +275,21 @@ namespace Mutagen.Bethesda.Generation
             if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                 && counterRecObj is string counterRecType)
             {
-                switch ((byte)typeGen.CustomData[CounterByteLength])
-                {
-                    case 1:
-                        fg.AppendLine("var amount = frame.ReadSubrecordFrame().Content[0];");
-                        break;
-                    case 2:
-                        fg.AppendLine("var amount = BinaryPrimitives.ReadInt16LittleEndian(frame.ReadSubrecordFrame().Content);");
-                        break;
-                    case 4:
-                        fg.AppendLine("var amount = BinaryPrimitives.ReadInt32LittleEndian(frame.ReadSubrecordFrame().Content);");
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                // Nothing
             }
             else if (data.MarkerType.HasValue)
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength; // Skip marker");
             }
             else if (listBinaryType == ListBinaryType.Trigger || (data.HasTrigger && !subData.HasTrigger))
             {
-                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                fg.AppendLine($"frame.Position += frame.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
             bool threading = list.CustomData.TryGetValue(ThreadKey, out var t)
                 && (bool)t;
 
-            bool needsMasters = list.SubTypeGeneration.NeedMasters();
+            bool needsRecordConv = list.SubTypeGeneration.NeedsRecordConverter();
 
             bool recordPerItem = false;
             if (listBinaryType == ListBinaryType.CounterRecord
@@ -332,21 +319,61 @@ namespace Mutagen.Bethesda.Generation
                         {
                             case ListBinaryType.SubTrigger:
                                 args.AddPassArg($"frame");
-                                args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                if (needsRecordConv)
+                                {
+                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                }
+                                else
+                                {
+                                    args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                }
+                                if (list.SubTypeGeneration is LoquiType loqui
+                                    && !loqui.TargetObjectGeneration.Abstract
+                                    && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
+                                {
+                                    args.Add("skipHeader: true");
+                                }
                                 break;
                             case ListBinaryType.Trigger:
                                 args.Add($"frame: frame.SpawnWithLength(contentLength)");
                                 break;
                             case ListBinaryType.CounterRecord:
                                 args.AddPassArg($"frame");
-                                args.AddPassArg($"amount");
+                                if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
+                                    && counterRecObj is string counterRecType)
+                                {
+                                    var len = (byte)typeGen.CustomData[CounterByteLength];
+                                    args.Add($"countLengthLength: {len}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"countRecord: {objGen.RecordTypeHeaderName(counterRecType)}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"countRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(counterRecType)})");
+                                    }
+                                }
                                 if (data.RecordType != null)
                                 {
-                                    args.Add($"triggeringRecord: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"triggeringRecord: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                                    }
                                 }
                                 else if (subData.HasTrigger)
                                 {
-                                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                    if (needsRecordConv)
+                                    {
+                                        args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
+                                    }
+                                    else
+                                    {
+                                        args.Add($"triggeringRecord: recordTypeConverter.ConvertToCustom({subData.TriggeringRecordSetAccessor})");
+                                    }
                                 }
                                 break;
                             case ListBinaryType.PrependCount:
@@ -373,37 +400,47 @@ namespace Mutagen.Bethesda.Generation
                     }
                     if (threading)
                     {
-                        args.Add($"thread: true");
+                        args.Add($"thread: frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
                     }
-                    if (needsMasters && data.HasTrigger)
+                    if (needsRecordConv)
                     {
                         args.AddPassArg($"recordTypeConverter");
                     }
                     var subGenTypes = subData.GenerationTypes.ToList();
                     var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                    if (subGenTypes.Count <= 1 && subTransl.AllowDirectParse(
-                        objGen,
-                        typeGen: list.SubTypeGeneration,
-                        squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
+                    if (subGenTypes.Count <= 1
+                        && subTransl.AllowDirectParse(
+                            objGen,
+                            typeGen: list.SubTypeGeneration,
+                            squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                     {
-                        if (list.SubTypeGeneration is LoquiType loqui
-                            && !loqui.CanStronglyType)
+                        args.Add(subFg =>
                         {
-                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse<{loqui.TypeName(getter: false)}>");
-                        }
-                        else
-                        {
-                            args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: false)}.Parse");
-                        }
+                            subGen.GenerateCopyInRet(
+                                fg: subFg,
+                                objGen: objGen,
+                                targetGen: list.SubTypeGeneration,
+                                typeGen: list.SubTypeGeneration,
+                                readerAccessor: "r",
+                                translationAccessor: "listTranslMask",
+                                retAccessor: "transl: ",
+                                outItemAccessor: new Accessor("listSubItem"),
+                                asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
+                                errorMaskAccessor: "listErrMask",
+                                converterAccessor: "conv",
+                                inline: true);
+                        });
                     }
                     else
                     {
                         args.Add((gen) =>
                         {
-                            gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsMasters ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
-                            using (new BraceWrapper(gen))
+                            if (subGenTypes.Count <= 1)
                             {
-                                if (subGenTypes.Count <= 1)
+                                if (subGen.AllowDirectParse(
+                                    objGen: objGen,
+                                    typeGen: list.SubTypeGeneration,
+                                    squashedRepeatedList: listBinaryType == ListBinaryType.Trigger))
                                 {
                                     subGen.GenerateCopyInRet(
                                         fg: gen,
@@ -412,13 +449,38 @@ namespace Mutagen.Bethesda.Generation
                                         typeGen: list.SubTypeGeneration,
                                         readerAccessor: "r",
                                         translationAccessor: "listTranslMask",
-                                        retAccessor: "return ",
+                                        retAccessor: "transl: ",
                                         outItemAccessor: new Accessor("listSubItem"),
                                         asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
                                         errorMaskAccessor: "listErrMask",
-                                        converterAccessor: "conv");
+                                        converterAccessor: "conv",
+                                        inline: true);
                                 }
                                 else
+                                {
+                                    gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                    using (new BraceWrapper(gen))
+                                    {
+                                        subGen.GenerateCopyInRet(
+                                            fg: gen,
+                                            objGen: objGen,
+                                            targetGen: list.SubTypeGeneration,
+                                            typeGen: list.SubTypeGeneration,
+                                            readerAccessor: "r",
+                                            translationAccessor: "listTranslMask",
+                                            retAccessor: "return ",
+                                            outItemAccessor: new Accessor("listSubItem"),
+                                            asyncMode: isAsync ? AsyncMode.Async : AsyncMode.Off,
+                                            errorMaskAccessor: "listErrMask",
+                                            converterAccessor: "conv",
+                                            inline: false);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                gen.AppendLine($"transl: {Loqui.Generation.Utility.Async(isAsync)}(MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}{(isAsync ? null : $", out {list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)} listSubItem")}{(needsRecordConv ? $", {nameof(RecordTypeConverter)}? conv" : null)}) =>");
+                                using (new BraceWrapper(gen))
                                 {
                                     gen.AppendLine("switch (header.TypeInt)");
                                     using (new BraceWrapper(gen))
@@ -431,7 +493,7 @@ namespace Mutagen.Bethesda.Generation
                                             }
                                             LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
                                             LoquiType specificLoqui = item.Value as LoquiType;
-                                            using (new DepthWrapper(gen))
+                                            using (new BraceWrapper(gen))
                                             {
                                                 subGen.GenerateCopyInRet(
                                                     fg: gen,
@@ -444,7 +506,8 @@ namespace Mutagen.Bethesda.Generation
                                                     outItemAccessor: new Accessor("listSubItem"),
                                                     asyncMode: AsyncMode.Async,
                                                     errorMaskAccessor: $"listErrMask",
-                                                    converterAccessor: "conv");
+                                                    converterAccessor: "conv",
+                                                    inline: false);
                                             }
                                         }
                                         gen.AppendLine("default:");
@@ -472,7 +535,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             throw new NotImplementedException();
         }
@@ -492,7 +556,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 case BinaryGenerationType.Normal:
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
@@ -501,7 +564,7 @@ namespace Mutagen.Bethesda.Generation
                         using (var args = new ArgsWrapper(fg,
                             $"partial void {typeGen.Name}CustomParse"))
                         {
-                            args.Add($"{nameof(BinaryMemoryReadStream)} stream");
+                            args.Add($"{nameof(OverlayStream)} stream");
                             args.Add($"long finalPos");
                             args.Add($"int offset");
                             args.Add($"{nameof(RecordType)} type");
@@ -521,18 +584,25 @@ namespace Mutagen.Bethesda.Generation
                 var typeName = this.Module.BinaryOverlayClassName(loqui);
                 switch (listBinaryType)
                 {
-                    case ListBinaryType.PrependCount 
+                    case ListBinaryType.PrependCount
                     when !data.HasTrigger && expLen.HasValue:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                     default:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
+                        if (data.HasTrigger)
+                        {
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{typeName}>();")}");
+                        }
+                        else
+                        {
+                            fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{typeName}>.FactoryByLazyParse({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        }
                         break;
                 }
             }
             else if (data.HasTrigger)
             {
-                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}");
+                fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} {{ get; private set; }}{(typeGen.HasBeenSet ? null : $" = ListExt.Empty<{list.SubTypeGeneration.TypeName(getter: true)}>();")}");
             }
             else
             {
@@ -541,10 +611,10 @@ namespace Mutagen.Bethesda.Generation
                     case ListBinaryType.CounterRecord:
                         throw new NotImplementedException();
                     case ListBinaryType.PrependCount:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByCountLength({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, countLength: {(byte)list.CustomData[CounterByteLength]}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                     default:
-                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlaySetList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
+                        fg.AppendLine($"public {list.Interface(getter: true, internalInterface: true)}{(typeGen.HasBeenSet ? "?" : null)} {typeGen.Name} => BinaryOverlayList<{list.SubTypeGeneration.TypeName(getter: true, needsCovariance: true)}>.FactoryByStartIndex({dataAccessor}{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}, _package, {expLen}, (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")});");
                         break;
                 }
             }
@@ -569,7 +639,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 case BinaryGenerationType.Normal:
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
@@ -589,7 +658,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType.HasValue)
             {
-                fg.AppendLine($"stream.Position += {packageAccessor}.Meta.SubConstants.HeaderLength; // Skip marker");
+                fg.AppendLine($"stream.Position += {packageAccessor}.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength; // Skip marker");
             }
             var subData = list.SubTypeGeneration.GetFieldData();
             var subGenTypes = subData.GenerationTypes.ToList();
@@ -654,35 +723,40 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     });
                                 }
+                                if (loqui != null
+                                    && !loqui.TargetObjectGeneration.Abstract
+                                    && loqui.TargetObjectGeneration.GetObjectData().TriggeringSource == null)
+                                {
+                                    args.Add("skipHeader: true");
+                                }
                             }
                         }
                         else
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                                $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                             {
                                 args.Add($"mem: stream.RemainingMemory");
                                 args.Add($"package: _package");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
-                                args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p, recConv)");
+                                args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
                                         $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
-                                        subArgs.AddPassArg("finalPos");
                                         subArgs.Add("trigger: type");
                                         switch (loqui.TargetObjectGeneration.GetObjectType())
                                         {
                                             case ObjectType.Subrecord:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
+                                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                                 break;
                                             case ObjectType.Record:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.MajorConstants)}");
+                                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.MajorConstants)}");
                                                 break;
                                             case ObjectType.Group:
-                                                subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.GroupConstants)}");
+                                                subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.GroupConstants)}");
                                                 break;
                                             case ObjectType.Mod:
                                             default:
@@ -697,7 +771,7 @@ namespace Mutagen.Bethesda.Generation
                     else if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
@@ -708,8 +782,7 @@ namespace Mutagen.Bethesda.Generation
                                     $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.AddPassArg("finalPos");
-                                    subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
+                                    subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: true");
                                     subArgs.Add($"recordTypeConverter: {converterAccessor}");
@@ -720,19 +793,18 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByArray"))
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
-                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "p.Meta.SubrecordFrame(s).Content", "p")}");
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordMemoryFrame(s).Content", "p")}");
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
                                     $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
-                                    subArgs.AddPassArg("finalPos");
-                                    subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
+                                    subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
                                     subArgs.Add("trigger: type");
                                     subArgs.Add("skipHeader: false");
                                     subArgs.Add($"recordTypeConverter: {converterAccessor}");
@@ -742,12 +814,12 @@ namespace Mutagen.Bethesda.Generation
                     }
                     break;
                 case ListBinaryType.Trigger:
-                    fg.AppendLine("var subMeta = _package.Meta.ReadSubrecord(stream);");
+                    fg.AppendLine($"var subMeta = stream.ReadSubrecord();");
                     fg.AppendLine("var subLen = subMeta.ContentLength;");
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByStartIndex"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByStartIndex"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -792,7 +864,7 @@ namespace Mutagen.Bethesda.Generation
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByLazyParse"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByLazyParse"))
                         {
                             args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
                             args.Add($"package: _package");
@@ -809,45 +881,25 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("stream.Position += subLen;");
                     break;
                 case ListBinaryType.CounterRecord:
-                    switch ((byte)list.CustomData[CounterByteLength])
-                    {
-                        case 1:
-                            fg.AppendLine($"var count = _package.Meta.ReadSubrecordFrame(stream).Content[0];");
-                            break;
-                        case 2:
-                            fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt16LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
-                            break;
-                        case 4:
-                            fg.AppendLine($"var count = BinaryPrimitives.{nameof(BinaryPrimitives.ReadUInt32LittleEndian)}(_package.Meta.ReadSubrecordFrame(stream).Content);");
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
-                    if (subData.HasTrigger)
-                    {
-                        if (expectedLen.HasValue)
-                        {
-                            fg.AppendLine($"var subLen = checked((int)(({expectedLen} + _package.Meta.SubConstants.HeaderLength) * count));");
-                        }
-                    }
-                    else
-                    {
-                        fg.AppendLine("var subMeta = _package.Meta.ReadSubrecord(stream);");
-                        fg.AppendLine("var subLen = subMeta.ContentLength;");
-                    }
+                    var counterLen = (byte)list.CustomData[CounterByteLength];
                     if (expectedLen.HasValue)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount{(subData.HasTrigger ? "PerItem" : null)}"))
                         {
-                            args.Add($"mem: stream.RemainingMemory.Slice(0, subLen)");
+                            args.AddPassArg($"stream");
                             args.Add($"package: _package");
                             args.Add($"itemLength: 0x{expectedLen:X}");
+                            args.Add($"countLength: {counterLen}");
+                            args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                             if (subData.HasTrigger)
                             {
                                 args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
                             }
-                            args.AddPassArg($"count");
+                            else
+                            {
+                                args.Add($"subrecordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                            }
                             if (subGenTypes.Count <= 1)
                             {
                                 args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, "s", "p")}");
@@ -888,50 +940,27 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add("skipHeader: false");
                             }
                         }
-                        fg.AppendLine("stream.Position += subLen;");
                     }
                     else
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByArray"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCountPerItem"))
                         {
-                            args.Add($"mem: stream.RemainingMemory");
+                            args.AddPassArg($"stream");
                             args.Add($"package: _package");
+                            args.Add($"countLength: {counterLen}");
+                            args.Add($"subrecordType: {subData.TriggeringRecordSetAccessor}");
+                            args.Add($"countType: {objGen.RecordTypeHeaderName(new RecordType((string)typeGen.CustomData[CounterRecordType]))}");
                             args.Add($"recordTypeConverter: {converterAccessor}");
-                            args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(BinaryMemoryReadStream)}(s), p, recConv)");
-                            args.Add(subFg =>
-                            {
-                                using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: {nameof(BinaryOverlay.ParseRecordLocationsByCount)}"))
-                                {
-                                    subArgs.AddPassArg("stream");
-                                    subArgs.AddPassArg("count");
-                                    subArgs.Add($"trigger: {subData.TriggeringRecordSetAccessor}");
-                                    switch (loqui.TargetObjectGeneration.GetObjectType())
-                                    {
-                                        case ObjectType.Subrecord:
-                                            subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.SubConstants)}");
-                                            break;
-                                        case ObjectType.Record:
-                                            subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.MajorConstants)}");
-                                            break;
-                                        case ObjectType.Group:
-                                            subArgs.Add($"constants: _package.Meta.{nameof(GameConstants.GroupConstants)}");
-                                            break;
-                                        case ObjectType.Mod:
-                                        default:
-                                            throw new NotImplementedException();
-                                    }
-                                    subArgs.Add("skipHeader: false");
-                                }
-                            });
+                            args.Add($"getter: (s, p, recConv) => {typeName}.{loqui.TargetObjectGeneration.Name}Factory(new {nameof(OverlayStream)}(s, p), p, recConv)");
+                            args.Add("skipHeader: false");
                         }
                     }
                     break;
                 case ListBinaryType.PrependCount:
                     if (data.HasTrigger)
                     {
-                        fg.AppendLine("stream.Position += _package.Meta.SubConstants.HeaderLength;");
+                        fg.AppendLine($"stream.Position += _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.HeaderLength;");
                     }
                     byte countLen = (byte)list.CustomData[CounterByteLength];
                     switch (countLen)
@@ -946,7 +975,7 @@ namespace Mutagen.Bethesda.Generation
                             throw new NotImplementedException();
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"this.{typeGen.Name} = BinaryOverlaySetList<{typeName}>.FactoryByCount"))
+                        $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount"))
                     {
                         args.AddPassArg($"stream");
                         args.Add($"package: _package");
@@ -1005,16 +1034,46 @@ namespace Mutagen.Bethesda.Generation
             string passedLengthAccessor)
         {
             ListType list = typeGen as ListType;
-            if (!list.CustomData.TryGetValue(CounterByteLength, out var counterLenObj)) return;
-            var len = (byte)counterLenObj;
-            if (len == 0) return;
-            if (len != 4)
-            {
-                throw new NotImplementedException();
-            }
+            ListBinaryType listBinaryType = GetListType(list, list.GetFieldData(), list.SubTypeGeneration.GetFieldData());
             var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
             var subExpLen = await subGen.ExpectedLength(objGen, list.SubTypeGeneration);
-            fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.ReadInt32LittleEndian(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + 4;");
+            switch (listBinaryType)
+            {
+                case ListBinaryType.SubTrigger:
+                    break;
+                case ListBinaryType.Trigger:
+                    break;
+                case ListBinaryType.CounterRecord:
+                    break;
+                case ListBinaryType.PrependCount:
+                    {
+                        var len = (byte)list.CustomData[CounterByteLength];
+                        string readStr;
+                        switch (len)
+                        {
+                            case 0:
+                                return;
+                            case 2:
+                                readStr = $"ReadUInt16LittleEndian";
+                                break;
+                            case 4:
+                                readStr = $"ReadInt32LittleEndian";
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        fg.AppendLine($"ret.{typeGen.Name}EndingPos = {(passedLengthAccessor == null ? null : $"{passedLengthAccessor} + ")}BinaryPrimitives.{readStr}(ret._data{(passedLengthAccessor == null ? null : $".Slice({passedLengthAccessor})")}) * {subExpLen.Value} + {len};");
+                    }
+                    break;
+                case ListBinaryType.Frame:
+                    if (!list.SubTypeGeneration.GetFieldData().HasTrigger)
+                    {
+                        fg.AppendLine($"ret.{typeGen.Name}EndingPos = ret._data.Length;");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

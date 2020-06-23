@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda
             public ISortedListGetter<long> GrupLocations => _grupLocations.Keys;
             public SortingListDictionary<long, (FormID FormID, RecordType Record)> ListedRecords => _fromStart;
             public RangeInt64 this[FormID id] => _fromFormIDs[id].Range;
-            public IReadOnlyCollection<FormID> FormIDs => _fromFormIDs.Keys;
+            public ICollectionGetter<FormID> FormIDs => new CollectionGetterWrapper<FormID>(_fromFormIDs.Keys);
 
             internal FileLocations(FileLocationConstructor constructor)
             {
@@ -152,13 +152,11 @@ namespace Mutagen.Bethesda
 
         public static FileLocations GetFileLocations(
             string filePath,
-            GameConstants meta,
+            GameConstants constants,
             RecordInterest? interest = null)
         {
-            using (var stream = new MutagenBinaryReadStream(filePath, meta))
-            {
-                return GetFileLocations(stream, interest);
-            }
+            using var stream = new MutagenBinaryReadStream(filePath, new ParsingBundle(constants));
+            return GetFileLocations(stream, interest);
         }
 
         private static void SkipHeader(IMutagenReadStream reader)
@@ -175,7 +173,7 @@ namespace Mutagen.Bethesda
             RecordInterest? interest = null,
             Func<IMutagenReadStream, RecordType, uint, bool>? additionalCriteria = null)
         {
-            FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData)
+            FileLocationConstructor ret = new FileLocationConstructor(reader.MetaData.Constants)
             {
                 AdditionalCriteria = additionalCriteria,
             };
@@ -225,6 +223,12 @@ namespace Mutagen.Bethesda
                 return null;
             }
 
+            if (grupRec.Type == "WRLD")
+            {
+                int wer = 23;
+                wer++;
+            }
+
             reader.Position += groupMeta.HeaderLength;
 
             using (var frame = MutagenFrame.ByFinalPosition(reader, reader.Position + groupMeta.ContentLength))
@@ -233,6 +237,12 @@ namespace Mutagen.Bethesda
                 {
                     MajorRecordHeader majorRecordMeta = frame.GetMajorRecord();
                     var targetRec = majorRecordMeta.RecordType;
+                    if (majorRecordMeta.FormID.ID == 0xB414D
+                        || majorRecordMeta.FormID.ID == 0xD74)
+                    {
+                        int wer = 23;
+                        wer++;
+                    }
                     if (targetRec != grupRec)
                     {
                         if (IsSubLevelGRUP(frame.GetGroup()))
@@ -361,17 +371,13 @@ namespace Mutagen.Bethesda
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
-                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Mutagen.Bethesda.Internals.Constants.Group))
+                var groupMeta = frame.GetGroup();
+                if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
                 }
                 fileLocs.GrupLocations.Add(grupLoc);
-                var recLength = frame.Reader.ReadUInt32();
-                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
-                frame.Reader.Position -= 16;
-                switch (grupType)
+                switch ((GroupTypeEnum)groupMeta.GroupType)
                 {
                     case GroupTypeEnum.InteriorCellSubBlock:
                     case GroupTypeEnum.ExteriorCellSubBlock:
@@ -399,17 +405,13 @@ namespace Mutagen.Bethesda
             while (!frame.Complete)
             {
                 var grupLoc = frame.Position;
-                var targetRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                if (!targetRec.Equals(Mutagen.Bethesda.Internals.Constants.Group))
+                var groupMeta = frame.GetGroup();
+                if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException();
                 }
                 fileLocs.GrupLocations.Add(grupLoc);
-                var recLength = frame.Reader.ReadUInt32();
-                var grupRec = HeaderTranslation.ReadNextRecordType(frame.Reader);
-                var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(MutagenFrame.ByLength(frame.Reader, 4));
-                frame.Reader.Position -= 16;
-                switch (grupType)
+                switch ((GroupTypeEnum)groupMeta.GroupType)
                 {
                     case GroupTypeEnum.CellPersistentChildren:
                     case GroupTypeEnum.CellTemporaryChildren:

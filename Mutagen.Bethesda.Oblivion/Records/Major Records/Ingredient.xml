@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingredient" baseClass="AItem" recordType="INGR" objType="Record" GUID="b617ece0-1ff6-475d-af9d-265d2f55af37" ID="76">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <Float name="Weight" recordType="DATA" />
+      <RefDirect name="Data" refName="IngredientData" />
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="IngredientData" recordType="ENIT" objType="Subrecord" GUID="462fc0c4-95a5-441c-93d9-0f87117b9910" ID="192">
+    <Fields>
+      <UInt32 name="Value" />
+      <Enum name="Flags" enumName="IngredientFlag" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -42,5 +42,17 @@ namespace Mutagen.Bethesda.Xml
         {
             throw new NotImplementedException();
         }
+
+        public void Write(XElement node, string? name, FormKey? item, int fieldIndex, ErrorMaskBuilder? errorMask)
+        {
+            if (!item.HasValue) return;
+            Write(node, name, item.Value, fieldIndex, errorMask);
+        }
+
+        public void Write(XElement node, string? name, FormKey? item, ErrorMaskBuilder? errorMask)
+        {
+            if (!item.HasValue) return;
+            Write(node, name, item.Value, errorMask);
+        }
     }
 }

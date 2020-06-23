@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Binary
         public ushort ContentLength => RecordLength;
         
         /// <summary>
-        /// Total length of the Major Record, including the header and its content.
+        /// Total length of the Sub Record, including the header and its content.
         /// </summary>
         public int TotalLength => this.HeaderLength + this.ContentLength;
 
@@ -83,6 +83,11 @@ namespace Mutagen.Bethesda.Binary
         /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlySpan<byte> HeaderAndContentData { get; }
+
+        /// <summary>
+        /// Total length of the Sub Record, including the header and its content.
+        /// </summary>
+        public int TotalLength => this.Content.Length + this.Header.HeaderLength;
         
         /// <summary>
         /// Raw bytes of the content data, excluding the header
@@ -130,7 +135,12 @@ namespace Mutagen.Bethesda.Binary
         /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-        
+
+        /// <summary> 
+        /// Total length of the Sub Record, including the header and its content. 
+        /// </summary> 
+        public int TotalLength => this.Content.Length + this.Header.HeaderLength;
+
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>

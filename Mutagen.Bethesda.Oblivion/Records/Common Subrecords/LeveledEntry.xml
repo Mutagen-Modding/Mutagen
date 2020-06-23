@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LeveledEntry" objType="Subrecord" recordType="LVLO" GUID="d73c0730-8b50-4574-9144-4738f8a8f73d" ID="92">
+    <Generic name="T" isClass="true" >
+      <Where>OblivionMajorRecord</Where>
+    </Generic>
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" >
+        <Generic>T</Generic>
+      </FormLink>
+      <Int16 name="Count" hasBeenSet="True" />
+      <Int16 name="Unknown2" hasBeenSet="True" />
+    </Fields>
+  </Object>
+</Loqui>

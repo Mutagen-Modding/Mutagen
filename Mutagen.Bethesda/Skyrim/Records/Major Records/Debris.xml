@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="SkyrimMajorRecord" GUID="5bcb6ea3-f45b-4db7-a1ce-65457d4695fe" ID="142">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

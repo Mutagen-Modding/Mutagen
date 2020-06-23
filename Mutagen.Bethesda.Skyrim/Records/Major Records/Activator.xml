@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Activator" objType="Record" recordType="ACTI" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="ec45e095-71e5-410d-a22b-ad98bead29c6" ID="144">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IModeled</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Interface>IObjectId</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Destructible" refName="Destructible" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA" >
+        <FormLink refName="Keyword" />
+      </List>
+      <Color name="MarkerColor" recordType="PNAM" binaryType="Alpha" />
+      <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="ActivationSound" refName="SoundDescriptor" recordType="VNAM" />
+      <FormLink name="WaterType" refName="Water" recordType="WNAM" />
+      <String name="ActivateTextOverride" recordType="RNAM" />
+      <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
+      <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -71,11 +71,11 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Npc_Registration.NPC__HEADER.Equals(recType)) return;
+            if (!RecordTypes.NPC_.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width);
+            var majorFrame = stream.ReadMajorRecordMemoryFrame();
             this.DynamicMove(
-                str,
+                majorFrame,
                 loc,
                 offendingIndices: new RecordType[]
                 {
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Creature_Registration.CREA_HEADER.Equals(recType)) return;
+            if (!RecordTypes.CREA.Equals(recType)) return;
             this.AlignRecords(
                 stream,
                 loc,
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!LeveledItem_Registration.LVLI_HEADER.Equals(recType)) return;
+            if (!RecordTypes.LVLI.Equals(recType)) return;
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
             var dataIndex = str.IndexOf("DATA");
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Region_Registration.REGN_HEADER.Equals(recType)) return;
+            if (!RecordTypes.REGN.Equals(recType)) return;
             stream.Position = loc.Min;
             var lenToRead = (int)loc.Width + Meta.MajorConstants.HeaderLength;
             var str = stream.ReadZString(lenToRead);
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Tests
                 MemoryStream memStream = new MemoryStream();
                 using (var writer = new MutagenWriter(memStream, this.GameMode))
                 {
-                    using (HeaderExport.ExportHeader(
+                    using (HeaderExport.Header(
                         writer,
                         new RecordType("ICON"),
                         ObjectType.Subrecord))
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!PlacedObject_Registration.REFR_HEADER.Equals(recType)) return;
+            if (!RecordTypes.REFR.Equals(recType)) return;
 
             int amount = 0;
             stream.Position = loc.Min;
@@ -423,67 +423,12 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Cell_Registration.CELL_HEADER.Equals(recType)) return;
-
-            // Clean empty child groups
-            List<RangeInt64> removes = new List<RangeInt64>();
-            stream.Position = loc.Min + 4;
-            var len = stream.ReadUInt32();
-            stream.Position += len + 12;
-            var grupPos = stream.Position;
-            var grup = stream.ReadZString(4);
-            if (!grup.Equals("GRUP")) return;
-            var grupLen = stream.ReadUInt32();
-            if (grupLen == 0x14)
-            {
-                removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
-            }
-            else
-            {
-                stream.Position += 4;
-                var grupType = (GroupTypeEnum)stream.ReadUInt32();
-                if (grupType != GroupTypeEnum.CellChildren) return;
-                stream.Position += 4;
-                var amountRemoved = 0;
-                for (int i = 0; i < 3; i++)
-                {
-                    var startPos = stream.Position;
-                    var subGrup = stream.ReadZString(4);
-                    if (!subGrup.Equals("GRUP")) break;
-                    var subGrupLen = stream.ReadUInt32();
-                    stream.Position = startPos + subGrupLen;
-                    if (subGrupLen == 0x14)
-                    { // Empty group
-                        this._LengthTracker[grupPos] = this._LengthTracker[grupPos] - 0x14;
-                        removes.Add(new RangeInt64(stream.Position - 0x14, stream.Position - 1));
-                        amountRemoved++;
-                    }
-                }
-
-                // Check to see if removed subgroups left parent empty
-                if (amountRemoved > 0
-                    && grupLen - 0x14 * amountRemoved == 0x14)
-                {
-                    removes.Add(new RangeInt64(grupPos, grupPos + 0x13));
-                }
-            }
-
-            if (removes.Count == 0) return;
-
-            int amount = 0;
-            foreach (var remove in removes)
-            {
-                this._Instructions.SetRemove(
-                    section: remove);
-                amount -= (int)remove.Width;
-            }
-
-            ProcessSubrecordLengths(
-                stream,
-                amount,
-                loc.Min,
-                formID,
-                doRecordLen: false);
+            if (!RecordTypes.CELL.Equals(recType)) return;
+            CleanEmptyCellGroups(
+                stream, 
+                formID, 
+                loc,
+                numSubGroups: 3);
         }
 
         private void ProcessDialogTopics(
@@ -492,32 +437,11 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!DialogTopic_Registration.DIAL_HEADER.Equals(recType)) return;
-
-            // Clean empty child groups
-            stream.Position = loc.Min + 4;
-            var len = stream.ReadUInt32();
-            stream.Position += len + 12;
-            var grupPos = stream.Position;
-            var grup = stream.ReadZString(4);
-            int amount = 0;
-            if (grup.Equals("GRUP"))
-            {
-                var grupLen = stream.ReadUInt32();
-                if (grupLen == 0x14)
-                {
-                    this._Instructions.SetRemove(
-                        section: new RangeInt64(grupPos, grupPos + 0x14 - 1));
-                    amount -= 0x14;
-                }
-            }
-
-            ProcessSubrecordLengths(
+            if (!RecordTypes.DIAL.Equals(recType)) return;
+            CleanEmptyDialogGroups(
                 stream,
-                amount,
-                loc.Min,
                 formID,
-                doRecordLen: false);
+                loc);
         }
 
         private void ProcessDialogItems(
@@ -526,7 +450,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!DialogItem_Registration.INFO_HEADER.Equals(recType)) return;
+            if (!RecordTypes.INFO.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -574,7 +498,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!IdleAnimation_Registration.IDLE_HEADER.Equals(recType)) return;
+            if (!RecordTypes.IDLE.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -604,7 +528,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!AIPackage_Registration.PACK_HEADER.Equals(recType)) return;
+            if (!RecordTypes.PACK.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -858,48 +782,6 @@ namespace Mutagen.Bethesda.Tests
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
-        private bool DynamicMove(
-            string str,
-            RangeInt64 loc,
-            IEnumerable<RecordType> offendingIndices,
-            IEnumerable<RecordType> offendingLimits,
-            IEnumerable<RecordType> locationsToMove,
-            bool enforcePast = false)
-        {
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                offendingIndices,
-                out var offender)) return false;
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                offendingLimits,
-                out var limit)) return false;
-            if (!LocateFirstOf(
-                str,
-                loc.Min,
-                locationsToMove,
-                out var locToMove,
-                past: enforcePast ? offender : default(long?)))
-            {
-                locToMove = loc.Min + str.Length;
-            }
-            if (limit == locToMove) return false;
-            if (offender < limit)
-            {
-                if (locToMove < offender)
-                {
-                    throw new ArgumentException();
-                }
-                this._Instructions.SetMove(
-                    section: new RangeInt64(offender, limit - 1),
-                    loc: locToMove);
-                return true;
-            }
-            return false;
-        }
-
         private void AlignRecords(
             IMutagenReadStream stream,
             RangeInt64 loc,
@@ -951,26 +833,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private bool LocateFirstOf(
-            string str,
-            long offset,
-            IEnumerable<RecordType> types,
-            out long loc,
-            long? past = null)
-        {
-            List<int> indices = new List<int>(types
-                .Select((r) => str.IndexOf(r.Type))
-                .Where((i) => i != -1)
-                .Where((i) => !past.HasValue || i > past));
-            if (indices.Count == 0)
-            {
-                loc = default(long);
-                return false;
-            }
-            loc = MathExt.Min(indices) + offset;
-            return true;
-        }
-
         private void ProcessMisindexedRecords(
             IMutagenReadStream stream,
             FormID formID,
@@ -1010,7 +872,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+            if (!RecordTypes.MGEF.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -1046,7 +908,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!MagicEffect_Registration.MGEF_HEADER.Equals(recType)) return;
+            if (!RecordTypes.MGEF.Equals(recType)) return;
 
             stream.Position = loc.Min;
             var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
@@ -1110,7 +972,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Enchantment_Registration.ENCH_HEADER.Equals(recType)) return;
+            if (!RecordTypes.ENCH.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -1120,7 +982,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Ingredient_Registration.INGR_HEADER.Equals(recType)) return;
+            if (!RecordTypes.INGR.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -1130,7 +992,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!Potion_Registration.ALCH_HEADER.Equals(recType)) return;
+            if (!RecordTypes.ALCH.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
 
@@ -1140,7 +1002,7 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType,
             RangeInt64 loc)
         {
-            if (!SigilStone_Registration.SGST_HEADER.Equals(recType)) return;
+            if (!RecordTypes.SGST.Equals(recType)) return;
             ProcessEffectsList(stream, formID, recType, loc);
         }
         #endregion

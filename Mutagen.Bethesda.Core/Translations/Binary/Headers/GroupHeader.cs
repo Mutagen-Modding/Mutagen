@@ -125,7 +125,17 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+
+        /// <summary> 
+        /// The length that the header itself takes 
+        /// </summary> 
+        public sbyte HeaderLength => Header.HeaderLength;
+
+        /// <summary> 
+        /// Total length of the Group Record, including the header and its content. 
+        /// </summary> 
+        public long TotalLength => this.HeaderLength + this.Content.Length;
 
         /// <summary>
         /// Constructor
@@ -168,11 +178,21 @@ namespace Mutagen.Bethesda.Binary
         /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-        
+
+        /// <summary> 
+        /// The length that the header itself takes 
+        /// </summary> 
+        public sbyte HeaderLength => Header.HeaderLength;
+
+        /// <summary> 
+        /// Total length of the Group Record, including the header and its content. 
+        /// </summary> 
+        public long TotalLength => this.HeaderLength + this.Content.Length;
+
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.RecordLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         /// <summary>
         /// Constructor

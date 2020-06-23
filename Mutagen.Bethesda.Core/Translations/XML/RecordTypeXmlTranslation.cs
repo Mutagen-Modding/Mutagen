@@ -11,33 +11,24 @@ namespace Mutagen.Bethesda.Xml
     public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
     {
         public readonly static RecordTypeXmlTranslation Instance = new RecordTypeXmlTranslation();
-         
-        public void ParseInto<T>(XElement node, int fieldIndex, IEDIDLink<T> item, ErrorMaskBuilder? errorMask)
+
+        public bool Parse<T>(
+            XElement node,
+            out EDIDLink<T> item,
+            ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
         {
-            using (errorMask.PushIndex(fieldIndex))
+            if (Parse(node, out RecordType id, errorMask))
             {
-                try
-                {
-                    if (Parse(node, out RecordType val, errorMask))
-                    {
-                        item.EDID = val;
-                    }
-                    else
-                    {
-                        item.EDID = EDIDLink<T>.Null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
+                item = new EDIDLink<T>(id);
+                return true;
             }
+            item = new EDIDLink<T>();
+            return false;
         }
 
         public bool Parse<T>(
-            XElement node, 
+            XElement node,
             out IEDIDLink<T> item,
             ErrorMaskBuilder? errorMask)
             where T : class, IMajorRecordCommonGetter
@@ -52,7 +43,20 @@ namespace Mutagen.Bethesda.Xml
         }
 
         public bool Parse<T>(
-            XElement node, 
+            XElement node,
+            out EDIDLink<T> item,
+            ErrorMaskBuilder? errorMask,
+            TranslationCrystal? translationMask)
+            where T : class, IMajorRecordCommonGetter
+        {
+            return this.Parse(
+                node: node,
+                item: out item,
+                errorMask: errorMask);
+        }
+
+        public bool Parse<T>(
+            XElement node,
             out IEDIDLink<T> item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)

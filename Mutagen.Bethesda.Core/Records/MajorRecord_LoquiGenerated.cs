@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MajorRecord obj)
+        public bool Equals(MajorRecord? obj)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -228,7 +228,6 @@ namespace Mutagen.Bethesda
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -273,7 +272,7 @@ namespace Mutagen.Bethesda
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
@@ -1215,251 +1214,6 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MajorRecordXmlWriteTranslation);
-        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
-        public static readonly RecordType PACK_HEADER = new RecordType("PACK");
-        public static readonly RecordType ANIO_HEADER = new RecordType("ANIO");
-        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
-        public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
-        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
-        public static readonly RecordType DIAL_HEADER = new RecordType("DIAL");
-        public static readonly RecordType INFO_HEADER = new RecordType("INFO");
-        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
-        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
-        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
-        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
-        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
-        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
-        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
-        public static readonly RecordType IDLE_HEADER = new RecordType("IDLE");
-        public static readonly RecordType LAND_HEADER = new RecordType("LAND");
-        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
-        public static readonly RecordType LSCR_HEADER = new RecordType("LSCR");
-        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
-        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
-        public static readonly RecordType ACHR_HEADER = new RecordType("ACHR");
-        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
-        public static readonly RecordType QUST_HEADER = new RecordType("QUST");
-        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
-        public static readonly RecordType ROAD_HEADER = new RecordType("ROAD");
-        public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
-        public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
-        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
-        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
-        public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
-        public static readonly RecordType TREE_HEADER = new RecordType("TREE");
-        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
-        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType MOD3_HEADER = new RecordType("MOD3");
-        public static readonly RecordType MOD4_HEADER = new RecordType("MOD4");
-        public static readonly RecordType ICO2_HEADER = new RecordType("ICO2");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
-        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
-        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
-        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
-        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType ASPC_HEADER = new RecordType("ASPC");
-        public static readonly RecordType AACT_HEADER = new RecordType("AACT");
-        public static readonly RecordType ARMA_HEADER = new RecordType("ARMA");
-        public static readonly RecordType ARTO_HEADER = new RecordType("ARTO");
-        public static readonly RecordType BPTD_HEADER = new RecordType("BPTD");
-        public static readonly RecordType COLL_HEADER = new RecordType("COLL");
-        public static readonly RecordType CLFM_HEADER = new RecordType("CLFM");
-        public static readonly RecordType COBJ_HEADER = new RecordType("COBJ");
-        public static readonly RecordType DEBR_HEADER = new RecordType("DEBR");
-        public static readonly RecordType DUAL_HEADER = new RecordType("DUAL");
-        public static readonly RecordType EQUP_HEADER = new RecordType("EQUP");
-        public static readonly RecordType EXPL_HEADER = new RecordType("EXPL");
-        public static readonly RecordType FLST_HEADER = new RecordType("FLST");
-        public static readonly RecordType HAZD_HEADER = new RecordType("HAZD");
-        public static readonly RecordType HDPT_HEADER = new RecordType("HDPT");
-        public static readonly RecordType IDLM_HEADER = new RecordType("IDLM");
-        public static readonly RecordType IMAD_HEADER = new RecordType("IMAD");
-        public static readonly RecordType IPDS_HEADER = new RecordType("IPDS");
-        public static readonly RecordType KYWD_HEADER = new RecordType("KYWD");
-        public static readonly RecordType LENS_HEADER = new RecordType("LENS");
-        public static readonly RecordType LVLN_HEADER = new RecordType("LVLN");
-        public static readonly RecordType LCRT_HEADER = new RecordType("LCRT");
-        public static readonly RecordType MATO_HEADER = new RecordType("MATO");
-        public static readonly RecordType MATT_HEADER = new RecordType("MATT");
-        public static readonly RecordType MSTT_HEADER = new RecordType("MSTT");
-        public static readonly RecordType MOVT_HEADER = new RecordType("MOVT");
-        public static readonly RecordType MUSC_HEADER = new RecordType("MUSC");
-        public static readonly RecordType NAVM_HEADER = new RecordType("NAVM");
-        public static readonly RecordType NAVI_HEADER = new RecordType("NAVI");
-        public static readonly RecordType OTFT_HEADER = new RecordType("OTFT");
-        public static readonly RecordType PERK_HEADER = new RecordType("PERK");
-        public static readonly RecordType PROJ_HEADER = new RecordType("PROJ");
-        public static readonly RecordType REVB_HEADER = new RecordType("REVB");
-        public static readonly RecordType SCRL_HEADER = new RecordType("SCRL");
-        public static readonly RecordType SPGD_HEADER = new RecordType("SPGD");
-        public static readonly RecordType SNDR_HEADER = new RecordType("SNDR");
-        public static readonly RecordType TACT_HEADER = new RecordType("TACT");
-        public static readonly RecordType TXST_HEADER = new RecordType("TXST");
-        public static readonly RecordType RFCT_HEADER = new RecordType("RFCT");
-        public static readonly RecordType VTYP_HEADER = new RecordType("VTYP");
-        public static readonly RecordType VOLI_HEADER = new RecordType("VOLI");
-        public static readonly RecordType SHOU_HEADER = new RecordType("SHOU");
-        public static readonly RecordType EDID_HEADER = new RecordType("EDID");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        ACTI_HEADER,
-                        PACK_HEADER,
-                        ANIO_HEADER,
-                        BSGN_HEADER,
-                        CLAS_HEADER,
-                        CLMT_HEADER,
-                        CSTY_HEADER,
-                        CONT_HEADER,
-                        DIAL_HEADER,
-                        INFO_HEADER,
-                        DOOR_HEADER,
-                        EFSH_HEADER,
-                        ENCH_HEADER,
-                        EYES_HEADER,
-                        FACT_HEADER,
-                        FLOR_HEADER,
-                        FURN_HEADER,
-                        GMST_HEADER,
-                        GLOB_HEADER,
-                        GRAS_HEADER,
-                        HAIR_HEADER,
-                        IDLE_HEADER,
-                        LAND_HEADER,
-                        LTEX_HEADER,
-                        LSCR_HEADER,
-                        MGEF_HEADER,
-                        PGRD_HEADER,
-                        ACRE_HEADER,
-                        ACHR_HEADER,
-                        REFR_HEADER,
-                        QUST_HEADER,
-                        RACE_HEADER,
-                        REGN_HEADER,
-                        ROAD_HEADER,
-                        SCPT_HEADER,
-                        SKIL_HEADER,
-                        SOUN_HEADER,
-                        STAT_HEADER,
-                        SBSP_HEADER,
-                        TREE_HEADER,
-                        WATR_HEADER,
-                        WTHR_HEADER,
-                        FULL_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
-                        MODL_HEADER,
-                        MOD2_HEADER,
-                        ICON_HEADER,
-                        MOD3_HEADER,
-                        MOD4_HEADER,
-                        ICO2_HEADER,
-                        APPA_HEADER,
-                        AMMO_HEADER,
-                        BOOK_HEADER,
-                        INGR_HEADER,
-                        KEYM_HEADER,
-                        LVLI_HEADER,
-                        LIGH_HEADER,
-                        MISC_HEADER,
-                        ALCH_HEADER,
-                        SGST_HEADER,
-                        SLGM_HEADER,
-                        WEAP_HEADER,
-                        ARMO_HEADER,
-                        CLOT_HEADER,
-                        LVLC_HEADER,
-                        CREA_HEADER,
-                        NPC__HEADER,
-                        LVSP_HEADER,
-                        SPEL_HEADER,
-                        CELL_HEADER,
-                        WRLD_HEADER,
-                        ASPC_HEADER,
-                        AACT_HEADER,
-                        ARMA_HEADER,
-                        ARTO_HEADER,
-                        BPTD_HEADER,
-                        COLL_HEADER,
-                        CLFM_HEADER,
-                        COBJ_HEADER,
-                        DEBR_HEADER,
-                        DUAL_HEADER,
-                        EQUP_HEADER,
-                        EXPL_HEADER,
-                        FLST_HEADER,
-                        HAZD_HEADER,
-                        HDPT_HEADER,
-                        IDLM_HEADER,
-                        IMAD_HEADER,
-                        IPDS_HEADER,
-                        KYWD_HEADER,
-                        LENS_HEADER,
-                        LVLN_HEADER,
-                        LCRT_HEADER,
-                        MATO_HEADER,
-                        MATT_HEADER,
-                        MSTT_HEADER,
-                        MOVT_HEADER,
-                        MUSC_HEADER,
-                        NAVM_HEADER,
-                        NAVI_HEADER,
-                        OTFT_HEADER,
-                        PERK_HEADER,
-                        PROJ_HEADER,
-                        REVB_HEADER,
-                        SCRL_HEADER,
-                        SPGD_HEADER,
-                        SNDR_HEADER,
-                        TACT_HEADER,
-                        TXST_HEADER,
-                        RFCT_HEADER,
-                        VTYP_HEADER,
-                        VOLI_HEADER,
-                        SHOU_HEADER
-                    })
-            );
-        });
-        public const int NumStructFields = 3;
-        public const int NumTypedFields = 1;
         public static readonly Type BinaryWriteTranslation = typeof(MajorRecordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1594,40 +1348,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         #region Binary Translation
-        public virtual RecordType RecordType => throw new ArgumentException();
-        protected static void FillBinaryStructs(
-            IMajorRecordInternal item,
-            MutagenFrame frame)
-        {
-            item.MajorRecordFlagsRaw = frame.ReadInt32();
-            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
-            item.Version = frame.ReadUInt32();
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMajorRecordInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x44494445: // EDID
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
-                }
-                default:
-                    frame.Position += contentLength + frame.MetaData.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IMajorRecordInternal item,
             MutagenFrame frame,
@@ -2341,7 +2061,7 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EditorID,
-                header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.EDID),
                 binaryType: StringBinaryType.NullTerminate);
         }
 
@@ -2375,6 +2095,40 @@ namespace Mutagen.Bethesda.Internals
     public partial class MajorRecordBinaryCreateTranslation
     {
         public readonly static MajorRecordBinaryCreateTranslation Instance = new MajorRecordBinaryCreateTranslation();
+
+        public virtual RecordType RecordType => throw new ArgumentException();
+        public static void FillBinaryStructs(
+            IMajorRecordInternal item,
+            MutagenFrame frame)
+        {
+            item.MajorRecordFlagsRaw = frame.ReadInt32();
+            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
+            item.Version = frame.ReadUInt32();
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMajorRecordInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.EDID:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                }
+                default:
+                    frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
+                    return TryGet<int?>.Succeed(null);
+            }
+        }
 
     }
 
@@ -2468,17 +2222,18 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MasterReferences!);
+        public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
         public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
-        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.Meta)) : default(string?);
+        public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        partial void CustomCtor(
-            IBinaryReadStream stream,
+        partial void CustomFactoryEnd(
+            OverlayStream stream,
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected MajorRecordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -2486,23 +2241,24 @@ namespace Mutagen.Bethesda.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
 
         public virtual TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x44494445: // EDID
+                case RecordTypeInts.EDID:
                 {
-                    _EditorIDLocation = (ushort)(stream.Position - offset);
+                    _EditorIDLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
                 }
                 default:

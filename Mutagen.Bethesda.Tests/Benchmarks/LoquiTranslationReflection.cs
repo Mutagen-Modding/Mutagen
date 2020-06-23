@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         byte[] _data = new byte[0x14];
         MutagenFrame _frame;
         MasterReferenceReader _masterRefs = new MasterReferenceReader(Mutagen.Bethesda.Oblivion.Constants.Oblivion);
+        ParsingBundle _parsingBundle;
 
         [GlobalSetup]
         public void Setup()
@@ -22,7 +23,11 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             _data[1] = (byte)'M';
             _data[2] = (byte)'M';
             _data[3] = (byte)'O';
-            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, GameConstants.Oblivion, _masterRefs));
+            _parsingBundle = new ParsingBundle(GameMode.Oblivion)
+            {
+                MasterReferences = _masterRefs
+            };
+            _frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _parsingBundle));
         }
 
         [Benchmark]

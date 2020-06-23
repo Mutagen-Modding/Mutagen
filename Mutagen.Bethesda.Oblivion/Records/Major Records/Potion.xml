@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Potion" objType="Record" recordType="ALCH" baseClass="AItem" GUID="f28ef4d6-1e08-4aab-a73e-af679ad7a30f" ID="98">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <Float name="Weight" recordType="DATA" />
+      <RefDirect name="Data" refName="PotionData" />
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="PotionData" objType="Subrecord" recordType="ENIT" GUID="bbd59739-d2a2-4702-93dc-71ffd5a4310e" ID="202">
+    <Fields>
+      <UInt32 name="Value" />
+      <Enum name="Flags" enumName="IngredientFlag" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

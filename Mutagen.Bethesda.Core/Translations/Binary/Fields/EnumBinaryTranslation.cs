@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             long length)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 WriteValue(writer, item, length);
             }
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Binary
             long length)
         {
             if (!item.HasValue) return;
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 WriteValue(writer, item.Value, length);
             }

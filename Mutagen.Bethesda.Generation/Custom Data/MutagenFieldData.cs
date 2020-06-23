@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Generation
         public TypeGeneration Parent;
         public RecordType? MarkerType { get; set; }
         public RecordType? RecordType { get; set; }
+        public RecordType? OverflowRecordType { get; set; }
         public HashSet<RecordType> TriggeringRecordTypes { get; } = new HashSet<Mutagen.Bethesda.RecordType>();
         public HashSet<string> TriggeringRecordAccessors = new HashSet<string>();
         public string TriggeringRecordSetAccessor { get; set; }
@@ -28,6 +29,7 @@ namespace Mutagen.Bethesda.Generation
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;
         public RecordTypeConverter RecordTypeConverter;
+        public int? CustomVersion;
 
         public MutagenFieldData(TypeGeneration source)
         {

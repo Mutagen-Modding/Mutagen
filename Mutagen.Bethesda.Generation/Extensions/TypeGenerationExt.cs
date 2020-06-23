@@ -32,11 +32,10 @@ namespace Mutagen.Bethesda.Generation
             return false;
         }
 
-        public static bool NeedMasters(this TypeGeneration typeGen)
+        public static bool NeedsRecordConverter(this TypeGeneration typeGen)
         {
-            return typeGen is FormLinkType
-                || (typeGen is LoquiType loqui
-                    && loqui.GetFieldData().HasTrigger);
+            return typeGen is LoquiType loqui
+                && loqui.GetFieldData().HasTrigger;
         }
     }
 }

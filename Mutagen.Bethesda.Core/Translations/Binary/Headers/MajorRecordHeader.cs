@@ -219,6 +219,11 @@ namespace Mutagen.Bethesda.Binary
         public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
 
         /// <summary>
+        /// Total length of the Major Record, including the header and its content.
+        /// </summary>
+        public long TotalLength => this.Header.HeaderLength + Content.Length;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
@@ -259,7 +264,12 @@ namespace Mutagen.Bethesda.Binary
         /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-        
+
+        /// <summary>
+        /// Total length of the Major Record, including the header and its content.
+        /// </summary>
+        public long TotalLength => this.Header.HeaderLength + Content.Length;
+
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>

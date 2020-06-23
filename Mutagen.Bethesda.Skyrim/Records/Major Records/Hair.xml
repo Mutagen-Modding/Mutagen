@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Hair" recordType="HAIR" objType="Record" baseClass="SkyrimMajorRecord" GUID="988d2dff-b06c-4859-9926-7c3b525ac3ca" ID="46">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

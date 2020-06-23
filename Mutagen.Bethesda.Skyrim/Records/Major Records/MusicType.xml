@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MusicType" recordType="MUSC" objType="Record" baseClass="SkyrimMajorRecord" GUID="9c2b9533-f2e9-4711-ba07-d85a2b23280f" ID="258">
+    <Fields>
+      <Enum name="Flags" enumName="MusicType.Flag" byteLength="4" recordType="FNAM" hasBeenSet="False" />
+      <RefDirect name="Data" refName="MusicTypeData" />
+      <Float name="FadeDuration" recordType="WNAM" />
+      <List name="Tracks" recordType="TNAM">
+        <FormLink refName="MusicTrack" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="MusicTypeData" recordType="PNAM" objType="Subrecord" GUID="ad50317e-e269-45d7-abb8-c74b14fca991" ID="451">
+    <Fields>
+      <UInt16 name="Priority" />
+      <Float name="DuckingDecibel" binaryType="Integer" integerType="UShort" divisor="100" />
+    </Fields>
+  </Object>
+</Loqui>

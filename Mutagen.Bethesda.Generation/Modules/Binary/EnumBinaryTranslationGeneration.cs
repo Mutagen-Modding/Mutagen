@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using Noggog;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Internals;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -80,7 +82,7 @@ namespace Mutagen.Bethesda.Generation
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {
-                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
+                fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
             TranslationGeneration.WrapParseCall(
@@ -109,20 +111,28 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
             var eType = typeGen as EnumType;
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
+            if (inline)
             {
-                args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
-                if (asyncMode == AsyncMode.Off)
+                throw new NotImplementedException();
+            }
+            else
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
                 {
-                    args.Add($"item: out {outItemAccessor.DirectAccess}");
-                }
-                if (this.DoErrorMasks)
-                {
-                    args.Add($"errorMask: {errorMaskAccessor}");
+                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
+                    if (asyncMode == AsyncMode.Off)
+                    {
+                        args.Add($"item: out {outItemAccessor.DirectAccess}");
+                    }
+                    if (this.DoErrorMasks)
+                    {
+                        args.Add($"errorMask: {errorMaskAccessor}");
+                    }
                 }
             }
         }
@@ -143,7 +153,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 case BinaryGenerationType.Normal:
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                     return;
                 case BinaryGenerationType.Custom:
@@ -168,7 +177,7 @@ namespace Mutagen.Bethesda.Generation
             string slice;
             if (data.RecordType.HasValue)
             {
-                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location!.Value, _package.Meta)";
+                slice = $"{nameof(HeaderTranslation)}.{nameof(HeaderTranslation.ExtractSubrecordSpan)}({dataAccessor}, _{typeGen.Name}Location!.Value, _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)})";
             }
             else
             {
@@ -178,7 +187,7 @@ namespace Mutagen.Bethesda.Generation
 
             if (dataType != null)
             {
-                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, $"0x{currentPosition:X}");
+                DataBinaryTranslationGeneration.GenerateWrapperExtraMembers(fg, dataType, objGen, typeGen, passedLengthAccessor);
             }
             if (eType.HasBeenSetFallbackInt != null)
             {

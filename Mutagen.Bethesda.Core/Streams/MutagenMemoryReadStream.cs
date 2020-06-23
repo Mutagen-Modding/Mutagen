@@ -15,40 +15,22 @@ namespace Mutagen.Bethesda.Binary
         public long OffsetReference { get; }
 
         /// <inheritdoc/>
-        public GameConstants MetaData { get; }
-
-        /// <inheritdoc/>
-        public MasterReferenceReader? MasterReferences { get; set; }
-
-        /// <inheritdoc/>
-        public RecordInfoCache? RecordInfoCache { get; set; }
-
-        /// <inheritdoc/>
-        public IStringsFolderLookup? StringsLookup { get; set; }
+        public ParsingBundle MetaData { get; }
 
         /// <summary>
         /// Constructor that wraps a memory slice
         /// </summary>
         /// <param name="data">Span to wrap and read from</param>
-        /// <param name="metaData">Game constants meta object to reference for header length measurements</param>
-        /// <param name="masterReferences">Optional MasterReferenceReader to reference while reading</param>
-        /// <param name="infoCache">Optional RecordInfoCache to reference while reading</param>
+        /// <param name="metaData">Bundle of all related metadata for parsing</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
-        /// <param name="stringsLookup">Optional strings lookup to reference while reading</param>
         public MutagenMemoryReadStream(
-            ReadOnlyMemorySlice<byte> data, 
-            GameConstants metaData,
-            MasterReferenceReader? masterReferences = null,
-            RecordInfoCache? infoCache = null,
-            IStringsFolderLookup? stringsLookup = null,
+            ReadOnlyMemorySlice<byte> data,
+            ParsingBundle metaData,
             long offsetReference = 0)
             : base(data)
         {
             this.MetaData = metaData;
-            this.MasterReferences = masterReferences;
-            this.RecordInfoCache = infoCache;
             this.OffsetReference = offsetReference;
-            this.StringsLookup = stringsLookup;
         }
 
         /// <summary>
@@ -64,10 +46,7 @@ namespace Mutagen.Bethesda.Binary
             return new MutagenMemoryReadStream(
                 this.Data, 
                 this.MetaData, 
-                this.MasterReferences, 
-                offsetReference: this.OffsetReference + this.Position,
-                infoCache: this.RecordInfoCache,
-                stringsLookup: this.StringsLookup);
+                offsetReference: this.OffsetReference + this.Position);
         }
     }
 }

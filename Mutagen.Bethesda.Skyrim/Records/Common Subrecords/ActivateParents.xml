@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ActivateParents" objType="Subrecord" GUID="984fc659-1c69-4368-b9e5-90b2fd0ff327" ID="308">
+    <Fields>
+      <Enum name="Flags" enumName="ActivateParents.Flag" byteLength="1" recordType="XAPD" hasBeenSet="False" />
+      <RefList name="Parents" refName="ActivateParent" />
+    </Fields>
+  </Object>
+  <Object name="ActivateParent" objType="Subrecord" recordType="XAPR" GUID="5a5f33f9-1fba-4a3f-84bf-57b7d9da4c18" ID="298">
+    <Fields>
+      <FormLink name="Reference">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <Float name="Delay" />
+    </Fields>
+  </Object>
+</Loqui>

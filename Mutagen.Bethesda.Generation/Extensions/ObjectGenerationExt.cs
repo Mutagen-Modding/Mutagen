@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
         {
-            return $"{objGen.RegistrationName}.{recType.Type}_HEADER";
+            return $"RecordTypes.{recType.CheckedType}";
         }
 
         public static bool StructHasBeenSet(this ObjectGeneration objGen)
@@ -183,6 +183,14 @@ namespace Mutagen.Bethesda.Generation
             return objGen.GetObjectType() == ObjectType.Subrecord && !objGen.HasRecordType();
         }
 
+        public static bool IsVariableLengthStruct(this ObjectGeneration objGen)
+        {
+            var objData = objGen.GetObjectData();
+            return objGen.GetObjectType() == ObjectType.Subrecord
+                && objData.TriggeringSource == null
+                && objData.HasVersioning();
+        }
+
         public static async Task<bool> GetNeedsMasters(this ObjectGeneration objGen)
         {
             if (objGen.GetObjectType() == ObjectType.Group) return true;
@@ -212,6 +220,12 @@ namespace Mutagen.Bethesda.Generation
                 if (await baseObj.GetNeedsMasters()) return true;
             }
             return false;
+        }
+
+        public static bool HasVersionedFields(this ObjectGeneration objGen)
+        {
+            if (objGen.GetObjectType() != ObjectType.Record) return false;
+            return objGen.Fields.Any(f => f.GetFieldData().CustomVersion != null);
         }
     }
 }

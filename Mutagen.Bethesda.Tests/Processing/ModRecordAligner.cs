@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException();
                 }
                 var ret = new byte[subLen + 6];
-                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
-                using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
+                MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
+                using (HeaderExport.Subrecord(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
                 }
@@ -118,15 +118,15 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     }
                     var data = new byte[subLen + 6];
-                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }
                     dataDict[subType] = data;
                 }
                 byte[] ret = new byte[dataDict.Values.Sum((d) => d.Length)];
-                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
                 foreach (var alignment in SubTypes)
                 {
                     if (dataDict.TryGetValue(
@@ -171,15 +171,15 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     }
                     var data = new byte[subLen + 6];
-                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    stream = new MutagenWriter(new MemoryStream(data), inputStream.MetaData.Constants);
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }
                     dataList.Add(data);
                 }
                 byte[] ret = new byte[dataList.Sum((d) => d.Length)];
-                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData);
+                stream = new MutagenWriter(new MemoryStream(ret), inputStream.MetaData.Constants);
                 foreach (var data in dataList)
                 {
                     stream.Write(data);
@@ -199,6 +199,9 @@ namespace Mutagen.Bethesda.Tests
             {
                 EmptyMeansInterested = false
             };
+            // Always interested in parent record types
+            interest.InterestingTypes.Add("CELL");
+            interest.InterestingTypes.Add("WRLD");
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
             temp ??= new TempFolder();
             using (temp)
@@ -319,13 +322,15 @@ namespace Mutagen.Bethesda.Tests
                 {
                     stopMarkers = null;
                 }
-                if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments))
-                {
-                    throw new ArgumentException($"Encountered an unknown record: {recType}");
-                }
                 writer.Write(recType.TypeInt);
                 writer.Write(len);
-                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.MajorConstants.LengthAfterLength);
+                if (!alignmentRules.Alignments.TryGetValue(recType, out var alignments))
+                {
+                    inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength + len);
+                    continue;
+                }
+                inputStream.WriteTo(writer.BaseStream, inputStream.MetaData.Constants.MajorConstants.LengthAfterLength);
+                var writerEndPos = writer.Position + len;
                 var endPos = inputStream.Position + len;
                 var dataDict = new Dictionary<RecordType, ReadOnlyMemorySlice<byte>>();
                 ReadOnlyMemorySlice<byte>? rest = null;
@@ -343,7 +348,7 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new ArgumentException($"Encountered an unknown record: {subType}");
                     }
-                    dataDict[subType] = rule.GetBytes(inputStream);
+                    dataDict.Add(subType, rule.GetBytes(inputStream));
                 }
                 foreach (var alignment in alignmentRules.Alignments[recType])
                 {
@@ -362,6 +367,10 @@ namespace Mutagen.Bethesda.Tests
                 if (rest != null)
                 {
                     writer.Write(rest.Value);
+                }
+                if (writer.Position != writerEndPos)
+                {
+                    throw new ArgumentException("Record alignment changed length");
                 }
             }
         }

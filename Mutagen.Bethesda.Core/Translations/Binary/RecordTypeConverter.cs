@@ -51,6 +51,10 @@ namespace Mutagen.Bethesda.Binary
             {
                 rec = converted;
             }
+            else if (converter.ToConversions.ContainsKey(rec))
+            {
+                return RecordType.Null;
+            }
             return rec;
         }
 
@@ -67,6 +71,10 @@ namespace Mutagen.Bethesda.Binary
             if (converter.ToConversions.TryGetValue(rec, out var converted))
             {
                 rec = converted;
+            }
+            else if (converter.FromConversions.ContainsKey(rec))
+            {
+                return RecordType.Null;
             }
             return rec;
         }

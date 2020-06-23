@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" objType="Record" baseClass="Place" recordType="WRLD" customBinaryEnd="Normal" GUID="d95e86a2-5fdd-4bb1-a2b9-c16161ef2f62" ID="75">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <FormLink name="Parent" recordType="WNAM" refName="Worldspace" />
+      <FormLink name="Climate" recordType="CNAM" refName="Climate" />
+      <FormLink name="Water" recordType="NAM2" refName="Water" />
+      <String name="Icon" recordType="ICON" />
+      <RefDirect name="MapData" refName="MapData" />
+      <Enum name="Flags" recordType="DATA" enumName="Worldspace.Flag" byteLength="1" />
+      <P2Float name="ObjectBoundsMin" recordType="NAM0" />
+      <P2Float name="ObjectBoundsMax" recordType="NAM9" />
+      <Enum name="Music" recordType="SNAM" enumName="MusicType" />
+      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
+      <RefDirect name="Road" refName="Road" binary="NoGeneration" />
+      <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group" GUID="ffc71d01-f9a7-406b-9c9f-a5760acd87ea" ID="140">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group" GUID="33d37c53-7561-4ea0-aef8-a9b9475eb68f" ID="141">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="MapData" objType="Subrecord" recordType="MNAM" GUID="493c28c6-8dd0-40cd-9c54-87243564a406" ID="146">
+    <Fields>
+      <P2Int32 name="UsableDimensions" />
+      <P2Int16 name="CellCoordinatesNWCell" />
+      <P2Int16 name="CellCoordinatesSECell" />
+    </Fields>
+  </Object>
+</Loqui>

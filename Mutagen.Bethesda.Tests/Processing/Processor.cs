@@ -1,4 +1,5 @@
 using Microsoft.VisualBasic;
+using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using Noggog.Utility;
@@ -6,6 +7,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda.Tests
@@ -106,7 +108,7 @@ namespace Mutagen.Bethesda.Tests
         {
             var loc = this._AlignedFileLocs[formID];
             ProcessEDID(stream, loc);
-            ProcessFormIDOverflow(stream, loc);
+            ProcessMajorRecordFormIDOverflow(stream, loc);
         }
 
         public void ProcessEDID(
@@ -123,7 +125,7 @@ namespace Mutagen.Bethesda.Tests
                 majorFrame.Header.FormID);
         }
 
-        public void ProcessFormIDOverflow(
+        public void ProcessMajorRecordFormIDOverflow(
             IMutagenReadStream stream,
             RangeInt64 loc)
         {
@@ -134,6 +136,18 @@ namespace Mutagen.Bethesda.Tests
             // Need to zero out master
             this._Instructions.SetSubstitution(
                 loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,
+                0);
+        }
+
+        public void ProcessFormIDOverflow(
+            IMutagenReadStream stream,
+            RangeInt64? loc)
+        {
+            var formID = new FormID(stream.ReadUInt32());
+            if (formID.ModIndex.ID <= this._NumMasters) return;
+            // Need to zero out master
+            this._Instructions.SetSubstitution(
+                (loc?.Min ?? 0) + stream.Position - 1,
                 0);
         }
 
@@ -237,6 +251,21 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        public void ProcessColorFloat(IMutagenReadStream stream)
+        {
+            var inBytes = stream.ReadSpan(12);
+            var color = IBinaryStreamExt.ReadColor(inBytes, ColorBinaryType.NoAlphaFloat);
+            var outBytes = new byte[12];
+            using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), null!))
+            {
+                writer.Write(color, ColorBinaryType.NoAlphaFloat);
+            }
+            if (inBytes.SequenceEqual(outBytes)) return;
+            this._Instructions.SetSubstitution(
+                stream.Position - 12,
+                outBytes);
+        }
+
         public void RemoveEmptyGroups(IMutagenReadStream stream)
         {
             foreach (var loc in this._AlignedFileLocs.GrupLocations)
@@ -248,85 +277,184 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        public int FixMissingCounters(
+            MajorRecordMemoryFrame frame,
+            RangeInt64 loc,
+            RecordType counterType,
+            RecordType containedType)
+        {
+            var pos = 0;
+            bool prevWasCounter = false;
+            int sizeChange = 0;
+            while (pos < frame.Content.Length)
+            {
+                var subRec = frame.Header.Meta.SubrecordFrame(frame.Content.Slice(pos));
+                if (subRec.Header.RecordType == counterType)
+                {
+                    prevWasCounter = true;
+                    pos += subRec.TotalLength;
+                    continue;
+                }
+                if (subRec.Header.RecordType != containedType)
+                {
+                    prevWasCounter = false;
+                    pos += subRec.TotalLength;
+                    continue;
+                }
+                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Header.Meta, containedType, out var numPassed);
+                // Found contained record
+                if (!prevWasCounter)
+                {
+                    byte[] bytes = new byte[10];
+                    BinaryPrimitives.WriteInt32LittleEndian(bytes, counterType.TypeInt);
+                    BinaryPrimitives.WriteInt16LittleEndian(bytes.AsSpan().Slice(4), 4);
+                    BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan().Slice(6), numPassed);
+                    // Add counter
+                    _Instructions.SetAddition(
+                        loc.Min + frame.Header.HeaderLength + pos,
+                        bytes);
+                    sizeChange += 10;
+
+                }
+                prevWasCounter = false;
+                pos += passedLen;
+            }
+            return sizeChange;
+        }
+
+        public abstract class AStringsAlignment
+        {
+            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.Config instr, List<KeyValuePair<uint, uint>> processedStrings, StringsLookupOverlay overlay, ref uint newIndex);
+
+            public RecordType MajorType;
+
+            public abstract Handle Handler { get; }
+
+            public static implicit operator AStringsAlignment(RecordType[] types)
+            {
+                return new StringsAlignmentTypical(types.Skip(1).ToArray())
+                {
+                    MajorType = types[0],
+                };
+            }
+
+            public static void ProcessStringLink(
+                IMutagenReadStream stream,
+                BinaryFileProcessor.Config instr,
+                List<KeyValuePair<uint, uint>> processedStrings,
+                StringsLookupOverlay overlay,
+                ref uint newIndex)
+            {
+                var sub = stream.ReadSubrecord();
+                if (sub.ContentLength != 4)
+                {
+                    throw new ArgumentException();
+                }
+                var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
+                if (!overlay.TryLookup(curIndex, out var str)
+                    || string.IsNullOrEmpty(str))
+                {
+                    instr.SetSubstitution(stream.Position, new byte[4]);
+                }
+                else if (curIndex != 0)
+                {
+                    var assignedIndex = newIndex++;
+                    processedStrings.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
+                    byte[] b = new byte[4];
+                    BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
+                    instr.SetSubstitution(stream.Position, b);
+                }
+                stream.Position -= sub.HeaderLength;
+            }
+        }
+
+        public class StringsAlignmentCustom : AStringsAlignment
+        {
+            public override Handle Handler { get; }
+
+            public StringsAlignmentCustom(RecordType majorType, Handle handler)
+            {
+                MajorType = majorType;
+                Handler = handler;
+            }
+        }
+
+        public class StringsAlignmentTypical : AStringsAlignment
+        {
+            public HashSet<RecordType> StringTypes = new HashSet<RecordType>();
+
+            public StringsAlignmentTypical(RecordType[] types)
+            {
+                StringTypes.Add(types);
+            }
+
+            public override AStringsAlignment.Handle Handler => Handle;
+
+            private void Handle(
+                IMutagenReadStream stream, 
+                MajorRecordHeader major,
+                BinaryFileProcessor.Config instr,
+                List<KeyValuePair<uint, uint>> processedStrings,
+                StringsLookupOverlay overlay,
+                ref uint newIndex)
+            {
+                var majorCompletePos = stream.Position + major.ContentLength;
+                while (stream.Position < majorCompletePos)
+                {
+                    var sub = stream.GetSubrecord();
+                    if (StringTypes.Contains(sub.RecordType))
+                    {
+                        ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+                    }
+                    stream.Position += sub.TotalLength;
+                }
+            }
+        }
+
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
             IMutagenReadStream stream,
             Language language,
             StringsSource source,
-            params RecordType[][] recordTypes)
+            params AStringsAlignment[] recordTypes)
         {
             var overlay = new StringsLookupOverlay(
                 Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings", StringsUtility.GetFileName(ModKey, language, source)),
                 StringsUtility.GetFormat(source));
             var ret = new List<KeyValuePair<uint, uint>>();
-            var dict = new Dictionary<RecordType, HashSet<RecordType>>();
+            var dict = new Dictionary<RecordType, AStringsAlignment>();
             foreach (var item in recordTypes)
             {
-                var set = new HashSet<RecordType>();
-                dict[item[0]] = set;
-                for (int i = 1; i < item.Length; i++)
-                {
-                    set.Add(item[i]);
-                }
+                dict[item.MajorType] = item;
             }
+
             stream.Position = 0;
             var mod = stream.ReadMod();
             if (!EnumExt.HasFlag(mod.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag)) return ListExt.Empty<KeyValuePair<uint, uint>>();
-            stream.Position += mod.ContentLength;
+
+            stream.Position = 0;
+            var locs = RecordLocator.GetFileLocations(
+                stream,
+                interest: new Mutagen.Bethesda.RecordInterest(dict.Keys));
 
             uint newIndex = 1;
-            while (!stream.Complete)
+            foreach (var rec in locs.ListedRecords)
             {
-                var grup = stream.ReadGroup();
-                if (!dict.TryGetValue(grup.ContainedRecordType, out var instructions))
+                stream.Position = rec.Key;
+                var major = stream.ReadMajorRecord();
+                if (!dict.TryGetValue(major.RecordType, out var instructions))
                 {
-                    stream.Position += grup.ContentLength;
                     continue;
                 }
-                var groupCompletePos = stream.Position + grup.ContentLength;
-                while (stream.Position < groupCompletePos)
-                {
-                    var major = stream.ReadMajorRecord();
-                    var majorCompletePos = stream.Position + major.ContentLength;
-                    while (stream.Position < majorCompletePos)
-                    {
-                        var sub = stream.ReadSubrecord();
-                        if (instructions.Contains(sub.RecordType))
-                        {
-                            if (sub.ContentLength != 4)
-                            {
-                                throw new ArgumentException();
-                            }
-                            var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
-                            if (curIndex == 0x11243)
-                            {
-                                int wer = 23;
-                                wer++;
-                            }
-                            if (!overlay.TryLookup(curIndex, out var str)
-                                || string.IsNullOrEmpty(str))
-                            {
-                                _Instructions.SetSubstitution(stream.Position, new byte[4]);
-                            }
-                            else if (curIndex != 0)
-                            {
-                                var assignedIndex = newIndex++;
-                                ret.Add(new KeyValuePair<uint, uint>(curIndex, assignedIndex));
-                                byte[] b = new byte[4];
-                                BinaryPrimitives.WriteUInt32LittleEndian(b, assignedIndex);
-                                _Instructions.SetSubstitution(stream.Position, b);
-                            }
-                        }
-                        stream.Position += sub.ContentLength;
-                    }
-                }
+                instructions.Handler(stream, major, _Instructions, ret, overlay, ref newIndex);
             }
+
             return ret;
         }
 
         public void ProcessStringsFiles(
             DirectoryInfo stringsFolder,
-            Language language, 
-            StringsSource source, 
+            Language language,
+            StringsSource source,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
@@ -355,6 +483,158 @@ namespace Mutagen.Bethesda.Tests
                     }
                 }
             }
+        }
+
+        public void CleanEmptyCellGroups(
+            IMutagenReadStream stream,
+            FormID formID,
+            RangeInt64 loc,
+            int numSubGroups)
+        {
+            List<RangeInt64> removes = new List<RangeInt64>();
+            stream.Position = loc.Min;
+            // Skip Major Record
+            var majorHeader = stream.ReadMajorRecord();
+            stream.Position += majorHeader.ContentLength;
+            var blockGroupPos = stream.Position;
+            var blockGroup = stream.ReadGroup();
+            if (!blockGroup.IsGroup) return;
+            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
+            if (blockGrupType != GroupTypeEnum.CellChildren) return;
+            if (blockGroup.ContentLength == 0)
+            {
+                removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            }
+            else if (numSubGroups > 0)
+            {
+                var amountRemoved = 0;
+                for (int i = 0; i < numSubGroups; i++)
+                {
+                    var subBlockGroupPos = stream.Position;
+                    var subBlockGroup = stream.ReadGroup();
+                    if (!subBlockGroup.IsGroup) break;
+                    switch ((GroupTypeEnum)subBlockGroup.GroupType)
+                    {
+                        case GroupTypeEnum.CellPersistentChildren:
+                        case GroupTypeEnum.CellTemporaryChildren:
+                        case GroupTypeEnum.CellVisibleDistantChildren:
+                            break;
+                        default:
+                            goto Break;
+                    }
+                    if (subBlockGroup.ContentLength == 0)
+                    { // Empty group
+                        this._LengthTracker[blockGroupPos] = checked((uint)(this._LengthTracker[blockGroupPos] - subBlockGroup.HeaderLength));
+                        removes.Add(RangeInt64.FactoryFromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
+                        amountRemoved++;
+                    }
+                    stream.Position = subBlockGroupPos + subBlockGroup.TotalLength;
+                }
+                Break:
+
+                // Check to see if removed subgroups left parent empty
+                if (amountRemoved > 0
+                    && blockGroup.ContentLength - (blockGroup.HeaderLength * amountRemoved) == 0)
+                {
+                    removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+                }
+            }
+
+            if (removes.Count == 0) return;
+
+            int amount = 0;
+            foreach (var remove in removes)
+            {
+                this._Instructions.SetRemove(
+                    section: remove);
+                amount -= (int)remove.Width;
+            }
+            ProcessSubrecordLengths(
+                stream,
+                amount,
+                loc.Min,
+                formID,
+                doRecordLen: false);
+        }
+
+        public void CleanEmptyDialogGroups(
+            IMutagenReadStream stream,
+            FormID formID,
+            RangeInt64 loc)
+        {
+            List<RangeInt64> removes = new List<RangeInt64>();
+            stream.Position = loc.Min;
+            // Skip Major Record
+            var majorHeader = stream.ReadMajorRecord();
+            stream.Position += majorHeader.ContentLength;
+            var blockGroupPos = stream.Position;
+            var blockGroup = stream.ReadGroup();
+            if (!blockGroup.IsGroup) return;
+            var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
+            if (blockGrupType != GroupTypeEnum.TopicChildren) return;
+            if (blockGroup.ContentLength == 0)
+            {
+                removes.Add(RangeInt64.FactoryFromLength(blockGroupPos, blockGroup.HeaderLength));
+            }
+
+            if (removes.Count == 0) return;
+
+            int amount = 0;
+            foreach (var remove in removes)
+            {
+                this._Instructions.SetRemove(
+                    section: remove);
+                amount -= (int)remove.Width;
+            }
+            ProcessSubrecordLengths(
+                stream,
+                amount,
+                loc.Min,
+                formID,
+                doRecordLen: false);
+        }
+
+        protected bool DynamicMove(
+            MajorRecordMemoryFrame majorFrame,
+            RangeInt64 loc,
+            ICollection<RecordType> offendingIndices,
+            ICollection<RecordType> offendingLimits,
+            ICollection<RecordType> locationsToMove,
+            bool enforcePast = false)
+        {
+            var offender = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Header.Meta,
+                recordTypes: offendingIndices.ToGetter());
+            if (offender == null) return false;
+            var limit = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content,
+                majorFrame.Header.Meta,
+                recordTypes: offendingLimits.ToGetter());
+            if (limit == null) return false;
+            long? locToMove = UtilityTranslation.FindFirstSubrecord(
+                majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
+                majorFrame.Header.Meta,
+                recordTypes: locationsToMove.ToGetter());
+            if (locToMove == null)
+            {
+                locToMove = majorFrame.TotalLength;
+            }
+            if (limit == locToMove) return false;
+            if (offender < limit)
+            {
+                if (locToMove < offender)
+                {
+                    throw new ArgumentException();
+                }
+                this._Instructions.SetMove(
+                    section: new RangeInt64(
+                        loc.Min + majorFrame.Header.HeaderLength + offender,
+                        loc.Min + majorFrame.Header.HeaderLength + limit - 1),
+                    loc: loc.Min + majorFrame.Header.HeaderLength + locToMove.Value);
+                return true;
+            }
+            return false;
         }
     }
 }

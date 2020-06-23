@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord" GUID="9450f7b5-2485-4eb3-ad52-910e7f254018" ID="286">
+    <Interface>ILocationRecord</Interface>
+    <Interface>ITranslatedNamed</Interface>
+    <Fields>
+      <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
+      <RefList name="LocationCellPersistentReferences" refName="LocationReference" recordType="LCPR" />
+      <List name="ReferenceCellPersistentReferences" recordType="RCPR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <RefList name="ActorCellUniques" refName="LocationReference" recordType="ACUN" />
+      <RefList name="LocationCellUniques" refName="LocationReference" recordType="LCUN" />
+      <List name="ReferenceCellUnique" recordType="RCUN">
+        <FormLink refName="Npc" />
+      </List>
+      <RefList name="ActorCellStaticReferences" refName="LocationCellStaticReference" recordType="ACSR" />
+      <RefList name="LocationCellStaticReferences" refName="LocationCellStaticReference" recordType="LCSR" />
+      <List name="ReferenceCellStaticReferences" recordType="RCSR">
+        <FormLink>
+          <Interface>IPlacedSimple</Interface>
+        </FormLink>
+      </List>
+      <List name="ActorCellEncounterCell" >
+        <RefDirect refName="LocationCoordinate" recordType="ACEC" />
+      </List>
+      <List name="LocationCellEncounterCell">
+        <RefDirect refName="LocationCoordinate" recordType="LCEC" />
+      </List>
+      <List name="ReferenceCellEncounterCell">
+        <RefDirect refName="LocationCoordinate" recordType="RCEC" />
+      </List>
+      <List name="ActorCellMarkerReference" recordType="ACID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <List name="LocationCellMarkerReference" recordType="LCID">
+        <FormLink>
+          <Interface>IPlaced</Interface>
+        </FormLink>
+      </List>
+      <RefList name="ActorCellEnablePoint" refName="LocationCellEnablePoint" recordType="ACEP" />
+      <RefList name="LocationCellEnablePoint" refName="LocationCellEnablePoint" recordType="LCEP" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
+        <FormLink refName="Keyword" />
+      </List>
+      <FormLink name="ParentLocation" recordType="PNAM" refName="Location" />
+      <FormLink name="Music" recordType="NAM1" refName="MusicType" />
+      <FormLink name="UnreportedCrimeFaction" recordType="FNAM" refName="Faction" />
+      <FormLink name="WorldLocationMarkerRef" recordType="MNAM">
+        <Interface>IPlacedSimple</Interface>
+      </FormLink>
+      <Float name="WorldLocationRadius" recordType="RNAM" />
+      <FormLink name="HorseMarkerRef" recordType="NAM0" refName="PlacedObject" />
+      <Color name="Color" recordType="CNAM" binaryType="Alpha" />
+    </Fields>
+  </Object>
+  <Object name="LocationReference" objType="Subrecord" GUID="9eabb96c-a6a9-4367-b785-5a605234d4bf" ID="442">
+    <Fields>
+      <FormLink name="Actor">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="LocationCellUnique" objType="Subrecord" GUID="b1c1d0dd-dc4c-40ea-8002-009003c18777" ID="443">
+    <Fields>
+      <FormLink name="Actor" refName="Npc" />
+      <FormLink name="Ref" refName="PlacedNpc" />
+      <FormLink name="Location" refName="Location" />
+    </Fields>
+  </Object>
+  <Object name="LocationCellStaticReference" objType="Subrecord" GUID="255e98cf-cb5f-412a-a62d-ace272813bb7" ID="444">
+    <Fields>
+      <FormLink name="LocationRefType" refName="LocationReferenceType" />
+      <FormLink name="Marker">
+        <Interface>ILinkedReference</Interface>
+      </FormLink>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+  <Object name="LocationCoordinate" objType="Subrecord" GUID="e9cf5169-5dec-499f-9aca-1b0813c5c9d8" ID="445">
+    <Fields>
+      <FormLink name="Location">
+        <Interface>IComplexLocation</Interface>
+      </FormLink>
+      <List name="Coordinates" >
+        <P2Int16 swapCoords="true" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="LocationCellEnablePoint" objType="Subrecord" GUID="dcb2f125-f8e9-423d-b6cf-086ba0216254" ID="446">
+    <Fields>
+      <FormLink name="Actor">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <FormLink name="Ref">
+        <Interface>IPlaced</Interface>
+      </FormLink>
+      <P2Int16 name="Grid" swapCoords="true" />
+    </Fields>
+  </Object>
+</Loqui>

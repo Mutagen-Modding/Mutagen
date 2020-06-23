@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Binary
         {
             item = Parse(
                 frame.ReadSpan(4),
-                frame.MasterReferences!);
+                frame.MetaData.MasterReferences!);
             return true;
         }
 
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Binary
         {
             return Parse(
                 frame.ReadSpan(4), 
-                frame.MasterReferences!);
+                frame.MetaData.MasterReferences!);
         }
 
         public void Write(
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Binary
         {
             UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: writer.MasterReferences!.GetFormID(item).Raw);
+                item: writer.MetaData.MasterReferences!.GetFormID(item).Raw);
         }
 
         public void Write(
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             bool nullable = false)
         {
-            using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
             {
                 this.Write(
                     writer,

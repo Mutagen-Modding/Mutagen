@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="SkyrimMajorRecord" GUID="d6455262-af10-48b1-acd1-01fbee5f3687" ID="81">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

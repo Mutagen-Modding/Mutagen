@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="BodyPartData" recordType="BPTD" baseClass="SkyrimMajorRecord" objType="Record" GUID="5429249e-d4da-4637-999b-0f2b8a75e074" ID="61">
+    <Interface>IModeled</Interface>
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <RefList name="Parts" refName="BodyPart" />
+    </Fields>
+  </Object>
+  <Object name="BodyPart" objType="Subrecord" GUID="8a2f315d-0fc0-40ef-abc2-ee949928ba76" ID="432">
+    <Interface>ITranslatedNamedRequired</Interface>
+    <Fields>
+      <String name="Name" recordType="BPTN" translated="Normal" hasBeenSet="False" />
+      <String name="PoseMatching" recordType="PNAM" />
+      <String name="PartNode" recordType="BPNN" hasBeenSet="False" />
+      <String name="VatsTarget" recordType="BPNT" hasBeenSet="False" />
+      <String name="IkStartNode" recordType="BPNI" hasBeenSet="False" />
+      <Data recordType="BPND">
+        <Fields>
+          <Float name="DamageMult" />
+          <Enum name="Flags" enumName="BodyPart.Flag" byteLength="1" />
+          <Enum name="Type" enumName="BodyPart.PartType" byteLength="1" />
+          <UInt8 name="HealthPercent" />
+          <Enum name="ActorValue" enumName="ActorValueExtended" byteLength="1" />
+          <UInt8 name="ToHitChance" />
+          <UInt8 name="ExplodableExplosionChance" />
+          <UInt16 name="ExplodableDebrisCount" />
+          <FormLink name="ExplodableDebris" refName="Debris" />
+          <FormLink name="ExplodableExplosion" refName="Explosion" />
+          <Float name="TrackingMaxAngle" />
+          <Float name="ExplodableDebrisScale" />
+          <Int32 name="SeverableDebrisCount" />
+          <FormLink name="SeverableDebris" refName="Debris" />
+          <FormLink name="SeverableExplosion" refName="Explosion" />
+          <Float name="SeverableDebrisScale" />
+          <P3Float name="GorePositioning" />
+          <P3Float name="GoreRotation" />
+          <FormLink name="SeverableImpactData" refName="ImpactDataSet" />
+          <FormLink name="ExplodableImpactData" refName="ImpactDataSet" />
+          <UInt8 name="SeverableDecalCount" />
+          <UInt8 name="ExplodableDecalCount" />
+          <UInt16 name="Unknown" />
+          <Float name="LimbReplacementScale" />
+        </Fields>
+      </Data>
+      <String name="LimbReplacementModel" recordType="NAM1" hasBeenSet="False" />
+      <String name="GoreTargetBone" recordType="NAM4" hasBeenSet="False" />
+      <ByteArray name="TextureFilesHashes" recordType="NAM5" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -34,7 +35,7 @@ namespace Mutagen.Bethesda.Binary
             T[] ret = new T[amount];
             for (int i = 0; i < amount; i++)
             {
-                ret[i] = getter(new BinaryMemoryReadStream(mem.Slice(i * length)), package, recordTypeConverter);
+                ret[i] = getter(new OverlayStream(mem.Slice(i * length), package), package, recordTypeConverter);
             }
             return ret;
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Enchantment" objType="Record" recordType="ENCH" baseClass="OblivionMajorRecord" GUID="70c1ef12-4d5f-4f6a-8899-5518fcba82ed" ID="55">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Data" refName="EnchantmentData" />
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+  <Object name="EnchantmentData" objType="Subrecord" recordType="ENIT" GUID="76cd10d5-9756-4d70-92e8-be1435a44a35" ID="189">
+    <Fields>
+      <Enum name="Type" enumName="Enchantment.EnchantmentType" byteLength="4" />
+      <UInt32 name="ChargeAmount" />
+      <UInt32 name="EnchantCost" />
+      <Enum name="Flags" enumName="Enchantment.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

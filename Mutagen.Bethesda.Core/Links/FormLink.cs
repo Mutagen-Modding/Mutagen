@@ -14,20 +14,20 @@ namespace Mutagen.Bethesda
     /// This provides type safety concepts on top of a basic FormKey.
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct FormLink<TMajor> : IFormLink<TMajor>, IEquatable<IFormLinkGetter<TMajor>>
+    public struct FormLink<TMajor> : IFormLink<TMajor>, IEquatable<IFormLink<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked FormLink
         /// </summary>
-        public static readonly IFormLinkGetter<TMajor> Null = new FormLink<TMajor>();
+        public static readonly FormLink<TMajor> Null = new FormLink<TMajor>();
 
         /// <summary>
         /// FormKey of the target record
         /// </summary>
-        public FormKey FormKey { get; set; }
+        public FormKey FormKey { get; }
         
-        Type ILinkGetter.TargetType => typeof(TMajor);
+        Type ILink.TargetType => typeof(TMajor);
 
         /// <summary>
         /// True if unlinked and ID points to Null
@@ -51,23 +51,6 @@ namespace Mutagen.Bethesda
             this.Set(formKey);
         }
 
-        /// <summary>
-        /// Sets the link to the target Major Record
-        /// </summary>
-        /// <param name="value">Target record to link to</param>
-        public void Set(TMajor value)
-        {
-            this.FormKey = value.FormKey;
-        }
-
-        /// <summary>
-        /// Resets to an unlinked state
-        /// </summary>
-        public void Unset()
-        {
-            this.FormKey = FormKey.Null;
-        }
-
         public static bool operator ==(FormLink<TMajor> lhs, IFormLink<TMajor> rhs)
         {
             return lhs.FormKey.Equals(rhs.FormKey);
@@ -85,7 +68,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if object is ILinkGetter and FormKeys match</returns>
         public override bool Equals(object obj)
         {
-            if (!(obj is ILinkGetter<TMajor> rhs)) return false;
+            if (!(obj is ILink<TMajor> rhs)) return false;
             return this.Equals(rhs);
         }
 
@@ -94,14 +77,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkGetter<TMajor> other) => this.FormKey.Equals(other.FormKey);
+        public bool Equals(IFormLink<TMajor> other) => this.FormKey.Equals(other.FormKey);
         
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullableGetter<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
+        public bool Equals(IFormLinkNullable<TMajor> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKey, other.FormKey);
 
         /// <summary>
         /// Returns hash code
@@ -137,13 +120,13 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)] out FormKey formKey)
+        bool ILink.TryResolveFormKey(ILinkCache package, [MaybeNullWhen(false)] out FormKey formKey)
         {
             formKey = this.FormKey;
             return true;
         }
 
-        bool ILinkGetter.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
+        bool ILink.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out var rec))
             {
@@ -168,10 +151,15 @@ namespace Mutagen.Bethesda
             return TryGet<TMajor>.Failure;
         }
 
-        bool ILinkGetter.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
             modKey = this.FormKey.ModKey;
             return true;
+        }
+
+        public static implicit operator FormLink<TMajor>(TMajor major)
+        {
+            return new FormLink<TMajor>(major.FormKey);
         }
 
         public static implicit operator FormLink<TMajor>(FormKey formKey)

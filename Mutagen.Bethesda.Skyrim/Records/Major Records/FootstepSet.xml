@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="FootstepSet" recordType="FSTS" objType="Record" baseClass="SkyrimMajorRecord" GUID="7bc68bd1-2eb5-4094-8e32-00eec9922c48" ID="441">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

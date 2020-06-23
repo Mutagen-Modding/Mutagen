@@ -63,7 +63,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor);
+            Accessor converterAccessor,
+            bool inline);
 
         public virtual async Task GenerateWrapperFields(
             FileGeneration fg,
@@ -113,7 +114,7 @@ namespace Mutagen.Bethesda.Generation
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
             {
                 case BinaryGenerationType.Normal:
-                    fg.AppendLine($"_{typeGen.Name}Location = (ushort){locationAccessor};");
+                    fg.AppendLine($"_{typeGen.Name}Location = {locationAccessor};");
                     break;
                 case BinaryGenerationType.Custom:
                     using (var args = new ArgsWrapper(fg,
@@ -124,7 +125,6 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg($"offset");
                     }
                     break;
-                case BinaryGenerationType.DoNothing:
                 case BinaryGenerationType.NoGeneration:
                 default:
                     return;

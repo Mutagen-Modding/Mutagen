@@ -39,8 +39,10 @@ namespace Mutagen.Bethesda.Generation
             Accessor outItemAccessor,
             Accessor errorMaskAccessor,
             Accessor translationAccessor,
-            Accessor converterAccessor)
+            Accessor converterAccessor,
+            bool inline)
         {
+            if (inline) throw new NotImplementedException();
             if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
             ZeroType zero = typeGen as ZeroType;
             fg.AppendLine($"{readerAccessor}.SetPosition({readerAccessor}.Position + {zero.Length});");

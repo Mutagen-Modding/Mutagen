@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Worldspace" objType="Record" recordType="WRLD" majorFlag="true" customBinaryEnd="Normal" baseClass="SkyrimMajorRecord" GUID="2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce" ID="268">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IComplexLocation</Interface>
+    <Fields>
+      <RefList name="LargeReferences" refName="WorldspaceGridReference" />
+      <RefDirect name="MaxHeight" refName="WorldspaceMaxHeight" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <P2Int16 name="FixedDimensionsCenterCell" recordType="WCTR" />
+      <FormLink name="InteriorLighting" recordType="LTMP" refName="LightingTemplate" />
+      <FormLink name="EncounterZone" recordType="XEZN" refName="EncounterZone" />
+      <FormLink name="Location" recordType="XLCN" refName="Location" />
+      <RefDirect name="Parent" refName="WorldspaceParent" />
+      <FormLink name="Climate" refName="Climate" recordType="CNAM" />
+      <FormLink name="Water" refName="Water" recordType="NAM2" />
+      <FormLink name="LodWater" refName="Water" recordType="NAM3" />
+      <Float name="LodWaterHeight" recordType="NAM4" />
+      <RefDirect name="LandDefaults" refName="WorldspaceLandDefaults" />
+      <String name="MapImage" recordType="ICON" />
+      <RefDirect name="CloudModel" refName="Model" />
+      <RefDirect name="MapData" refName="WorldspaceMap" />
+      <RefDirect name="MapOffset" refName="WorldspaceMapOffset" hasBeenSet="False" />
+      <Float name="DistantLodMultiplier" recordType="NAMA" />
+      <Enum name="Flags" enumName="Worldspace.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
+      <RefDirect name="ObjectBounds" refName="WorldspaceObjectBounds" />
+      <FormLink name="Music" refName="MusicType" recordType="ZNAM" />
+      <String name="CanopyShadow" recordType="NNAM" />
+      <String name="WaterNoiseTexture" recordType="XNAM" />
+      <String name="HdLodDiffuseTexture" recordType="TNAM" />
+      <String name="HdLodNormalTexture" recordType="UNAM" />
+      <String name="WaterEnvironmentMap" recordType="XWEM" />
+      <ByteArray name="OffsetData" recordType="OFST" overflowRecordType="XXXX" />
+      <RefDirect name="TopCell" refName="Cell" binary="NoGeneration" />
+      <Int32 name="SubCellsTimestamp" binary="NoGeneration" />
+      <Int32 name="SubCellsUnknown" binary="NoGeneration" />
+      <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceBlock" objType="Group" GUID="d1ae377b-80e5-406a-b6a7-bd497c26ee73" ID="335">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="WorldspaceSubBlock" thread="true" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceSubBlock" objType="Group" GUID="029950f4-66a5-4de5-8865-96413af5c948" ID="336">
+    <Fields>
+      <Int16 name="BlockNumberY" />
+      <Int16 name="BlockNumberX" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
+      <Int32 name="LastModified" />
+      <Int32 name="Unknown" />
+      <RefList name="Items" refName="Cell" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceGridReference" objType="Subrecord" recordType="RNAM" GUID="2b2e308e-dd80-4d45-aff5-be2729f904dd" ID="337">
+    <Fields>
+      <P2Int16 name="GridPosition" />
+      <RefList name="References" refName="WorldspaceReference" counterLength="4" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceReference" objType="Subrecord" GUID="78826a17-779c-4004-9034-3af98461d33c" ID="338">
+    <Fields>
+      <FormLink name="Reference" refName="PlacedObject" />
+      <P2Int16 name="Position" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceMaxHeight" objType="Subrecord" recordType="MHDT" GUID="95b6c7c5-03c2-4878-81df-e265344cfe42" ID="339">
+    <Fields>
+      <P2Int16 name="Min" />
+      <P2Int16 name="Max" />
+      <ByteArray name="CellData" hasBeenSet="false" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceParent" objType="Subrecord" GUID="1e24c739-2c8c-41e2-b910-59ba865655be" ID="341">
+    <Fields>
+      <FormLink name="Worldspace" refName="Worldspace" recordType="WNAM" hasBeenSet="False" />
+      <Enum name="Flags" enumName="WorldspaceParent.Flag" byteLength="2" hasBeenSet="False" recordType="PNAM" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceLandDefaults" objType="Subrecord" recordType="DNAM" GUID="bd2d5da4-8f2e-43df-a0da-bca4371c1cc7" ID="342">
+    <Fields>
+      <Float name="DefaultLandHeight" />
+      <Float name="DefaultWaterHeight" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceMap" recordType="MNAM" objType="Subrecord" GUID="83748f51-a851-498e-8d24-d18c1c7189ce" ID="343">
+    <Fields>
+      <P2Int32 name="UsableDimensions" />
+      <P2Int16 name="NorthwestCellCoords" />
+      <P2Int16 name="SoutheastCellCoords" />
+      <Break />
+      <Float name="CameraMinHeight" />
+      <Float name="CameraMaxHeight" />
+      <Float name="CameraInitialPitch" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceMapOffset" objType="Subrecord" recordType="ONAM" GUID="c89bb33f-7638-41bb-8dab-2721e26c1f63" ID="344">
+    <Fields>
+      <Float name="Scale" />
+      <P3Float name="CellOffset" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceObjectBounds" objType="Subrecord" GUID="5863982b-d963-4fd8-a231-eb09b921d6ab" ID="345">
+    <Fields>
+      <P2Float name="Min" recordType="NAM0" hasBeenSet="False" binary="Custom" />
+      <P2Float name="Max" recordType="NAM9" hasBeenSet="False" binary="Custom" />
+    </Fields>
+  </Object>
+</Loqui>

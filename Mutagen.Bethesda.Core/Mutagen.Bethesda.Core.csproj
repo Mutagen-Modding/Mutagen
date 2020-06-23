@@ -5,30 +5,17 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702; 1998</NoWarn>
-    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <WarningsAsErrors>NU1605, CS4014</WarningsAsErrors>
-    <NoWarn>1701;1702; 1998</NoWarn>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Records\Oblivion\**" />
-    <EmbeddedResource Remove="Records\Skyrim\**" />
-    <None Remove="Records\Oblivion\**" />
-    <None Remove="Records\Skyrim\**" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.1.12" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.17" />
+    <PackageReference Include="Loqui" Version="1.1.14" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.8</Version>
+    <Version>0.9</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -47,9 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
-    <Compile Include="Enums\FloatBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
@@ -60,6 +47,10 @@
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Records\RecordTypeInts.cs" />
+    <Compile Include="Records\RecordTypes.cs" />
+    <Compile Include="Streams\WritingBundle.cs" />
+    <Compile Include="Streams\ParsingBundle.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />
     <Compile Include="String Lookup\ITranslatedString.cs" />
     <Compile Include="String Lookup\IStringsFolderLookup.cs" />
@@ -68,6 +59,8 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="Translations\Binary\Binary Overlay\OverlayStream.cs" />
+    <Compile Include="Translations\Binary\ExtraLengthHeaderExport.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
@@ -87,7 +80,7 @@
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlaySetList.cs" />
+    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayList.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
     <Compile Include="Records\AGroup.cs" />
@@ -169,7 +162,7 @@
     <Compile Include="Translations\Binary\Fields\LoquiBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\ModKeyBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\MutagenFrame.cs" />
-    <Compile Include="Translations\Binary\MutagenWriter.cs" />
+    <Compile Include="Streams\MutagenWriter.cs" />
     <Compile Include="Translations\Binary\Fields\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\P3Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\P2Int16BinaryTranslation.cs" />

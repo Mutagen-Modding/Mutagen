@@ -13,13 +13,13 @@ namespace Mutagen.Bethesda
     /// This class stores the target EDID as RecordType, as that is a convenient 4 character struct
     /// </summary>
     /// <typeparam name="TMajor">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLinkGetter<TMajor>>
+    public struct EDIDLink<TMajor> : IEDIDLink<TMajor>, IEquatable<IEDIDLink<TMajor>>
        where TMajor : class, IMajorRecordCommonGetter
     {
         /// <summary>
         /// A readonly singleton representing an unlinked EDIDLink
         /// </summary>
-        public static readonly IEDIDLinkGetter<TMajor> Empty = new EDIDLink<TMajor>();
+        public static readonly IEDIDLink<TMajor> Empty = new EDIDLink<TMajor>();
         
         /// <summary>
         /// A readonly singleton representing a "null" record type
@@ -29,9 +29,9 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Record type representing the target EditorID to link against
         /// </summary>
-        public RecordType EDID { get; set; }
+        public RecordType EDID { get; }
         
-        Type ILinkGetter.TargetType => typeof(TMajor);
+        Type ILink.TargetType => typeof(TMajor);
 
         /// <summary>
         /// Default constructor that creates an EDIDLink linked to the target EditorID
@@ -43,37 +43,11 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Sets the link to the target EditorID
-        /// </summary>
-        /// <param name="type">Target EditorID to link to</param>
-        public void Set(RecordType type)
-        {
-            this.EDID = type;
-        }
-
-        /// <summary>
-        /// Sets the link to the target Major Record
-        /// </summary>
-        /// <param name="value">Target record to link to</param>
-        /// <exception cref="ArgumentException">If EditorID of target record is not 4 characters</exception>
-        public void Set(TMajor? value)
-        {
-            if (value?.EditorID == null)
-            {
-                this.EDID = Null;
-            }
-            else
-            {
-                this.Set(new RecordType(value.EditorID));
-            }
-        }
-
-        /// <summary>
         /// Compares equality of two links.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if EDID members are equal</returns>
-        public bool Equals(IEDIDLinkGetter<TMajor> other) => this.EDID.Equals(other.EDID);
+        public bool Equals(IEDIDLink<TMajor> other) => this.EDID.Equals(other.EDID);
 
         /// <summary>
         /// Returns hash code
@@ -153,7 +127,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        bool ILinkGetter.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
+        bool ILink.TryResolveCommon(ILinkCache package, [MaybeNullWhen(false)]out IMajorRecordCommonGetter formKey)
         {
             if (TryResolve(package, out TMajor rec))
             {
@@ -178,15 +152,7 @@ namespace Mutagen.Bethesda
             return TryGet<TMajor>.Failure;
         }
 
-        /// <summary>
-        /// Resets to an unlinked state
-        /// </summary>
-        public void Unset()
-        {
-            this.EDID = Null;
-        }
-
-        bool ILinkGetter.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        bool ILink.TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
             modKey = default!;
             return false;
@@ -195,6 +161,18 @@ namespace Mutagen.Bethesda
         public static implicit operator EDIDLink<TMajor>(RecordType recordType)
         {
             return new EDIDLink<TMajor>(recordType);
+        }
+
+        public static implicit operator EDIDLink<TMajor>(TMajor major)
+        {
+            if (major.EditorID == null)
+            {
+                return EDIDLink<TMajor>.Null;
+            }
+            else
+            {
+                return new EDIDLink<TMajor>(new RecordType(major.EditorID));
+            }
         }
     }
 }

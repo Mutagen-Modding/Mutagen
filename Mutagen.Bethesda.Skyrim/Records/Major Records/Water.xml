@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Water" objType="Record" recordType="WATR" baseClass="SkyrimMajorRecord" GUID="cf1e41d5-72e0-47c6-82ca-e1289b290653" ID="148">
+    <Interface>ITranslatedNamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <List name="UnusedNoisemaps" >
+        <String recordType="NNAM" />
+      </List>
+      <UInt8 name="Opacity" hasBeenSet="False" recordType="ANAM" />
+      <Enum name="Flags" enumName="Water.Flag" byteLength="1" recordType="FNAM" />
+      <ByteArray name="MNAM" recordType="MNAM" />
+      <FormLink name="Material" refName="MaterialType" recordType="TNAM" />
+      <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
+      <FormLink name="Spell" refName="Spell" recordType="XNAM" />
+      <FormLink name="ImageSpace" refName="ImageSpaceAdapter" recordType="INAM" />
+      <UInt16 name="DamagePerSecond" recordType="DATA" />
+      <Data recordType="DNAM" >
+        <Fields>
+          <ByteArray name="Unknown" byteLength="16" hasBeenSet="False" />
+          <Float name="SpecularSunPower" />
+          <Float name="WaterReflectivity" />
+          <Float name="WaterFresnel" />
+          <Int32 name="Unknown2" />
+          <Float name="FogAboveWaterDistanceNearPlane" />
+          <Float name="FogAboveWaterDistanceFarPlane" />
+          <Color name="ShallowColor" binaryType="Alpha" />
+          <Color name="DeepColor" binaryType="Alpha" />
+          <Color name="ReflectionColor" binaryType="Alpha" />
+          <ByteArray name="Unknown3" byteLength="20" hasBeenSet="False" />
+          <Float name="DisplacementStartingSize" />
+          <Float name="DisplacementFoce" />
+          <Float name="DisplacementVelocity" />
+          <Float name="DisplacementFalloff" />
+          <Float name="DisplacementDampner" />
+          <Int32 name="Unknown4" />
+          <Float name="NoiseFalloff" />
+          <Float name="NoiseLayerOneWindDirection" />
+          <Float name="NoiseLayerTwoWindDirection" />
+          <Float name="NoiseLayerThreeWindDirection" />
+          <Float name="NoiseLayerOneWindSpeed" />
+          <Float name="NoiseLayerTwoWindSpeed" />
+          <Float name="NoiseLayerThreeWindSpeed" />
+          <ByteArray name="Unknown5" byteLength="8" hasBeenSet="False" />
+          <Float name="FogAboveWaterAmount" />
+          <Int32 name="Unknown6" />
+          <Float name="FogUnderWaterAmount" />
+          <Float name="FogUnderWaterDistanceNearPlane" />
+          <Float name="FogUnderWaterDistanceFarPlane" />
+          <Float name="WaterRefractionMagnitude" />
+          <Float name="SpecularPower" />
+          <Int32 name="Unknown7" />
+          <Float name="SpecularRadius" />
+          <Float name="SpecularBrightness" />
+          <Float name="NoiseLayerOneUvScale" />
+          <Float name="NoiseLayerTwoUvScale" />
+          <Float name="NoiseLayerThreeUvScale" />
+          <Float name="NoiseLayerOneAmplitudeScale" />
+          <Float name="NoiseLayerTwoAmplitudeScale" />
+          <Float name="NoiseLayerThreeAmplitudeScale" />
+          <Float name="WaterReflectionMagnitude" />
+          <Float name="SpecularSunSparkleMagnitude" />
+          <Float name="SpecularSunSpecularMagnitude" />
+          <Float name="DepthReflections" />
+          <Float name="DepthRefraction" />
+          <Float name="DepthNormals" />
+          <Float name="DepthSpecularLighting" />
+          <Float name="SpecularSunSparklePower" />
+          <Float name="NoiseFlowmapScale" isSE="true" />
+        </Fields>
+      </Data>
+      <ByteArray name="GNAM" recordType="GNAM" />
+      <P3Float name="LinearVelocity" recordType="NAM0" />
+      <P3Float name="AngularVelocity" recordType="NAM1" />
+      <String name="NoiseLayerOneTexture" recordType="NAM2" />
+      <String name="NoiseLayerTwoTexture" recordType="NAM3" />
+      <String name="NoiseLayerThreeTexture" recordType="NAM4" />
+      <String name="FlowNormalsNoiseTexture" recordType="NAM5" isSE="true" />
+    </Fields>
+  </Object>
+</Loqui>

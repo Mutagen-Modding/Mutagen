@@ -9,6 +9,7 @@ using System.IO;
 using Loqui.Internal;
 using Mutagen.Bethesda.Internals;
 using static Mutagen.Bethesda.UtilityTranslation;
+using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -51,7 +52,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, nextRecord, out var subIitem))
@@ -99,7 +100,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, nextRecord, out var subIitem, recordTypeConverter))
@@ -120,26 +121,27 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
+            RecordTypeConverter? recordTypeConverter = null,
+            bool skipHeader = false)
         {
             var ret = new List<T>();
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
-                if (!IsLoqui)
+                if (!frame.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
+                if (!IsLoqui || skipHeader)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += header.HeaderLength;
                 }
                 var startingPos = frame.Position;
-                if (transl(frame, out var subItem, recordTypeConverter))
+                if (transl(skipHeader ? frame.SpawnWithLength(header.ContentLength) : frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -156,8 +158,7 @@ namespace Mutagen.Bethesda.Binary
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var header = frame
-                    .MetaData.GetNextRecordVariableMeta(frame.Reader);
+                var header = frame.MetaData.Constants.GetNextRecordVariableMeta(frame.Reader);
                 if (header.RecordType != triggeringRecord) break;
                 if (!IsLoqui)
                 {
@@ -222,7 +223,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subIitem))
@@ -251,7 +252,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 if (transl(frame, out var subIitem, recordTypeConverter))
@@ -278,6 +279,10 @@ namespace Mutagen.Bethesda.Binary
                 {
                     ret.Add(subItem);
                 }
+                else
+                {
+                    break;
+                }
             }
             return ret;
         }
@@ -293,6 +298,10 @@ namespace Mutagen.Bethesda.Binary
                 if (transl(frame, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
+                }
+                else
+                {
+                    break;
                 }
             }
             return ret;
@@ -345,7 +354,7 @@ namespace Mutagen.Bethesda.Binary
             }
             if (!IsLoqui)
             {
-                frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
             }
             var ret = new List<T>();
             var startingPos = frame.Position;
@@ -361,6 +370,108 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
             return ret;
+        }
+
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return Parse(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+        }
+
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecord();
+            if (subHeader.RecordType != triggeringRecord)
+            {
+                throw new ArgumentException($"Unexpected record encountered.");
+            }
+            if (!IsLoqui)
+            {
+                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+            }
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                if (transl(frame, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
+        public IEnumerable<T> Parse(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return Parse(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl);
+            }
         }
 
         public IEnumerable<T> ParsePerItem(
@@ -381,7 +492,7 @@ namespace Mutagen.Bethesda.Binary
                 }
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 if (transl(frame, out var subIitem, recordTypeConverter))
                 {
@@ -393,6 +504,145 @@ namespace Mutagen.Bethesda.Binary
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
             return ret;
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl,
+                    recordTypeConverter);
+            }
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            int amount,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<T> transl)
+        {
+            var ret = new List<T>();
+            var startingPos = frame.Position;
+            for (int i = 0; i < amount; i++)
+            {
+                var subHeader = frame.GetSubrecord();
+                if (subHeader.RecordType != triggeringRecord)
+                {
+                    throw new ArgumentException($"Unexpected record encountered.");
+                }
+                if (!IsLoqui)
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                }
+                if (transl(frame, out var subIitem))
+                {
+                    ret.Add(subIitem);
+                }
+            }
+            if (frame.Position == startingPos)
+            {
+                throw new ArgumentException($"Parsed item on the list consumed no data.");
+            }
+            return ret;
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType triggeringRecord,
+            RecordType countRecord,
+            int countLengthLength,
+            BinarySubParseDelegate<T> transl)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    triggeringRecord,
+                    transl);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    triggeringRecord,
+                    transl);
+            }
+        }
+
+        public IEnumerable<T> ParsePerItem(
+            MutagenFrame frame,
+            RecordType countRecord,
+            int countLengthLength,
+            BinaryMasterParseDelegate<T> transl,
+            ICollectionGetter<RecordType> triggeringRecord,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var subHeader = frame.GetSubrecordFrame();
+            var recType = subHeader.Header.RecordType;
+            if (recType == countRecord)
+            {
+                var count = countLengthLength switch
+                {
+                    1 => subHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(subHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                frame.Position += subHeader.TotalLength;
+                return ParsePerItem(
+                    frame,
+                    count,
+                    transl,
+                    triggeringRecord,
+                    recordTypeConverter);
+            }
+            else
+            {
+                return Parse(
+                    frame,
+                    transl,
+                    triggeringRecord,
+                    recordTypeConverter);
+            }
         }
 
         public IEnumerable<T> ParsePerItem(
@@ -410,7 +660,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 if (transl(frame, out var subIitem, recordTypeConverter))
                 {
@@ -456,7 +706,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubWriteDelegate<T> transl)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, recordType))
             {
                 foreach (var item in items)
                 {
@@ -473,7 +723,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, recordType))
             {
                 foreach (var item in items)
                 {
@@ -491,7 +741,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, recordType))
             {
                 switch (countLengthLength)
                 {
@@ -569,7 +819,7 @@ namespace Mutagen.Bethesda.Binary
             if (items == null) return;
             foreach (var item in items)
             {
-                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, recordType))
                 {
                     transl(writer, item);
                 }
@@ -585,11 +835,11 @@ namespace Mutagen.Bethesda.Binary
             byte counterLength)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, counterType))
             {
                 writer.Write(items.Count, counterLength);
             }
-            using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, recordType))
             {
                 foreach (var item in items)
                 {
@@ -609,7 +859,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Subrecord(writer, counterType))
             {
                 writer.Write(items.Count, counterLength);
             }
@@ -617,7 +867,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 foreach (var item in items)
                 {
-                    using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                    using (HeaderExport.Subrecord(writer, recordType))
                     {
                         transl(writer, item, recordTypeConverter);
                     }
@@ -625,7 +875,7 @@ namespace Mutagen.Bethesda.Binary
             }
             else
             {
-                using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
+                using (HeaderExport.Subrecord(writer, recordType))
                 {
                     foreach (var item in items)
                     {
@@ -644,7 +894,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (items == null) return;
-            using (HeaderExport.ExportHeader(writer, counterType, ObjectType.Subrecord))
+            using (HeaderExport.Header(writer, counterType, ObjectType.Subrecord))
             {
                 writer.Write(items.Count, counterLength);
             }
@@ -699,7 +949,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 var item = await transl(frame).ConfigureAwait(false);
@@ -710,7 +960,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -729,7 +979,7 @@ namespace Mutagen.Bethesda.Binary
                 if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
                 var startingPos = frame.Position;
                 var item = await transl(frame, recordTypeConverter).ConfigureAwait(false);
@@ -740,7 +990,7 @@ namespace Mutagen.Bethesda.Binary
 
                 if (frame.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -761,7 +1011,7 @@ namespace Mutagen.Bethesda.Binary
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
                 var toDo = transl(frame);
@@ -788,7 +1038,7 @@ namespace Mutagen.Bethesda.Binary
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
                 var toDo = transl(frame, recordTypeConverter);

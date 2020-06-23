@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Place" abstract="true" objType="Record" baseClass="OblivionMajorRecord" GUID="9413b2c4-8392-4e96-8cb2-374ab5e65bbf" ID="163">
-    <Fields>
-    </Fields>
-  </Object>
-</Loqui>

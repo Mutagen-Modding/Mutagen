@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weapon" baseClass="AItem" objType="Record" recordType="WEAP" GUID="7251519c-a94a-44f1-a46c-c9a659b6e36c" ID="82">
+    <Interface>INamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <String name="Icon" recordType="ICON" />
+      <FormLink name="Script" refName="Script" recordType="SCRI" />
+      <FormLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <UInt16 name="EnchantmentPoints" recordType="ANAM" />
+      <RefDirect name="Data" refName="WeaponData" />
+    </Fields>
+  </Object>
+  <Object name="WeaponData" recordType="DATA" objType="Subrecord" GUID="950914fc-ecc6-459d-8cda-edd66842e652" ID="215">
+    <Fields>
+      <Enum name="Type" enumName="Weapon.WeaponType" byteLength="4" />
+      <Float name="Speed" />
+      <Float name="Reach" />
+      <Enum name="Flags" enumName="Weapon.WeaponFlag" byteLength="4" />
+      <UInt32 name="Value" />
+      <UInt32 name="Health" />
+      <Float name="Weight" />
+      <UInt16 name="Damage" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Preprocessing
             GameMode gameMode,
             RecordInterest? interest = null)
         {
-            var meta = GameConstants.Get(gameMode);
-            using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta, masterReferences: null);
+            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
             using var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator(), meta);
             using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);
 
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     var majorMetaSpan = majorMeta.Span.ToArray();
 
                     // Write major Meta
-                    var writableMajorMeta = meta.MajorRecordWritable(majorMetaSpan.AsSpan());
+                    var writableMajorMeta = meta.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());
                     writableMajorMeta.IsCompressed = false;
                     writableMajorMeta.RecordLength = (uint)(len + lengthDiff);
                     writer.Write(majorMetaSpan);

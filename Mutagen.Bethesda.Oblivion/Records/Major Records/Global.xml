@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Global" recordType="GLOB" baseClass="OblivionMajorRecord" objType="Record" abstract="true" GUID="072ceda7-3182-4314-a4e3-927e68f39c3f" ID="12">
+    <Fields>
+      <CustomLogic name="TypeChar" recordType="FNAM" />
+    </Fields>
+  </Object>
+  <Object name="GlobalInt" recordType="GLOB" baseClass="Global" objType="Record" GUID="fcf8c0ba-4933-42bc-8499-168c84bb2f4e" ID="13">
+    <Fields>
+      <Int32 name="Data" recordType="FLTV" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="GlobalShort" recordType="GLOB" baseClass="Global" objType="Record" GUID="95f041f0-bcdb-4e1e-bd9c-53b06d9d855e" ID="14">
+    <Fields>
+      <Int16 name="Data" recordType="FLTV" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="GlobalFloat" recordType="GLOB" baseClass="Global" objType="Record" GUID="e7bd631f-d97b-4b8b-a44e-2bae41f32674" ID="15">
+    <Fields>
+      <Float name="Data" recordType="FLTV" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,17 @@ namespace Mutagen.Bethesda.Generation
                 {
                     breakType.Index = breaks++;
                 }
+            }
+        }
+
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            await base.PostFieldLoad(obj, field, node);
+            var data = field.GetFieldData();
+            var version = node.Elements(XName.Get("CustomVersion", LoquiGenerator.Namespace)).FirstOrDefault();
+            if (version != null)
+            {
+                data.CustomVersion = int.Parse(version.Value);
             }
         }
     }

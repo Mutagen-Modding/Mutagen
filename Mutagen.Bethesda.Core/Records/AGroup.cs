@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda
             private T ConstructWrapper(int pos)
             {
                 ReadOnlyMemorySlice<byte> slice = this._data.Slice(pos);
-                var majorMeta = _package.Meta.MajorRecord(slice);
+                var majorMeta = _package.MetaData.Constants.MajorRecord(slice);
                 if (majorMeta.IsCompressed)
                 {
                     uint uncompressedLength = BinaryPrimitives.ReadUInt32LittleEndian(slice.Slice(majorMeta.HeaderLength));
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda
                     // Set length bytes
                     BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
                     // Remove compression flag
-                    BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.Meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                    BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
                     // Copy uncompressed data over
                     using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                     {
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda
                     slice = new MemorySlice<byte>(buf);
                 }
                 return LoquiBinaryOverlayTranslation<T>.Create(
-                   stream: new BinaryMemoryReadStream(this._data.Slice(pos)),
+                   stream: new OverlayStream(this._data.Slice(pos), _package),
                    package: _package,
                    recordTypeConverter: null);
             }
@@ -164,15 +164,15 @@ namespace Mutagen.Bethesda
             {
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
-                stream.Position -= package.Meta.GroupConstants.HeaderLength;
-                var groupMeta = package.Meta.GetGroup(stream);
+                stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
+                var groupMeta = package.MetaData.Constants.GetGroup(stream);
                 var finalPos = stream.Position + groupMeta.TotalLength;
-                stream.Position += package.Meta.GroupConstants.HeaderLength;
+                stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
                 // Parse MajorRecord locations
                 ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
                 {
-                    VariableHeader varMeta = package.Meta.NextRecordVariableMeta(stream.RemainingSpan);
+                    VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingSpan);
                     if (varMeta.IsGroup)
                     {
                         if (lastParsed != ObjectType.Record)
@@ -184,12 +184,12 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        MajorRecordHeader majorMeta = package.Meta.MajorRecord(stream.RemainingSpan);
+                        MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingSpan);
                         if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                         {
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);
                         }
-                        var formKey = FormKey.Factory(package.MasterReferences!, majorMeta.FormID.Raw);
+                        var formKey = FormKey.Factory(package.MetaData.MasterReferences!, majorMeta.FormID.Raw);
                         locationDict.Add(formKey, checked((int)(stream.Position - offset)));
                         stream.Position += checked((int)majorMeta.TotalLength);
                         lastParsed = ObjectType.Record;

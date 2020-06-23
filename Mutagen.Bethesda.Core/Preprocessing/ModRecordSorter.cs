@@ -18,61 +18,55 @@ namespace Mutagen.Bethesda.Preprocessing
             Stream outputStream,
             GameMode gameMode)
         {
-            var meta = GameConstants.Get(gameMode);
-            using (var inputStream = new MutagenBinaryReadStream(streamCreator(), meta))
+            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
+            using var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta);
+            using var writer = new MutagenWriter(outputStream, gameMode, dispose: false);
+            while (!inputStream.Complete)
             {
-                using (var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta))
+                long noRecordLength;
+                foreach (var grupLoc in RecordLocator.IterateBaseGroupLocations(locatorStream))
                 {
-                    using (var writer = new MutagenWriter(outputStream, gameMode, dispose: false))
+                    noRecordLength = grupLoc.Value - inputStream.Position;
+                    inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                    // If complete overall, return
+                    if (inputStream.Complete) return;
+
+                    var groupMeta = inputStream.GetGroup();
+                    if (!groupMeta.IsGroup)
                     {
-                        while (!inputStream.Complete)
+                        throw new ArgumentException();
+                    }
+
+                    var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
+                    using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
+                    {
+                        inputStream.WriteTo(writer.BaseStream, meta.Constants.GroupConstants.HeaderLength);
+                        locatorStream.Position = grupLoc.Value;
+                        foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
                         {
-                            long noRecordLength;
-                            foreach (var grupLoc in RecordLocator.IterateBaseGroupLocations(locatorStream))
+                            MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
+                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
+                            if (grupFrame.Complete) continue;
+                            GroupHeader subGroupMeta = inputStream.GetGroup();
+                            if (subGroupMeta.IsGroup)
                             {
-                                noRecordLength = grupLoc.Value - inputStream.Position;
-                                inputStream.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-                                // If complete overall, return
-                                if (inputStream.Complete) return;
-
-                                var groupMeta = inputStream.GetGroup();
-                                if (!groupMeta.IsGroup)
-                                {
-                                    throw new ArgumentException();
-                                }
-
-                                var storage = new Dictionary<FormID, List<ReadOnlyMemorySlice<byte>>>();
-                                using (var grupFrame = new MutagenFrame(inputStream).SpawnWithLength(groupMeta.TotalLength))
-                                {
-                                    inputStream.WriteTo(writer.BaseStream, meta.GroupConstants.HeaderLength);
-                                    locatorStream.Position = grupLoc.Value;
-                                    foreach (var rec in RecordLocator.ParseTopLevelGRUP(locatorStream))
-                                    {
-                                        MajorRecordHeader majorMeta = inputStream.GetMajorRecord();
-                                        storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)majorMeta.TotalLength), readSafe: true));
-                                        if (grupFrame.Complete) continue;
-                                        GroupHeader subGroupMeta = inputStream.GetGroup();
-                                        if (subGroupMeta.IsGroup)
-                                        {
-                                            storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
-                                        }
-                                    }
-                                }
-
-                                foreach (var item in storage.OrderBy((i) => i.Key.ID))
-                                {
-                                    foreach (var bytes in item.Value)
-                                    {
-                                        writer.Write(bytes);
-                                    }
-                                }
+                                storage.TryCreateValue(rec.FormID).Add(inputStream.ReadMemory(checked((int)subGroupMeta.TotalLength), readSafe: true));
                             }
-                            
-                            inputStream.WriteTo(writer.BaseStream, (int)inputStream.Remaining);
+                        }
+                    }
+
+                    foreach (var item in storage.OrderBy((i) => i.Key.ID))
+                    {
+                        foreach (var bytes in item.Value)
+                        {
+                            writer.Write(bytes);
                         }
                     }
                 }
+
+                inputStream.WriteTo(writer.BaseStream, (int)inputStream.Remaining);
             }
         }
     }

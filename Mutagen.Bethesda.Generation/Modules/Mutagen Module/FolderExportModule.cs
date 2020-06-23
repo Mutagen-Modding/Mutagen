@@ -13,13 +13,10 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FolderExportModule : GenerationModule
     {
-        public override async Task<IEnumerable<string>> RequiredUsingStatements(ObjectGeneration obj)
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
-            return new string[]
-            {
-                "System.Threading.Tasks",
-                "Noggog.Utility"
-            };
+            yield return "System.Threading.Tasks";
+            yield return "Noggog.Utility";
         }
 
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)

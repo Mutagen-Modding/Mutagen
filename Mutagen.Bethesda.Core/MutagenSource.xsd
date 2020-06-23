@@ -96,10 +96,27 @@
     <xs:complexType name="Field">
       <xs:complexContent>
         <xs:extension base="Field">
+          <xs:sequence>
+            <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
+          </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
                 Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="recordTypeHex" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Integer representation used for record type
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="overflowRecordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Record type to use if there is a length overflow
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -256,11 +273,27 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Bool">
+      <xs:complexContent>
+        <xs:extension base="Bool">
+          <xs:attribute name="boolAsMarker" type="xs:string" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="P2">
+      <xs:complexContent>
+        <xs:extension base="P2">
+          <xs:attribute name="swapCoords" type="xs:boolean" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="RangedFloat">
       <xs:complexContent>
         <xs:extension base="RangedFloat">
-          <xs:attribute name="binaryType" type="FloatBinaryType" />
           <xs:attribute name="multiplier" type="xs:double" />
+          <xs:attribute name="divisor" type="xs:double" />
           <xs:attribute name="integerType" type="FloatIntegerType" />
         </xs:extension>
       </xs:complexContent>
@@ -373,9 +406,9 @@
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="FormKey" type="NFormKey"/>
         <xs:element name="ModKey" type="NModKey"/>
+        <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
-        <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Group" type="GroupType" />
         <xs:element name="CustomLogic" type="CustomLogic" />
@@ -392,8 +425,8 @@
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="FormKey" type="FormKey"/>
         <xs:element name="ModKey" type="ModKey"/>
+        <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
-        <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
         <xs:element name="Gendered" type="GenderedItem" />
@@ -424,13 +457,13 @@
       <xs:enumeration value="NoAlpha" />
       <xs:enumeration value="Alpha" />
       <xs:enumeration value="NoAlphaFloat" />
+      <xs:enumeration value="AlphaFloat" />
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="MutagenBinaryType" final="restriction" >
     <xs:restriction base="xs:string">
       <xs:enumeration value="Normal" />
-      <xs:enumeration value="DoNothing" />
       <xs:enumeration value="NoGeneration" />
       <xs:enumeration value="Custom" />
     </xs:restriction>
@@ -442,13 +475,6 @@
       <xs:enumeration value="NullTerminate" />
       <xs:enumeration value="PrependLength" />
       <xs:enumeration value="PrependLengthUShort" />
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="FloatBinaryType" final="restriction" >
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Normal" />
-      <xs:enumeration value="Integer" />
     </xs:restriction>
   </xs:simpleType>
 
@@ -478,12 +504,15 @@
   </xs:complexType>
 
   <xs:complexType name="ZeroType">
-    <xs:attribute name="byteLength" type="xs:byte" use="required" />
+    <xs:attribute name="byteLength" type="xs:int" use="required" />
   </xs:complexType>
 
   <xs:complexType name="CustomLogic">
+    <xs:sequence>
+      <xs:element name="RecordType" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
-    <xs:attribute name="byteLength" type="xs:byte" />
+    <xs:attribute name="byteLength" type="xs:int" />
     <xs:attribute name="recordType" type="xs:string" >
       <xs:annotation>
         <xs:documentation>
@@ -501,19 +530,7 @@
   </xs:complexType>
 
   <xs:complexType name="TransferType">
-    <xs:attribute name="byteLength" type="xs:byte" use="required" />
-  </xs:complexType>
-
-  <xs:complexType name="SpecialParse" >
-    <xs:attribute name="recordType" type="xs:string" use="required" />
-  </xs:complexType>
-
-  <xs:complexType name="NSpecialParse" >
-    <xs:complexContent>
-      <xs:extension base="SpecialParse">
-        <xs:attribute name="name" type="xs:string" use="required" />
-      </xs:extension>
-    </xs:complexContent>
+    <xs:attribute name="byteLength" type="xs:int" use="required" />
   </xs:complexType>
 
   <xs:simpleType name="FormIDType" final="restriction" >
@@ -538,13 +555,6 @@
           <xs:annotation>
             <xs:documentation>
               Type of formID system to use
-            </xs:documentation>
-          </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="objType" type="MutagenObjectType">
-          <xs:annotation>
-            <xs:documentation>
-              Type of mutagen object this is creating.  Only applicable if FormLink is referencing non-Loqui interfaces
             </xs:documentation>
           </xs:annotation>
         </xs:attribute>
@@ -597,6 +607,20 @@
   <xs:complexType name="NModKey" >
     <xs:complexContent>
       <xs:extension base="ModKey">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RecordType" >
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NRecordType" >
+    <xs:complexContent>
+      <xs:extension base="RecordType">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>

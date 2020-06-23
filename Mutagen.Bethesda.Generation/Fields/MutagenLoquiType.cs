@@ -15,13 +15,15 @@ namespace Mutagen.Bethesda.Generation
     public class MutagenLoquiType : LoquiType
     {
         private ObjectType _interfObjectType;
+        public bool RequireInterfaceObject = true;
 
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
             if (this.RefType == LoquiRefType.Interface)
             {
-                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.ObjectType, out _interfObjectType))
+                if (!node.TryGetAttribute<ObjectType>(Mutagen.Bethesda.Generation.Constants.ObjectType, out _interfObjectType)
+                    && RequireInterfaceObject)
                 {
                     throw new ArgumentException("Interface Ref Type was specified without supplying object type");
                 }
@@ -44,11 +46,9 @@ namespace Mutagen.Bethesda.Generation
             switch (this.RefType)
             {
                 case LoquiRefType.Direct:
-                    fg.AppendLine($"var copyRet = new {this.TargetObjectGeneration.ObjectName}({rhsAccessor}.FormKey);");
                     using (var args = new ArgsWrapper(fg,
-                        $"copyRet.{(deepCopy ? "Deep" : null)}CopyIn"))
+                        $"{retAccessor}({this.TargetObjectGeneration.ObjectName}){rhsAccessor}.{(deepCopy ? "Deep" : null)}Copy"))
                     {
-                        args.Add($"rhs: {rhsAccessor}");
                         if (this.RefType == LoquiRefType.Direct)
                         {
                             if (!doTranslationMask)
@@ -66,7 +66,6 @@ namespace Mutagen.Bethesda.Generation
                         }
                         args.AddPassArg($"errorMask");
                     }
-                    fg.AppendLine($"{retAccessor}copyRet;");
                     break;
                 case LoquiRefType.Generic:
                     if (deepCopy)

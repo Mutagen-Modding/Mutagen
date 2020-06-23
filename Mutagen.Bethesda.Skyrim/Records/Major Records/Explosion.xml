@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Explosion" recordType="EXPL" objType="Record" baseClass="SkyrimMajorRecord" GUID="ce166e0d-db1e-4510-b8f6-af429a302425" ID="109">
+    <Interface>ITranslatedNamed</Interface>
+    <Interface>IObjectBounded</Interface>
+    <Fields>
+      <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
+      <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <RefDirect name="Model" refName="Model" />
+      <FormLink name="ObjectEffect" recordType="EITM" >
+        <Interface>IEffectRecord</Interface>
+      </FormLink>
+      <FormLink name="ImageSpaceModifier" refName="ImageSpaceAdapter" recordType="MNAM" />
+      <Data>
+        <Fields>
+          <FormLink name="Light" refName="Light" />
+          <FormLink name="Sound1" refName="SoundDescriptor" />
+          <FormLink name="Sound2" refName="SoundDescriptor" />
+          <FormLink name="ImpactDataSet" refName="ImpactDataSet" />
+          <FormLink name="PlacedObject" refName="SkyrimMajorRecord" />
+          <FormLink name="SpawnProjectile" refName="Projectile" />
+          <Float name="Force" />
+          <Float name="Damage" />
+          <Float name="Radius" />
+          <Float name="ISRadius" />
+          <Break />
+          <Float name="VerticalOffsetMult" />
+          <Break />
+          <Enum name="Flags" enumName="Explosion.Flag" byteLength="4" />
+          <Break />
+          <Enum name="SoundLevel" enumName="SoundLevel" byteLength="4" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

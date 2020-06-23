@@ -12,24 +12,9 @@ namespace Mutagen.Bethesda.Binary
     public interface IMutagenReadStream : IBinaryReadStream
     {
         /// <summary>
-        /// Game constants meta object to reference for header length measurements
+        /// All the extra meta bits for parsing
         /// </summary>
-        GameConstants MetaData { get; }
-
-        /// <summary>
-        /// Optional MasterReferenceReader to reference while reading
-        /// </summary>
-        MasterReferenceReader? MasterReferences { get; set; }
-
-        /// <summary>
-        /// Optional RecordInfoCache to reference while reading
-        /// </summary>
-        RecordInfoCache? RecordInfoCache { get; set; }
-
-        /// <summary>
-        /// Optional strings lookup to reference while reading
-        /// </summary>
-        IStringsFolderLookup? StringsLookup { get; set; }
+        ParsingBundle MetaData { get; }
 
         /// <summary>
         /// Convenience offset tracker variable for helping print meaningful position information

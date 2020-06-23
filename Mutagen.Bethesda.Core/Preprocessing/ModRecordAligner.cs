@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Preprocessing
                 }
                 var ret = new byte[subLen + 6];
                 MutagenWriter stream = new MutagenWriter(new MemoryStream(ret), this._gameMode);
-                using (HeaderExport.ExportSubrecordHeader(stream, _recordType))
+                using (HeaderExport.Subrecord(stream, _recordType))
                 {
                     inputStream.WriteTo(stream.BaseStream, subLen);
                 }
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     }
                     var data = new byte[subLen + 6];
                     stream = new MutagenWriter(new MemoryStream(data), this.GameMode);
-                    using (HeaderExport.ExportSubrecordHeader(stream, subType))
+                    using (HeaderExport.Subrecord(stream, subType))
                     {
                         inputStream.WriteTo(stream.BaseStream, subLen);
                     }
@@ -154,88 +154,80 @@ namespace Mutagen.Bethesda.Preprocessing
             {
                 EmptyMeansInterested = false
             };
+            var parsingBundle = new ParsingBundle(GameConstants.Get(gameMode));
             var fileLocs = RecordLocator.GetFileLocations(inputPath.Path, gameMode, interest);
-            temp = temp ?? new TempFolder();
+            temp ??= new TempFolder();
             using (temp)
             {
                 var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
-                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))
+                using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, parsingBundle))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode))
-                    {
-                        AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
-                    }
+                    using var writer = new MutagenWriter(new FileStream(alignedMajorRecordsFile, FileMode.Create), gameMode);
+                    AlignMajorRecordsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
                 var alignedGroupsFile = Path.Combine(temp.Dir.Path, "alignedGroups");
-                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, GameConstants.Get(gameMode)))
+                using (var inputStream = new MutagenBinaryReadStream(alignedMajorRecordsFile, parsingBundle))
                 {
-                    using (var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode))
-                    {
-                        AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
-                    }
+                    using var writer = new MutagenWriter(new FileStream(alignedGroupsFile, FileMode.Create), gameMode);
+                    AlignGroupsByRules(inputStream, writer, alignmentRules, fileLocs);
                 }
 
                 fileLocs = RecordLocator.GetFileLocations(alignedGroupsFile, gameMode, interest);
                 var alignedCellsFile = Path.Combine(temp.Dir.Path, "alignedCells");
                 using (var mutaReader = new BinaryReadStream(alignedGroupsFile))
                 {
-                    using (var writer = new MutagenWriter(alignedCellsFile, gameMode))
+                    using var writer = new MutagenWriter(alignedCellsFile, gameMode);
+                    foreach (var grup in fileLocs.GrupLocations)
                     {
-                        foreach (var grup in fileLocs.GrupLocations)
+                        if (grup <= mutaReader.Position) continue;
+                        var noRecordLength = grup - mutaReader.Position;
+                        mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                        // If complete overall, return
+                        if (mutaReader.Complete) break;
+
+                        mutaReader.WriteTo(writer.BaseStream, 12);
+                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                        writer.Write((int)grupType);
+                        switch (grupType)
                         {
-                            if (grup <= mutaReader.Position) continue;
-                            var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-                            // If complete overall, return
-                            if (mutaReader.Complete) break;
-
-                            mutaReader.WriteTo(writer.BaseStream, 12);
-                            var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                            writer.Write((int)grupType);
-                            switch (grupType)
-                            {
-                                case GroupTypeEnum.CellChildren:
-                                    AlignCellChildren(mutaReader, writer);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case GroupTypeEnum.CellChildren:
+                                AlignCellChildren(mutaReader, writer);
+                                break;
+                            default:
+                                break;
                         }
-                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
+                    mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                 }
 
                 fileLocs = RecordLocator.GetFileLocations(alignedCellsFile, gameMode, interest);
-                var meta = GameConstants.Get(gameMode);
-                using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, meta))
+                using (var mutaReader = new MutagenBinaryReadStream(alignedCellsFile, parsingBundle))
                 {
-                    using (var writer = new MutagenWriter(outputPath.Path, meta))
+                    using var writer = new MutagenWriter(outputPath.Path, GameConstants.Get(gameMode));
+                    foreach (var grup in fileLocs.GrupLocations)
                     {
-                        foreach (var grup in fileLocs.GrupLocations)
+                        if (grup <= mutaReader.Position) continue;
+                        var noRecordLength = grup - mutaReader.Position;
+                        mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
+
+                        // If complete overall, return
+                        if (mutaReader.Complete) break;
+
+                        mutaReader.WriteTo(writer.BaseStream, 12);
+                        var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
+                        writer.Write((int)grupType);
+                        switch (grupType)
                         {
-                            if (grup <= mutaReader.Position) continue;
-                            var noRecordLength = grup - mutaReader.Position;
-                            mutaReader.WriteTo(writer.BaseStream, (int)noRecordLength);
-
-                            // If complete overall, return
-                            if (mutaReader.Complete) break;
-
-                            mutaReader.WriteTo(writer.BaseStream, 12);
-                            var grupType = (GroupTypeEnum)mutaReader.ReadUInt32();
-                            writer.Write((int)grupType);
-                            switch (grupType)
-                            {
-                                case GroupTypeEnum.WorldChildren:
-                                    AlignWorldChildren(mutaReader, writer);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case GroupTypeEnum.WorldChildren:
+                                AlignWorldChildren(mutaReader, writer);
+                                break;
+                            default:
+                                break;
                         }
-                        mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                     }
+                    mutaReader.WriteTo(writer.BaseStream, checked((int)mutaReader.Remaining));
                 }
             }
         }

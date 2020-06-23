@@ -49,13 +49,7 @@ namespace Mutagen.Bethesda
         public ModKey Master { get; set; } = ModKey.Null;
         #endregion
         #region FileSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private UInt64? _FileSize;
-        public UInt64? FileSize
-        {
-            get => this._FileSize;
-            set => this._FileSize = value;
-        }
+        public UInt64? FileSize { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         UInt64? IMasterReferenceGetter.FileSize => this.FileSize;
         #endregion
@@ -80,7 +74,7 @@ namespace Mutagen.Bethesda
             return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(MasterReference obj)
+        public bool Equals(MasterReference? obj)
         {
             return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj);
         }
@@ -224,7 +218,6 @@ namespace Mutagen.Bethesda
         public class Mask<TItem> :
             IMask<TItem>,
             IEquatable<Mask<TItem>>
-            where TItem : notnull
         {
             #region Ctors
             public Mask(TItem initialValue)
@@ -261,7 +254,7 @@ namespace Mutagen.Bethesda
                 return Equals(rhs);
             }
 
-            public bool Equals(Mask<TItem> rhs)
+            public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Master, rhs.Master)) return false;
@@ -557,6 +550,15 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out MasterReference item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(frame, recordTypeConverter);
+            return startPos != frame.Position;
+        }
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
@@ -1071,11 +1073,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(MasterReferenceXmlWriteTranslation);
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TriggeringRecordType = MAST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public static readonly RecordType TriggeringRecordType = RecordTypes.MAST;
         public static readonly Type BinaryWriteTranslation = typeof(MasterReferenceBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1151,41 +1149,6 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         
         #region Binary Translation
-        protected static void FillBinaryStructs(
-            IMasterReference item,
-            MutagenFrame frame)
-        {
-        }
-        
-        protected static TryGet<int?> FillBinaryRecordTypes(
-            IMasterReference item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case 0x5453414D: // MAST
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
-                }
-                case 0x41544144: // DATA
-                {
-                    frame.Position += frame.MetaData.SubConstants.HeaderLength;
-                    item.FileSize = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
-        
         public virtual void CopyInFromBinary(
             IMasterReference item,
             MutagenFrame frame,
@@ -1195,8 +1158,8 @@ namespace Mutagen.Bethesda.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: FillBinaryStructs,
-                fillTyped: FillBinaryRecordTypes);
+                fillStructs: MasterReferenceBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: MasterReferenceBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
@@ -1791,11 +1754,11 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Master,
-                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MAST));
             Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileSize,
-                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.DATA_HEADER));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
         }
 
         public void Write(
@@ -1825,6 +1788,41 @@ namespace Mutagen.Bethesda.Internals
     public partial class MasterReferenceBinaryCreateTranslation
     {
         public readonly static MasterReferenceBinaryCreateTranslation Instance = new MasterReferenceBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IMasterReference item,
+            MutagenFrame frame)
+        {
+        }
+
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMasterReference item,
+            MutagenFrame frame,
+            int? lastParsed,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MAST:
+                {
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FileSize = frame.ReadUInt64();
+                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                }
+                default:
+                    return TryGet<int?>.Failure;
+            }
+        }
 
     }
 
@@ -1909,17 +1907,18 @@ namespace Mutagen.Bethesda.Internals
 
         #region Master
         private int? _MasterLocation;
-        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterLocation.Value, _package.Meta))) : ModKey.Null;
+        public ModKey Master => _MasterLocation.HasValue ? ModKey.Factory(BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MasterLocation.Value, _package.MetaData.Constants))) : ModKey.Null;
         #endregion
         #region FileSize
         private int? _FileSizeLocation;
-        public UInt64? FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FileSizeLocation.Value, _package.Meta)) : default(UInt64?);
+        public UInt64? FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FileSizeLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
         #endregion
-        partial void CustomCtor(
-            IBinaryReadStream stream,
+        partial void CustomFactoryEnd(
+            OverlayStream stream,
             int finalPos,
             int offset);
 
+        partial void CustomCtor();
         protected MasterReferenceBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
@@ -1927,10 +1926,11 @@ namespace Mutagen.Bethesda.Internals
                 bytes: bytes,
                 package: package)
         {
+            this.CustomCtor();
         }
 
         public static MasterReferenceBinaryOverlay MasterReferenceFactory(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1938,10 +1938,6 @@ namespace Mutagen.Bethesda.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.CustomCtor(
-                stream: stream,
-                finalPos: stream.Length,
-                offset: 0);
             ret.FillTypelessSubrecordTypes(
                 stream: stream,
                 finalPos: stream.Length,
@@ -1957,31 +1953,31 @@ namespace Mutagen.Bethesda.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             return MasterReferenceFactory(
-                stream: new BinaryMemoryReadStream(slice),
+                stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
         public TryGet<int?> FillRecordType(
-            BinaryMemoryReadStream stream,
+            OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
-            RecordTypeConverter? recordTypeConverter)
+            RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case 0x5453414D: // MAST
+                case RecordTypeInts.MAST:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
-                    _MasterLocation = (ushort)(stream.Position - offset);
+                    _MasterLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
                 }
-                case 0x41544144: // DATA
+                case RecordTypeInts.DATA:
                 {
-                    _FileSizeLocation = (ushort)(stream.Position - offset);
+                    _FileSizeLocation = (stream.Position - offset);
                     return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
                 }
                 default:

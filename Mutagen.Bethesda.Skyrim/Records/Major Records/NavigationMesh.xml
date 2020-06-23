@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ANavigationMesh" recordType="NAVM" objType="Record" baseClass="SkyrimMajorRecord" abstract="true" majorFlag="true" GUID="225085bf-6162-4178-8f6a-de8d829916c2" ID="272">
+    <Fields>
+      <CustomLogic name="LengthLogic" recordType="XXXX" />
+      <CustomLogic name="DataLogic" recordType="NVNM" />
+      <ByteArray name="ONAM" recordType="ONAM" />
+      <ByteArray name="PNAM" recordType="PNAM" />
+      <ByteArray name="NNAM" recordType="NNAM" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceNavigationMesh" baseClass="ANavigationMesh" recordType="NAVM" objType="Record" GUID="61ff6fb6-5bd3-413b-b27c-b9e48cc8a8de" ID="318">
+    <Fields>
+      <RefDirect name="Data" refName="WorldspaceNavigationMeshData" binary="NoGeneration" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="CellNavigationMesh" baseClass="ANavigationMesh" recordType="NAVM" objType="Record" GUID="c097a44b-e830-4762-8234-5cd4d9e89ae1" ID="319">
+    <Fields>
+      <RefDirect name="Data" refName="CellNavigationMeshData" binary="NoGeneration" hasBeenSet="True" />
+    </Fields>
+  </Object>
+  <Object name="ANavigationMeshData" objType="Subrecord" abstract="true" GUID="0f14b502-0797-43b9-810a-e958643a5d68" ID="324">
+    <Fields>
+      <UInt32 name="NavmeshVersion" default="12" />
+      <UInt32 name="Magic" default="0xA5E9A03C" />
+      <CustomLogic name="ParentLogic" byteLength="8" />
+      <List name="Vertices" counterLength="4">
+        <P3Float />
+      </List>
+      <RefList name="Triangles" refName="NavmeshTriangle" counterLength="4" binaryOverlay="Custom" />
+      <RefList name="EdgeLinks" refName="EdgeLink" counterLength="4" />
+      <RefList name="DoorTriangles" refName="DoorTriangle" counterLength="4" />
+      <CustomLogic name="CoverTrianglesLogic" />
+      <UInt32 name="NavmeshGridDivisor" binaryOverlay="NoGeneration" />
+      <Float name="MaxDistanceX" binaryOverlay="NoGeneration" />
+      <Float name="MaxDistanceY" binaryOverlay="NoGeneration" />
+      <P3Float name="Min" binaryOverlay="NoGeneration" />
+      <P3Float name="Max" binaryOverlay="NoGeneration" />
+      <ByteArray name="NavmeshGrid" binaryOverlay="NoGeneration" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="WorldspaceNavigationMeshData" objType="Subrecord" baseClass="ANavigationMeshData" GUID="f11242bf-a5b1-431f-9a8a-49a5283a4c0a" ID="325">
+    <Fields>
+      <FormLink name="Parent" refName="Worldspace" binary="NoGeneration" />
+      <P2Int16 name="Coordinates" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="CellNavigationMeshData" objType="Subrecord" baseClass="ANavigationMeshData" GUID="91d1e4c9-6710-4005-a9f3-e8408fa6e343" ID="326">
+    <Fields>
+      <FormLink name="UnusedWorldspaceParent" refName="Worldspace" binary="NoGeneration" />
+      <FormLink name="Parent" refName="Cell" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="NavmeshTriangle" objType="Subrecord" GUID="1b0eb710-fc34-463b-8f7b-03859bb6c879" ID="320">
+    <Fields>
+      <P3Int16 name="Vertices" />
+      <Int16 name="EdgeLink_0_1" />
+      <Int16 name="EdgeLink_1_2" />
+      <Int16 name="EdgeLink_2_0" />
+      <Enum name="Flags" enumName="NavmeshTriangle.Flag" byteLength="2" />
+      <!-- ToDo: Decode and split into separate fields -->
+      <UInt16 name="CoverFlags" />
+      <Bool name="IsCover" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="EdgeLink" objType="Subrecord" GUID="d5312308-0813-41dc-87c0-d45119a5615e" ID="321">
+    <Fields>
+      <Int32 name="Unknown" />
+      <FormLink name="Mesh" refName="ANavigationMesh" />
+      <Int16 name="TriangleIndex" />
+    </Fields>
+  </Object>
+  <Object name="DoorTriangle" objType="Subrecord" GUID="2723707b-8770-415b-8a3b-772ae9a6aa8d" ID="322">
+    <Fields>
+      <Int16 name="TriangleBeforeDoor" />
+      <Int32 name="Unknown" />
+      <FormLink name="Door" refName="PlacedObject" />
+    </Fields>
+  </Object>
+</Loqui>
