@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedNpc" baseClass="OblivionMajorRecord" objType="Record" recordType="ACHR" GUID="1bd10cd8-4d9b-4cc0-9639-51f02a1b2e36" ID="137">
+    <Interface>IPlaced</Interface>
+    <Fields>
+      <FormLink name="Base" recordType="NAME" refName="Npc" />
+      <ByteArray name="XPCIFluff" recordType="XPCI" />
+      <ByteArray name="FULLFluff" recordType="FULL" />
+      <RefDirect name="DistantLODData" refName="DistantLODData" />
+      <RefDirect name="EnableParent" refName="EnableParent" />
+      <FormLink name="MerchantContainer" recordType="XMRC" refName="PlacedObject" />
+      <FormLink name="Horse" recordType="XHRS" refName="PlacedCreature" />
+      <ByteArray name="RagdollData" recordType="XRGD" />
+      <Float name="Scale" recordType="XSCL" />
+      <RefDirect name="Location" refName="Location" recordType="DATA" />
+    </Fields>
+  </Object>
+</Loqui>

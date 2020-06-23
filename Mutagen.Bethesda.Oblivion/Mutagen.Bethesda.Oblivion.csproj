@@ -394,7 +394,9 @@
     <Compile Include="Records\Major Records\FogDistance_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\furniture.cs" />
+    <Compile Include="Records\Major Records\Furniture.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Furniture_LoquiGenerated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
@@ -584,14 +586,15 @@
     <Compile Include="Records\Major Records\Miscellaneous_LoquiGenerated.cs">
       <DependentUpon>Miscellaneous.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\NPC.cs" />
+    <Compile Include="Records\Major Records\Npc.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NpcData_LoquiGenerated.cs">
       <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\NPC_LoquiGenerated.cs" />
     <Compile Include="Records\Major Records\PathGrid.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
@@ -910,6 +913,9 @@
     <Compile Include="Warmup.cs" />
     <Compile Include="Records\Major Records\AScriptReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Npc_LoquiGenerated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
