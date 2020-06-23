@@ -130,6 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
             _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
             _LightingTemplates_Object = new Group<LightingTemplate>(this);
             _MusicTypes_Object = new Group<MusicType>(this);
+            _Footsteps_Object = new Group<Footstep>(this);
+            _FootstepSets_Object = new Group<FootstepSet>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -751,6 +753,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IMusicTypeGetter> ISkyrimModGetter.MusicTypes => _MusicTypes_Object;
         #endregion
+        #region Footsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Footstep> _Footsteps_Object;
+        public Group<Footstep> Footsteps => _Footsteps_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IFootstepGetter> ISkyrimModGetter.Footsteps => _Footsteps_Object;
+        #endregion
+        #region FootstepSets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<FootstepSet> _FootstepSets_Object;
+        public Group<FootstepSet> FootstepSets => _FootstepSets_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IFootstepSetGetter> ISkyrimModGetter.FootstepSets => _FootstepSets_Object;
+        #endregion
 
         #region To String
 
@@ -1008,6 +1024,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1098,7 +1116,9 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Messages,
                 TItem DefaultObjectManagers,
                 TItem LightingTemplates,
-                TItem MusicTypes)
+                TItem MusicTypes,
+                TItem Footsteps,
+                TItem FootstepSets)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1188,6 +1208,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultObjectManagers = new MaskItem<TItem, Group.Mask<TItem>?>(DefaultObjectManagers, new Group.Mask<TItem>(DefaultObjectManagers));
                 this.LightingTemplates = new MaskItem<TItem, Group.Mask<TItem>?>(LightingTemplates, new Group.Mask<TItem>(LightingTemplates));
                 this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTypes, new Group.Mask<TItem>(MusicTypes));
+                this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(Footsteps, new Group.Mask<TItem>(Footsteps));
+                this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(FootstepSets, new Group.Mask<TItem>(FootstepSets));
             }
 
             #pragma warning disable CS8618
@@ -1287,6 +1309,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? DefaultObjectManagers { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LightingTemplates { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? MusicTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Footsteps { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? FootstepSets { get; set; }
             #endregion
 
             #region Equals
@@ -1387,6 +1411,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
                 if (!object.Equals(this.LightingTemplates, rhs.LightingTemplates)) return false;
                 if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
+                if (!object.Equals(this.Footsteps, rhs.Footsteps)) return false;
+                if (!object.Equals(this.FootstepSets, rhs.FootstepSets)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1480,6 +1506,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DefaultObjectManagers);
                 hash.Add(this.LightingTemplates);
                 hash.Add(this.MusicTypes);
+                hash.Add(this.Footsteps);
+                hash.Add(this.FootstepSets);
                 return hash.ToHashCode();
             }
 
@@ -1928,6 +1956,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.MusicTypes.Overall)) return false;
                     if (this.MusicTypes.Specific != null && !this.MusicTypes.Specific.All(eval)) return false;
                 }
+                if (Footsteps != null)
+                {
+                    if (!eval(this.Footsteps.Overall)) return false;
+                    if (this.Footsteps.Specific != null && !this.Footsteps.Specific.All(eval)) return false;
+                }
+                if (FootstepSets != null)
+                {
+                    if (!eval(this.FootstepSets.Overall)) return false;
+                    if (this.FootstepSets.Specific != null && !this.FootstepSets.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2375,6 +2413,16 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.MusicTypes.Overall)) return true;
                     if (this.MusicTypes.Specific != null && this.MusicTypes.Specific.Any(eval)) return true;
                 }
+                if (Footsteps != null)
+                {
+                    if (eval(this.Footsteps.Overall)) return true;
+                    if (this.Footsteps.Specific != null && this.Footsteps.Specific.Any(eval)) return true;
+                }
+                if (FootstepSets != null)
+                {
+                    if (eval(this.FootstepSets.Overall)) return true;
+                    if (this.FootstepSets.Specific != null && this.FootstepSets.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2477,6 +2525,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DefaultObjectManagers = this.DefaultObjectManagers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DefaultObjectManagers.Overall), this.DefaultObjectManagers.Specific?.Translate(eval));
                 obj.LightingTemplates = this.LightingTemplates == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LightingTemplates.Overall), this.LightingTemplates.Specific?.Translate(eval));
                 obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
+                obj.Footsteps = this.Footsteps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Footsteps.Overall), this.Footsteps.Specific?.Translate(eval));
+                obj.FootstepSets = this.FootstepSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FootstepSets.Overall), this.FootstepSets.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2851,6 +2901,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         MusicTypes?.ToString(fg);
                     }
+                    if (printMask?.Footsteps?.Overall ?? true)
+                    {
+                        Footsteps?.ToString(fg);
+                    }
+                    if (printMask?.FootstepSets?.Overall ?? true)
+                    {
+                        FootstepSets?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -2964,6 +3022,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<DefaultObjectManager.ErrorMask>?>? DefaultObjectManagers;
             public MaskItem<Exception?, Group.ErrorMask<LightingTemplate.ErrorMask>?>? LightingTemplates;
             public MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
+            public MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>? Footsteps;
+            public MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>? FootstepSets;
             #endregion
 
             #region IErrorMask
@@ -3148,6 +3208,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return LightingTemplates;
                     case SkyrimMod_FieldIndex.MusicTypes:
                         return MusicTypes;
+                    case SkyrimMod_FieldIndex.Footsteps:
+                        return Footsteps;
+                    case SkyrimMod_FieldIndex.FootstepSets:
+                        return FootstepSets;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3421,6 +3485,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.MusicTypes:
                         this.MusicTypes = new MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Footsteps:
+                        this.Footsteps = new MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.FootstepSets:
+                        this.FootstepSets = new MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3696,6 +3766,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.MusicTypes:
                         this.MusicTypes = (MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Footsteps:
+                        this.Footsteps = (MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.FootstepSets:
+                        this.FootstepSets = (MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3792,6 +3868,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DefaultObjectManagers != null) return true;
                 if (LightingTemplates != null) return true;
                 if (MusicTypes != null) return true;
+                if (Footsteps != null) return true;
+                if (FootstepSets != null) return true;
                 return false;
             }
             #endregion
@@ -3914,6 +3992,8 @@ namespace Mutagen.Bethesda.Skyrim
                 DefaultObjectManagers?.ToString(fg);
                 LightingTemplates?.ToString(fg);
                 MusicTypes?.ToString(fg);
+                Footsteps?.ToString(fg);
+                FootstepSets?.ToString(fg);
             }
             #endregion
 
@@ -4010,6 +4090,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DefaultObjectManagers = this.DefaultObjectManagers.Combine(rhs.DefaultObjectManagers, (l, r) => l.Combine(r));
                 ret.LightingTemplates = this.LightingTemplates.Combine(rhs.LightingTemplates, (l, r) => l.Combine(r));
                 ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
+                ret.Footsteps = this.Footsteps.Combine(rhs.Footsteps, (l, r) => l.Combine(r));
+                ret.FootstepSets = this.FootstepSets.Combine(rhs.FootstepSets, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4119,6 +4201,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<DefaultObjectManager.TranslationMask>?> DefaultObjectManagers;
             public MaskItem<bool, Group.TranslationMask<LightingTemplate.TranslationMask>?> LightingTemplates;
             public MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?> MusicTypes;
+            public MaskItem<bool, Group.TranslationMask<Footstep.TranslationMask>?> Footsteps;
+            public MaskItem<bool, Group.TranslationMask<FootstepSet.TranslationMask>?> FootstepSets;
             #endregion
 
             #region Ctors
@@ -4212,6 +4296,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultObjectManagers = new MaskItem<bool, Group.TranslationMask<DefaultObjectManager.TranslationMask>?>(defaultOn, null);
                 this.LightingTemplates = new MaskItem<bool, Group.TranslationMask<LightingTemplate.TranslationMask>?>(defaultOn, null);
                 this.MusicTypes = new MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?>(defaultOn, null);
+                this.Footsteps = new MaskItem<bool, Group.TranslationMask<Footstep.TranslationMask>?>(defaultOn, null);
+                this.FootstepSets = new MaskItem<bool, Group.TranslationMask<FootstepSet.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4315,6 +4401,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DefaultObjectManagers?.Overall ?? true, DefaultObjectManagers?.Specific?.GetCrystal()));
                 ret.Add((LightingTemplates?.Overall ?? true, LightingTemplates?.Specific?.GetCrystal()));
                 ret.Add((MusicTypes?.Overall ?? true, MusicTypes?.Specific?.GetCrystal()));
+                ret.Add((Footsteps?.Overall ?? true, Footsteps?.Specific?.GetCrystal()));
+                ret.Add((FootstepSets?.Overall ?? true, FootstepSets?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4416,6 +4504,8 @@ namespace Mutagen.Bethesda.Skyrim
             _DefaultObjectManagers_Object = new Group<DefaultObjectManager>(this);
             _LightingTemplates_Object = new Group<LightingTemplate>(this);
             _MusicTypes_Object = new Group<MusicType>(this);
+            _Footsteps_Object = new Group<Footstep>(this);
+            _FootstepSets_Object = new Group<FootstepSet>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -4771,6 +4861,14 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.MusicTypes ?? true)
             {
                 this.MusicTypes.RecordCache.Set(rhsMod.MusicTypes.RecordCache.Items);
+            }
+            if (mask?.Footsteps ?? true)
+            {
+                this.Footsteps.RecordCache.Set(rhsMod.Footsteps.RecordCache.Items);
+            }
+            if (mask?.FootstepSets ?? true)
+            {
+                this.FootstepSets.RecordCache.Set(rhsMod.FootstepSets.RecordCache.Items);
             }
         }
 
@@ -5388,6 +5486,20 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<MusicType>());
             }
+            if (mask?.Footsteps ?? true)
+            {
+                this.Footsteps.RecordCache.Set(
+                    rhs.Footsteps.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Footstep>());
+            }
+            if (mask?.FootstepSets ?? true)
+            {
+                this.FootstepSets.RecordCache.Set(
+                    rhs.FootstepSets.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<FootstepSet>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5494,6 +5606,8 @@ namespace Mutagen.Bethesda.Skyrim
             count += DefaultObjectManagers.RecordCache.Count > 0 ? 1 : 0;
             count += LightingTemplates.RecordCache.Count > 0 ? 1 : 0;
             count += MusicTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += Footsteps.RecordCache.Count > 0 ? 1 : 0;
+            count += FootstepSets.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5800,6 +5914,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<DefaultObjectManager> DefaultObjectManagers { get; }
         new Group<LightingTemplate> LightingTemplates { get; }
         new Group<MusicType> MusicTypes { get; }
+        new Group<Footstep> Footsteps { get; }
+        new Group<FootstepSet> FootstepSets { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -5905,6 +6021,8 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IDefaultObjectManagerGetter> DefaultObjectManagers { get; }
         IGroupGetter<ILightingTemplateGetter> LightingTemplates { get; }
         IGroupGetter<IMusicTypeGetter> MusicTypes { get; }
+        IGroupGetter<IFootstepGetter> Footsteps { get; }
+        IGroupGetter<IFootstepSetGetter> FootstepSets { get; }
 
     }
 
@@ -6448,6 +6566,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         DefaultObjectManagers = 85,
         LightingTemplates = 86,
         MusicTypes = 87,
+        Footsteps = 88,
+        FootstepSets = 89,
     }
     #endregion
 
@@ -6465,9 +6585,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 88;
+        public const ushort AdditionalFieldCount = 90;
 
-        public const ushort FieldCount = 88;
+        public const ushort FieldCount = 90;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -6673,6 +6793,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.LightingTemplates;
                 case "MUSICTYPES":
                     return (ushort)SkyrimMod_FieldIndex.MusicTypes;
+                case "FOOTSTEPS":
+                    return (ushort)SkyrimMod_FieldIndex.Footsteps;
+                case "FOOTSTEPSETS":
+                    return (ushort)SkyrimMod_FieldIndex.FootstepSets;
                 default:
                     return null;
             }
@@ -6771,6 +6895,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DefaultObjectManagers:
                 case SkyrimMod_FieldIndex.LightingTemplates:
                 case SkyrimMod_FieldIndex.MusicTypes:
+                case SkyrimMod_FieldIndex.Footsteps:
+                case SkyrimMod_FieldIndex.FootstepSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6870,6 +6996,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DefaultObjectManagers:
                 case SkyrimMod_FieldIndex.LightingTemplates:
                 case SkyrimMod_FieldIndex.MusicTypes:
+                case SkyrimMod_FieldIndex.Footsteps:
+                case SkyrimMod_FieldIndex.FootstepSets:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6969,6 +7097,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DefaultObjectManagers:
                 case SkyrimMod_FieldIndex.LightingTemplates:
                 case SkyrimMod_FieldIndex.MusicTypes:
+                case SkyrimMod_FieldIndex.Footsteps:
+                case SkyrimMod_FieldIndex.FootstepSets:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7156,6 +7286,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "LightingTemplates";
                 case SkyrimMod_FieldIndex.MusicTypes:
                     return "MusicTypes";
+                case SkyrimMod_FieldIndex.Footsteps:
+                    return "Footsteps";
+                case SkyrimMod_FieldIndex.FootstepSets:
+                    return "FootstepSets";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7254,6 +7388,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DefaultObjectManagers:
                 case SkyrimMod_FieldIndex.LightingTemplates:
                 case SkyrimMod_FieldIndex.MusicTypes:
+                case SkyrimMod_FieldIndex.Footsteps:
+                case SkyrimMod_FieldIndex.FootstepSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7354,6 +7490,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DefaultObjectManagers:
                 case SkyrimMod_FieldIndex.LightingTemplates:
                 case SkyrimMod_FieldIndex.MusicTypes:
+                case SkyrimMod_FieldIndex.Footsteps:
+                case SkyrimMod_FieldIndex.FootstepSets:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7541,6 +7679,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<LightingTemplate>);
                 case SkyrimMod_FieldIndex.MusicTypes:
                     return typeof(Group<MusicType>);
+                case SkyrimMod_FieldIndex.Footsteps:
+                    return typeof(Group<Footstep>);
+                case SkyrimMod_FieldIndex.FootstepSets:
+                    return typeof(Group<FootstepSet>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7676,6 +7818,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DefaultObjectManagers.Clear();
             item.LightingTemplates.Clear();
             item.MusicTypes.Clear();
+            item.Footsteps.Clear();
+            item.FootstepSets.Clear();
         }
         
         #region Xml Translation
@@ -7918,6 +8062,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DefaultObjectManagers = MaskItemExt.Factory(item.DefaultObjectManagers.GetEqualsMask(rhs.DefaultObjectManagers, include), include);
             ret.LightingTemplates = MaskItemExt.Factory(item.LightingTemplates.GetEqualsMask(rhs.LightingTemplates, include), include);
             ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
+            ret.Footsteps = MaskItemExt.Factory(item.Footsteps.GetEqualsMask(rhs.Footsteps, include), include);
+            ret.FootstepSets = MaskItemExt.Factory(item.FootstepSets.GetEqualsMask(rhs.FootstepSets, include), include);
         }
         
         public string ToString(
@@ -8316,6 +8462,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.MusicTypes?.ToString(fg, "MusicTypes");
             }
+            if (printMask?.Footsteps?.Overall ?? true)
+            {
+                item.Footsteps?.ToString(fg, "Footsteps");
+            }
+            if (printMask?.FootstepSets?.Overall ?? true)
+            {
+                item.FootstepSets?.ToString(fg, "FootstepSets");
+            }
         }
         
         public bool HasBeenSet(
@@ -8417,6 +8571,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.DefaultObjectManagers = new MaskItem<bool, Group.Mask<bool>?>(true, item.DefaultObjectManagers?.GetHasBeenSetMask());
             mask.LightingTemplates = new MaskItem<bool, Group.Mask<bool>?>(true, item.LightingTemplates?.GetHasBeenSetMask());
             mask.MusicTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTypes?.GetHasBeenSetMask());
+            mask.Footsteps = new MaskItem<bool, Group.Mask<bool>?>(true, item.Footsteps?.GetHasBeenSetMask());
+            mask.FootstepSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.FootstepSets?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8514,6 +8670,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
             if (!object.Equals(lhs.LightingTemplates, rhs.LightingTemplates)) return false;
             if (!object.Equals(lhs.MusicTypes, rhs.MusicTypes)) return false;
+            if (!object.Equals(lhs.Footsteps, rhs.Footsteps)) return false;
+            if (!object.Equals(lhs.FootstepSets, rhs.FootstepSets)) return false;
             return true;
         }
         
@@ -8608,6 +8766,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DefaultObjectManagers);
             hash.Add(item.LightingTemplates);
             hash.Add(item.MusicTypes);
+            hash.Add(item.Footsteps);
+            hash.Add(item.FootstepSets);
             return hash.ToHashCode();
         }
         
@@ -9059,6 +9219,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicType":
                 case "IMusicTypeInternal":
                     return obj.MusicTypes.RecordCache;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    return obj.Footsteps.RecordCache;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    return obj.FootstepSets.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -9078,7 +9248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[87];
+            Stream[] outputStreams = new Stream[89];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -9167,6 +9337,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -9826,6 +9998,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Footsteps is ILinkedFormKeyContainer FootstepslinkCont)
+            {
+                foreach (var item in FootstepslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.FootstepSets is ILinkedFormKeyContainer FootstepSetslinkCont)
+            {
+                foreach (var item in FootstepSetslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -10177,6 +10363,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.MusicTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Footsteps.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.FootstepSets.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -10976,6 +11170,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IMusicType":
                 case "IMusicTypeInternal":
                     foreach (var item in obj.MusicTypes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Footstep":
+                case "IFootstepGetter":
+                case "IFootstep":
+                case "IFootstepInternal":
+                    foreach (var item in obj.Footsteps.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "FootstepSet":
+                case "IFootstepSetGetter":
+                case "IFootstepSet":
+                case "IFootstepSetInternal":
+                    foreach (var item in obj.FootstepSets.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -12759,6 +12971,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Footsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Footsteps);
+                try
+                {
+                    item.Footsteps.DeepCopyIn(
+                        rhs: rhs.Footsteps,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Footsteps));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FootstepSets) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.FootstepSets);
+                try
+                {
+                    item.FootstepSets.DeepCopyIn(
+                        rhs: rhs.FootstepSets,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FootstepSets));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -13815,6 +14067,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.MusicTypes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTypes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Footsteps) ?? true))
+            {
+                var FootstepsItem = item.Footsteps;
+                ((GroupXmlWriteTranslation)((IXmlItem)FootstepsItem).XmlWriteTranslator).Write<IFootstepGetter>(
+                    item: FootstepsItem,
+                    node: node,
+                    name: nameof(item.Footsteps),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Footsteps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Footsteps));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FootstepSets) ?? true))
+            {
+                var FootstepSetsItem = item.FootstepSets;
+                ((GroupXmlWriteTranslation)((IXmlItem)FootstepSetsItem).XmlWriteTranslator).Write<IFootstepSetGetter>(
+                    item: FootstepSetsItem,
+                    node: node,
+                    name: nameof(item.FootstepSets),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.FootstepSets,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FootstepSets));
             }
         }
 
@@ -15556,6 +15830,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Footsteps":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Footsteps);
+                    try
+                    {
+                        item.Footsteps.CopyInFromXml<Footstep>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FootstepSets":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.FootstepSets);
+                    try
+                    {
+                        item.FootstepSets.CopyInFromXml<FootstepSet>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -15812,6 +16124,8 @@ namespace Mutagen.Bethesda.Skyrim
         public bool DefaultObjectManagers;
         public bool LightingTemplates;
         public bool MusicTypes;
+        public bool Footsteps;
+        public bool FootstepSets;
         public GroupMask()
         {
         }
@@ -15904,6 +16218,8 @@ namespace Mutagen.Bethesda.Skyrim
             DefaultObjectManagers = defaultValue;
             LightingTemplates = defaultValue;
             MusicTypes = defaultValue;
+            Footsteps = defaultValue;
+            FootstepSets = defaultValue;
         }
     }
 
@@ -16885,6 +17201,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)MusicTypesItem).BinaryWriteTranslator).Write<IMusicTypeGetter>(
                         item: MusicTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Footsteps ?? true)
+            {
+                var FootstepsItem = item.Footsteps;
+                if (FootstepsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FootstepsItem).BinaryWriteTranslator).Write<IFootstepGetter>(
+                        item: FootstepsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.FootstepSets ?? true)
+            {
+                var FootstepSetsItem = item.FootstepSets;
+                if (FootstepSetsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)FootstepSetsItem).BinaryWriteTranslator).Write<IFootstepSetGetter>(
+                        item: FootstepSetsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -18176,6 +18514,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
                 }
+                case RecordTypeInts.FSTP:
+                {
+                    if (importMask?.Footsteps ?? true)
+                    {
+                        item.Footsteps.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                }
+                case RecordTypeInts.FSTS:
+                {
+                    if (importMask?.FootstepSets ?? true)
+                    {
+                        item.FootstepSets.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -18782,6 +19148,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IMusicTypeGetter>? _MusicTypes => _MusicTypesLocation.HasValue ? GroupBinaryOverlay<IMusicTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MusicTypesLocation!.Value.Min, _MusicTypesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IMusicTypeGetter> MusicTypes => _MusicTypes ?? new Group<MusicType>(this);
         #endregion
+        #region Footsteps
+        private RangeInt64? _FootstepsLocation;
+        private IGroupGetter<IFootstepGetter>? _Footsteps => _FootstepsLocation.HasValue ? GroupBinaryOverlay<IFootstepGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _FootstepsLocation!.Value.Min, _FootstepsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IFootstepGetter> Footsteps => _Footsteps ?? new Group<Footstep>(this);
+        #endregion
+        #region FootstepSets
+        private RangeInt64? _FootstepSetsLocation;
+        private IGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocation.HasValue ? GroupBinaryOverlay<IFootstepSetGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _FootstepSetsLocation!.Value.Min, _FootstepSetsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new Group<FootstepSet>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -19311,6 +19687,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                }
+                case RecordTypeInts.FSTP:
+                {
+                    _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                }
+                case RecordTypeInts.FSTS:
+                {
+                    _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

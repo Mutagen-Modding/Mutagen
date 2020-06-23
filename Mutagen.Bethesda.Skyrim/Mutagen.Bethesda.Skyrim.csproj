@@ -720,6 +720,9 @@
     <Compile Include="Records\Major Records\Flora_LoquiGenerated.cs">
       <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\FootstepSet.cs">
+      <DependentUpon>FootstepSet.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\FormList_LoquiGenerated.cs">
       <DependentUpon>FormList.xml</DependentUpon>
     </Compile>
@@ -1935,6 +1938,9 @@
     </Compile>
     <Compile Include="Records\Major Records\MusicTypeData_LoquiGenerated.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Footstep_LoquiGenerated.cs">
+      <DependentUpon>Footstep.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

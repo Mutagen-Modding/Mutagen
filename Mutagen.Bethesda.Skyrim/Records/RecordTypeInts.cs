@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int FLTV = 0x56544C46;
         public const int FNAM = 0x4D414E46;
         public const int FNPR = 0x52504E46;
+        public const int FSTP = 0x50545346;
         public const int FSTS = 0x53545346;
         public const int FTSM = 0x4D535446;
         public const int FTST = 0x54535446;

@@ -49,6 +49,76 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region WalkForwardFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Footstep>> _WalkForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public ExtendedList<IFormLink<Footstep>> WalkForwardFootsteps
+        {
+            get => this._WalkForwardFootsteps;
+            protected set => this._WalkForwardFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardFootsteps => _WalkForwardFootsteps;
+        #endregion
+
+        #endregion
+        #region RunForwardFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Footstep>> _RunForwardFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public ExtendedList<IFormLink<Footstep>> RunForwardFootsteps
+        {
+            get => this._RunForwardFootsteps;
+            protected set => this._RunForwardFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.RunForwardFootsteps => _RunForwardFootsteps;
+        #endregion
+
+        #endregion
+        #region WalkForwardAlternateFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps
+        {
+            get => this._WalkForwardAlternateFootsteps;
+            protected set => this._WalkForwardAlternateFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps => _WalkForwardAlternateFootsteps;
+        #endregion
+
+        #endregion
+        #region RunForwardAlternateFootsteps
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Footstep>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<Footstep>>();
+        public ExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps
+        {
+            get => this._RunForwardAlternateFootsteps;
+            protected set => this._RunForwardAlternateFootsteps = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.RunForwardAlternateFootsteps => _RunForwardAlternateFootsteps;
+        #endregion
+
+        #endregion
+        #region WalkForwardAlternateFootsteps2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<Footstep>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<Footstep>>();
+        public ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2
+        {
+            get => this._WalkForwardAlternateFootsteps2;
+            protected set => this._WalkForwardAlternateFootsteps2 = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps2 => _WalkForwardAlternateFootsteps2;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +288,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -226,7 +301,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem WalkForwardFootsteps,
+                TItem RunForwardFootsteps,
+                TItem WalkForwardAlternateFootsteps,
+                TItem RunForwardAlternateFootsteps,
+                TItem WalkForwardAlternateFootsteps2)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +315,11 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.WalkForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunForwardFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.RunForwardAlternateFootsteps = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(RunForwardAlternateFootsteps, Enumerable.Empty<(int Index, TItem Value)>());
+                this.WalkForwardAlternateFootsteps2 = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(WalkForwardAlternateFootsteps2, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +328,14 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunForwardFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardAlternateFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? RunForwardAlternateFootsteps;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? WalkForwardAlternateFootsteps2;
             #endregion
 
             #region Equals
@@ -256,11 +349,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.WalkForwardFootsteps, rhs.WalkForwardFootsteps)) return false;
+                if (!object.Equals(this.RunForwardFootsteps, rhs.RunForwardFootsteps)) return false;
+                if (!object.Equals(this.WalkForwardAlternateFootsteps, rhs.WalkForwardAlternateFootsteps)) return false;
+                if (!object.Equals(this.RunForwardAlternateFootsteps, rhs.RunForwardAlternateFootsteps)) return false;
+                if (!object.Equals(this.WalkForwardAlternateFootsteps2, rhs.WalkForwardAlternateFootsteps2)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.WalkForwardFootsteps);
+                hash.Add(this.RunForwardFootsteps);
+                hash.Add(this.WalkForwardAlternateFootsteps);
+                hash.Add(this.RunForwardAlternateFootsteps);
+                hash.Add(this.WalkForwardAlternateFootsteps2);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +374,61 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (this.WalkForwardFootsteps != null)
+                {
+                    if (!eval(this.WalkForwardFootsteps.Overall)) return false;
+                    if (this.WalkForwardFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunForwardFootsteps != null)
+                {
+                    if (!eval(this.RunForwardFootsteps.Overall)) return false;
+                    if (this.RunForwardFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunForwardFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WalkForwardAlternateFootsteps != null)
+                {
+                    if (!eval(this.WalkForwardAlternateFootsteps.Overall)) return false;
+                    if (this.WalkForwardAlternateFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardAlternateFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunForwardAlternateFootsteps != null)
+                {
+                    if (!eval(this.RunForwardAlternateFootsteps.Overall)) return false;
+                    if (this.RunForwardAlternateFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunForwardAlternateFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WalkForwardAlternateFootsteps2 != null)
+                {
+                    if (!eval(this.WalkForwardAlternateFootsteps2.Overall)) return false;
+                    if (this.WalkForwardAlternateFootsteps2.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardAlternateFootsteps2.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +437,61 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (this.WalkForwardFootsteps != null)
+                {
+                    if (eval(this.WalkForwardFootsteps.Overall)) return true;
+                    if (this.WalkForwardFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunForwardFootsteps != null)
+                {
+                    if (eval(this.RunForwardFootsteps.Overall)) return true;
+                    if (this.RunForwardFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunForwardFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WalkForwardAlternateFootsteps != null)
+                {
+                    if (eval(this.WalkForwardAlternateFootsteps.Overall)) return true;
+                    if (this.WalkForwardAlternateFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardAlternateFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.RunForwardAlternateFootsteps != null)
+                {
+                    if (eval(this.RunForwardAlternateFootsteps.Overall)) return true;
+                    if (this.RunForwardAlternateFootsteps.Specific != null)
+                    {
+                        foreach (var item in this.RunForwardAlternateFootsteps.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.WalkForwardAlternateFootsteps2 != null)
+                {
+                    if (eval(this.WalkForwardAlternateFootsteps2.Overall)) return true;
+                    if (this.WalkForwardAlternateFootsteps2.Specific != null)
+                    {
+                        foreach (var item in this.WalkForwardAlternateFootsteps2.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +507,76 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                if (WalkForwardFootsteps != null)
+                {
+                    obj.WalkForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WalkForwardFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.WalkForwardFootsteps.Specific = l;
+                        foreach (var item in WalkForwardFootsteps.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (RunForwardFootsteps != null)
+                {
+                    obj.RunForwardFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RunForwardFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RunForwardFootsteps.Specific = l;
+                        foreach (var item in RunForwardFootsteps.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (WalkForwardAlternateFootsteps != null)
+                {
+                    obj.WalkForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WalkForwardAlternateFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.WalkForwardAlternateFootsteps.Specific = l;
+                        foreach (var item in WalkForwardAlternateFootsteps.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (RunForwardAlternateFootsteps != null)
+                {
+                    obj.RunForwardAlternateFootsteps = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.RunForwardAlternateFootsteps.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (RunForwardAlternateFootsteps.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.RunForwardAlternateFootsteps.Specific = l;
+                        foreach (var item in RunForwardAlternateFootsteps.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (WalkForwardAlternateFootsteps2 != null)
+                {
+                    obj.WalkForwardAlternateFootsteps2 = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.WalkForwardAlternateFootsteps2.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (WalkForwardAlternateFootsteps2.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.WalkForwardAlternateFootsteps2.Specific = l;
+                        foreach (var item in WalkForwardAlternateFootsteps2.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +599,121 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if ((printMask?.WalkForwardFootsteps?.Overall ?? true)
+                        && WalkForwardFootsteps.TryGet(out var WalkForwardFootstepsItem))
+                    {
+                        fg.AppendLine("WalkForwardFootsteps =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(WalkForwardFootstepsItem.Overall);
+                            if (WalkForwardFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in WalkForwardFootstepsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RunForwardFootsteps?.Overall ?? true)
+                        && RunForwardFootsteps.TryGet(out var RunForwardFootstepsItem))
+                    {
+                        fg.AppendLine("RunForwardFootsteps =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RunForwardFootstepsItem.Overall);
+                            if (RunForwardFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in RunForwardFootstepsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
+                        && WalkForwardAlternateFootsteps.TryGet(out var WalkForwardAlternateFootstepsItem))
+                    {
+                        fg.AppendLine("WalkForwardAlternateFootsteps =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
+                            if (WalkForwardAlternateFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
+                        && RunForwardAlternateFootsteps.TryGet(out var RunForwardAlternateFootstepsItem))
+                    {
+                        fg.AppendLine("RunForwardAlternateFootsteps =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(RunForwardAlternateFootstepsItem.Overall);
+                            if (RunForwardAlternateFootstepsItem.Specific != null)
+                            {
+                                foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
+                        && WalkForwardAlternateFootsteps2.TryGet(out var WalkForwardAlternateFootsteps2Item))
+                    {
+                        fg.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
+                            if (WalkForwardAlternateFootsteps2Item.Specific != null)
+                            {
+                                foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +725,30 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunForwardFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardAlternateFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? RunForwardAlternateFootsteps;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? WalkForwardAlternateFootsteps2;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                        return WalkForwardFootsteps;
+                    case FootstepSet_FieldIndex.RunForwardFootsteps:
+                        return RunForwardFootsteps;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                        return WalkForwardAlternateFootsteps;
+                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                        return RunForwardAlternateFootsteps;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                        return WalkForwardAlternateFootsteps2;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +759,21 @@ namespace Mutagen.Bethesda.Skyrim
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                        this.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.RunForwardFootsteps:
+                        this.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                        this.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                        this.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                        this.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +785,21 @@ namespace Mutagen.Bethesda.Skyrim
                 FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
                 switch (enu)
                 {
+                    case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                        this.WalkForwardFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.RunForwardFootsteps:
+                        this.RunForwardFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                        this.WalkForwardAlternateFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                        this.RunForwardAlternateFootsteps = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                        this.WalkForwardAlternateFootsteps2 = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +809,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (WalkForwardFootsteps != null) return true;
+                if (RunForwardFootsteps != null) return true;
+                if (WalkForwardAlternateFootsteps != null) return true;
+                if (RunForwardAlternateFootsteps != null) return true;
+                if (WalkForwardAlternateFootsteps2 != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +849,116 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                if (WalkForwardFootsteps.TryGet(out var WalkForwardFootstepsItem))
+                {
+                    fg.AppendLine("WalkForwardFootsteps =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(WalkForwardFootstepsItem.Overall);
+                        if (WalkForwardFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in WalkForwardFootstepsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RunForwardFootsteps.TryGet(out var RunForwardFootstepsItem))
+                {
+                    fg.AppendLine("RunForwardFootsteps =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RunForwardFootstepsItem.Overall);
+                        if (RunForwardFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in RunForwardFootstepsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (WalkForwardAlternateFootsteps.TryGet(out var WalkForwardAlternateFootstepsItem))
+                {
+                    fg.AppendLine("WalkForwardAlternateFootsteps =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(WalkForwardAlternateFootstepsItem.Overall);
+                        if (WalkForwardAlternateFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in WalkForwardAlternateFootstepsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (RunForwardAlternateFootsteps.TryGet(out var RunForwardAlternateFootstepsItem))
+                {
+                    fg.AppendLine("RunForwardAlternateFootsteps =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(RunForwardAlternateFootstepsItem.Overall);
+                        if (RunForwardAlternateFootstepsItem.Specific != null)
+                        {
+                            foreach (var subItem in RunForwardAlternateFootstepsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (WalkForwardAlternateFootsteps2.TryGet(out var WalkForwardAlternateFootsteps2Item))
+                {
+                    fg.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(WalkForwardAlternateFootsteps2Item.Overall);
+                        if (WalkForwardAlternateFootsteps2Item.Specific != null)
+                        {
+                            foreach (var subItem in WalkForwardAlternateFootsteps2Item.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +967,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.WalkForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardFootsteps?.Overall, rhs.WalkForwardFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardFootsteps?.Specific, rhs.WalkForwardFootsteps?.Specific));
+                ret.RunForwardFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardFootsteps?.Overall, rhs.RunForwardFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardFootsteps?.Specific, rhs.RunForwardFootsteps?.Specific));
+                ret.WalkForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Overall, rhs.WalkForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps?.Specific, rhs.WalkForwardAlternateFootsteps?.Specific));
+                ret.RunForwardAlternateFootsteps = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Overall, rhs.RunForwardAlternateFootsteps?.Overall), ExceptionExt.Combine(this.RunForwardAlternateFootsteps?.Specific, rhs.RunForwardAlternateFootsteps?.Specific));
+                ret.WalkForwardAlternateFootsteps2 = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Overall, rhs.WalkForwardAlternateFootsteps2?.Overall), ExceptionExt.Combine(this.WalkForwardAlternateFootsteps2?.Specific, rhs.WalkForwardAlternateFootsteps2?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +993,47 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool WalkForwardFootsteps;
+            public bool RunForwardFootsteps;
+            public bool WalkForwardAlternateFootsteps;
+            public bool RunForwardAlternateFootsteps;
+            public bool WalkForwardAlternateFootsteps2;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.WalkForwardFootsteps = defaultOn;
+                this.RunForwardFootsteps = defaultOn;
+                this.WalkForwardAlternateFootsteps = defaultOn;
+                this.RunForwardAlternateFootsteps = defaultOn;
+                this.WalkForwardAlternateFootsteps2 = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((WalkForwardFootsteps, null));
+                ret.Add((RunForwardFootsteps, null));
+                ret.Add((WalkForwardAlternateFootsteps, null));
+                ret.Add((RunForwardAlternateFootsteps, null));
+                ret.Add((WalkForwardAlternateFootsteps2, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -528,6 +1122,11 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IFootstepSetInternal>
     {
+        new ExtendedList<IFormLink<Footstep>> WalkForwardFootsteps { get; }
+        new ExtendedList<IFormLink<Footstep>> RunForwardFootsteps { get; }
+        new ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLink<Footstep>> RunForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLink<Footstep>> WalkForwardAlternateFootsteps2 { get; }
     }
 
     public partial interface IFootstepSetInternal :
@@ -541,9 +1140,15 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IFootstepSetGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => FootstepSet_Registration.Instance;
+        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
+        IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
+        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
+        IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
+        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
 
     }
 
@@ -844,6 +1449,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        WalkForwardFootsteps = 6,
+        RunForwardFootsteps = 7,
+        WalkForwardAlternateFootsteps = 8,
+        RunForwardAlternateFootsteps = 9,
+        WalkForwardAlternateFootsteps2 = 10,
     }
     #endregion
 
@@ -861,9 +1471,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "7bc68bd1-2eb5-4094-8e32-00eec9922c48";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(FootstepSet.Mask<>);
 
@@ -893,6 +1503,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "WALKFORWARDFOOTSTEPS":
+                    return (ushort)FootstepSet_FieldIndex.WalkForwardFootsteps;
+                case "RUNFORWARDFOOTSTEPS":
+                    return (ushort)FootstepSet_FieldIndex.RunForwardFootsteps;
+                case "WALKFORWARDALTERNATEFOOTSTEPS":
+                    return (ushort)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps;
+                case "RUNFORWARDALTERNATEFOOTSTEPS":
+                    return (ushort)FootstepSet_FieldIndex.RunForwardAlternateFootsteps;
+                case "WALKFORWARDALTERNATEFOOTSTEPS2":
+                    return (ushort)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2;
                 default:
                     return null;
             }
@@ -903,6 +1523,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return true;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1539,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1555,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1571,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                    return "WalkForwardFootsteps";
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                    return "RunForwardFootsteps";
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                    return "WalkForwardAlternateFootsteps";
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                    return "RunForwardAlternateFootsteps";
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return "WalkForwardAlternateFootsteps2";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1591,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1607,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1623,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FootstepSet_FieldIndex enu = (FootstepSet_FieldIndex)index;
             switch (enu)
             {
+                case FootstepSet_FieldIndex.WalkForwardFootsteps:
+                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                case FootstepSet_FieldIndex.RunForwardFootsteps:
+                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps:
+                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                case FootstepSet_FieldIndex.RunForwardAlternateFootsteps:
+                    return typeof(ExtendedList<IFormLink<Footstep>>);
+                case FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2:
+                    return typeof(ExtendedList<IFormLink<Footstep>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1682,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFootstepSetInternal item)
         {
             ClearPartial();
+            item.WalkForwardFootsteps.Clear();
+            item.RunForwardFootsteps.Clear();
+            item.WalkForwardAlternateFootsteps.Clear();
+            item.RunForwardAlternateFootsteps.Clear();
+            item.WalkForwardAlternateFootsteps2.Clear();
             base.Clear(item);
         }
         
@@ -1169,6 +1844,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.WalkForwardFootsteps = item.WalkForwardFootsteps.CollectionEqualsHelper(
+                rhs.WalkForwardFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RunForwardFootsteps = item.RunForwardFootsteps.CollectionEqualsHelper(
+                rhs.RunForwardFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.WalkForwardAlternateFootsteps = item.WalkForwardAlternateFootsteps.CollectionEqualsHelper(
+                rhs.WalkForwardAlternateFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.RunForwardAlternateFootsteps = item.RunForwardAlternateFootsteps.CollectionEqualsHelper(
+                rhs.RunForwardAlternateFootsteps,
+                (l, r) => object.Equals(l, r),
+                include);
+            ret.WalkForwardAlternateFootsteps2 = item.WalkForwardAlternateFootsteps2.CollectionEqualsHelper(
+                rhs.WalkForwardAlternateFootsteps2,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,6 +1915,96 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.WalkForwardFootsteps?.Overall ?? true)
+            {
+                fg.AppendLine("WalkForwardFootsteps =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.WalkForwardFootsteps)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.RunForwardFootsteps?.Overall ?? true)
+            {
+                fg.AppendLine("RunForwardFootsteps =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RunForwardFootsteps)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.WalkForwardAlternateFootsteps?.Overall ?? true)
+            {
+                fg.AppendLine("WalkForwardAlternateFootsteps =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.WalkForwardAlternateFootsteps)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.RunForwardAlternateFootsteps?.Overall ?? true)
+            {
+                fg.AppendLine("RunForwardAlternateFootsteps =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.RunForwardAlternateFootsteps)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (printMask?.WalkForwardAlternateFootsteps2?.Overall ?? true)
+            {
+                fg.AppendLine("WalkForwardAlternateFootsteps2 =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.WalkForwardAlternateFootsteps2)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
@@ -1235,6 +2020,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFootstepSetGetter item,
             FootstepSet.Mask<bool> mask)
         {
+            mask.WalkForwardFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.RunForwardFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.WalkForwardAlternateFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.RunForwardAlternateFootsteps = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
+            mask.WalkForwardAlternateFootsteps2 = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +2076,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!lhs.WalkForwardFootsteps.SequenceEqual(rhs.WalkForwardFootsteps)) return false;
+            if (!lhs.RunForwardFootsteps.SequenceEqual(rhs.RunForwardFootsteps)) return false;
+            if (!lhs.WalkForwardAlternateFootsteps.SequenceEqual(rhs.WalkForwardAlternateFootsteps)) return false;
+            if (!lhs.RunForwardAlternateFootsteps.SequenceEqual(rhs.RunForwardAlternateFootsteps)) return false;
+            if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqual(rhs.WalkForwardAlternateFootsteps2)) return false;
             return true;
         }
         
@@ -1310,6 +2105,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFootstepSetGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.WalkForwardFootsteps);
+            hash.Add(item.RunForwardFootsteps);
+            hash.Add(item.WalkForwardAlternateFootsteps);
+            hash.Add(item.RunForwardAlternateFootsteps);
+            hash.Add(item.WalkForwardAlternateFootsteps2);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1336,6 +2136,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IFootstepSetGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WalkForwardFootsteps.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RunForwardFootsteps.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WalkForwardAlternateFootsteps.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.RunForwardAlternateFootsteps.Select(f => f.FormKey))
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WalkForwardAlternateFootsteps2.Select(f => f.FormKey))
             {
                 yield return item;
             }
@@ -1386,6 +2206,101 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardFootsteps);
+                try
+                {
+                    item.WalkForwardFootsteps.SetTo(
+                        rhs.WalkForwardFootsteps
+                        .Select(r => (IFormLink<Footstep>)new FormLink<Footstep>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardFootsteps);
+                try
+                {
+                    item.RunForwardFootsteps.SetTo(
+                        rhs.RunForwardFootsteps
+                        .Select(r => (IFormLink<Footstep>)new FormLink<Footstep>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps);
+                try
+                {
+                    item.WalkForwardAlternateFootsteps.SetTo(
+                        rhs.WalkForwardAlternateFootsteps
+                        .Select(r => (IFormLink<Footstep>)new FormLink<Footstep>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps);
+                try
+                {
+                    item.RunForwardAlternateFootsteps.SetTo(
+                        rhs.RunForwardAlternateFootsteps
+                        .Select(r => (IFormLink<Footstep>)new FormLink<Footstep>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            {
+                errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2);
+                try
+                {
+                    item.WalkForwardAlternateFootsteps2.SetTo(
+                        rhs.WalkForwardAlternateFootsteps2
+                        .Select(r => (IFormLink<Footstep>)new FormLink<Footstep>(r.FormKey)));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2443,96 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.WalkForwardFootsteps),
+                    item: item.WalkForwardFootsteps,
+                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardFootsteps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardFootsteps),
+                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RunForwardFootsteps),
+                    item: item.RunForwardFootsteps,
+                    fieldIndex: (int)FootstepSet_FieldIndex.RunForwardFootsteps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.RunForwardFootsteps),
+                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.WalkForwardAlternateFootsteps),
+                    item: item.WalkForwardAlternateFootsteps,
+                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps),
+                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.RunForwardAlternateFootsteps),
+                    item: item.RunForwardAlternateFootsteps,
+                    fieldIndex: (int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps),
+                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((translationMask?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IFootstepGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.WalkForwardAlternateFootsteps2),
+                    item: item.WalkForwardAlternateFootsteps2,
+                    fieldIndex: (int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2),
+                    transl: (XElement subNode, IFormLink<IFootstepGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1635,6 +2640,146 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "WalkForwardFootsteps":
+                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardFootsteps);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
+                            node: node,
+                            enumer: out var WalkForwardFootstepsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.WalkForwardFootsteps.SetTo(WalkForwardFootstepsItem);
+                        }
+                        else
+                        {
+                            item.WalkForwardFootsteps.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RunForwardFootsteps":
+                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardFootsteps);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RunForwardFootstepsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RunForwardFootsteps.SetTo(RunForwardFootstepsItem);
+                        }
+                        else
+                        {
+                            item.RunForwardFootsteps.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WalkForwardAlternateFootsteps":
+                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
+                            node: node,
+                            enumer: out var WalkForwardAlternateFootstepsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.WalkForwardAlternateFootsteps.SetTo(WalkForwardAlternateFootstepsItem);
+                        }
+                        else
+                        {
+                            item.WalkForwardAlternateFootsteps.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RunForwardAlternateFootsteps":
+                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
+                            node: node,
+                            enumer: out var RunForwardAlternateFootstepsItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.RunForwardAlternateFootsteps.SetTo(RunForwardAlternateFootstepsItem);
+                        }
+                        else
+                        {
+                            item.RunForwardAlternateFootsteps.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WalkForwardAlternateFootsteps2":
+                    errorMask?.PushIndex((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<Footstep>>.Instance.Parse(
+                            node: node,
+                            enumer: out var WalkForwardAlternateFootsteps2Item,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.WalkForwardAlternateFootsteps2.SetTo(WalkForwardAlternateFootsteps2Item);
+                        }
+                        else
+                        {
+                            item.WalkForwardAlternateFootsteps2.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2866,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FootstepSetBinaryWriteTranslation Instance = new FootstepSetBinaryWriteTranslation();
 
+        static partial void WriteBinaryCountCustom(
+            MutagenWriter writer,
+            IFootstepSetGetter item);
+
+        public static void WriteBinaryCount(
+            MutagenWriter writer,
+            IFootstepSetGetter item)
+        {
+            WriteBinaryCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IFootstepSetGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IFootstepSetGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            FootstepSetBinaryWriteTranslation.WriteBinaryCount(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IFootstepSetGetter item,
@@ -1731,10 +2912,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.FSTS),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +2971,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IFootstepSetInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.XCNT:
+                {
+                    FootstepSetBinaryCreateTranslation.FillBinaryCountCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        static partial void FillBinaryCountCustom(
+            MutagenFrame frame,
+            IFootstepSetInternal item);
+
     }
 
 }
@@ -1825,6 +3036,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IFootstepSetGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => FootstepSetCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => FootstepSetXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +3068,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Count
+        partial void CountCustomParse(
+            OverlayStream stream,
+            int offset);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +3125,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.XCNT:
+                {
+                    CountCustomParse(
+                        stream,
+                        offset);
+                    return TryGet<int?>.Succeed(null);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

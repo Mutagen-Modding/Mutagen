@@ -153,6 +153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FLTV = new RecordType(0x56544C46);
         public static readonly RecordType FNAM = new RecordType(0x4D414E46);
         public static readonly RecordType FNPR = new RecordType(0x52504E46);
+        public static readonly RecordType FSTP = new RecordType(0x50545346);
         public static readonly RecordType FSTS = new RecordType(0x53545346);
         public static readonly RecordType FTSM = new RecordType(0x4D535446);
         public static readonly RecordType FTST = new RecordType(0x54535446);
