@@ -379,6 +379,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SIAD = new RecordType(0x44414953);
         public static readonly RecordType SLCP = new RecordType(0x50434C53);
         public static readonly RecordType SLGM = new RecordType(0x4D474C53);
+        public static readonly RecordType SMBN = new RecordType(0x4E424D53);
+        public static readonly RecordType SMEN = new RecordType(0x4E454D53);
+        public static readonly RecordType SMQN = new RecordType(0x4E514D53);
         public static readonly RecordType SNAM = new RecordType(0x4D414E53);
         public static readonly RecordType SNDD = new RecordType(0x44444E53);
         public static readonly RecordType SNDR = new RecordType(0x52444E53);

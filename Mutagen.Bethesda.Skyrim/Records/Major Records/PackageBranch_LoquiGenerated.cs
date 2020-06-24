@@ -52,15 +52,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            set => this._Conditions = value;
+            protected set => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IConditionGetter>? IPackageBranchGetter.Conditions => _Conditions;
+        IReadOnlyList<IConditionGetter> IPackageBranchGetter.Conditions => _Conditions;
         #endregion
 
         #endregion
@@ -1114,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageBranch>
     {
         new String BranchType { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<Condition> Conditions { get; }
         new PackageRoot? Root { get; set; }
         new String? ProcedureType { get; set; }
         new PackageBranch.Flag? Flags { get; set; }
@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PackageBranch_Registration.Instance;
         String BranchType { get; }
-        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IConditionGetter> Conditions { get; }
         IPackageRootGetter? Root { get; }
         String? ProcedureType { get; }
         PackageBranch.Flag? Flags { get; }
@@ -1748,7 +1748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.BranchType = string.Empty;
-            item.Conditions = null;
+            item.Conditions.Clear();
             item.Root = null;
             item.ProcedureType = default;
             item.Flags = default;
@@ -1908,14 +1908,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.BranchType, "BranchType");
             }
-            if ((printMask?.Conditions?.Overall ?? true)
-                && item.Conditions.TryGet(out var ConditionsItem))
+            if (printMask?.Conditions?.Overall ?? true)
             {
                 fg.AppendLine("Conditions =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    foreach (var subItem in ConditionsItem)
+                    foreach (var subItem in item.Conditions)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1994,7 +1993,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageBranchGetter item,
             PackageBranch.Mask<bool?> checkMask)
         {
-            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
             if (checkMask.Root?.Overall.HasValue ?? false && checkMask.Root.Overall.Value != (item.Root != null)) return false;
             if (checkMask.Root?.Specific != null && (item.Root == null || !item.Root.HasBeenSet(checkMask.Root.Specific))) return false;
             if (checkMask.ProcedureType.HasValue && checkMask.ProcedureType.Value != (item.ProcedureType != null)) return false;
@@ -2011,10 +2009,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageBranch.Mask<bool> mask)
         {
             mask.BranchType = true;
-            if (item.Conditions.TryGet(out var ConditionsItem))
-            {
-                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            var ConditionsItem = item.Conditions;
+            mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemRoot = item.Root;
             mask.Root = new MaskItem<bool, PackageRoot.Mask<bool>?>(itemRoot != null, itemRoot?.GetHasBeenSetMask());
             mask.ProcedureType = (item.ProcedureType != null);
@@ -2087,13 +2083,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public IEnumerable<FormKey> GetLinkFormKeys(IPackageBranchGetter obj)
         {
-            if (obj.Conditions.TryGet(out var ConditionsItem))
+            foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                .SelectMany((f) => f.LinkFormKeys))
             {
-                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
-                    .SelectMany((f) => f.LinkFormKeys))
-                {
-                    yield return item;
-                }
+                yield return item;
             }
             yield break;
         }
@@ -2122,22 +2115,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask?.PushIndex((int)PackageBranch_FieldIndex.Conditions);
                 try
                 {
-                    if ((rhs.Conditions != null))
-                    {
-                        item.Conditions = 
-                            rhs.Conditions
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<Condition>();
-                    }
-                    else
-                    {
-                        item.Conditions = null;
-                    }
+                    item.Conditions.SetTo(
+                        rhs.Conditions
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2369,8 +2354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PackageBranch_FieldIndex.BranchType,
                     errorMask: errorMask);
             }
-            if ((item.Conditions != null)
-                && (translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
             {
                 ListXmlTranslation<IConditionGetter>.Instance.Write(
                     node: node,
@@ -2623,11 +2607,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             errorMask: errorMask,
                             translationMask: translationMask))
                         {
-                            item.Conditions = ConditionsItem.ToExtendedList();
+                            item.Conditions.SetTo(ConditionsItem);
                         }
                         else
                         {
-                            item.Conditions = null;
+                            item.Conditions.Clear();
                         }
                     }
                     catch (Exception ex)

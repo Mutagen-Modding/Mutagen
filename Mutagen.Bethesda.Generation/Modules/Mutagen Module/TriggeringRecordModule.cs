@@ -368,6 +368,7 @@ namespace Mutagen.Bethesda.Generation
             else if (field is ListType listType
                 && !data.RecordType.HasValue)
             {
+                bool previouslyTurnedOff = false;
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
                     if (subListLoqui.GenericDef != null)
@@ -395,12 +396,14 @@ namespace Mutagen.Bethesda.Generation
                         // Don't actually want it to be marked has been set
                         listType.SubTypeGeneration.HasBeenSetProperty.OnNext((false, true));
                         listType.HasBeenSetProperty.OnNext((false, true));
+                        previouslyTurnedOff = true;
                     }
                 }
                 // If has count, mark as has been set
                 var hasCounter = (listType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter)
                     && counter != null);
-                if (hasCounter)
+                if (hasCounter 
+                    && (previouslyTurnedOff || !listType.HasBeenSetProperty.Value.HasBeenSet))
                 {
                     listType.HasBeenSetProperty.OnNext((true, true));
                 }

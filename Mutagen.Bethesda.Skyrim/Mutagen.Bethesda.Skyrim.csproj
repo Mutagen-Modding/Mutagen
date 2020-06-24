@@ -444,6 +444,9 @@
     <Compile Include="Records\Major Records\ASpell_LoquiGenerated.cs">
       <DependentUpon>ASpell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AStoryManagerNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AvailableMorphs.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -1593,6 +1596,9 @@
     <Compile Include="Records\Major Records\Static_LoquiGenerated.cs">
       <DependentUpon>Static.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\TalkingActivator.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>
@@ -1941,6 +1947,21 @@
     </Compile>
     <Compile Include="Records\Major Records\Footstep_LoquiGenerated.cs">
       <DependentUpon>Footstep.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerBranchNode_LoquiGenerated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AStoryManagerNode_LoquiGenerated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuestNode_LoquiGenerated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerEventNode_LoquiGenerated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\StoryManagerQuest_LoquiGenerated.cs">
+      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

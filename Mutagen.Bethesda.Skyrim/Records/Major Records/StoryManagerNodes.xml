@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AStoryManagerNode" abstract="true" baseClass="SkyrimMajorRecord" objType="Record" GUID="584bb4cb-8773-49ba-b205-eb549dc029b0" ID="454">
+    <Fields>
+      <FormLink name="Parent" recordType="PNAM" refName="AStoryManagerNode" />
+      <FormLink name="PreviousSibling" recordType="SNAM" refName="AStoryManagerNode" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" hasBeenSet="False" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerBranchNode" recordType="SMBN" baseClass="AStoryManagerNode" objType="Record" GUID="d5eb571d-6f2f-4286-9efa-0a5fab8eddb6" ID="453">
+    <Fields>
+      <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
+      <ByteArray name="XNAM" recordType="XNAM" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerQuestNode" recordType="SMQN" baseClass="AStoryManagerNode" objType="Record" GUID="2f1031e5-dcff-4f22-aad3-7472e3300692" ID="455">
+    <Fields>
+      <Enum name="Flags" enumName="StoryManagerQuestNode.QuestFlag" byteLength="4" recordType="DNAM" />
+      <UInt32 name="MaxConcurrentQuests" recordType="XNAM" />
+      <UInt32 name="MaxNumQuestsToRun" recordType="MNAM" />
+      <RefList name="Quests" counterRecType="QNAM" hasBeenSet="False" refName="StoryManagerQuest" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerQuest" objType="Subrecord" GUID="b4d160cb-2899-46b7-b717-a555f48bcba1" ID="457">
+    <Fields>
+      <FormLink name="Quest" recordType="NNAM" refName="Quest" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <Float name="HoursUntilReset" recordType="RNAM" multiplier="24" />
+    </Fields>
+  </Object>
+  <Object name="StoryManagerEventNode" recordType="SMEN" baseClass="AStoryManagerNode" objType="Record" GUID="dd24d26a-8a21-4c53-9dbd-842a4d2fbe2f" ID="456">
+    <Fields>
+      <Enum name="Flags" enumName="AStoryManagerNode.Flag" byteLength="4" recordType="DNAM" />
+      <ByteArray name="XNAM" recordType="XNAM" />
+      <RecordType name="Type" recordType="ENAM" />
+    </Fields>
+  </Object>
+</Loqui>

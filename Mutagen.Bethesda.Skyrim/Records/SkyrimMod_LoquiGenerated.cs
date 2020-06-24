@@ -132,6 +132,9 @@ namespace Mutagen.Bethesda.Skyrim
             _MusicTypes_Object = new Group<MusicType>(this);
             _Footsteps_Object = new Group<Footstep>(this);
             _FootstepSets_Object = new Group<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -767,6 +770,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IFootstepSetGetter> ISkyrimModGetter.FootstepSets => _FootstepSets_Object;
         #endregion
+        #region StoryManagerBranchNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<StoryManagerBranchNode> _StoryManagerBranchNodes_Object;
+        public Group<StoryManagerBranchNode> StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IStoryManagerBranchNodeGetter> ISkyrimModGetter.StoryManagerBranchNodes => _StoryManagerBranchNodes_Object;
+        #endregion
+        #region StoryManagerQuestNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<StoryManagerQuestNode> _StoryManagerQuestNodes_Object;
+        public Group<StoryManagerQuestNode> StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IStoryManagerQuestNodeGetter> ISkyrimModGetter.StoryManagerQuestNodes => _StoryManagerQuestNodes_Object;
+        #endregion
+        #region StoryManagerEventNodes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<StoryManagerEventNode> _StoryManagerEventNodes_Object;
+        public Group<StoryManagerEventNode> StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IStoryManagerEventNodeGetter> ISkyrimModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
+        #endregion
 
         #region To String
 
@@ -1026,6 +1050,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1118,7 +1145,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LightingTemplates,
                 TItem MusicTypes,
                 TItem Footsteps,
-                TItem FootstepSets)
+                TItem FootstepSets,
+                TItem StoryManagerBranchNodes,
+                TItem StoryManagerQuestNodes,
+                TItem StoryManagerEventNodes)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1210,6 +1240,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicTypes = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTypes, new Group.Mask<TItem>(MusicTypes));
                 this.Footsteps = new MaskItem<TItem, Group.Mask<TItem>?>(Footsteps, new Group.Mask<TItem>(Footsteps));
                 this.FootstepSets = new MaskItem<TItem, Group.Mask<TItem>?>(FootstepSets, new Group.Mask<TItem>(FootstepSets));
+                this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerBranchNodes, new Group.Mask<TItem>(StoryManagerBranchNodes));
+                this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerQuestNodes, new Group.Mask<TItem>(StoryManagerQuestNodes));
+                this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerEventNodes, new Group.Mask<TItem>(StoryManagerEventNodes));
             }
 
             #pragma warning disable CS8618
@@ -1311,6 +1344,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? MusicTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Footsteps { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? FootstepSets { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
             #endregion
 
             #region Equals
@@ -1413,6 +1449,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MusicTypes, rhs.MusicTypes)) return false;
                 if (!object.Equals(this.Footsteps, rhs.Footsteps)) return false;
                 if (!object.Equals(this.FootstepSets, rhs.FootstepSets)) return false;
+                if (!object.Equals(this.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
+                if (!object.Equals(this.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
+                if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1508,6 +1547,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MusicTypes);
                 hash.Add(this.Footsteps);
                 hash.Add(this.FootstepSets);
+                hash.Add(this.StoryManagerBranchNodes);
+                hash.Add(this.StoryManagerQuestNodes);
+                hash.Add(this.StoryManagerEventNodes);
                 return hash.ToHashCode();
             }
 
@@ -1966,6 +2008,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.FootstepSets.Overall)) return false;
                     if (this.FootstepSets.Specific != null && !this.FootstepSets.Specific.All(eval)) return false;
                 }
+                if (StoryManagerBranchNodes != null)
+                {
+                    if (!eval(this.StoryManagerBranchNodes.Overall)) return false;
+                    if (this.StoryManagerBranchNodes.Specific != null && !this.StoryManagerBranchNodes.Specific.All(eval)) return false;
+                }
+                if (StoryManagerQuestNodes != null)
+                {
+                    if (!eval(this.StoryManagerQuestNodes.Overall)) return false;
+                    if (this.StoryManagerQuestNodes.Specific != null && !this.StoryManagerQuestNodes.Specific.All(eval)) return false;
+                }
+                if (StoryManagerEventNodes != null)
+                {
+                    if (!eval(this.StoryManagerEventNodes.Overall)) return false;
+                    if (this.StoryManagerEventNodes.Specific != null && !this.StoryManagerEventNodes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2423,6 +2480,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.FootstepSets.Overall)) return true;
                     if (this.FootstepSets.Specific != null && this.FootstepSets.Specific.Any(eval)) return true;
                 }
+                if (StoryManagerBranchNodes != null)
+                {
+                    if (eval(this.StoryManagerBranchNodes.Overall)) return true;
+                    if (this.StoryManagerBranchNodes.Specific != null && this.StoryManagerBranchNodes.Specific.Any(eval)) return true;
+                }
+                if (StoryManagerQuestNodes != null)
+                {
+                    if (eval(this.StoryManagerQuestNodes.Overall)) return true;
+                    if (this.StoryManagerQuestNodes.Specific != null && this.StoryManagerQuestNodes.Specific.Any(eval)) return true;
+                }
+                if (StoryManagerEventNodes != null)
+                {
+                    if (eval(this.StoryManagerEventNodes.Overall)) return true;
+                    if (this.StoryManagerEventNodes.Specific != null && this.StoryManagerEventNodes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2527,6 +2599,9 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MusicTypes = this.MusicTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTypes.Overall), this.MusicTypes.Specific?.Translate(eval));
                 obj.Footsteps = this.Footsteps == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Footsteps.Overall), this.Footsteps.Specific?.Translate(eval));
                 obj.FootstepSets = this.FootstepSets == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.FootstepSets.Overall), this.FootstepSets.Specific?.Translate(eval));
+                obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
+                obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
+                obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2909,6 +2984,18 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         FootstepSets?.ToString(fg);
                     }
+                    if (printMask?.StoryManagerBranchNodes?.Overall ?? true)
+                    {
+                        StoryManagerBranchNodes?.ToString(fg);
+                    }
+                    if (printMask?.StoryManagerQuestNodes?.Overall ?? true)
+                    {
+                        StoryManagerQuestNodes?.ToString(fg);
+                    }
+                    if (printMask?.StoryManagerEventNodes?.Overall ?? true)
+                    {
+                        StoryManagerEventNodes?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3024,6 +3111,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<MusicType.ErrorMask>?>? MusicTypes;
             public MaskItem<Exception?, Group.ErrorMask<Footstep.ErrorMask>?>? Footsteps;
             public MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>? FootstepSets;
+            public MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
+            public MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
+            public MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
             #endregion
 
             #region IErrorMask
@@ -3212,6 +3302,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return Footsteps;
                     case SkyrimMod_FieldIndex.FootstepSets:
                         return FootstepSets;
+                    case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                        return StoryManagerBranchNodes;
+                    case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                        return StoryManagerQuestNodes;
+                    case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                        return StoryManagerEventNodes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3491,6 +3587,15 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.FootstepSets:
                         this.FootstepSets = new MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                        this.StoryManagerBranchNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                        this.StoryManagerQuestNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                        this.StoryManagerEventNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3772,6 +3877,15 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.FootstepSets:
                         this.FootstepSets = (MaskItem<Exception?, Group.ErrorMask<FootstepSet.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                        this.StoryManagerBranchNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                        this.StoryManagerQuestNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                        this.StoryManagerEventNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3870,6 +3984,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MusicTypes != null) return true;
                 if (Footsteps != null) return true;
                 if (FootstepSets != null) return true;
+                if (StoryManagerBranchNodes != null) return true;
+                if (StoryManagerQuestNodes != null) return true;
+                if (StoryManagerEventNodes != null) return true;
                 return false;
             }
             #endregion
@@ -3994,6 +4111,9 @@ namespace Mutagen.Bethesda.Skyrim
                 MusicTypes?.ToString(fg);
                 Footsteps?.ToString(fg);
                 FootstepSets?.ToString(fg);
+                StoryManagerBranchNodes?.ToString(fg);
+                StoryManagerQuestNodes?.ToString(fg);
+                StoryManagerEventNodes?.ToString(fg);
             }
             #endregion
 
@@ -4092,6 +4212,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MusicTypes = this.MusicTypes.Combine(rhs.MusicTypes, (l, r) => l.Combine(r));
                 ret.Footsteps = this.Footsteps.Combine(rhs.Footsteps, (l, r) => l.Combine(r));
                 ret.FootstepSets = this.FootstepSets.Combine(rhs.FootstepSets, (l, r) => l.Combine(r));
+                ret.StoryManagerBranchNodes = this.StoryManagerBranchNodes.Combine(rhs.StoryManagerBranchNodes, (l, r) => l.Combine(r));
+                ret.StoryManagerQuestNodes = this.StoryManagerQuestNodes.Combine(rhs.StoryManagerQuestNodes, (l, r) => l.Combine(r));
+                ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4203,6 +4326,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?> MusicTypes;
             public MaskItem<bool, Group.TranslationMask<Footstep.TranslationMask>?> Footsteps;
             public MaskItem<bool, Group.TranslationMask<FootstepSet.TranslationMask>?> FootstepSets;
+            public MaskItem<bool, Group.TranslationMask<StoryManagerBranchNode.TranslationMask>?> StoryManagerBranchNodes;
+            public MaskItem<bool, Group.TranslationMask<StoryManagerQuestNode.TranslationMask>?> StoryManagerQuestNodes;
+            public MaskItem<bool, Group.TranslationMask<StoryManagerEventNode.TranslationMask>?> StoryManagerEventNodes;
             #endregion
 
             #region Ctors
@@ -4298,6 +4424,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MusicTypes = new MaskItem<bool, Group.TranslationMask<MusicType.TranslationMask>?>(defaultOn, null);
                 this.Footsteps = new MaskItem<bool, Group.TranslationMask<Footstep.TranslationMask>?>(defaultOn, null);
                 this.FootstepSets = new MaskItem<bool, Group.TranslationMask<FootstepSet.TranslationMask>?>(defaultOn, null);
+                this.StoryManagerBranchNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerBranchNode.TranslationMask>?>(defaultOn, null);
+                this.StoryManagerQuestNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerQuestNode.TranslationMask>?>(defaultOn, null);
+                this.StoryManagerEventNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerEventNode.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4403,6 +4532,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MusicTypes?.Overall ?? true, MusicTypes?.Specific?.GetCrystal()));
                 ret.Add((Footsteps?.Overall ?? true, Footsteps?.Specific?.GetCrystal()));
                 ret.Add((FootstepSets?.Overall ?? true, FootstepSets?.Specific?.GetCrystal()));
+                ret.Add((StoryManagerBranchNodes?.Overall ?? true, StoryManagerBranchNodes?.Specific?.GetCrystal()));
+                ret.Add((StoryManagerQuestNodes?.Overall ?? true, StoryManagerQuestNodes?.Specific?.GetCrystal()));
+                ret.Add((StoryManagerEventNodes?.Overall ?? true, StoryManagerEventNodes?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4506,6 +4638,9 @@ namespace Mutagen.Bethesda.Skyrim
             _MusicTypes_Object = new Group<MusicType>(this);
             _Footsteps_Object = new Group<Footstep>(this);
             _FootstepSets_Object = new Group<FootstepSet>(this);
+            _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
+            _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
+            _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -4869,6 +5004,18 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.FootstepSets ?? true)
             {
                 this.FootstepSets.RecordCache.Set(rhsMod.FootstepSets.RecordCache.Items);
+            }
+            if (mask?.StoryManagerBranchNodes ?? true)
+            {
+                this.StoryManagerBranchNodes.RecordCache.Set(rhsMod.StoryManagerBranchNodes.RecordCache.Items);
+            }
+            if (mask?.StoryManagerQuestNodes ?? true)
+            {
+                this.StoryManagerQuestNodes.RecordCache.Set(rhsMod.StoryManagerQuestNodes.RecordCache.Items);
+            }
+            if (mask?.StoryManagerEventNodes ?? true)
+            {
+                this.StoryManagerEventNodes.RecordCache.Set(rhsMod.StoryManagerEventNodes.RecordCache.Items);
             }
         }
 
@@ -5500,6 +5647,27 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<FootstepSet>());
             }
+            if (mask?.StoryManagerBranchNodes ?? true)
+            {
+                this.StoryManagerBranchNodes.RecordCache.Set(
+                    rhs.StoryManagerBranchNodes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<StoryManagerBranchNode>());
+            }
+            if (mask?.StoryManagerQuestNodes ?? true)
+            {
+                this.StoryManagerQuestNodes.RecordCache.Set(
+                    rhs.StoryManagerQuestNodes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<StoryManagerQuestNode>());
+            }
+            if (mask?.StoryManagerEventNodes ?? true)
+            {
+                this.StoryManagerEventNodes.RecordCache.Set(
+                    rhs.StoryManagerEventNodes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<StoryManagerEventNode>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5608,6 +5776,9 @@ namespace Mutagen.Bethesda.Skyrim
             count += MusicTypes.RecordCache.Count > 0 ? 1 : 0;
             count += Footsteps.RecordCache.Count > 0 ? 1 : 0;
             count += FootstepSets.RecordCache.Count > 0 ? 1 : 0;
+            count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : 0;
+            count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : 0;
+            count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -5916,6 +6087,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<MusicType> MusicTypes { get; }
         new Group<Footstep> Footsteps { get; }
         new Group<FootstepSet> FootstepSets { get; }
+        new Group<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
+        new Group<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
+        new Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -6023,6 +6197,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IMusicTypeGetter> MusicTypes { get; }
         IGroupGetter<IFootstepGetter> Footsteps { get; }
         IGroupGetter<IFootstepSetGetter> FootstepSets { get; }
+        IGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
+        IGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
+        IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
 
     }
 
@@ -6568,6 +6745,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MusicTypes = 87,
         Footsteps = 88,
         FootstepSets = 89,
+        StoryManagerBranchNodes = 90,
+        StoryManagerQuestNodes = 91,
+        StoryManagerEventNodes = 92,
     }
     #endregion
 
@@ -6585,9 +6765,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 90;
+        public const ushort AdditionalFieldCount = 93;
 
-        public const ushort FieldCount = 90;
+        public const ushort FieldCount = 93;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -6797,6 +6977,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Footsteps;
                 case "FOOTSTEPSETS":
                     return (ushort)SkyrimMod_FieldIndex.FootstepSets;
+                case "STORYMANAGERBRANCHNODES":
+                    return (ushort)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
+                case "STORYMANAGERQUESTNODES":
+                    return (ushort)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
+                case "STORYMANAGEREVENTNODES":
+                    return (ushort)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 default:
                     return null;
             }
@@ -6897,6 +7083,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MusicTypes:
                 case SkyrimMod_FieldIndex.Footsteps:
                 case SkyrimMod_FieldIndex.FootstepSets:
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6998,6 +7187,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MusicTypes:
                 case SkyrimMod_FieldIndex.Footsteps:
                 case SkyrimMod_FieldIndex.FootstepSets:
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7099,6 +7291,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MusicTypes:
                 case SkyrimMod_FieldIndex.Footsteps:
                 case SkyrimMod_FieldIndex.FootstepSets:
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7290,6 +7485,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Footsteps";
                 case SkyrimMod_FieldIndex.FootstepSets:
                     return "FootstepSets";
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                    return "StoryManagerBranchNodes";
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                    return "StoryManagerQuestNodes";
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                    return "StoryManagerEventNodes";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7390,6 +7591,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MusicTypes:
                 case SkyrimMod_FieldIndex.Footsteps:
                 case SkyrimMod_FieldIndex.FootstepSets:
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7492,6 +7696,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.MusicTypes:
                 case SkyrimMod_FieldIndex.Footsteps:
                 case SkyrimMod_FieldIndex.FootstepSets:
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7683,6 +7890,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<Footstep>);
                 case SkyrimMod_FieldIndex.FootstepSets:
                     return typeof(Group<FootstepSet>);
+                case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
+                    return typeof(Group<StoryManagerBranchNode>);
+                case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
+                    return typeof(Group<StoryManagerQuestNode>);
+                case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                    return typeof(Group<StoryManagerEventNode>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7820,6 +8033,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MusicTypes.Clear();
             item.Footsteps.Clear();
             item.FootstepSets.Clear();
+            item.StoryManagerBranchNodes.Clear();
+            item.StoryManagerQuestNodes.Clear();
+            item.StoryManagerEventNodes.Clear();
         }
         
         #region Xml Translation
@@ -8064,6 +8280,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MusicTypes = MaskItemExt.Factory(item.MusicTypes.GetEqualsMask(rhs.MusicTypes, include), include);
             ret.Footsteps = MaskItemExt.Factory(item.Footsteps.GetEqualsMask(rhs.Footsteps, include), include);
             ret.FootstepSets = MaskItemExt.Factory(item.FootstepSets.GetEqualsMask(rhs.FootstepSets, include), include);
+            ret.StoryManagerBranchNodes = MaskItemExt.Factory(item.StoryManagerBranchNodes.GetEqualsMask(rhs.StoryManagerBranchNodes, include), include);
+            ret.StoryManagerQuestNodes = MaskItemExt.Factory(item.StoryManagerQuestNodes.GetEqualsMask(rhs.StoryManagerQuestNodes, include), include);
+            ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
         }
         
         public string ToString(
@@ -8470,6 +8689,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.FootstepSets?.ToString(fg, "FootstepSets");
             }
+            if (printMask?.StoryManagerBranchNodes?.Overall ?? true)
+            {
+                item.StoryManagerBranchNodes?.ToString(fg, "StoryManagerBranchNodes");
+            }
+            if (printMask?.StoryManagerQuestNodes?.Overall ?? true)
+            {
+                item.StoryManagerQuestNodes?.ToString(fg, "StoryManagerQuestNodes");
+            }
+            if (printMask?.StoryManagerEventNodes?.Overall ?? true)
+            {
+                item.StoryManagerEventNodes?.ToString(fg, "StoryManagerEventNodes");
+            }
         }
         
         public bool HasBeenSet(
@@ -8573,6 +8804,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MusicTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTypes?.GetHasBeenSetMask());
             mask.Footsteps = new MaskItem<bool, Group.Mask<bool>?>(true, item.Footsteps?.GetHasBeenSetMask());
             mask.FootstepSets = new MaskItem<bool, Group.Mask<bool>?>(true, item.FootstepSets?.GetHasBeenSetMask());
+            mask.StoryManagerBranchNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerBranchNodes?.GetHasBeenSetMask());
+            mask.StoryManagerQuestNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerQuestNodes?.GetHasBeenSetMask());
+            mask.StoryManagerEventNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerEventNodes?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8672,6 +8906,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.MusicTypes, rhs.MusicTypes)) return false;
             if (!object.Equals(lhs.Footsteps, rhs.Footsteps)) return false;
             if (!object.Equals(lhs.FootstepSets, rhs.FootstepSets)) return false;
+            if (!object.Equals(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
+            if (!object.Equals(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
+            if (!object.Equals(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
             return true;
         }
         
@@ -8768,6 +9005,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.MusicTypes);
             hash.Add(item.Footsteps);
             hash.Add(item.FootstepSets);
+            hash.Add(item.StoryManagerBranchNodes);
+            hash.Add(item.StoryManagerQuestNodes);
+            hash.Add(item.StoryManagerEventNodes);
             return hash.ToHashCode();
         }
         
@@ -9229,6 +9469,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
                     return obj.FootstepSets.RecordCache;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    return obj.StoryManagerBranchNodes.RecordCache;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    return obj.StoryManagerQuestNodes.RecordCache;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    return obj.StoryManagerEventNodes.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -9248,7 +9503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[89];
+            Stream[] outputStreams = new Stream[92];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -9339,6 +9594,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10012,6 +10270,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.StoryManagerBranchNodes is ILinkedFormKeyContainer StoryManagerBranchNodeslinkCont)
+            {
+                foreach (var item in StoryManagerBranchNodeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.StoryManagerQuestNodes is ILinkedFormKeyContainer StoryManagerQuestNodeslinkCont)
+            {
+                foreach (var item in StoryManagerQuestNodeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.StoryManagerEventNodes is ILinkedFormKeyContainer StoryManagerEventNodeslinkCont)
+            {
+                foreach (var item in StoryManagerEventNodeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -10371,6 +10650,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.FootstepSets.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11188,6 +11479,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
                     foreach (var item in obj.FootstepSets.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerBranchNode":
+                case "IStoryManagerBranchNodeGetter":
+                case "IStoryManagerBranchNode":
+                case "IStoryManagerBranchNodeInternal":
+                    foreach (var item in obj.StoryManagerBranchNodes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerQuestNode":
+                case "IStoryManagerQuestNodeGetter":
+                case "IStoryManagerQuestNode":
+                case "IStoryManagerQuestNodeInternal":
+                    foreach (var item in obj.StoryManagerQuestNodes.EnumerateMajorRecords<TMajor>())
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "StoryManagerEventNode":
+                case "IStoryManagerEventNodeGetter":
+                case "IStoryManagerEventNode":
+                case "IStoryManagerEventNodeInternal":
+                    foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords<TMajor>())
                     {
                         yield return item;
                     }
@@ -13011,6 +13329,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                try
+                {
+                    item.StoryManagerBranchNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerBranchNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                try
+                {
+                    item.StoryManagerQuestNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerQuestNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerEventNodes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                try
+                {
+                    item.StoryManagerEventNodes.DeepCopyIn(
+                        rhs: rhs.StoryManagerEventNodes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerEventNodes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -14089,6 +14467,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.FootstepSets,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.FootstepSets));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            {
+                var StoryManagerBranchNodesItem = item.StoryManagerBranchNodes;
+                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerBranchNodesItem).XmlWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
+                    item: StoryManagerBranchNodesItem,
+                    node: node,
+                    name: nameof(item.StoryManagerBranchNodes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            {
+                var StoryManagerQuestNodesItem = item.StoryManagerQuestNodes;
+                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerQuestNodesItem).XmlWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
+                    item: StoryManagerQuestNodesItem,
+                    node: node,
+                    name: nameof(item.StoryManagerQuestNodes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerEventNodes) ?? true))
+            {
+                var StoryManagerEventNodesItem = item.StoryManagerEventNodes;
+                ((GroupXmlWriteTranslation)((IXmlItem)StoryManagerEventNodesItem).XmlWriteTranslator).Write<IStoryManagerEventNodeGetter>(
+                    item: StoryManagerEventNodesItem,
+                    node: node,
+                    name: nameof(item.StoryManagerEventNodes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerEventNodes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerEventNodes));
             }
         }
 
@@ -15868,6 +16279,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "StoryManagerBranchNodes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                    try
+                    {
+                        item.StoryManagerBranchNodes.CopyInFromXml<StoryManagerBranchNode>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StoryManagerQuestNodes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                    try
+                    {
+                        item.StoryManagerQuestNodes.CopyInFromXml<StoryManagerQuestNode>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "StoryManagerEventNodes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                    try
+                    {
+                        item.StoryManagerEventNodes.CopyInFromXml<StoryManagerEventNode>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -16126,6 +16594,9 @@ namespace Mutagen.Bethesda.Skyrim
         public bool MusicTypes;
         public bool Footsteps;
         public bool FootstepSets;
+        public bool StoryManagerBranchNodes;
+        public bool StoryManagerQuestNodes;
+        public bool StoryManagerEventNodes;
         public GroupMask()
         {
         }
@@ -16220,6 +16691,9 @@ namespace Mutagen.Bethesda.Skyrim
             MusicTypes = defaultValue;
             Footsteps = defaultValue;
             FootstepSets = defaultValue;
+            StoryManagerBranchNodes = defaultValue;
+            StoryManagerQuestNodes = defaultValue;
+            StoryManagerEventNodes = defaultValue;
         }
     }
 
@@ -17223,6 +17697,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)FootstepSetsItem).BinaryWriteTranslator).Write<IFootstepSetGetter>(
                         item: FootstepSetsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.StoryManagerBranchNodes ?? true)
+            {
+                var StoryManagerBranchNodesItem = item.StoryManagerBranchNodes;
+                if (StoryManagerBranchNodesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerBranchNodesItem).BinaryWriteTranslator).Write<IStoryManagerBranchNodeGetter>(
+                        item: StoryManagerBranchNodesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.StoryManagerQuestNodes ?? true)
+            {
+                var StoryManagerQuestNodesItem = item.StoryManagerQuestNodes;
+                if (StoryManagerQuestNodesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerQuestNodesItem).BinaryWriteTranslator).Write<IStoryManagerQuestNodeGetter>(
+                        item: StoryManagerQuestNodesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.StoryManagerEventNodes ?? true)
+            {
+                var StoryManagerEventNodesItem = item.StoryManagerEventNodes;
+                if (StoryManagerEventNodesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
+                        item: StoryManagerEventNodesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -18542,6 +19049,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
                 }
+                case RecordTypeInts.SMBN:
+                {
+                    if (importMask?.StoryManagerBranchNodes ?? true)
+                    {
+                        item.StoryManagerBranchNodes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                }
+                case RecordTypeInts.SMQN:
+                {
+                    if (importMask?.StoryManagerQuestNodes ?? true)
+                    {
+                        item.StoryManagerQuestNodes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                }
+                case RecordTypeInts.SMEN:
+                {
+                    if (importMask?.StoryManagerEventNodes ?? true)
+                    {
+                        item.StoryManagerEventNodes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -19158,6 +19707,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IFootstepSetGetter>? _FootstepSets => _FootstepSetsLocation.HasValue ? GroupBinaryOverlay<IFootstepSetGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _FootstepSetsLocation!.Value.Min, _FootstepSetsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IFootstepSetGetter> FootstepSets => _FootstepSets ?? new Group<FootstepSet>(this);
         #endregion
+        #region StoryManagerBranchNodes
+        private RangeInt64? _StoryManagerBranchNodesLocation;
+        private IGroupGetter<IStoryManagerBranchNodeGetter>? _StoryManagerBranchNodes => _StoryManagerBranchNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerBranchNodeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _StoryManagerBranchNodesLocation!.Value.Min, _StoryManagerBranchNodesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes => _StoryManagerBranchNodes ?? new Group<StoryManagerBranchNode>(this);
+        #endregion
+        #region StoryManagerQuestNodes
+        private RangeInt64? _StoryManagerQuestNodesLocation;
+        private IGroupGetter<IStoryManagerQuestNodeGetter>? _StoryManagerQuestNodes => _StoryManagerQuestNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerQuestNodeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _StoryManagerQuestNodesLocation!.Value.Min, _StoryManagerQuestNodesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes => _StoryManagerQuestNodes ?? new Group<StoryManagerQuestNode>(this);
+        #endregion
+        #region StoryManagerEventNodes
+        private RangeInt64? _StoryManagerEventNodesLocation;
+        private IGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerEventNodeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _StoryManagerEventNodesLocation!.Value.Min, _StoryManagerEventNodesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Group<StoryManagerEventNode>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -19697,6 +20261,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                }
+                case RecordTypeInts.SMBN:
+                {
+                    _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                }
+                case RecordTypeInts.SMQN:
+                {
+                    _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                }
+                case RecordTypeInts.SMEN:
+                {
+                    _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

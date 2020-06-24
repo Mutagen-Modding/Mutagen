@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -383,7 +384,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = new List<int>();
             var set = new HashSet<RecordType>();
             var startingPos = stream.Position;
-            while (ret.Count < count)
+            while (!stream.Complete)
             {
                 var varMeta = constants.GetVariableMeta(stream);
                 var recType = varMeta.RecordType;
@@ -413,9 +414,13 @@ namespace Mutagen.Bethesda.Binary
                     set.Clear();
                     set.Add(recType);
                 }
+                else if (ret.Count == count)
+                {
+                    break;
+                }
                 else
                 {
-                    stream.Position += (int)varMeta.TotalLength;
+                    throw new ArgumentException($"Unexpected record encountered: {recType}. Was expecting: {string.Join(", ", trigger)}");
                 }
             }
             return ret.ToArray();

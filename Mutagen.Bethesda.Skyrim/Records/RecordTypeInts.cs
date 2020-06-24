@@ -379,6 +379,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int SIAD = 0x44414953;
         public const int SLCP = 0x50434C53;
         public const int SLGM = 0x4D474C53;
+        public const int SMBN = 0x4E424D53;
+        public const int SMEN = 0x4E454D53;
+        public const int SMQN = 0x4E514D53;
         public const int SNAM = 0x4D414E53;
         public const int SNDD = 0x44444E53;
         public const int SNDR = 0x52444E53;
