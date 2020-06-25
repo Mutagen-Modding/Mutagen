@@ -263,9 +263,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         #endregion
 
         #region Binary Translation
@@ -710,7 +714,22 @@ namespace Mutagen.Bethesda.Skyrim
             where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(
+            this IListGroupGetter<T> obj,
+            Type type)
+            where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+        {
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -725,7 +744,22 @@ namespace Mutagen.Bethesda.Skyrim
             where T : class, ICellBlock, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommon
         {
-            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(
+            this IListGroup<T> obj,
+            Type type)
+            where T : class, ICellBlock, IXmlItem, IBinaryItem
+        {
+            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -1043,12 +1077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IListGroup<T> obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IListGroup<T> obj,
+            Type type)
         {
-            foreach (var item in ListGroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in ListGroupCommon<T>.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -1255,10 +1290,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IListGroupGetter<T> obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IListGroupGetter<T> obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -1268,15 +1304,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "SkyrimMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 default:
-                    if(typeof(TMajor).IsAssignableFrom(typeof(T)))
+                    if(type.IsAssignableFrom(typeof(T)))
                     {
                         foreach (var item in obj.Records)
                         {
-                            yield return (item as TMajor)!;
+                            yield return (IMajorRecordCommonGetter)item;
                         }
                     }
                     yield break;
@@ -2047,6 +2083,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => ListGroupXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

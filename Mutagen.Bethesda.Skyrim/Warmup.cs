@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// <summary>
     /// A static class to house initialization warmup logic
     /// </summary>
-    public static class Warmup
+    public static class WarmupSkyrim
     {
         /// <summary>
         /// Will initialize internals in a more efficient way that avoids reflection.
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         public static void Init()
         {
-            LoquiRegistration.SpinUp(
+            Loqui.Initialization.SpinUp(
                 new ProtocolDefinition_Skyrim());
         }
     }

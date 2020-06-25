@@ -257,9 +257,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         #endregion
 
         #region Binary Translation
@@ -702,7 +706,22 @@ namespace Mutagen.Bethesda.Oblivion
             where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords<T>(
+            this IGroupGetter<T> obj,
+            Type type)
+            where T : class, IOblivionMajorRecordGetter, IXmlItem, IBinaryItem
+        {
+            return ((GroupCommon<T>)((IGroupGetter<T>)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -717,7 +736,22 @@ namespace Mutagen.Bethesda.Oblivion
             where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
             where TMajor : class, IMajorRecordCommon
         {
-            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(
+            this IGroup<T> obj,
+            Type type)
+            where T : class, IOblivionMajorRecordInternal, IXmlItem, IBinaryItem
+        {
+            return ((GroupSetterCommon<T>)((IGroupGetter<T>)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -1020,12 +1054,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IGroup<T> obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IGroup<T> obj,
+            Type type)
         {
-            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in GroupCommon<T>.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -1226,10 +1261,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IGroupGetter<T> obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IGroupGetter<T> obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -1239,15 +1275,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 default:
-                    if(typeof(TMajor).IsAssignableFrom(typeof(T)))
+                    if(type.IsAssignableFrom(typeof(T)))
                     {
                         foreach (var item in obj.RecordCache.Items)
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
@@ -1979,6 +2015,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<T, TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => GroupXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

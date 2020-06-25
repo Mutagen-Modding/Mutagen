@@ -3744,9 +3744,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         #endregion
 
         #region Binary Translation
@@ -4388,7 +4392,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionModGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            this IOblivionModGetter obj,
+            Type type)
+        {
+            return ((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -4401,7 +4419,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IOblivionMod obj)
             where TMajor : class, IMajorRecordCommon
         {
-            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+            this IOblivionMod obj,
+            Type type)
+        {
+            return ((OblivionModSetterCommon)((IOblivionModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -5501,12 +5533,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IOblivionMod obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IOblivionMod obj,
+            Type type)
         {
-            foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in OblivionModCommon.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -7129,10 +7162,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IOblivionModGetter obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IOblivionModGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -7142,14 +7176,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    foreach (var item in obj.GameSettings.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.GameSettings.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7158,7 +7192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    foreach (var item in obj.Globals.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Globals.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7167,7 +7201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    foreach (var item in obj.Classes.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Classes.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7176,7 +7210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7185,7 +7219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    foreach (var item in obj.Hairs.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Hairs.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7194,7 +7228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    foreach (var item in obj.Eyes.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Eyes.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7203,7 +7237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Races.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7212,7 +7246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    foreach (var item in obj.Sounds.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Sounds.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7221,7 +7255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    foreach (var item in obj.Skills.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Skills.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7230,7 +7264,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.MagicEffects.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7239,7 +7273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    foreach (var item in obj.Scripts.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Scripts.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7248,7 +7282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    foreach (var item in obj.LandTextures.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.LandTextures.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7257,7 +7291,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    foreach (var item in obj.Enchantments.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Enchantments.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7266,7 +7300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    foreach (var item in obj.Spells.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Spells.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7275,7 +7309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    foreach (var item in obj.Birthsigns.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Birthsigns.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7284,7 +7318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Activators.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7293,7 +7327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.AlchemicalApparatus.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7302,7 +7336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    foreach (var item in obj.Armors.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Armors.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7311,7 +7345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    foreach (var item in obj.Books.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Books.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7320,7 +7354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    foreach (var item in obj.Clothes.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Clothes.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7329,7 +7363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    foreach (var item in obj.Containers.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Containers.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7338,7 +7372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Doors.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7347,7 +7381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7356,7 +7390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Lights.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7365,7 +7399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    foreach (var item in obj.Miscellaneous.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Miscellaneous.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7374,7 +7408,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    foreach (var item in obj.Statics.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Statics.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7383,7 +7417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    foreach (var item in obj.Grasses.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Grasses.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7392,7 +7426,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    foreach (var item in obj.Trees.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Trees.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7401,7 +7435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    foreach (var item in obj.Flora.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Flora.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7410,7 +7444,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Furniture.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7419,7 +7453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Weapons.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7428,7 +7462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7437,7 +7471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7446,7 +7480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    foreach (var item in obj.Creatures.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Creatures.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7455,7 +7489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.LeveledCreatures.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7464,7 +7498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7473,7 +7507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    foreach (var item in obj.Keys.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Keys.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7482,7 +7516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    foreach (var item in obj.Potions.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Potions.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7491,7 +7525,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    foreach (var item in obj.Subspaces.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Subspaces.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7500,7 +7534,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    foreach (var item in obj.SigilStones.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.SigilStones.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7509,7 +7543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7518,7 +7552,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    foreach (var item in obj.Weathers.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Weathers.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7527,7 +7561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    foreach (var item in obj.Climates.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Climates.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7536,7 +7570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    foreach (var item in obj.Regions.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Regions.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7544,7 +7578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Cells.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7553,7 +7587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7562,7 +7596,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7571,7 +7605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    foreach (var item in obj.Quests.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Quests.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7580,7 +7614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7589,7 +7623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    foreach (var item in obj.AIPackages.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.AIPackages.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7598,7 +7632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.CombatStyles.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7607,7 +7641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.LoadScreens.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7616,7 +7650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7625,7 +7659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.AnimatedObjects.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7634,7 +7668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    foreach (var item in obj.Waters.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.Waters.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -7643,13 +7677,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords<TMajor>())
+                    foreach (var item in obj.EffectShaders.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -12589,6 +12623,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => OblivionModXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

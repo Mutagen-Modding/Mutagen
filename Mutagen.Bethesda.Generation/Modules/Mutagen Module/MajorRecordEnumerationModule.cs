@@ -34,12 +34,16 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
             fg.AppendLine("[DebuggerStepThrough]");
             fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
+            fg.AppendLine("[DebuggerStepThrough]");
+            fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommonGetter)}> {nameof(IMajorRecordGetterEnumerable)}.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);");
             if (!onlyGetter)
             {
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords() => this.EnumerateMajorRecords();");
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}();");
+                fg.AppendLine("[DebuggerStepThrough]");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);");
             }
         }
 
@@ -62,8 +66,8 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (loqui.RefType == LoquiType.LoquiRefType.Interface)
             {
-                // ToDo
-                // Quick hack.  Real solution should use reflection to investigate the interface
+                // ToDo 
+                // Quick hack.  Real solution should use reflection to investigate the interface 
                 return Case.Yes;
             }
             return Case.Maybe;
@@ -108,7 +112,7 @@ namespace Mutagen.Bethesda.Generation
         public static async Task<Case> HasMajorRecordsInTree(ObjectGeneration obj, bool includeBaseClass, GenericSpecification specifications = null)
         {
             if (await HasMajorRecords(obj, includeBaseClass, specifications) == Case.Yes) return Case.Yes;
-            // If no, check subclasses
+            // If no, check subclasses 
             foreach (var inheritingObject in await obj.InheritingObjects())
             {
                 if (await HasMajorRecordsInTree(inheritingObject, includeBaseClass: false, specifications: specifications) == Case.Yes) return Case.Yes;
@@ -147,10 +151,38 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords<TMajor>"))
+                using (var args = new FunctionWrapper(fg,
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
                 {
                     args.AddPassArg("obj");
+                    args.Add("type: typeof(TMajor)");
+                }
+                using (new DepthWrapper(fg))
+                {
+                    fg.AppendLine(".Select(m => (TMajor)m);");
+                }
+            }
+            fg.AppendLine();
+
+            fg.AppendLine("[DebuggerStepThrough]");
+            using (var args = new FunctionWrapper(fg,
+                $"public static IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+            {
+                args.Add($"this {obj.Interface(getter: true, internalInterface: true)} obj");
+                args.Add($"Type type");
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, obj.Generics));
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                {
+                    args.AddPassArg("obj");
+                    args.AddPassArg("type");
+                }
+                using (new DepthWrapper(fg))
+                {
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommonGetter)})m);");
                 }
             }
             fg.AppendLine();
@@ -182,10 +214,38 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                using (var args = new ArgsWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords<TMajor>"))
+                using (var args = new FunctionWrapper(fg,
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
                 {
                     args.AddPassArg("obj");
+                    args.Add("type: typeof(TMajor)");
+                }
+                using (new DepthWrapper(fg))
+                {
+                    fg.AppendLine(".Select(m => (TMajor)m);");
+                }
+            }
+            fg.AppendLine();
+
+            fg.AppendLine("[DebuggerStepThrough]");
+            using (var args = new FunctionWrapper(fg,
+                $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
+            {
+                args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
+                args.Add($"Type type");
+                args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                {
+                    args.AddPassArg("obj");
+                    args.AddPassArg("type");
+                }
+                using (new DepthWrapper(fg))
+                {
+                    fg.AppendLine($".Select(m => ({nameof(IMajorRecordCommon)})m);");
                 }
             }
             fg.AppendLine();
@@ -193,48 +253,27 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task LoquiTypeHandler(FileGeneration fg, Accessor loquiAccessor, LoquiType loquiType, string generic)
         {
-            // ToDo
-            // Quick hack.  Real solution should use reflection to investigate the interface
+            // ToDo 
+            // Quick hack.  Real solution should use reflection to investigate the interface 
             if (loquiType.RefType == LoquiType.LoquiRefType.Interface)
             {
-                if (generic == null)
-                {
-                    fg.AppendLine($"yield return {loquiAccessor};");
-                }
-                else
-                {
-                    fg.AppendLine($"yield return ({loquiAccessor} as TMajor)!;");
-                }
+                fg.AppendLine($"yield return {loquiAccessor};");
                 return;
             }
 
             if (loquiType.TargetObjectGeneration != null
                 && await loquiType.TargetObjectGeneration.IsMajorRecord())
             {
-                if (generic == null)
-                {
-                    fg.AppendLine($"yield return {loquiAccessor};");
-                }
-                else
-                {
-                    fg.AppendLine($"yield return ({loquiAccessor} as TMajor)!;");
-                }
+                fg.AppendLine($"yield return {loquiAccessor};");
             }
             if (await HasMajorRecords(loquiType, includeBaseClass: true) == Case.No)
             {
                 return;
             }
-            fg.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords{(generic == null ? null : $"<{generic}>")}())");
+            fg.AppendLine($"foreach (var item in {loquiAccessor}.EnumerateMajorRecords({(generic == null ? null : "type")}))");
             using (new BraceWrapper(fg))
             {
-                if (generic == null)
-                {
-                    fg.AppendLine($"yield return item;");
-                }
-                else
-                {
-                    fg.AppendLine($"yield return (item as TMajor)!;");
-                }
+                fg.AppendLine($"yield return item;");
             }
         }
 
@@ -389,7 +428,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            // Generate base overrides
+            // Generate base overrides 
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await HasMajorRecords(baseClass, includeBaseClass: true) != Case.No)
@@ -412,19 +451,19 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new FunctionWrapper(fg,
-                $"public{overrideStr}IEnumerable<TMajor> EnumerateMajorRecords<TMajor>"))
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
-                args.Wheres.Add($"where TMajor : class, {nameof(IMajorRecordCommon)}{(getter ? "Getter" : null)}");
+                args.Add($"Type type");
             }
             using (new BraceWrapper(fg))
             {
                 if (setter)
                 {
-                    fg.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords<TMajor>(obj))");
+                    fg.AppendLine($"foreach (var item in {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.EnumerateMajorRecords(obj, type))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine("yield return (item as TMajor)!;");
+                        fg.AppendLine("yield return item;");
                     }
                 }
                 else
@@ -444,7 +483,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
 
-                    fg.AppendLine("switch (typeof(TMajor).Name)");
+                    fg.AppendLine("switch (type.Name)");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
@@ -462,7 +501,7 @@ namespace Mutagen.Bethesda.Generation
                             fg.AppendLine("foreach (var item in this.EnumerateMajorRecords(obj))");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("yield return (item as TMajor)!;");
+                                fg.AppendLine("yield return item;");
                             }
                             fg.AppendLine("yield break;");
                         }
@@ -492,7 +531,7 @@ namespace Mutagen.Bethesda.Generation
                                 var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                                 {
-                                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords<TMajor>())");
+                                    fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type))");
                                     using (new BraceWrapper(fieldGen))
                                     {
                                         fieldGen.AppendLine("yield return item;");
@@ -522,13 +561,13 @@ namespace Mutagen.Bethesda.Generation
                                 if (contLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.TryCreateValue("default:");
-                                    fieldGen.AppendLine($"if(typeof(TMajor).IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
+                                    fieldGen.AppendLine($"if(type.IsAssignableFrom(typeof({contLoqui.GenericDef.Name})))");
                                     using (new BraceWrapper(fieldGen))
                                     {
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name})");
                                         using (new BraceWrapper(fieldGen))
                                         {
-                                            fieldGen.AppendLine($"yield return (item as TMajor)!;");
+                                            fieldGen.AppendLine($"yield return ({nameof(IMajorRecordCommonGetter)})item;");
                                         }
                                     }
                                 }
@@ -550,7 +589,7 @@ namespace Mutagen.Bethesda.Generation
                                                 }
                                                 break;
                                             case Case.Maybe:
-                                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                                fieldGen.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.Where(i => i.GetType() == type))");
                                                 using (new BraceWrapper(fieldGen))
                                                 {
                                                     await LoquiTypeHandler(fieldGen, $"subItem", contLoqui, generic: "TMajor");
@@ -570,13 +609,13 @@ namespace Mutagen.Bethesda.Generation
                                 if (dictLoqui.RefType == LoquiType.LoquiRefType.Generic)
                                 {
                                     fieldGen = generationDict.TryCreateValue("default:");
-                                    fieldGen.AppendLine($"if(typeof(TMajor).IsAssignableFrom(typeof({dictLoqui.GenericDef.Name})))");
+                                    fieldGen.AppendLine($"if(type.IsAssignableFrom(typeof({dictLoqui.GenericDef.Name})))");
                                     using (new BraceWrapper(fieldGen))
                                     {
                                         fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.Items)");
                                         using (new BraceWrapper(fieldGen))
                                         {
-                                            fieldGen.AppendLine($"yield return (item as TMajor)!;");
+                                            fieldGen.AppendLine($"yield return item;");
                                         }
                                     }
                                 }
@@ -624,7 +663,7 @@ namespace Mutagen.Bethesda.Generation
                                 case LoquiType loqui:
                                     if (loqui.RefType == LoquiType.LoquiRefType.Generic)
                                     {
-                                        // Handled in default case
+                                        // Handled in default case 
                                         continue;
                                     }
                                     else
@@ -684,7 +723,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {typeof(TMajor)}\");");
+                                fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
                             }
 
                         }
@@ -693,7 +732,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            // Generate base overrides
+            // Generate base overrides 
             foreach (var baseClass in obj.BaseClassTrail())
             {
                 if (await HasMajorRecords(baseClass, includeBaseClass: true) != Case.No)

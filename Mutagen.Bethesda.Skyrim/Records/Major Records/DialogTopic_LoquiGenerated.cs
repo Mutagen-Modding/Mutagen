@@ -946,9 +946,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [Flags]
         public enum DATADataType
         {
@@ -1341,7 +1345,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            this IDialogTopicGetter obj,
+            Type type)
+        {
+            return ((DialogTopicCommon)((IDialogTopicGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -1354,7 +1372,21 @@ namespace Mutagen.Bethesda.Skyrim
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IDialogTopicInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
-            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+            this IDialogTopicInternal obj,
+            Type type)
+        {
+            return ((DialogTopicSetterCommon)((IDialogTopicGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -1833,12 +1865,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IDialogTopicInternal obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IDialogTopicInternal obj,
+            Type type)
         {
-            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in DialogTopicCommon.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -2249,10 +2282,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IDialogTopicGetter obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IDialogTopicGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -2262,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "SkyrimMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 case "DialogResponses":
@@ -2271,15 +2305,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IDialogResponsesInternal":
                     foreach (var subItem in obj.Responses)
                     {
-                        yield return (subItem as TMajor)!;
-                        foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
+                        yield return subItem;
+                        foreach (var item in subItem.EnumerateMajorRecords(type))
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -3353,6 +3387,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DialogTopicXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

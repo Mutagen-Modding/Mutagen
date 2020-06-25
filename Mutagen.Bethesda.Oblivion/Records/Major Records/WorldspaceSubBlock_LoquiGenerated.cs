@@ -702,9 +702,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         #endregion
 
         #region Binary Translation
@@ -1098,7 +1102,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceSubBlockGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            this IWorldspaceSubBlockGetter obj,
+            Type type)
+        {
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -1111,7 +1129,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceSubBlock obj)
             where TMajor : class, IMajorRecordCommon
         {
-            return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+            this IWorldspaceSubBlock obj,
+            Type type)
+        {
+            return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -1430,12 +1462,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceSubBlock obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IWorldspaceSubBlock obj,
+            Type type)
         {
-            foreach (var item in WorldspaceSubBlockCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in WorldspaceSubBlockCommon.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -1649,10 +1682,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceSubBlockGetter obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IWorldspaceSubBlockGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -1662,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 case "Cell":
@@ -1671,15 +1705,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellInternal":
                     foreach (var subItem in obj.Items)
                     {
-                        yield return (subItem as TMajor)!;
-                        foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
+                        yield return subItem;
+                        foreach (var item in subItem.EnumerateMajorRecords(type))
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -2423,6 +2457,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => WorldspaceSubBlockXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

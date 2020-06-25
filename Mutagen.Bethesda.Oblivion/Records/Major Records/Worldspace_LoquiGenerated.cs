@@ -1105,9 +1105,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         #endregion
 
         #region Binary Translation
@@ -1500,7 +1504,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceGetter obj)
             where TMajor : class, IMajorRecordCommonGetter
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            this IWorldspaceGetter obj,
+            Type type)
+        {
+            return ((WorldspaceCommon)((IWorldspaceGetter)obj).CommonInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommonGetter)m);
         }
 
         [DebuggerStepThrough]
@@ -1513,7 +1531,21 @@ namespace Mutagen.Bethesda.Oblivion
         public static IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(this IWorldspaceInternal obj)
             where TMajor : class, IMajorRecordCommon
         {
-            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords<TMajor>(obj: obj);
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: typeof(TMajor))
+                .Select(m => (TMajor)m);
+        }
+
+        [DebuggerStepThrough]
+        public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
+            this IWorldspaceInternal obj,
+            Type type)
+        {
+            return ((WorldspaceSetterCommon)((IWorldspaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+                obj: obj,
+                type: type)
+                .Select(m => (IMajorRecordCommon)m);
         }
 
         #endregion
@@ -2048,12 +2080,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceInternal obj)
-            where TMajor : class, IMajorRecordCommon
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IWorldspaceInternal obj,
+            Type type)
         {
-            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords<TMajor>(obj))
+            foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecords(obj, type))
             {
-                yield return (item as TMajor)!;
+                yield return item;
             }
         }
         
@@ -2633,10 +2666,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public IEnumerable<TMajor> EnumerateMajorRecords<TMajor>(IWorldspaceGetter obj)
-            where TMajor : class, IMajorRecordCommonGetter
+        public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
+            IWorldspaceGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "IMajorRecordCommon":
                 case "IMajorRecordCommonGetter":
@@ -2646,7 +2680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "OblivionMajorRecord":
                     foreach (var item in this.EnumerateMajorRecords(obj))
                     {
-                        yield return (item as TMajor)!;
+                        yield return item;
                     }
                     yield break;
                 case "Road":
@@ -2655,10 +2689,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IRoadInternal":
                     if (obj.Road.TryGet(out var Roaditem))
                     {
-                        yield return (Roaditem as TMajor)!;
-                        foreach (var item in Roaditem.EnumerateMajorRecords<TMajor>())
+                        yield return Roaditem;
+                        foreach (var item in Roaditem.EnumerateMajorRecords(type))
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
@@ -2668,10 +2702,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellInternal":
                     if (obj.TopCell.TryGet(out var TopCellitem))
                     {
-                        yield return (TopCellitem as TMajor)!;
-                        foreach (var item in TopCellitem.EnumerateMajorRecords<TMajor>())
+                        yield return TopCellitem;
+                        foreach (var item in TopCellitem.EnumerateMajorRecords(type))
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
@@ -2680,14 +2714,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceBlock":
                     foreach (var subItem in obj.SubCells)
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords<TMajor>())
+                        foreach (var item in subItem.EnumerateMajorRecords(type))
                         {
-                            yield return (item as TMajor)!;
+                            yield return item;
                         }
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -4027,6 +4061,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
+        [DebuggerStepThrough]
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => WorldspaceXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

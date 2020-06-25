@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterFlagSync_Correct()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var masterMod = new OblivionMod(new ModKey("Test", master: true));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterFlagSync_MasterThrow()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var masterMod = new OblivionMod(new ModKey("Test", master: true));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterFlagSync_ChildThrow()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var masterMod = new OblivionMod(new ModKey("Test", master: false));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterFlagSync_MasterCorrect()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var masterMod = new OblivionMod(new ModKey("Test", master: true));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterFlagSync_ChildCorrect()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var masterMod = new OblivionMod(new ModKey("Test", master: false));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterListSync_AddMissingToEmpty()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var obliv = ModKey.Factory("Oblivion.esm");
             var knights = ModKey.Factory("Knights.esm");
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterListSync_RemoveUnnecessary()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var obliv = ModKey.Factory("Oblivion.esm");
             var knights = ModKey.Factory("Knights.esm");
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MasterListSync_SkipNulls()
         {
-            Warmup.Init();
+            WarmupOblivion.Init();
             using var folder = new TempFolder();
             var obliv = ModKey.Factory("Oblivion.esm");
             var mod = new OblivionMod(obliv);

@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests
     {
         public LinkingInit()
         {
-            Warmup.Init();
+            WarmupAll.Init();
         }
 
         public void Dispose()
