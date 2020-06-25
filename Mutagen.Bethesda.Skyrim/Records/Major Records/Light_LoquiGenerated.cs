@@ -1284,14 +1284,14 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILight :
         ILightGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
+        IEmittance,
+        IObjectId,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
-        IObjectId,
         IWeightValue,
-        IEmittance,
         ILoquiObjectSetter<ILightInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1330,14 +1330,14 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILightGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
+        IEmittanceGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
         IWeightValueGetter,
-        IEmittanceGetter,
         ILoquiObject<ILightGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

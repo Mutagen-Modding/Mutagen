@@ -1036,8 +1036,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAlchemicalApparatus :
         IAlchemicalApparatusGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
@@ -1068,8 +1068,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAlchemicalApparatusGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,

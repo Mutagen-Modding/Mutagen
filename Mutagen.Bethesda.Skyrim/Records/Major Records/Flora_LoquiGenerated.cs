@@ -1097,10 +1097,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFlora :
         IFloraGetter,
         ISkyrimMajorRecord,
+        IRegionTarget,
         ITranslatedNamedRequired,
         IModeled,
         IObjectBounded,
-        IRegionTarget,
         ILoquiObjectSetter<IFloraInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1126,10 +1126,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFloraGetter :
         ISkyrimMajorRecordGetter,
+        IRegionTargetGetter,
         ITranslatedNamedRequiredGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IRegionTargetGetter,
         ILoquiObject<IFloraGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

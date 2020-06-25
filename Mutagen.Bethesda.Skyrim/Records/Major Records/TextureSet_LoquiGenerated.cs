@@ -924,8 +924,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITextureSet :
         ITextureSetGetter,
         ISkyrimMajorRecord,
-        IObjectBounded,
         IObjectId,
+        IObjectBounded,
         ILoquiObjectSetter<ITextureSetInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -950,8 +950,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITextureSetGetter :
         ISkyrimMajorRecordGetter,
-        IObjectBoundedGetter,
         IObjectIdGetter,
+        IObjectBoundedGetter,
         ILoquiObject<ITextureSetGetter>,
         IXmlItem,
         IBinaryItem

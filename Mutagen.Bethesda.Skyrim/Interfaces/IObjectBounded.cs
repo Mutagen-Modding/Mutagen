@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
     /// </summary>
     public interface IObjectBoundedGetter : IObjectBoundedOptionalGetter
     {
-        new IObjectBoundsGetter? ObjectBounds { get; }
+        new IObjectBoundsGetter ObjectBounds { get; }
     }
 
     /// <summary>

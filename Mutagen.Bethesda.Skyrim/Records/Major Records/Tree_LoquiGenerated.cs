@@ -1029,11 +1029,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ITree :
         ITreeGetter,
         ISkyrimMajorRecord,
+        IRegionTarget,
         ITranslatedNamed,
         IHarvestable,
         IModeled,
         IObjectBounded,
-        IRegionTarget,
         ILoquiObjectSetter<ITreeInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1064,11 +1064,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ITreeGetter :
         ISkyrimMajorRecordGetter,
+        IRegionTargetGetter,
         ITranslatedNamedGetter,
         IHarvestableGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IRegionTargetGetter,
         ILoquiObject<ITreeGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

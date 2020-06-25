@@ -4,7 +4,6 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -22,5 +21,6 @@
       <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

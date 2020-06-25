@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Core;
 using Noggog;
 using System;
 using System.Collections;
@@ -77,17 +78,15 @@ namespace Mutagen.Bethesda
             {
                 if (!_majorRecords.TryGetValue(typeof(TMajor), out cache))
                 {
-                    cache = GetCache<TMajor>();
+                    cache = ConstructCache<TMajor>();
                     if (typeof(TMajor).Equals(typeof(IMajorRecordCommon))
                         || typeof(TMajor).Equals(typeof(IMajorRecordCommonGetter)))
                     {
                         _majorRecords[typeof(IMajorRecordCommon)] = cache;
                         _majorRecords[typeof(IMajorRecordCommonGetter)] = cache;
                     }
-                    else
+                    else if (LoquiRegistration.TryGetRegister(typeof(TMajor), out var registration))
                     {
-                        var registration = LoquiRegistration.GetRegister(typeof(TMajor));
-                        if (registration == null) throw new ArgumentException();
                         _majorRecords[registration.ClassType] = cache;
                         _majorRecords[registration.GetterType] = cache;
                         _majorRecords[registration.SetterType] = cache;
@@ -98,6 +97,19 @@ namespace Mutagen.Bethesda
                         if (registration.InternalSetterType != null)
                         {
                             _majorRecords[registration.InternalSetterType] = cache;
+                        }
+                    }
+                    else
+                    {
+                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(GameMode.Skyrim);
+                        if (!interfaceMappings.TryGetValue(typeof(TMajor), out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {typeof(TMajor).Name}");
+                        }
+                        var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
+                        foreach (var objType in objs)
+                        {
+                            //majorRecords.Set(GetCache())
                         }
                     }
                 }
@@ -121,7 +133,19 @@ namespace Mutagen.Bethesda
             return majorRecords;
         }
 
-        private IReadOnlyCache<TMajor, FormKey> GetCache<TMajor>()
+        private IReadOnlyCache<object, FormKey> ConstructCache<TMajor>()
+            where TMajor : class, IMajorRecordCommonGetter
+        {
+            var cache = new Cache<TMajor, FormKey>(x => x.FormKey);
+            foreach (var majorRec in this._sourceMod.EnumerateMajorRecords<TMajor>())
+            {
+                cache.Set(majorRec);
+            }
+            return cache;
+        }
+
+
+        private IReadOnlyCache<object, FormKey> GetCache<TMajor>()
             where TMajor : class, IMajorRecordCommonGetter
         {
             var cache = new Cache<TMajor, FormKey>(x => x.FormKey);

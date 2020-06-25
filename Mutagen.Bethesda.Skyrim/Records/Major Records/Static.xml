@@ -3,8 +3,6 @@
   <Object name="Static" recordType="STAT" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="89036057-4570-493d-a5f7-4c5718f67a06" ID="105">
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
-    <Interface>IRegionTarget</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <RefDirect name="Model" refName="Model" />
@@ -18,6 +16,8 @@
       </Data>
       <RefDirect name="Lod" refName="Lod" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
   <Object name="Lod" objType="Subrecord" recordType="MNAM" GUID="a708745a-1c62-4a97-afcc-345a6c66ad64" ID="185">
     <Fields>

@@ -1265,10 +1265,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ISpell :
         ISpellGetter,
         IASpell,
-        ITranslatedNamed,
-        IEffectRecord,
-        IObjectBounded,
         IObjectId,
+        IEffectRecord,
+        ISpellSpawn,
+        ITranslatedNamed,
+        IObjectBounded,
         ILoquiObjectSetter<ISpellInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1299,10 +1300,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ISpellGetter :
         IASpellGetter,
-        ITranslatedNamedGetter,
-        IEffectRecordGetter,
-        IObjectBoundedGetter,
         IObjectIdGetter,
+        IEffectRecordGetter,
+        ISpellSpawnGetter,
+        ITranslatedNamedGetter,
+        IObjectBoundedGetter,
         ILoquiObject<ISpellGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

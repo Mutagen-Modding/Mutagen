@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Shout" objType="Record" baseClass="ASpell" recordType="SHOU" GUID="61a903b0-ef7c-4014-a0b3-ed1fbc0c4a81" ID="147">
-    <Interface>IObjectId</Interface>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

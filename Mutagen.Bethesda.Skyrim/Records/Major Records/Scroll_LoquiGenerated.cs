@@ -1524,11 +1524,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IScroll :
         IScrollGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
+        IObjectId,
         IItem,
+        ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        IObjectId,
         IWeightValue,
         ILoquiObjectSetter<IScrollInternal>
     {
@@ -1567,11 +1567,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IScrollGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
+        IObjectIdGetter,
         IItemGetter,
+        ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
         IWeightValueGetter,
         ILoquiObject<IScrollGetter>,
         IXmlItem,

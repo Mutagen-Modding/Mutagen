@@ -1322,12 +1322,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IBook :
         IBookGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
+        IObjectId,
         IItem,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
-        IObjectId,
         IWeightValue,
         ILoquiObjectSetter<IBookInternal>
     {
@@ -1361,12 +1361,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IBookGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
+        IObjectIdGetter,
         IItemGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
         IWeightValueGetter,
         ILoquiObject<IBookGetter>,
         IXmlItem,

@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.9</Version>
+    <Version>0.9.0.1</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -43,8 +43,6 @@
     <Compile Include="Enums\SoulLevel.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
-    <Compile Include="Interfaces\IOwner.cs" />
-    <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="OblivionPipeline.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
@@ -917,6 +915,9 @@
     <Compile Include="Records\Major Records\Npc_LoquiGenerated.cs">
       <DependentUpon>Npc.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IOwner_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IPlaced_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.15" />

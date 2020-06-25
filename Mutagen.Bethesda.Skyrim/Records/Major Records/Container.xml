@@ -4,7 +4,6 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -21,5 +20,6 @@
       <FormLink name="OpenSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="CloseSound" refName="SoundDescriptor" recordType="QNAM" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

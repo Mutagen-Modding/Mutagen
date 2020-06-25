@@ -7682,6 +7682,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         yield return item;
                     }
                     yield break;
+                case "IOwner":
+                case "IOwnerGetter":
+                    foreach (var item in obj.Factions.EnumerateMajorRecords(typeof(Faction)))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "IPlaced":
+                case "IPlacedGetter":
+                    yield break;
                 default:
                     throw new ArgumentException($"Unknown major record type: {type}");
             }

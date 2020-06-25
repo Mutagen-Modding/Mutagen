@@ -2,8 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Ingredient" recordType="INGR" baseClass="SkyrimMajorRecord" objType="Record" GUID="03907af3-2557-45c7-9c9e-c22854b4ffe6" ID="164">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IItem</Interface>
-    <Interface>IHarvestTarget</Interface>
     <Interface>IHasIcons</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
@@ -35,5 +33,7 @@
       </Data>
       <RefList name="Effects" refName="Effect" hasBeenSet="False" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
 </Loqui>

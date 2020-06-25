@@ -3274,10 +3274,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IPlacedObject :
         IPlacedObjectGetter,
         ISkyrimMajorRecord,
-        ILocationTargetable,
-        IPlaced,
-        IPlacedThing,
         ILinkedReference,
+        IPlaced,
+        IPlacedSimple,
+        IPlacedThing,
+        ILocationTargetable,
         IPositionRotation,
         ILoquiObjectSetter<IPlacedObjectInternal>
     {
@@ -3352,10 +3353,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IPlacedObjectGetter :
         ISkyrimMajorRecordGetter,
-        ILocationTargetableGetter,
-        IPlacedGetter,
-        IPlacedThingGetter,
         ILinkedReferenceGetter,
+        IPlacedGetter,
+        IPlacedSimpleGetter,
+        IPlacedThingGetter,
+        ILocationTargetableGetter,
         IPositionRotationGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IXmlItem,

@@ -786,10 +786,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IStatic :
         IStaticGetter,
         ISkyrimMajorRecord,
-        IModeled,
-        IObjectBounded,
         IObjectId,
         IRegionTarget,
+        IModeled,
+        IObjectBounded,
         ILoquiObjectSetter<IStaticInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -813,10 +813,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IStaticGetter :
         ISkyrimMajorRecordGetter,
-        IModeledGetter,
-        IObjectBoundedGetter,
         IObjectIdGetter,
         IRegionTargetGetter,
+        IModeledGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IStaticGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

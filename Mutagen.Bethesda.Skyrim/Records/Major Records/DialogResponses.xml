@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogResponses" recordType="INFO" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="39a0ccd0-da05-4f90-b32a-20fcdb7a9ea3" ID="350">
-    <Interface>IDialog</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="DialogResponsesAdapter" recordType="VMAD" />
       <ByteArray name="DATA" recordType="DATA" />
@@ -23,6 +22,7 @@
       <FormLink name="WalkAwayTopic" recordType="TWAT" refName="DialogTopic" />
       <FormLink name="AudioOutputOverride" recordType="ONAM" refName="SoundOutputModel" />
     </Fields>
+    <LinkInterface>IDialog</LinkInterface>
   </Object>
   <Object name="DialogResponseFlags" objType="Subrecord" recordType="ENAM" GUID="8f8feabd-8d62-4c94-8fb7-3edfc3c31f25" ID="359">
     <Fields>

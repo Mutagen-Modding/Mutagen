@@ -2109,8 +2109,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ICell :
         ICellGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IComplexLocation,
+        ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<ICellInternal>
     {
@@ -2163,8 +2163,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ICellGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IComplexLocationGetter,
+        ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<ICellGetter>,
         IXmlItem,

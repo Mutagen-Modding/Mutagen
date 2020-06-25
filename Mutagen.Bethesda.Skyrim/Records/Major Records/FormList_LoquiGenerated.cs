@@ -660,9 +660,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFormList :
         IFormListGetter,
         ISkyrimMajorRecord,
-        IObjectId,
-        ILockList,
         IAliasVoiceType,
+        ILockList,
+        IObjectId,
         ILoquiObjectSetter<IFormListInternal>
     {
         new ExtendedList<IFormLink<SkyrimMajorRecord>> Items { get; }
@@ -677,9 +677,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFormListGetter :
         ISkyrimMajorRecordGetter,
-        IObjectIdGetter,
-        ILockListGetter,
         IAliasVoiceTypeGetter,
+        ILockListGetter,
+        IObjectIdGetter,
         ILoquiObject<IFormListGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

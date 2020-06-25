@@ -1781,12 +1781,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeapon :
         IWeaponGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
+        IObjectId,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
-        IObjectId,
         ILoquiObjectSetter<IWeaponInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1835,12 +1835,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IWeaponGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
         ILoquiObject<IWeaponGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

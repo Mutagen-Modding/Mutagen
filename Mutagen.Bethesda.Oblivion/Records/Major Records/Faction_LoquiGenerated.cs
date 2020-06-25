@@ -878,8 +878,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface IFaction :
         IFactionGetter,
         IOblivionMajorRecord,
-        INamed,
         IOwner,
+        INamed,
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
@@ -898,8 +898,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface IFactionGetter :
         IOblivionMajorRecordGetter,
-        INamedGetter,
         IOwnerGetter,
+        INamedGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

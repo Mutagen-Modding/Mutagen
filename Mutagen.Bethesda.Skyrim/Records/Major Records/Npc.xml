@@ -3,10 +3,6 @@
   <Object name="Npc" recordType="NPC_" objType="Record" majorFlag="true" baseClass="SkyrimMajorRecord" GUID="63c41e9b-1707-48b0-906a-573f3c678370" ID="75">
     <Interface>IObjectBounded</Interface>
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IObjectId</Interface>
-    <Interface>INpcSpawn</Interface>
-    <Interface>ILockList</Interface>
-    <Interface>IAliasVoiceType</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -65,6 +61,10 @@
       <RefDirect name="FaceParts" refName="NpcFaceParts" />
       <RefList name="TintLayers" refName="TintLayer" />
     </Fields>
+    <LinkInterface>IAliasVoiceType</LinkInterface>
+    <LinkInterface>ILockList</LinkInterface>
+    <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="32c58c3d-5a6e-4382-8bf1-7e6633863702" ID="201">
     <Fields>

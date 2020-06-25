@@ -1052,8 +1052,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IHazard :
         IHazardGetter,
         ISkyrimMajorRecord,
-        IObjectBounded,
         IPlacedTrapTarget,
+        IObjectBounded,
         ILoquiObjectSetter<IHazardInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -1082,8 +1082,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IHazardGetter :
         ISkyrimMajorRecordGetter,
-        IObjectBoundedGetter,
         IPlacedTrapTargetGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IHazardGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

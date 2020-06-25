@@ -768,6 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface ILeveledSpell :
         ILeveledSpellGetter,
         IASpell,
+        ISpellSpawn,
         IObjectBounded,
         ILoquiObjectSetter<ILeveledSpellInternal>
     {
@@ -786,6 +787,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface ILeveledSpellGetter :
         IASpellGetter,
+        ISpellSpawnGetter,
         IObjectBoundedGetter,
         ILoquiObject<ILeveledSpellGetter>,
         IXmlItem,

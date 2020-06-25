@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LandscapeTexture" recordType="LTEX" objType="Record" baseClass="SkyrimMajorRecord" GUID="f6e8d6f6-773c-4c3b-b09b-d892c0114ed7" ID="130">
-    <Interface>IRegionTarget</Interface>
     <Fields>
       <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
       <FormLink name="MaterialType" refName="MaterialType" recordType="MNAM" hasBeenSet="False" />
@@ -16,5 +15,6 @@
         <FormLink refName="Grass" recordType="GNAM" />
       </List>
     </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

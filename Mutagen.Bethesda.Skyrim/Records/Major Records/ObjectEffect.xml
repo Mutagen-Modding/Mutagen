@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ObjectEffect" recordType="ENCH" objType="Record" baseClass="SkyrimMajorRecord" GUID="0f27c016-189e-43f2-8328-927b0ace82d4" ID="128">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IEffectRecord</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -23,5 +22,6 @@
       </Data>
       <RefList name="Effects" refName="Effect" hasBeenSet="False" />
     </Fields>
+    <LinkInterface>IEffectRecord</LinkInterface>
   </Object>
 </Loqui>

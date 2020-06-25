@@ -1026,8 +1026,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDialogTopic :
         IDialogTopicGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IDialog,
+        ITranslatedNamed,
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
@@ -1054,8 +1054,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDialogTopicGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IDialogGetter,
+        ITranslatedNamedGetter,
         IMajorRecordGetterEnumerable,
         ILoquiObject<IDialogTopicGetter>,
         IXmlItem,

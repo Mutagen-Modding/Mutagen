@@ -3944,8 +3944,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRace :
         IRaceGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IRelatable,
+        ITranslatedNamed,
         ILoquiObjectSetter<IRaceInternal>
     {
         new TranslatedString? Name { get; set; }
@@ -4045,8 +4045,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IRaceGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IRelatableGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IRaceGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

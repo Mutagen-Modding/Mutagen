@@ -1333,9 +1333,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IIngredient :
         IIngredientGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
         IHarvestTarget,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
@@ -1370,9 +1370,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IIngredientGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
         IHarvestTargetGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,

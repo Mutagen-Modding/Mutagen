@@ -895,11 +895,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDoor :
         IDoorGetter,
         ISkyrimMajorRecord,
+        IObjectId,
+        ILocationTargetable,
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        ILocationTargetable,
-        IObjectId,
         ILoquiObjectSetter<IDoorInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -926,11 +926,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDoorGetter :
         ISkyrimMajorRecordGetter,
+        IObjectIdGetter,
+        ILocationTargetableGetter,
         ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        ILocationTargetableGetter,
-        IObjectIdGetter,
         ILoquiObject<IDoorGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

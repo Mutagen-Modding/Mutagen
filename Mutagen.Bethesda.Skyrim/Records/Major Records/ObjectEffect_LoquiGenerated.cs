@@ -1056,8 +1056,8 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IObjectEffect :
         IObjectEffectGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IEffectRecord,
+        ITranslatedNamed,
         IObjectBounded,
         ILoquiObjectSetter<IObjectEffectInternal>
     {
@@ -1085,8 +1085,8 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IObjectEffectGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IEffectRecordGetter,
+        ITranslatedNamedGetter,
         IObjectBoundedGetter,
         ILoquiObject<IObjectEffectGetter>,
         IXmlItem,

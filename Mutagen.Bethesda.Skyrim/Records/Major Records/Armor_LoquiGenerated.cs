@@ -1529,10 +1529,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmor :
         IArmorGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
-        IObjectBounded,
         IObjectId,
+        ITranslatedNamed,
+        IObjectBounded,
         IWeightValue,
         ILoquiObjectSetter<IArmorInternal>
     {
@@ -1575,10 +1575,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
-        IObjectBoundedGetter,
         IObjectIdGetter,
+        ITranslatedNamedGetter,
+        IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IArmorGetter>,
         IXmlItem,

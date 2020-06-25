@@ -1088,9 +1088,9 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IKey :
         IKeyGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamedRequired,
         IItem,
         IObjectId,
+        ITranslatedNamedRequired,
         IObjectBounded,
         IWeightValue,
         ILoquiObjectSetter<IKeyInternal>
@@ -1122,9 +1122,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IKeyGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedRequiredGetter,
         IItemGetter,
         IObjectIdGetter,
+        ITranslatedNamedRequiredGetter,
         IObjectBoundedGetter,
         IWeightValueGetter,
         ILoquiObject<IKeyGetter>,

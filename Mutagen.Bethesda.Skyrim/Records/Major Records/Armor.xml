@@ -2,9 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Armor" recordType="ARMO" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="e2a20eca-5715-4c3b-9189-5cb7b6248375" ID="48">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IItem</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
@@ -56,6 +54,8 @@
       <Float name="ArmorRating" recordType="DNAM" integerType="UInt" divisor="100" hasBeenSet="False" />
       <FormLink name="TemplateArmor" recordType="TNAM" refName="Armor" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
   <Object name="ArmorModel" objType="Subrecord" GUID="39a3a83f-68bd-473a-aa14-10efdb07031b" ID="151">
     <Interface>IHasIcons</Interface>

@@ -2890,12 +2890,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface INpc :
         INpcGetter,
         ISkyrimMajorRecord,
+        IAliasVoiceType,
+        ILockList,
+        INpcSpawn,
+        IObjectId,
         IObjectBounded,
         ITranslatedNamed,
-        IObjectId,
-        INpcSpawn,
-        ILockList,
-        IAliasVoiceType,
         ILoquiObjectSetter<INpcInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -2958,12 +2958,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface INpcGetter :
         ISkyrimMajorRecordGetter,
+        IAliasVoiceTypeGetter,
+        ILockListGetter,
+        INpcSpawnGetter,
+        IObjectIdGetter,
         IObjectBoundedGetter,
         ITranslatedNamedGetter,
-        IObjectIdGetter,
-        INpcSpawnGetter,
-        ILockListGetter,
-        IAliasVoiceTypeGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

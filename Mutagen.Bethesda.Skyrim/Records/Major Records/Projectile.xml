@@ -2,8 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Projectile" recordType="PROJ" objType="Record" baseClass="SkyrimMajorRecord" GUID="ddfea8a6-86fc-4134-a352-a2fecdacda31" ID="111">
     <Interface>IObjectBounded</Interface>
-    <Interface>IPlacedTrapTarget</Interface>
-    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -43,5 +41,7 @@
       <ByteArray name="TextureFilesHashes" recordType="NAM2" />
       <UInt32 name="SoundLevel" hasBeenSet="False" recordType="VNAM" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IPlacedTrapTarget</LinkInterface>
   </Object>
 </Loqui>

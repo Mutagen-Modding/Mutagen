@@ -1173,12 +1173,12 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IAmmunition :
         IAmmunitionGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
+        IObjectId,
+        ITranslatedNamed,
         IObjectBounded,
         IModeled,
         IHasIcons,
-        IObjectId,
         IWeightValue,
         ILoquiObjectSetter<IAmmunitionInternal>
     {
@@ -1212,12 +1212,12 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IAmmunitionGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
         IObjectBoundedGetter,
         IModeledGetter,
         IHasIconsGetter,
-        IObjectIdGetter,
         IWeightValueGetter,
         ILoquiObject<IAmmunitionGetter>,
         IXmlItem,

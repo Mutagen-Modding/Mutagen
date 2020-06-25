@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "return Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Pa";
+            string testString = "ch (var item in GroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(ob";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

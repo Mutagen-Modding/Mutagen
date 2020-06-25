@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.9</Version>
+    <Version>0.9.0.1</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -45,38 +45,14 @@
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
-    <Compile Include="Interfaces\EmotionType.cs" />
-    <Compile Include="Interfaces\IAliasVoiceType.cs" />
+    <Compile Include="Enums\EmotionType.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
-    <Compile Include="Interfaces\IDialog.cs" />
-    <Compile Include="Interfaces\IEffectRecord.cs" />
-    <Compile Include="Interfaces\IEmittance.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
-    <Compile Include="Interfaces\IHarvestTarget.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
-    <Compile Include="Interfaces\IIdleRelation.cs" />
-    <Compile Include="Interfaces\IComplexLocation.cs" />
-    <Compile Include="Interfaces\IItem.cs" />
-    <Compile Include="Interfaces\IKeywordLinkedReference.cs" />
-    <Compile Include="Interfaces\ILinkedReference.cs" />
-    <Compile Include="Interfaces\ILocationRecord.cs" />
-    <Compile Include="Interfaces\ILocationTargetable.cs" />
-    <Compile Include="Interfaces\ILockList.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
-    <Compile Include="Interfaces\INpcSpawn.cs" />
     <Compile Include="Interfaces\IObjectBounded.cs" />
-    <Compile Include="Interfaces\IObjectId.cs" />
-    <Compile Include="Interfaces\IOwner.cs" />
-    <Compile Include="Interfaces\IPlacedSimple.cs" />
-    <Compile Include="Interfaces\IPlaced.cs" />
-    <Compile Include="Interfaces\IPlacedThing.cs" />
-    <Compile Include="Interfaces\IPlacedTrapTarget.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
-    <Compile Include="Interfaces\IRegionObject.cs" />
-    <Compile Include="Interfaces\IRelatable.cs" />
-    <Compile Include="Interfaces\ISound.cs" />
-    <Compile Include="Interfaces\ISpellSpawn.cs" />
     <Compile Include="Interfaces\IWeightValue.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
@@ -1963,6 +1939,31 @@
     <Compile Include="Records\Major Records\StoryManagerQuest_LoquiGenerated.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IAliasVoiceType_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IComplexLocation_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IDialog_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IEffectRecord_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IEmittance_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IHarvestTarget_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IIdleRelation_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IItem_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IKeywordLinkedReference_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ILinkedReference_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ILocationRecord_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ILocationTargetable_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ILockList_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\INpcSpawn_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IObjectId_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IOwner_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IPlaced_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IPlacedSimple_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IPlacedThing_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IPlacedTrapTarget_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IRegionTarget_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\IRelatable_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ISpellSpawn_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\ISound_LoquiGenerated.cs" />
+    <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.15" />

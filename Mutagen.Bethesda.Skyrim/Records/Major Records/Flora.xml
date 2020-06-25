@@ -4,7 +4,6 @@
     <Interface>ITranslatedNamedRequired</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IRegionTarget</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -23,5 +22,6 @@
       <FormLink name="HarvestSound" recordType="SNAM" refName="SoundDescriptor" />
       <RefDirect name="Production" refName="SeasonalIngredientProduction" />
     </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

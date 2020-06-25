@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Worldspace" objType="Record" recordType="WRLD" majorFlag="true" customBinaryEnd="Normal" baseClass="SkyrimMajorRecord" GUID="2ee9dfa0-e46f-43fe-b3e3-acc2314e4bce" ID="268">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IComplexLocation</Interface>
     <Fields>
       <RefList name="LargeReferences" refName="WorldspaceGridReference" />
       <RefDirect name="MaxHeight" refName="WorldspaceMaxHeight" />
@@ -36,6 +35,7 @@
       <Int32 name="SubCellsUnknown" binary="NoGeneration" />
       <RefList name="SubCells" refName="WorldspaceBlock" binary="NoGeneration" thread="true" />
     </Fields>
+    <LinkInterface>IComplexLocation</LinkInterface>
   </Object>
   <Object name="WorldspaceBlock" objType="Group" GUID="d1ae377b-80e5-406a-b6a7-bd497c26ee73" ID="335">
     <Fields>

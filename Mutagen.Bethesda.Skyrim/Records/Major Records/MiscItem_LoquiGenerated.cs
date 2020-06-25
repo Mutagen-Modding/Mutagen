@@ -1090,13 +1090,13 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMiscItem :
         IMiscItemGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
         IItem,
         IHarvestTarget,
+        IObjectId,
+        ITranslatedNamed,
         IHasIcons,
         IModeled,
         IObjectBounded,
-        IObjectId,
         IWeightValue,
         ILoquiObjectSetter<IMiscItemInternal>
     {
@@ -1127,13 +1127,13 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMiscItemGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
         IItemGetter,
         IHarvestTargetGetter,
+        IObjectIdGetter,
+        ITranslatedNamedGetter,
         IHasIconsGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
         IWeightValueGetter,
         ILoquiObject<IMiscItemGetter>,
         IXmlItem,

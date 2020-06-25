@@ -713,6 +713,39 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
+                        if (obj.GetObjectType() == ObjectType.Mod)
+                        {
+                            // Generate for major record marker interfaces
+                            if (LinkInterfaceModule.ObjectMappings.TryGetValue(obj.ProtoGen.Protocol, out var interfs))
+                            {
+                                foreach (var interf in interfs)
+                                {
+                                    fg.AppendLine($"case \"{interf.Key}\":");
+                                    fg.AppendLine($"case \"{interf.Key}Getter\":");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        foreach (var subObj in interf.Value)
+                                        {
+                                            var grup = obj.Fields
+                                                .WhereCastable<TypeGeneration, GroupType>()
+                                                .Where(g => g.GetGroupTarget() == subObj)
+                                                .FirstOrDefault();
+
+                                            // Should only happen in unparsed records not listed on the mod yet
+                                            if (grup == null) continue;
+
+                                            fg.AppendLine($"foreach (var item in {accessor}.{grup.Name}.EnumerateMajorRecords(typeof({grup.GetGroupTarget().ObjectName})))");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                fg.AppendLine("yield return item;");
+                                            }
+                                        }
+                                        fg.AppendLine("yield break;");
+                                    }
+                                }
+                            }
+                        }
+
                         fg.AppendLine("default:");
                         using (new DepthWrapper(fg))
                         {

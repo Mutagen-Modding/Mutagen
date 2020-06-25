@@ -1881,8 +1881,8 @@ namespace Mutagen.Bethesda.Oblivion
     public partial interface INpc :
         INpcGetter,
         IANpc,
-        INamed,
         IOwner,
+        INamed,
         ILoquiObjectSetter<INpcInternal>
     {
         new String? Name { get; set; }
@@ -1919,8 +1919,8 @@ namespace Mutagen.Bethesda.Oblivion
 
     public partial interface INpcGetter :
         IANpcGetter,
-        INamedGetter,
         IOwnerGetter,
+        INamedGetter,
         ILoquiObject<INpcGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

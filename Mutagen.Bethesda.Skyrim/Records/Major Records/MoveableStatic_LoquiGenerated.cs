@@ -782,11 +782,11 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IMoveableStatic :
         IMoveableStaticGetter,
         ISkyrimMajorRecord,
+        IObjectId,
+        IRegionTarget,
         ITranslatedNamed,
         IModeled,
         IObjectBounded,
-        IObjectId,
-        IRegionTarget,
         ILoquiObjectSetter<IMoveableStaticInternal>
     {
         new ObjectBounds ObjectBounds { get; set; }
@@ -810,11 +810,11 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IMoveableStaticGetter :
         ISkyrimMajorRecordGetter,
+        IObjectIdGetter,
+        IRegionTargetGetter,
         ITranslatedNamedGetter,
         IModeledGetter,
         IObjectBoundedGetter,
-        IObjectIdGetter,
-        IRegionTargetGetter,
         ILoquiObject<IMoveableStaticGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

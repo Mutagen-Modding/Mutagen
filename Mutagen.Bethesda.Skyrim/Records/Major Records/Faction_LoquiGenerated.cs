@@ -1368,10 +1368,10 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IFaction :
         IFactionGetter,
         ISkyrimMajorRecord,
-        ITranslatedNamed,
-        IRelatable,
-        IObjectId,
         IOwner,
+        IObjectId,
+        IRelatable,
+        ITranslatedNamed,
         ILoquiObjectSetter<IFactionInternal>
     {
         new TranslatedString? Name { get; set; }
@@ -1401,10 +1401,10 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IFactionGetter :
         ISkyrimMajorRecordGetter,
-        ITranslatedNamedGetter,
-        IRelatableGetter,
-        IObjectIdGetter,
         IOwnerGetter,
+        IObjectIdGetter,
+        IRelatableGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IFactionGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,

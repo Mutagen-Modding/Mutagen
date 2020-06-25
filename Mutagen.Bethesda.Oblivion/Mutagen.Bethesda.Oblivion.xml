@@ -30,18 +30,6 @@
             Different types of numeric comparison styles allowed in Oblivion
             </summary>
         </member>
-        <member name="T:Mutagen.Bethesda.Oblivion.IPlaced">
-            <summary>
-            An interface for something that can be placed in a Cell/Worldspace
-            Implemented by: [Landscape, PlacedCreature, PlacedNpc, PlacedObject]
-            </summary>
-        </member>
-        <member name="T:Mutagen.Bethesda.Oblivion.IPlacedGetter">
-            <summary>
-            A getter interface for something that can be placed in a Cell/Worldspace
-            Implemented by: [Landscape, PlacedCreature, PlacedNpc, PlacedObject]
-            </summary>
-        </member>
         <member name="T:Mutagen.Bethesda.Oblivion.WarmupOblivion">
             <summary>
             A static class to house initialization warmup logic
@@ -51,6 +39,26 @@
             <summary>
             Will initialize internals in a more efficient way that avoids reflection.
             Not required to call, but can be used to warm up ahead of time.
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Oblivion.IOwner">
+            <summary>
+            Implemented by: [Faction, Npc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Oblivion.IOwnerGetter">
+            <summary>
+            Implemented by: [Faction, Npc]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Oblivion.IPlaced">
+            <summary>
+            Implemented by: [Landscape, PlacedCreature, PlacedNpc, PlacedObject]
+            </summary>
+        </member>
+        <member name="T:Mutagen.Bethesda.Oblivion.IPlacedGetter">
+            <summary>
+            Implemented by: [Landscape, PlacedCreature, PlacedNpc, PlacedObject]
             </summary>
         </member>
     </members>
