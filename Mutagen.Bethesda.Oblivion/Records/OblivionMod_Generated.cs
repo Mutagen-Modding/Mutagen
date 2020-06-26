@@ -7684,11 +7684,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield break;
                 case "IOwner":
                 case "IOwnerGetter":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(typeof(Faction)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc)))
                     {
                         yield return item;
                     }

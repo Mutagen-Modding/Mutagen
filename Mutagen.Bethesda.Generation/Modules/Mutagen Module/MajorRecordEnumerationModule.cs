@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Generation
                                             // Should only happen in unparsed records not listed on the mod yet
                                             if (grup == null) continue;
 
-                                            fg.AppendLine($"foreach (var item in {accessor}.{grup.Name}.EnumerateMajorRecords(typeof({grup.GetGroupTarget().ObjectName})))");
+                                            fg.AppendLine($"foreach (var item in EnumerateMajorRecords({accessor}, typeof({grup.GetGroupTarget().ObjectName})))");
                                             using (new BraceWrapper(fg))
                                             {
                                                 fg.AppendLine("yield return item;");

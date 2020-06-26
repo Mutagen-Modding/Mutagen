@@ -11546,337 +11546,337 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
-                    foreach (var item in obj.Actions.EnumerateMajorRecords(typeof(ActionRecord)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ActionRecord)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.IdleAnimations.EnumerateMajorRecords(typeof(IdleAnimation)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleAnimation)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IObjectId":
                 case "IObjectIdGetter":
-                    foreach (var item in obj.Activators.EnumerateMajorRecords(typeof(Activator)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Activator)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(typeof(Ammunition)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(typeof(Armor)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Books.EnumerateMajorRecords(typeof(Book)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Containers.EnumerateMajorRecords(typeof(Container)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Container)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(typeof(Door)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(typeof(Faction)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(typeof(FormList)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Furniture.EnumerateMajorRecords(typeof(Furniture)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Furniture)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.IdleMarkers.EnumerateMajorRecords(typeof(IdleMarker)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IdleMarker)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(typeof(Ingestible)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(typeof(Key)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(typeof(Light)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(typeof(MiscItem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(typeof(MoveableStatic)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(typeof(Projectile)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(typeof(Scroll)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(typeof(SoundMarker)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(typeof(Spell)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(typeof(Static)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.TextureSets.EnumerateMajorRecords(typeof(TextureSet)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(TextureSet)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(typeof(Weapon)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IItem":
                 case "IItemGetter":
-                    foreach (var item in obj.AlchemicalApparatuses.EnumerateMajorRecords(typeof(AlchemicalApparatus)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(AlchemicalApparatus)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ammunitions.EnumerateMajorRecords(typeof(Ammunition)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ammunition)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Armors.EnumerateMajorRecords(typeof(Armor)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Armor)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Books.EnumerateMajorRecords(typeof(Book)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Book)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(typeof(Ingestible)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(typeof(Ingredient)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Keys.EnumerateMajorRecords(typeof(Key)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Key)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(typeof(LeveledItem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(typeof(Light)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(typeof(MiscItem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Scrolls.EnumerateMajorRecords(typeof(Scroll)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.SoulGems.EnumerateMajorRecords(typeof(SoulGem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoulGem)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Weapons.EnumerateMajorRecords(typeof(Weapon)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Weapon)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(typeof(Worldspace)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Worldspace)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IDialog":
                 case "IDialogGetter":
-                    foreach (var item in obj.DialogTopics.EnumerateMajorRecords(typeof(DialogTopic)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(DialogTopic)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "ILocationTargetable":
                 case "ILocationTargetableGetter":
-                    foreach (var item in obj.Doors.EnumerateMajorRecords(typeof(Door)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Door)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IOwner":
                 case "IOwnerGetter":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(typeof(Faction)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IRelatable":
                 case "IRelatableGetter":
-                    foreach (var item in obj.Factions.EnumerateMajorRecords(typeof(Faction)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Faction)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Races.EnumerateMajorRecords(typeof(Race)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Race)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IRegionTarget":
                 case "IRegionTargetGetter":
-                    foreach (var item in obj.Florae.EnumerateMajorRecords(typeof(Flora)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Flora)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.LandscapeTextures.EnumerateMajorRecords(typeof(LandscapeTexture)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LandscapeTexture)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.MoveableStatics.EnumerateMajorRecords(typeof(MoveableStatic)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(MoveableStatic)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Statics.EnumerateMajorRecords(typeof(Static)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Static)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Trees.EnumerateMajorRecords(typeof(Tree)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Tree)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IAliasVoiceType":
                 case "IAliasVoiceTypeGetter":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(typeof(FormList)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "ILockList":
                 case "ILockListGetter":
-                    foreach (var item in obj.FormLists.EnumerateMajorRecords(typeof(FormList)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(FormList)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IPlacedTrapTarget":
                 case "IPlacedTrapTargetGetter":
-                    foreach (var item in obj.Hazards.EnumerateMajorRecords(typeof(Hazard)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Hazard)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Projectiles.EnumerateMajorRecords(typeof(Projectile)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Projectile)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IHarvestTarget":
                 case "IHarvestTargetGetter":
-                    foreach (var item in obj.Ingestibles.EnumerateMajorRecords(typeof(Ingestible)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingestible)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Ingredients.EnumerateMajorRecords(typeof(Ingredient)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Ingredient)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.LeveledItems.EnumerateMajorRecords(typeof(LeveledItem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledItem)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.MiscItems.EnumerateMajorRecords(typeof(MiscItem)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(MiscItem)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
-                    foreach (var item in obj.Keywords.EnumerateMajorRecords(typeof(Keyword)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Keyword)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "INpcSpawn":
                 case "INpcSpawnGetter":
-                    foreach (var item in obj.LeveledNpcs.EnumerateMajorRecords(typeof(LeveledNpc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledNpc)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Npcs.EnumerateMajorRecords(typeof(Npc)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Npc)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "ISpellSpawn":
                 case "ISpellSpawnGetter":
-                    foreach (var item in obj.LeveledSpells.EnumerateMajorRecords(typeof(LeveledSpell)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LeveledSpell)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(typeof(Spell)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IEmittance":
                 case "IEmittanceGetter":
-                    foreach (var item in obj.Lights.EnumerateMajorRecords(typeof(Light)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Light)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Regions.EnumerateMajorRecords(typeof(Region)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Region)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "ILocationRecord":
                 case "ILocationRecordGetter":
-                    foreach (var item in obj.Locations.EnumerateMajorRecords(typeof(Location)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Location)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.LocationReferenceTypes.EnumerateMajorRecords(typeof(LocationReferenceType)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(LocationReferenceType)))
                     {
                         yield return item;
                     }
                     yield break;
                 case "IEffectRecord":
                 case "IEffectRecordGetter":
-                    foreach (var item in obj.ObjectEffects.EnumerateMajorRecords(typeof(ObjectEffect)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(ObjectEffect)))
                     {
                         yield return item;
                     }
-                    foreach (var item in obj.Spells.EnumerateMajorRecords(typeof(Spell)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Spell)))
                     {
                         yield return item;
                     }
@@ -11895,7 +11895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield break;
                 case "ISound":
                 case "ISoundGetter":
-                    foreach (var item in obj.SoundMarkers.EnumerateMajorRecords(typeof(SoundMarker)))
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(SoundMarker)))
                     {
                         yield return item;
                     }
