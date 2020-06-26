@@ -363,9 +363,9 @@ namespace Mutagen.Bethesda.UnitTests
         }
         #endregion
 
-        #region FormLink Resolves
+        #region Direct FormLink Resolves
         [Fact]
-        public void FormLink_TryResolve_NoLink()
+        public void FormLink_Direct_TryResolve_NoLink()
         {
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_Linked()
+        public void FormLink_Direct_TryResolve_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var npc = mod.Npcs.AddNew();
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_DeepRecord_NoLink()
+        public void FormLink_Direct_TryResolve_DeepRecord_NoLink()
         {
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_DeepRecord_Linked()
+        public void FormLink_Direct_TryResolve_DeepRecord_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var worldspace = mod.Worldspaces.AddNew();
@@ -417,7 +417,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_NoLink()
+        public void FormLink_Direct_Resolve_NoLink()
         {
             FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_Linked()
+        public void FormLink_Direct_Resolve_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var npc = mod.Npcs.AddNew();
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_DeepRecord_NoLink()
+        public void FormLink_Direct_Resolve_DeepRecord_NoLink()
         {
             FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_DeepRecord_Linked()
+        public void FormLink_Direct_Resolve_DeepRecord_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var worldspace = mod.Worldspaces.AddNew();
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_MarkerInterface()
+        public void FormLink_Direct_TryResolve_MarkerInterface()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var spell = mod.Spells.AddNew();
@@ -476,7 +476,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_MarkerInterface_NoLink()
+        public void FormLink_Direct_TryResolve_MarkerInterface_NoLink()
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_MarkerInterface_DeepRecord_NoLink()
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_NoLink()
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_TryResolve_MarkerInterface_DeepRecord_Linked()
+        public void FormLink_Direct_TryResolve_MarkerInterface_DeepRecord_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var worldspace = mod.Worldspaces.AddNew();
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_MarkerInterface()
+        public void FormLink_Direct_Resolve_MarkerInterface()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var spell = mod.Spells.AddNew();
@@ -527,7 +527,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_MarkerInterface_NoLink()
+        public void FormLink_Direct_Resolve_MarkerInterface_NoLink()
         {
             FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -535,7 +535,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_MarkerInterface_DeepRecord_NoLink()
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_NoLink()
         {
             FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
             var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
-        public void FormLink_Resolve_MarkerInterface_DeepRecord_Linked()
+        public void FormLink_Direct_Resolve_MarkerInterface_DeepRecord_Linked()
         {
             var mod = new SkyrimMod(Utility.ModKey);
             var worldspace = mod.Worldspaces.AddNew();
@@ -556,6 +556,257 @@ namespace Mutagen.Bethesda.UnitTests
             block.Items.Add(subBlock);
             worldspace.SubCells.Add(block);
             var package = new DirectModLinkCache<SkyrimMod>(mod);
+            FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
+            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
+            Assert.Same(cell, cellFormLink.Resolve(package));
+            FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
+            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+        }
+        #endregion
+
+        #region Load Order FormLink Resolves
+        LoadOrder<SkyrimMod> TypicalLoadOrder()
+        {
+            return new LoadOrder<SkyrimMod>()
+            {
+                new SkyrimMod(Utility.ModKey),
+                new SkyrimMod(Utility.ModKey2),
+            };
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_NoLink()
+        {
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
+            Assert.False(formLink.TryResolve(package, out var _));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var npc = mod.Npcs.AddNew();
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
+            Assert.True(formLink.TryResolve(package, out var linkedRec));
+            Assert.Same(npc, linkedRec);
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_DeepRecord_NoLink()
+        {
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
+            Assert.False(formLink.TryResolve(package, out var _));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_DeepRecord_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var worldspace = mod.Worldspaces.AddNew();
+            var subBlock = new WorldspaceSubBlock();
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Temporary.Add(placedNpc);
+            var block = new WorldspaceBlock();
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
+            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+            Assert.Same(placedNpc, linkedPlacedNpc);
+            FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
+            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+            Assert.Same(cell, linkedCell);
+            FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
+            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+            Assert.Same(worldspace, linkedWorldspace);
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_NoLink()
+        {
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            FormLink<INpc> formLink = new FormLink<INpc>(UnusedFormKey);
+            Assert.Null(formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var npc = mod.Npcs.AddNew();
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<INpc> formLink = new FormLink<INpc>(npc.FormKey);
+            Assert.Same(npc, formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_DeepRecord_NoLink()
+        {
+            FormLink<IPlacedNpc> formLink = new FormLink<IPlacedNpc>(UnusedFormKey);
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            Assert.Null(formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_DeepRecord_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var worldspace = mod.Worldspaces.AddNew();
+            var subBlock = new WorldspaceSubBlock();
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Temporary.Add(placedNpc);
+            var block = new WorldspaceBlock();
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<IPlacedNpc> placedFormLink = new FormLink<IPlacedNpc>(placedNpc.FormKey);
+            Assert.Same(placedNpc, placedFormLink.Resolve(package));
+            FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
+            Assert.Same(cell, cellFormLink.Resolve(package));
+            FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
+            Assert.Same(worldspace, worldspaceFormLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var spell = mod.Spells.AddNew();
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
+            Assert.True(formLink.TryResolve(package, out var linkedRec));
+            Assert.Same(spell, linkedRec);
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface_NoLink()
+        {
+            FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            Assert.False(formLink.TryResolve(package, out var _));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_NoLink()
+        {
+            FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            Assert.False(formLink.TryResolve(package, out var _));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_TryResolve_MarkerInterface_DeepRecord_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var worldspace = mod.Worldspaces.AddNew();
+            var subBlock = new WorldspaceSubBlock();
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Temporary.Add(placedNpc);
+            var block = new WorldspaceBlock();
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
+            Assert.True(placedFormLink.TryResolve(package, out var linkedPlacedNpc));
+            Assert.Same(placedNpc, linkedPlacedNpc);
+            FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
+            Assert.True(cellFormLink.TryResolve(package, out var linkedCell));
+            Assert.Same(cell, linkedCell);
+            FormLink<IWorldspace> worldspaceFormLink = new FormLink<IWorldspace>(worldspace.FormKey);
+            Assert.True(worldspaceFormLink.TryResolve(package, out var linkedWorldspace));
+            Assert.Same(worldspace, linkedWorldspace);
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var spell = mod.Spells.AddNew();
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(spell.FormKey);
+            Assert.Same(spell, formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface_NoLink()
+        {
+            FormLink<IEffectRecord> formLink = new FormLink<IEffectRecord>(UnusedFormKey);
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            Assert.Null(formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_NoLink()
+        {
+            FormLink<IPlaced> formLink = new FormLink<IPlaced>(UnusedFormKey);
+            var package = new LoadOrderLinkCache<SkyrimMod>(TypicalLoadOrder());
+            Assert.Null(formLink.Resolve(package));
+        }
+
+        [Fact]
+        public void FormLink_LoadOrder_Resolve_MarkerInterface_DeepRecord_Linked()
+        {
+            var mod = new SkyrimMod(Utility.ModKey);
+            var worldspace = mod.Worldspaces.AddNew();
+            var subBlock = new WorldspaceSubBlock();
+            var cell = new Cell(mod.GetNextFormKey());
+            subBlock.Items.Add(cell);
+            var placedNpc = new PlacedNpc(mod.GetNextFormKey());
+            cell.Temporary.Add(placedNpc);
+            var block = new WorldspaceBlock();
+            block.Items.Add(subBlock);
+            worldspace.SubCells.Add(block);
+            var loadOrder = new LoadOrder<SkyrimMod>()
+            {
+                mod,
+                new SkyrimMod(Utility.ModKey2),
+            };
+            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
             FormLink<IPlaced> placedFormLink = new FormLink<IPlaced>(placedNpc.FormKey);
             Assert.Same(placedNpc, placedFormLink.Resolve(package));
             FormLink<ICell> cellFormLink = new FormLink<ICell>(cell.FormKey);
