@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static MemoryStream DataOutput;
         public static BinaryWriteParameters WriteParametersNoCheck = new BinaryWriteParameters()
         {
-            MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+            ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
             MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
         };
 

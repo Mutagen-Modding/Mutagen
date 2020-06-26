@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.UnitTests
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.UnitTests
             childMod.WriteToBinary(childPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             reimport = OblivionMod.CreateFromBinaryOverlay(childPath);
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.UnitTests
                 masterMod.WriteToBinary(masterPath,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     });
             });
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.UnitTests
                 masterMod.WriteToBinary(masterPath,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     });
             });
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.UnitTests
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.CorrectToPath,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.CorrectToPath,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.UnitTests
             masterMod.WriteToBinary(masterPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.CorrectToPath,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.CorrectToPath,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.UnitTests
             mod.WriteToBinary(modPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.UnitTests
             mod.WriteToBinary(modPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.UnitTests
             mod.WriteToBinary(modPath,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(modPath);

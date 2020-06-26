@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda
         public static BinaryWriteParameters Default = new BinaryWriteParameters();
 
         /// <summary>
-        /// Flag to specify what logic to use to keep a mod's master flag in sync
+        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public enum MasterFlagSyncOption
+        public enum ModKeySyncOption
         {
             /// <summary>
             // Do no check
@@ -47,9 +47,9 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Logic to use to keep a mod's master flag in sync
+        /// Flag to specify what logic to use to keep a mod's ModKey in sync with its path
         /// </summary>
-        public MasterFlagSyncOption MasterFlagSync = MasterFlagSyncOption.ThrowIfMisaligned;
+        public ModKeySyncOption ModKeySync = ModKeySyncOption.ThrowIfMisaligned;
 
         /// <summary>
         /// Logic to use to keep a mod's master list in sync
@@ -73,20 +73,20 @@ namespace Mutagen.Bethesda
         /// <exception cref="ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
         public ModKey RunMasterMatch(IModGetter mod, string path)
         {
-            if (MasterFlagSync == MasterFlagSyncOption.NoCheck) return mod.ModKey;
+            if (ModKeySync == ModKeySyncOption.NoCheck) return mod.ModKey;
             if (!ModKey.TryFactory(Path.GetFileName(path), out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }
-            switch (MasterFlagSync)
+            switch (ModKeySync)
             {
-                case MasterFlagSyncOption.ThrowIfMisaligned:
+                case ModKeySyncOption.ThrowIfMisaligned:
                     if (mod.ModKey != pathModKey)
                     {
                         throw new ArgumentException($"ModKeys were misaligned: {mod.ModKey} != {pathModKey}");
                     }
                     return mod.ModKey;
-                case MasterFlagSyncOption.CorrectToPath:
+                case ModKeySyncOption.CorrectToPath:
                     return pathModKey;
                 default:
                     throw new NotImplementedException();
