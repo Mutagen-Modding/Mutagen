@@ -1,4 +1,4 @@
-﻿using Compression.BSA;
+using Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -52,6 +52,7 @@ namespace Mutagen.Bethesda
                     if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
                     if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
                     var dict = ret.Get(type);
+                    if (dict.ContainsKey(lang)) continue;
                     dict[lang] = new Lazy<IStringsLookup>(() =>
                     {
                         byte[] bytes = new byte[item.Size];
@@ -89,27 +90,12 @@ namespace Mutagen.Bethesda
 
         public TranslatedString CreateString(StringsSource source, uint key)
         {
-            var ret = new TranslatedString();
-            var dict = Get(source);
-            // Avoid register dictionaries if just one strings language
-            if (dict.Count == 1
-                && dict.Keys.First() == TranslatedString.DefaultLanguage)
+            return new TranslatedString()
             {
-                var first = dict.Values.First();
-                if (first.Value.TryLookup(key, out var str))
-                {
-                    ret.String = str;
-                    return ret;
-                }
-            }
-            foreach (var kv in dict)
-            {
-                if (kv.Value.Value.TryLookup(key, out var str))
-                {
-                    ret.Set(kv.Key, str);
-                }
-            }
-            return ret;
+                StringsLookup = this,
+                Key = key,
+                StringsSource = source,
+            };
         }
     }
 }

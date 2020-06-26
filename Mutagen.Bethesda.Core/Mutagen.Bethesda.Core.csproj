@@ -64,6 +64,7 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="TestingPermissions.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\OverlayStream.cs" />
     <Compile Include="Translations\Binary\ExtraLengthHeaderExport.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
