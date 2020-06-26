@@ -709,7 +709,6 @@
       <DependentUpon>SkyrimMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
-    <Compile Include="WarmupSkyrim.cs" />
     <Compile Include="Records\Group_Generated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -1964,6 +1963,7 @@
     <Compile Include="Interfaces\IPlacedSimple_Generated.cs" />
     <Compile Include="Interfaces\IPlacedThing_Generated.cs" />
     <Compile Include="Interfaces\ISound_Generated.cs" />
+    <Compile Include="WarmupSkyrim_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.15" />

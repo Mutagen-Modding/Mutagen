@@ -58,6 +58,7 @@ namespace Mutagen.Bethesda.Generation
             foreach (var interf in mappings)
             {
                 FileGeneration fg = new FileGeneration();
+                ObjectGeneration.AddAutogenerationComment(fg);
 
                 fg.AppendLine("using Mutagen.Bethesda;");
                 fg.AppendLine();
@@ -123,6 +124,7 @@ namespace Mutagen.Bethesda.Generation
 
             // Generate interface to major record mapping registry
             FileGeneration mappingGen = new FileGeneration();
+            ObjectGeneration.AddAutogenerationComment(mappingGen);
             mappingGen.AppendLine($"using System;");
             mappingGen.AppendLine($"using System.Collections.Generic;");
             mappingGen.AppendLine($"using Mutagen.Bethesda.Core;");
