@@ -20279,7 +20279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return SkyrimModFactory(
                 stream: stream,
                 modKey: modKey,
-                shouldDispose: false);
+                shouldDispose: true);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(

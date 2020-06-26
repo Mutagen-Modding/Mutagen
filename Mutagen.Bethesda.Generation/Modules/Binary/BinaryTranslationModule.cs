@@ -2122,7 +2122,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("stream");
                                 args.AddPassArg("modKey");
-                                args.Add("shouldDispose: false");
+                                args.Add("shouldDispose: true");
                             }
                         }
                         fg.AppendLine();

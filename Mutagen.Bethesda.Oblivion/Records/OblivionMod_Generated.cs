@@ -13113,7 +13113,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return OblivionModFactory(
                 stream: stream,
                 modKey: modKey,
-                shouldDispose: false);
+                shouldDispose: true);
         }
 
         public static OblivionModBinaryOverlay OblivionModFactory(
