@@ -1018,7 +1018,9 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "BPTD", "BPTN" },
                     new RecordType[] { "AVIF", "FULL" },
                     new RecordType[] { "LCTN", "FULL" },
-                    new RecordType[] { "MESG", "FULL", "ITXT" }
+                    new RecordType[] { "MESG", "FULL", "ITXT" },
+                    new RecordType[] { "WOOP", "FULL", "TNAM" },
+                    new RecordType[] { "SHOU", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,
@@ -1039,7 +1041,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "LSCR", "DESC" },
                     new RecordType[] { "PERK", "DESC" },
                     new RecordType[] { "AVIF", "DESC" },
-                    new RecordType[] { "MESG", "DESC" }
+                    new RecordType[] { "MESG", "DESC" },
+                    new RecordType[] { "SHOU", "DESC" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

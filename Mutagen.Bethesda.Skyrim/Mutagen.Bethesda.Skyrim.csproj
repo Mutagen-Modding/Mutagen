@@ -243,6 +243,9 @@
     <Compile Include="Records\Major Records\DebrisModel.cs">
       <DependentUpon>Debris.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\DialogBranch.cs">
+      <DependentUpon>DialogBranch.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\DialogResponse.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
@@ -435,6 +438,9 @@
     <Compile Include="Records\Major Records\MoveableStatic.cs">
       <DependentUpon>MoveableStatic.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MusicTrack.cs">
+      <DependentUpon>MusicTrack.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MusicType.cs">
       <DependentUpon>MusicType.xml</DependentUpon>
     </Compile>
@@ -612,11 +618,17 @@
     <Compile Include="Records\Major Records\RegionSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Relationship.cs">
+      <DependentUpon>Relationship.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ShaderParticleGeometry.cs">
       <DependentUpon>ShaderParticleGeometry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Shout.cs">
+      <DependentUpon>Shout.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
@@ -677,6 +689,9 @@
     </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WordOfPower.cs">
+      <DependentUpon>WordOfPower.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorkbenchData.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
@@ -1967,6 +1982,24 @@
     <Compile Include="Interfaces\IPlacedThing_Generated.cs" />
     <Compile Include="Interfaces\ISound_Generated.cs" />
     <Compile Include="WarmupSkyrim_Generated.cs" />
+    <Compile Include="Records\Major Records\AssociationType_Generated.cs">
+      <DependentUpon>AssociationType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogView_Generated.cs">
+      <DependentUpon>DialogView.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MusicTrackLoopData_Generated.cs">
+      <DependentUpon>MusicTrack.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Relationship_Generated.cs">
+      <DependentUpon>Relationship.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ShoutWord_Generated.cs">
+      <DependentUpon>Shout.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WordOfPower_Generated.cs">
+      <DependentUpon>WordOfPower.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.16" />

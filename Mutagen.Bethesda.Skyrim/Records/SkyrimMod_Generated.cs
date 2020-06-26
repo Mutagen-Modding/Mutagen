@@ -135,6 +135,13 @@ namespace Mutagen.Bethesda.Skyrim
             _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
             _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
+            _DialogBranches_Object = new Group<DialogBranch>(this);
+            _MusicTracks_Object = new Group<MusicTrack>(this);
+            _DialogViews_Object = new Group<DialogView>(this);
+            _WordsOfPower_Object = new Group<WordOfPower>(this);
+            _Shouts_Object = new Group<Shout>(this);
+            _EquipTypes_Object = new Group<EquipType>(this);
+            _Relationships_Object = new Group<Relationship>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -791,6 +798,55 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IStoryManagerEventNodeGetter> ISkyrimModGetter.StoryManagerEventNodes => _StoryManagerEventNodes_Object;
         #endregion
+        #region DialogBranches
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<DialogBranch> _DialogBranches_Object;
+        public Group<DialogBranch> DialogBranches => _DialogBranches_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDialogBranchGetter> ISkyrimModGetter.DialogBranches => _DialogBranches_Object;
+        #endregion
+        #region MusicTracks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<MusicTrack> _MusicTracks_Object;
+        public Group<MusicTrack> MusicTracks => _MusicTracks_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IMusicTrackGetter> ISkyrimModGetter.MusicTracks => _MusicTracks_Object;
+        #endregion
+        #region DialogViews
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<DialogView> _DialogViews_Object;
+        public Group<DialogView> DialogViews => _DialogViews_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IDialogViewGetter> ISkyrimModGetter.DialogViews => _DialogViews_Object;
+        #endregion
+        #region WordsOfPower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<WordOfPower> _WordsOfPower_Object;
+        public Group<WordOfPower> WordsOfPower => _WordsOfPower_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IWordOfPowerGetter> ISkyrimModGetter.WordsOfPower => _WordsOfPower_Object;
+        #endregion
+        #region Shouts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Shout> _Shouts_Object;
+        public Group<Shout> Shouts => _Shouts_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IShoutGetter> ISkyrimModGetter.Shouts => _Shouts_Object;
+        #endregion
+        #region EquipTypes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<EquipType> _EquipTypes_Object;
+        public Group<EquipType> EquipTypes => _EquipTypes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IEquipTypeGetter> ISkyrimModGetter.EquipTypes => _EquipTypes_Object;
+        #endregion
+        #region Relationships
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Relationship> _Relationships_Object;
+        public Group<Relationship> Relationships => _Relationships_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IRelationshipGetter> ISkyrimModGetter.Relationships => _Relationships_Object;
+        #endregion
 
         #region To String
 
@@ -1053,6 +1109,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DialogBranches = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.MusicTracks = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.DialogViews = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.WordsOfPower = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1148,7 +1211,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FootstepSets,
                 TItem StoryManagerBranchNodes,
                 TItem StoryManagerQuestNodes,
-                TItem StoryManagerEventNodes)
+                TItem StoryManagerEventNodes,
+                TItem DialogBranches,
+                TItem MusicTracks,
+                TItem DialogViews,
+                TItem WordsOfPower,
+                TItem Shouts,
+                TItem EquipTypes,
+                TItem Relationships)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1243,6 +1313,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StoryManagerBranchNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerBranchNodes, new Group.Mask<TItem>(StoryManagerBranchNodes));
                 this.StoryManagerQuestNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerQuestNodes, new Group.Mask<TItem>(StoryManagerQuestNodes));
                 this.StoryManagerEventNodes = new MaskItem<TItem, Group.Mask<TItem>?>(StoryManagerEventNodes, new Group.Mask<TItem>(StoryManagerEventNodes));
+                this.DialogBranches = new MaskItem<TItem, Group.Mask<TItem>?>(DialogBranches, new Group.Mask<TItem>(DialogBranches));
+                this.MusicTracks = new MaskItem<TItem, Group.Mask<TItem>?>(MusicTracks, new Group.Mask<TItem>(MusicTracks));
+                this.DialogViews = new MaskItem<TItem, Group.Mask<TItem>?>(DialogViews, new Group.Mask<TItem>(DialogViews));
+                this.WordsOfPower = new MaskItem<TItem, Group.Mask<TItem>?>(WordsOfPower, new Group.Mask<TItem>(WordsOfPower));
+                this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(Shouts, new Group.Mask<TItem>(Shouts));
+                this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(EquipTypes, new Group.Mask<TItem>(EquipTypes));
+                this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(Relationships, new Group.Mask<TItem>(Relationships));
             }
 
             #pragma warning disable CS8618
@@ -1347,6 +1424,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerBranchNodes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerQuestNodes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? StoryManagerEventNodes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DialogBranches { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? MusicTracks { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? DialogViews { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? WordsOfPower { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Shouts { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? EquipTypes { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Relationships { get; set; }
             #endregion
 
             #region Equals
@@ -1452,6 +1536,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
                 if (!object.Equals(this.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
                 if (!object.Equals(this.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
+                if (!object.Equals(this.DialogBranches, rhs.DialogBranches)) return false;
+                if (!object.Equals(this.MusicTracks, rhs.MusicTracks)) return false;
+                if (!object.Equals(this.DialogViews, rhs.DialogViews)) return false;
+                if (!object.Equals(this.WordsOfPower, rhs.WordsOfPower)) return false;
+                if (!object.Equals(this.Shouts, rhs.Shouts)) return false;
+                if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
+                if (!object.Equals(this.Relationships, rhs.Relationships)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1550,6 +1641,13 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.StoryManagerBranchNodes);
                 hash.Add(this.StoryManagerQuestNodes);
                 hash.Add(this.StoryManagerEventNodes);
+                hash.Add(this.DialogBranches);
+                hash.Add(this.MusicTracks);
+                hash.Add(this.DialogViews);
+                hash.Add(this.WordsOfPower);
+                hash.Add(this.Shouts);
+                hash.Add(this.EquipTypes);
+                hash.Add(this.Relationships);
                 return hash.ToHashCode();
             }
 
@@ -2023,6 +2121,41 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.StoryManagerEventNodes.Overall)) return false;
                     if (this.StoryManagerEventNodes.Specific != null && !this.StoryManagerEventNodes.Specific.All(eval)) return false;
                 }
+                if (DialogBranches != null)
+                {
+                    if (!eval(this.DialogBranches.Overall)) return false;
+                    if (this.DialogBranches.Specific != null && !this.DialogBranches.Specific.All(eval)) return false;
+                }
+                if (MusicTracks != null)
+                {
+                    if (!eval(this.MusicTracks.Overall)) return false;
+                    if (this.MusicTracks.Specific != null && !this.MusicTracks.Specific.All(eval)) return false;
+                }
+                if (DialogViews != null)
+                {
+                    if (!eval(this.DialogViews.Overall)) return false;
+                    if (this.DialogViews.Specific != null && !this.DialogViews.Specific.All(eval)) return false;
+                }
+                if (WordsOfPower != null)
+                {
+                    if (!eval(this.WordsOfPower.Overall)) return false;
+                    if (this.WordsOfPower.Specific != null && !this.WordsOfPower.Specific.All(eval)) return false;
+                }
+                if (Shouts != null)
+                {
+                    if (!eval(this.Shouts.Overall)) return false;
+                    if (this.Shouts.Specific != null && !this.Shouts.Specific.All(eval)) return false;
+                }
+                if (EquipTypes != null)
+                {
+                    if (!eval(this.EquipTypes.Overall)) return false;
+                    if (this.EquipTypes.Specific != null && !this.EquipTypes.Specific.All(eval)) return false;
+                }
+                if (Relationships != null)
+                {
+                    if (!eval(this.Relationships.Overall)) return false;
+                    if (this.Relationships.Specific != null && !this.Relationships.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2495,6 +2628,41 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.StoryManagerEventNodes.Overall)) return true;
                     if (this.StoryManagerEventNodes.Specific != null && this.StoryManagerEventNodes.Specific.Any(eval)) return true;
                 }
+                if (DialogBranches != null)
+                {
+                    if (eval(this.DialogBranches.Overall)) return true;
+                    if (this.DialogBranches.Specific != null && this.DialogBranches.Specific.Any(eval)) return true;
+                }
+                if (MusicTracks != null)
+                {
+                    if (eval(this.MusicTracks.Overall)) return true;
+                    if (this.MusicTracks.Specific != null && this.MusicTracks.Specific.Any(eval)) return true;
+                }
+                if (DialogViews != null)
+                {
+                    if (eval(this.DialogViews.Overall)) return true;
+                    if (this.DialogViews.Specific != null && this.DialogViews.Specific.Any(eval)) return true;
+                }
+                if (WordsOfPower != null)
+                {
+                    if (eval(this.WordsOfPower.Overall)) return true;
+                    if (this.WordsOfPower.Specific != null && this.WordsOfPower.Specific.Any(eval)) return true;
+                }
+                if (Shouts != null)
+                {
+                    if (eval(this.Shouts.Overall)) return true;
+                    if (this.Shouts.Specific != null && this.Shouts.Specific.Any(eval)) return true;
+                }
+                if (EquipTypes != null)
+                {
+                    if (eval(this.EquipTypes.Overall)) return true;
+                    if (this.EquipTypes.Specific != null && this.EquipTypes.Specific.Any(eval)) return true;
+                }
+                if (Relationships != null)
+                {
+                    if (eval(this.Relationships.Overall)) return true;
+                    if (this.Relationships.Specific != null && this.Relationships.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2602,6 +2770,13 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.StoryManagerBranchNodes = this.StoryManagerBranchNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerBranchNodes.Overall), this.StoryManagerBranchNodes.Specific?.Translate(eval));
                 obj.StoryManagerQuestNodes = this.StoryManagerQuestNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerQuestNodes.Overall), this.StoryManagerQuestNodes.Specific?.Translate(eval));
                 obj.StoryManagerEventNodes = this.StoryManagerEventNodes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.StoryManagerEventNodes.Overall), this.StoryManagerEventNodes.Specific?.Translate(eval));
+                obj.DialogBranches = this.DialogBranches == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogBranches.Overall), this.DialogBranches.Specific?.Translate(eval));
+                obj.MusicTracks = this.MusicTracks == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.MusicTracks.Overall), this.MusicTracks.Specific?.Translate(eval));
+                obj.DialogViews = this.DialogViews == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DialogViews.Overall), this.DialogViews.Specific?.Translate(eval));
+                obj.WordsOfPower = this.WordsOfPower == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.WordsOfPower.Overall), this.WordsOfPower.Specific?.Translate(eval));
+                obj.Shouts = this.Shouts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Shouts.Overall), this.Shouts.Specific?.Translate(eval));
+                obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
+                obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2996,6 +3171,34 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         StoryManagerEventNodes?.ToString(fg);
                     }
+                    if (printMask?.DialogBranches?.Overall ?? true)
+                    {
+                        DialogBranches?.ToString(fg);
+                    }
+                    if (printMask?.MusicTracks?.Overall ?? true)
+                    {
+                        MusicTracks?.ToString(fg);
+                    }
+                    if (printMask?.DialogViews?.Overall ?? true)
+                    {
+                        DialogViews?.ToString(fg);
+                    }
+                    if (printMask?.WordsOfPower?.Overall ?? true)
+                    {
+                        WordsOfPower?.ToString(fg);
+                    }
+                    if (printMask?.Shouts?.Overall ?? true)
+                    {
+                        Shouts?.ToString(fg);
+                    }
+                    if (printMask?.EquipTypes?.Overall ?? true)
+                    {
+                        EquipTypes?.ToString(fg);
+                    }
+                    if (printMask?.Relationships?.Overall ?? true)
+                    {
+                        Relationships?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3114,6 +3317,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<StoryManagerBranchNode.ErrorMask>?>? StoryManagerBranchNodes;
             public MaskItem<Exception?, Group.ErrorMask<StoryManagerQuestNode.ErrorMask>?>? StoryManagerQuestNodes;
             public MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>? StoryManagerEventNodes;
+            public MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>? DialogBranches;
+            public MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>? MusicTracks;
+            public MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>? DialogViews;
+            public MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>? WordsOfPower;
+            public MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>? Shouts;
+            public MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
+            public MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
             #endregion
 
             #region IErrorMask
@@ -3308,6 +3518,20 @@ namespace Mutagen.Bethesda.Skyrim
                         return StoryManagerQuestNodes;
                     case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                         return StoryManagerEventNodes;
+                    case SkyrimMod_FieldIndex.DialogBranches:
+                        return DialogBranches;
+                    case SkyrimMod_FieldIndex.MusicTracks:
+                        return MusicTracks;
+                    case SkyrimMod_FieldIndex.DialogViews:
+                        return DialogViews;
+                    case SkyrimMod_FieldIndex.WordsOfPower:
+                        return WordsOfPower;
+                    case SkyrimMod_FieldIndex.Shouts:
+                        return Shouts;
+                    case SkyrimMod_FieldIndex.EquipTypes:
+                        return EquipTypes;
+                    case SkyrimMod_FieldIndex.Relationships:
+                        return Relationships;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3596,6 +3820,27 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                         this.StoryManagerEventNodes = new MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.DialogBranches:
+                        this.DialogBranches = new MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.MusicTracks:
+                        this.MusicTracks = new MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.DialogViews:
+                        this.DialogViews = new MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.WordsOfPower:
+                        this.WordsOfPower = new MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Shouts:
+                        this.Shouts = new MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.EquipTypes:
+                        this.EquipTypes = new MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Relationships:
+                        this.Relationships = new MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -3886,6 +4131,27 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                         this.StoryManagerEventNodes = (MaskItem<Exception?, Group.ErrorMask<StoryManagerEventNode.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.DialogBranches:
+                        this.DialogBranches = (MaskItem<Exception?, Group.ErrorMask<DialogBranch.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.MusicTracks:
+                        this.MusicTracks = (MaskItem<Exception?, Group.ErrorMask<MusicTrack.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.DialogViews:
+                        this.DialogViews = (MaskItem<Exception?, Group.ErrorMask<DialogView.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.WordsOfPower:
+                        this.WordsOfPower = (MaskItem<Exception?, Group.ErrorMask<WordOfPower.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Shouts:
+                        this.Shouts = (MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.EquipTypes:
+                        this.EquipTypes = (MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Relationships:
+                        this.Relationships = (MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3987,6 +4253,13 @@ namespace Mutagen.Bethesda.Skyrim
                 if (StoryManagerBranchNodes != null) return true;
                 if (StoryManagerQuestNodes != null) return true;
                 if (StoryManagerEventNodes != null) return true;
+                if (DialogBranches != null) return true;
+                if (MusicTracks != null) return true;
+                if (DialogViews != null) return true;
+                if (WordsOfPower != null) return true;
+                if (Shouts != null) return true;
+                if (EquipTypes != null) return true;
+                if (Relationships != null) return true;
                 return false;
             }
             #endregion
@@ -4114,6 +4387,13 @@ namespace Mutagen.Bethesda.Skyrim
                 StoryManagerBranchNodes?.ToString(fg);
                 StoryManagerQuestNodes?.ToString(fg);
                 StoryManagerEventNodes?.ToString(fg);
+                DialogBranches?.ToString(fg);
+                MusicTracks?.ToString(fg);
+                DialogViews?.ToString(fg);
+                WordsOfPower?.ToString(fg);
+                Shouts?.ToString(fg);
+                EquipTypes?.ToString(fg);
+                Relationships?.ToString(fg);
             }
             #endregion
 
@@ -4215,6 +4495,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.StoryManagerBranchNodes = this.StoryManagerBranchNodes.Combine(rhs.StoryManagerBranchNodes, (l, r) => l.Combine(r));
                 ret.StoryManagerQuestNodes = this.StoryManagerQuestNodes.Combine(rhs.StoryManagerQuestNodes, (l, r) => l.Combine(r));
                 ret.StoryManagerEventNodes = this.StoryManagerEventNodes.Combine(rhs.StoryManagerEventNodes, (l, r) => l.Combine(r));
+                ret.DialogBranches = this.DialogBranches.Combine(rhs.DialogBranches, (l, r) => l.Combine(r));
+                ret.MusicTracks = this.MusicTracks.Combine(rhs.MusicTracks, (l, r) => l.Combine(r));
+                ret.DialogViews = this.DialogViews.Combine(rhs.DialogViews, (l, r) => l.Combine(r));
+                ret.WordsOfPower = this.WordsOfPower.Combine(rhs.WordsOfPower, (l, r) => l.Combine(r));
+                ret.Shouts = this.Shouts.Combine(rhs.Shouts, (l, r) => l.Combine(r));
+                ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
+                ret.Relationships = this.Relationships.Combine(rhs.Relationships, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4329,6 +4616,13 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<StoryManagerBranchNode.TranslationMask>?> StoryManagerBranchNodes;
             public MaskItem<bool, Group.TranslationMask<StoryManagerQuestNode.TranslationMask>?> StoryManagerQuestNodes;
             public MaskItem<bool, Group.TranslationMask<StoryManagerEventNode.TranslationMask>?> StoryManagerEventNodes;
+            public MaskItem<bool, Group.TranslationMask<DialogBranch.TranslationMask>?> DialogBranches;
+            public MaskItem<bool, Group.TranslationMask<MusicTrack.TranslationMask>?> MusicTracks;
+            public MaskItem<bool, Group.TranslationMask<DialogView.TranslationMask>?> DialogViews;
+            public MaskItem<bool, Group.TranslationMask<WordOfPower.TranslationMask>?> WordsOfPower;
+            public MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?> Shouts;
+            public MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?> EquipTypes;
+            public MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?> Relationships;
             #endregion
 
             #region Ctors
@@ -4427,6 +4721,13 @@ namespace Mutagen.Bethesda.Skyrim
                 this.StoryManagerBranchNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerBranchNode.TranslationMask>?>(defaultOn, null);
                 this.StoryManagerQuestNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerQuestNode.TranslationMask>?>(defaultOn, null);
                 this.StoryManagerEventNodes = new MaskItem<bool, Group.TranslationMask<StoryManagerEventNode.TranslationMask>?>(defaultOn, null);
+                this.DialogBranches = new MaskItem<bool, Group.TranslationMask<DialogBranch.TranslationMask>?>(defaultOn, null);
+                this.MusicTracks = new MaskItem<bool, Group.TranslationMask<MusicTrack.TranslationMask>?>(defaultOn, null);
+                this.DialogViews = new MaskItem<bool, Group.TranslationMask<DialogView.TranslationMask>?>(defaultOn, null);
+                this.WordsOfPower = new MaskItem<bool, Group.TranslationMask<WordOfPower.TranslationMask>?>(defaultOn, null);
+                this.Shouts = new MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?>(defaultOn, null);
+                this.EquipTypes = new MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?>(defaultOn, null);
+                this.Relationships = new MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4535,6 +4836,13 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((StoryManagerBranchNodes?.Overall ?? true, StoryManagerBranchNodes?.Specific?.GetCrystal()));
                 ret.Add((StoryManagerQuestNodes?.Overall ?? true, StoryManagerQuestNodes?.Specific?.GetCrystal()));
                 ret.Add((StoryManagerEventNodes?.Overall ?? true, StoryManagerEventNodes?.Specific?.GetCrystal()));
+                ret.Add((DialogBranches?.Overall ?? true, DialogBranches?.Specific?.GetCrystal()));
+                ret.Add((MusicTracks?.Overall ?? true, MusicTracks?.Specific?.GetCrystal()));
+                ret.Add((DialogViews?.Overall ?? true, DialogViews?.Specific?.GetCrystal()));
+                ret.Add((WordsOfPower?.Overall ?? true, WordsOfPower?.Specific?.GetCrystal()));
+                ret.Add((Shouts?.Overall ?? true, Shouts?.Specific?.GetCrystal()));
+                ret.Add((EquipTypes?.Overall ?? true, EquipTypes?.Specific?.GetCrystal()));
+                ret.Add((Relationships?.Overall ?? true, Relationships?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4652,6 +4960,13 @@ namespace Mutagen.Bethesda.Skyrim
             _StoryManagerBranchNodes_Object = new Group<StoryManagerBranchNode>(this);
             _StoryManagerQuestNodes_Object = new Group<StoryManagerQuestNode>(this);
             _StoryManagerEventNodes_Object = new Group<StoryManagerEventNode>(this);
+            _DialogBranches_Object = new Group<DialogBranch>(this);
+            _MusicTracks_Object = new Group<MusicTrack>(this);
+            _DialogViews_Object = new Group<DialogView>(this);
+            _WordsOfPower_Object = new Group<WordOfPower>(this);
+            _Shouts_Object = new Group<Shout>(this);
+            _EquipTypes_Object = new Group<EquipType>(this);
+            _Relationships_Object = new Group<Relationship>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -5027,6 +5342,34 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.StoryManagerEventNodes ?? true)
             {
                 this.StoryManagerEventNodes.RecordCache.Set(rhsMod.StoryManagerEventNodes.RecordCache.Items);
+            }
+            if (mask?.DialogBranches ?? true)
+            {
+                this.DialogBranches.RecordCache.Set(rhsMod.DialogBranches.RecordCache.Items);
+            }
+            if (mask?.MusicTracks ?? true)
+            {
+                this.MusicTracks.RecordCache.Set(rhsMod.MusicTracks.RecordCache.Items);
+            }
+            if (mask?.DialogViews ?? true)
+            {
+                this.DialogViews.RecordCache.Set(rhsMod.DialogViews.RecordCache.Items);
+            }
+            if (mask?.WordsOfPower ?? true)
+            {
+                this.WordsOfPower.RecordCache.Set(rhsMod.WordsOfPower.RecordCache.Items);
+            }
+            if (mask?.Shouts ?? true)
+            {
+                this.Shouts.RecordCache.Set(rhsMod.Shouts.RecordCache.Items);
+            }
+            if (mask?.EquipTypes ?? true)
+            {
+                this.EquipTypes.RecordCache.Set(rhsMod.EquipTypes.RecordCache.Items);
+            }
+            if (mask?.Relationships ?? true)
+            {
+                this.Relationships.RecordCache.Set(rhsMod.Relationships.RecordCache.Items);
             }
         }
 
@@ -5679,6 +6022,55 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<StoryManagerEventNode>());
             }
+            if (mask?.DialogBranches ?? true)
+            {
+                this.DialogBranches.RecordCache.Set(
+                    rhs.DialogBranches.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<DialogBranch>());
+            }
+            if (mask?.MusicTracks ?? true)
+            {
+                this.MusicTracks.RecordCache.Set(
+                    rhs.MusicTracks.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<MusicTrack>());
+            }
+            if (mask?.DialogViews ?? true)
+            {
+                this.DialogViews.RecordCache.Set(
+                    rhs.DialogViews.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<DialogView>());
+            }
+            if (mask?.WordsOfPower ?? true)
+            {
+                this.WordsOfPower.RecordCache.Set(
+                    rhs.WordsOfPower.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<WordOfPower>());
+            }
+            if (mask?.Shouts ?? true)
+            {
+                this.Shouts.RecordCache.Set(
+                    rhs.Shouts.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Shout>());
+            }
+            if (mask?.EquipTypes ?? true)
+            {
+                this.EquipTypes.RecordCache.Set(
+                    rhs.EquipTypes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<EquipType>());
+            }
+            if (mask?.Relationships ?? true)
+            {
+                this.Relationships.RecordCache.Set(
+                    rhs.Relationships.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Relationship>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -5790,6 +6182,13 @@ namespace Mutagen.Bethesda.Skyrim
             count += StoryManagerBranchNodes.RecordCache.Count > 0 ? 1 : 0;
             count += StoryManagerQuestNodes.RecordCache.Count > 0 ? 1 : 0;
             count += StoryManagerEventNodes.RecordCache.Count > 0 ? 1 : 0;
+            count += DialogBranches.RecordCache.Count > 0 ? 1 : 0;
+            count += MusicTracks.RecordCache.Count > 0 ? 1 : 0;
+            count += DialogViews.RecordCache.Count > 0 ? 1 : 0;
+            count += WordsOfPower.RecordCache.Count > 0 ? 1 : 0;
+            count += Shouts.RecordCache.Count > 0 ? 1 : 0;
+            count += EquipTypes.RecordCache.Count > 0 ? 1 : 0;
+            count += Relationships.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6105,6 +6504,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<StoryManagerBranchNode> StoryManagerBranchNodes { get; }
         new Group<StoryManagerQuestNode> StoryManagerQuestNodes { get; }
         new Group<StoryManagerEventNode> StoryManagerEventNodes { get; }
+        new Group<DialogBranch> DialogBranches { get; }
+        new Group<MusicTrack> MusicTracks { get; }
+        new Group<DialogView> DialogViews { get; }
+        new Group<WordOfPower> WordsOfPower { get; }
+        new Group<Shout> Shouts { get; }
+        new Group<EquipType> EquipTypes { get; }
+        new Group<Relationship> Relationships { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -6215,6 +6621,13 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IStoryManagerBranchNodeGetter> StoryManagerBranchNodes { get; }
         IGroupGetter<IStoryManagerQuestNodeGetter> StoryManagerQuestNodes { get; }
         IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes { get; }
+        IGroupGetter<IDialogBranchGetter> DialogBranches { get; }
+        IGroupGetter<IMusicTrackGetter> MusicTracks { get; }
+        IGroupGetter<IDialogViewGetter> DialogViews { get; }
+        IGroupGetter<IWordOfPowerGetter> WordsOfPower { get; }
+        IGroupGetter<IShoutGetter> Shouts { get; }
+        IGroupGetter<IEquipTypeGetter> EquipTypes { get; }
+        IGroupGetter<IRelationshipGetter> Relationships { get; }
 
     }
 
@@ -6797,6 +7210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         StoryManagerBranchNodes = 90,
         StoryManagerQuestNodes = 91,
         StoryManagerEventNodes = 92,
+        DialogBranches = 93,
+        MusicTracks = 94,
+        DialogViews = 95,
+        WordsOfPower = 96,
+        Shouts = 97,
+        EquipTypes = 98,
+        Relationships = 99,
     }
     #endregion
 
@@ -6814,9 +7234,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 93;
+        public const ushort AdditionalFieldCount = 100;
 
-        public const ushort FieldCount = 93;
+        public const ushort FieldCount = 100;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -7032,6 +7452,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 case "STORYMANAGEREVENTNODES":
                     return (ushort)SkyrimMod_FieldIndex.StoryManagerEventNodes;
+                case "DIALOGBRANCHES":
+                    return (ushort)SkyrimMod_FieldIndex.DialogBranches;
+                case "MUSICTRACKS":
+                    return (ushort)SkyrimMod_FieldIndex.MusicTracks;
+                case "DIALOGVIEWS":
+                    return (ushort)SkyrimMod_FieldIndex.DialogViews;
+                case "WORDSOFPOWER":
+                    return (ushort)SkyrimMod_FieldIndex.WordsOfPower;
+                case "SHOUTS":
+                    return (ushort)SkyrimMod_FieldIndex.Shouts;
+                case "EQUIPTYPES":
+                    return (ushort)SkyrimMod_FieldIndex.EquipTypes;
+                case "RELATIONSHIPS":
+                    return (ushort)SkyrimMod_FieldIndex.Relationships;
                 default:
                     return null;
             }
@@ -7135,6 +7569,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
                 case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                case SkyrimMod_FieldIndex.DialogBranches:
+                case SkyrimMod_FieldIndex.MusicTracks:
+                case SkyrimMod_FieldIndex.DialogViews:
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                case SkyrimMod_FieldIndex.Shouts:
+                case SkyrimMod_FieldIndex.EquipTypes:
+                case SkyrimMod_FieldIndex.Relationships:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7239,6 +7680,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
                 case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                case SkyrimMod_FieldIndex.DialogBranches:
+                case SkyrimMod_FieldIndex.MusicTracks:
+                case SkyrimMod_FieldIndex.DialogViews:
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                case SkyrimMod_FieldIndex.Shouts:
+                case SkyrimMod_FieldIndex.EquipTypes:
+                case SkyrimMod_FieldIndex.Relationships:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7343,6 +7791,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
                 case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                case SkyrimMod_FieldIndex.DialogBranches:
+                case SkyrimMod_FieldIndex.MusicTracks:
+                case SkyrimMod_FieldIndex.DialogViews:
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                case SkyrimMod_FieldIndex.Shouts:
+                case SkyrimMod_FieldIndex.EquipTypes:
+                case SkyrimMod_FieldIndex.Relationships:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7540,6 +7995,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "StoryManagerQuestNodes";
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return "StoryManagerEventNodes";
+                case SkyrimMod_FieldIndex.DialogBranches:
+                    return "DialogBranches";
+                case SkyrimMod_FieldIndex.MusicTracks:
+                    return "MusicTracks";
+                case SkyrimMod_FieldIndex.DialogViews:
+                    return "DialogViews";
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                    return "WordsOfPower";
+                case SkyrimMod_FieldIndex.Shouts:
+                    return "Shouts";
+                case SkyrimMod_FieldIndex.EquipTypes:
+                    return "EquipTypes";
+                case SkyrimMod_FieldIndex.Relationships:
+                    return "Relationships";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7643,6 +8112,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
                 case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                case SkyrimMod_FieldIndex.DialogBranches:
+                case SkyrimMod_FieldIndex.MusicTracks:
+                case SkyrimMod_FieldIndex.DialogViews:
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                case SkyrimMod_FieldIndex.Shouts:
+                case SkyrimMod_FieldIndex.EquipTypes:
+                case SkyrimMod_FieldIndex.Relationships:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7748,6 +8224,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.StoryManagerBranchNodes:
                 case SkyrimMod_FieldIndex.StoryManagerQuestNodes:
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
+                case SkyrimMod_FieldIndex.DialogBranches:
+                case SkyrimMod_FieldIndex.MusicTracks:
+                case SkyrimMod_FieldIndex.DialogViews:
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                case SkyrimMod_FieldIndex.Shouts:
+                case SkyrimMod_FieldIndex.EquipTypes:
+                case SkyrimMod_FieldIndex.Relationships:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7945,6 +8428,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<StoryManagerQuestNode>);
                 case SkyrimMod_FieldIndex.StoryManagerEventNodes:
                     return typeof(Group<StoryManagerEventNode>);
+                case SkyrimMod_FieldIndex.DialogBranches:
+                    return typeof(Group<DialogBranch>);
+                case SkyrimMod_FieldIndex.MusicTracks:
+                    return typeof(Group<MusicTrack>);
+                case SkyrimMod_FieldIndex.DialogViews:
+                    return typeof(Group<DialogView>);
+                case SkyrimMod_FieldIndex.WordsOfPower:
+                    return typeof(Group<WordOfPower>);
+                case SkyrimMod_FieldIndex.Shouts:
+                    return typeof(Group<Shout>);
+                case SkyrimMod_FieldIndex.EquipTypes:
+                    return typeof(Group<EquipType>);
+                case SkyrimMod_FieldIndex.Relationships:
+                    return typeof(Group<Relationship>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8085,6 +8582,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.StoryManagerBranchNodes.Clear();
             item.StoryManagerQuestNodes.Clear();
             item.StoryManagerEventNodes.Clear();
+            item.DialogBranches.Clear();
+            item.MusicTracks.Clear();
+            item.DialogViews.Clear();
+            item.WordsOfPower.Clear();
+            item.Shouts.Clear();
+            item.EquipTypes.Clear();
+            item.Relationships.Clear();
         }
         
         #region Xml Translation
@@ -8334,6 +8838,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.StoryManagerBranchNodes = MaskItemExt.Factory(item.StoryManagerBranchNodes.GetEqualsMask(rhs.StoryManagerBranchNodes, include), include);
             ret.StoryManagerQuestNodes = MaskItemExt.Factory(item.StoryManagerQuestNodes.GetEqualsMask(rhs.StoryManagerQuestNodes, include), include);
             ret.StoryManagerEventNodes = MaskItemExt.Factory(item.StoryManagerEventNodes.GetEqualsMask(rhs.StoryManagerEventNodes, include), include);
+            ret.DialogBranches = MaskItemExt.Factory(item.DialogBranches.GetEqualsMask(rhs.DialogBranches, include), include);
+            ret.MusicTracks = MaskItemExt.Factory(item.MusicTracks.GetEqualsMask(rhs.MusicTracks, include), include);
+            ret.DialogViews = MaskItemExt.Factory(item.DialogViews.GetEqualsMask(rhs.DialogViews, include), include);
+            ret.WordsOfPower = MaskItemExt.Factory(item.WordsOfPower.GetEqualsMask(rhs.WordsOfPower, include), include);
+            ret.Shouts = MaskItemExt.Factory(item.Shouts.GetEqualsMask(rhs.Shouts, include), include);
+            ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
+            ret.Relationships = MaskItemExt.Factory(item.Relationships.GetEqualsMask(rhs.Relationships, include), include);
         }
         
         public string ToString(
@@ -8752,6 +9263,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.StoryManagerEventNodes?.ToString(fg, "StoryManagerEventNodes");
             }
+            if (printMask?.DialogBranches?.Overall ?? true)
+            {
+                item.DialogBranches?.ToString(fg, "DialogBranches");
+            }
+            if (printMask?.MusicTracks?.Overall ?? true)
+            {
+                item.MusicTracks?.ToString(fg, "MusicTracks");
+            }
+            if (printMask?.DialogViews?.Overall ?? true)
+            {
+                item.DialogViews?.ToString(fg, "DialogViews");
+            }
+            if (printMask?.WordsOfPower?.Overall ?? true)
+            {
+                item.WordsOfPower?.ToString(fg, "WordsOfPower");
+            }
+            if (printMask?.Shouts?.Overall ?? true)
+            {
+                item.Shouts?.ToString(fg, "Shouts");
+            }
+            if (printMask?.EquipTypes?.Overall ?? true)
+            {
+                item.EquipTypes?.ToString(fg, "EquipTypes");
+            }
+            if (printMask?.Relationships?.Overall ?? true)
+            {
+                item.Relationships?.ToString(fg, "Relationships");
+            }
         }
         
         public bool HasBeenSet(
@@ -8858,6 +9397,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.StoryManagerBranchNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerBranchNodes?.GetHasBeenSetMask());
             mask.StoryManagerQuestNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerQuestNodes?.GetHasBeenSetMask());
             mask.StoryManagerEventNodes = new MaskItem<bool, Group.Mask<bool>?>(true, item.StoryManagerEventNodes?.GetHasBeenSetMask());
+            mask.DialogBranches = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogBranches?.GetHasBeenSetMask());
+            mask.MusicTracks = new MaskItem<bool, Group.Mask<bool>?>(true, item.MusicTracks?.GetHasBeenSetMask());
+            mask.DialogViews = new MaskItem<bool, Group.Mask<bool>?>(true, item.DialogViews?.GetHasBeenSetMask());
+            mask.WordsOfPower = new MaskItem<bool, Group.Mask<bool>?>(true, item.WordsOfPower?.GetHasBeenSetMask());
+            mask.Shouts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Shouts?.GetHasBeenSetMask());
+            mask.EquipTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.EquipTypes?.GetHasBeenSetMask());
+            mask.Relationships = new MaskItem<bool, Group.Mask<bool>?>(true, item.Relationships?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -8960,6 +9506,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
             if (!object.Equals(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
             if (!object.Equals(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
+            if (!object.Equals(lhs.DialogBranches, rhs.DialogBranches)) return false;
+            if (!object.Equals(lhs.MusicTracks, rhs.MusicTracks)) return false;
+            if (!object.Equals(lhs.DialogViews, rhs.DialogViews)) return false;
+            if (!object.Equals(lhs.WordsOfPower, rhs.WordsOfPower)) return false;
+            if (!object.Equals(lhs.Shouts, rhs.Shouts)) return false;
+            if (!object.Equals(lhs.EquipTypes, rhs.EquipTypes)) return false;
+            if (!object.Equals(lhs.Relationships, rhs.Relationships)) return false;
             return true;
         }
         
@@ -9059,6 +9612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.StoryManagerBranchNodes);
             hash.Add(item.StoryManagerQuestNodes);
             hash.Add(item.StoryManagerEventNodes);
+            hash.Add(item.DialogBranches);
+            hash.Add(item.MusicTracks);
+            hash.Add(item.DialogViews);
+            hash.Add(item.WordsOfPower);
+            hash.Add(item.Shouts);
+            hash.Add(item.EquipTypes);
+            hash.Add(item.Relationships);
             return hash.ToHashCode();
         }
         
@@ -9535,6 +10095,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
                     return obj.StoryManagerEventNodes.RecordCache;
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
+                    return obj.DialogBranches.RecordCache;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    return obj.MusicTracks.RecordCache;
+                case "DialogView":
+                case "IDialogViewGetter":
+                case "IDialogView":
+                case "IDialogViewInternal":
+                    return obj.DialogViews.RecordCache;
+                case "WordOfPower":
+                case "IWordOfPowerGetter":
+                case "IWordOfPower":
+                case "IWordOfPowerInternal":
+                    return obj.WordsOfPower.RecordCache;
+                case "Shout":
+                case "IShoutGetter":
+                case "IShout":
+                case "IShoutInternal":
+                    return obj.Shouts.RecordCache;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    return obj.EquipTypes.RecordCache;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    return obj.Relationships.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -9554,7 +10149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[92];
+            Stream[] outputStreams = new Stream[99];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -9648,6 +10243,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10342,6 +10944,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.DialogBranches is ILinkedFormKeyContainer DialogBrancheslinkCont)
+            {
+                foreach (var item in DialogBrancheslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.MusicTracks is ILinkedFormKeyContainer MusicTrackslinkCont)
+            {
+                foreach (var item in MusicTrackslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.DialogViews is ILinkedFormKeyContainer DialogViewslinkCont)
+            {
+                foreach (var item in DialogViewslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.WordsOfPower is ILinkedFormKeyContainer WordsOfPowerlinkCont)
+            {
+                foreach (var item in WordsOfPowerlinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Shouts is ILinkedFormKeyContainer ShoutslinkCont)
+            {
+                foreach (var item in ShoutslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.EquipTypes is ILinkedFormKeyContainer EquipTypeslinkCont)
+            {
+                foreach (var item in EquipTypeslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Relationships is ILinkedFormKeyContainer RelationshipslinkCont)
+            {
+                foreach (var item in RelationshipslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -10713,6 +11364,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.StoryManagerEventNodes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogBranches.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.MusicTracks.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.DialogViews.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.WordsOfPower.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Shouts.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.EquipTypes.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Relationships.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -11563,6 +12242,69 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
+                case "DialogBranch":
+                case "IDialogBranchGetter":
+                case "IDialogBranch":
+                case "IDialogBranchInternal":
+                    foreach (var item in obj.DialogBranches.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "MusicTrack":
+                case "IMusicTrackGetter":
+                case "IMusicTrack":
+                case "IMusicTrackInternal":
+                    foreach (var item in obj.MusicTracks.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "DialogView":
+                case "IDialogViewGetter":
+                case "IDialogView":
+                case "IDialogViewInternal":
+                    foreach (var item in obj.DialogViews.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "WordOfPower":
+                case "IWordOfPowerGetter":
+                case "IWordOfPower":
+                case "IWordOfPowerInternal":
+                    foreach (var item in obj.WordsOfPower.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Shout":
+                case "IShoutGetter":
+                case "IShout":
+                case "IShoutInternal":
+                    foreach (var item in obj.Shouts.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "EquipType":
+                case "IEquipTypeGetter":
+                case "IEquipType":
+                case "IEquipTypeInternal":
+                    foreach (var item in obj.EquipTypes.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Relationship":
+                case "IRelationshipGetter":
+                case "IRelationship":
+                case "IRelationshipInternal":
+                    foreach (var item in obj.Relationships.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
                 case "Cell":
                 case "ICellGetter":
                 case "ICell":
@@ -11732,6 +12474,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     foreach (var item in EnumerateMajorRecords(obj, typeof(Scroll), throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(Shout), throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13892,6 +14638,146 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogBranches) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogBranches);
+                try
+                {
+                    item.DialogBranches.DeepCopyIn(
+                        rhs: rhs.DialogBranches,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogBranches));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTracks) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTracks);
+                try
+                {
+                    item.MusicTracks.DeepCopyIn(
+                        rhs: rhs.MusicTracks,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTracks));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogViews) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogViews);
+                try
+                {
+                    item.DialogViews.DeepCopyIn(
+                        rhs: rhs.DialogViews,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogViews));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.WordsOfPower) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.WordsOfPower);
+                try
+                {
+                    item.WordsOfPower.DeepCopyIn(
+                        rhs: rhs.WordsOfPower,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.WordsOfPower));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Shouts) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Shouts);
+                try
+                {
+                    item.Shouts.DeepCopyIn(
+                        rhs: rhs.Shouts,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Shouts));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EquipTypes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EquipTypes);
+                try
+                {
+                    item.EquipTypes.DeepCopyIn(
+                        rhs: rhs.EquipTypes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EquipTypes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Relationships) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Relationships);
+                try
+                {
+                    item.Relationships.DeepCopyIn(
+                        rhs: rhs.Relationships,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Relationships));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -15003,6 +15889,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.StoryManagerEventNodes,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.StoryManagerEventNodes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogBranches) ?? true))
+            {
+                var DialogBranchesItem = item.DialogBranches;
+                ((GroupXmlWriteTranslation)((IXmlItem)DialogBranchesItem).XmlWriteTranslator).Write<IDialogBranchGetter>(
+                    item: DialogBranchesItem,
+                    node: node,
+                    name: nameof(item.DialogBranches),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogBranches,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogBranches));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTracks) ?? true))
+            {
+                var MusicTracksItem = item.MusicTracks;
+                ((GroupXmlWriteTranslation)((IXmlItem)MusicTracksItem).XmlWriteTranslator).Write<IMusicTrackGetter>(
+                    item: MusicTracksItem,
+                    node: node,
+                    name: nameof(item.MusicTracks),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.MusicTracks,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.MusicTracks));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogViews) ?? true))
+            {
+                var DialogViewsItem = item.DialogViews;
+                ((GroupXmlWriteTranslation)((IXmlItem)DialogViewsItem).XmlWriteTranslator).Write<IDialogViewGetter>(
+                    item: DialogViewsItem,
+                    node: node,
+                    name: nameof(item.DialogViews),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.DialogViews,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.DialogViews));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.WordsOfPower) ?? true))
+            {
+                var WordsOfPowerItem = item.WordsOfPower;
+                ((GroupXmlWriteTranslation)((IXmlItem)WordsOfPowerItem).XmlWriteTranslator).Write<IWordOfPowerGetter>(
+                    item: WordsOfPowerItem,
+                    node: node,
+                    name: nameof(item.WordsOfPower),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.WordsOfPower,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.WordsOfPower));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Shouts) ?? true))
+            {
+                var ShoutsItem = item.Shouts;
+                ((GroupXmlWriteTranslation)((IXmlItem)ShoutsItem).XmlWriteTranslator).Write<IShoutGetter>(
+                    item: ShoutsItem,
+                    node: node,
+                    name: nameof(item.Shouts),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Shouts,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Shouts));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EquipTypes) ?? true))
+            {
+                var EquipTypesItem = item.EquipTypes;
+                ((GroupXmlWriteTranslation)((IXmlItem)EquipTypesItem).XmlWriteTranslator).Write<IEquipTypeGetter>(
+                    item: EquipTypesItem,
+                    node: node,
+                    name: nameof(item.EquipTypes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.EquipTypes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.EquipTypes));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Relationships) ?? true))
+            {
+                var RelationshipsItem = item.Relationships;
+                ((GroupXmlWriteTranslation)((IXmlItem)RelationshipsItem).XmlWriteTranslator).Write<IRelationshipGetter>(
+                    item: RelationshipsItem,
+                    node: node,
+                    name: nameof(item.Relationships),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Relationships,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Relationships));
             }
         }
 
@@ -16839,6 +17802,139 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "DialogBranches":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogBranches);
+                    try
+                    {
+                        item.DialogBranches.CopyInFromXml<DialogBranch>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MusicTracks":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.MusicTracks);
+                    try
+                    {
+                        item.MusicTracks.CopyInFromXml<MusicTrack>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DialogViews":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.DialogViews);
+                    try
+                    {
+                        item.DialogViews.CopyInFromXml<DialogView>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WordsOfPower":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.WordsOfPower);
+                    try
+                    {
+                        item.WordsOfPower.CopyInFromXml<WordOfPower>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Shouts":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Shouts);
+                    try
+                    {
+                        item.Shouts.CopyInFromXml<Shout>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EquipTypes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.EquipTypes);
+                    try
+                    {
+                        item.EquipTypes.CopyInFromXml<EquipType>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Relationships":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Relationships);
+                    try
+                    {
+                        item.Relationships.CopyInFromXml<Relationship>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -17100,6 +18196,13 @@ namespace Mutagen.Bethesda.Skyrim
         public bool StoryManagerBranchNodes;
         public bool StoryManagerQuestNodes;
         public bool StoryManagerEventNodes;
+        public bool DialogBranches;
+        public bool MusicTracks;
+        public bool DialogViews;
+        public bool WordsOfPower;
+        public bool Shouts;
+        public bool EquipTypes;
+        public bool Relationships;
         public GroupMask()
         {
         }
@@ -17197,6 +18300,13 @@ namespace Mutagen.Bethesda.Skyrim
             StoryManagerBranchNodes = defaultValue;
             StoryManagerQuestNodes = defaultValue;
             StoryManagerEventNodes = defaultValue;
+            DialogBranches = defaultValue;
+            MusicTracks = defaultValue;
+            DialogViews = defaultValue;
+            WordsOfPower = defaultValue;
+            Shouts = defaultValue;
+            EquipTypes = defaultValue;
+            Relationships = defaultValue;
         }
     }
 
@@ -18233,6 +19343,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)StoryManagerEventNodesItem).BinaryWriteTranslator).Write<IStoryManagerEventNodeGetter>(
                         item: StoryManagerEventNodesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.DialogBranches ?? true)
+            {
+                var DialogBranchesItem = item.DialogBranches;
+                if (DialogBranchesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogBranchesItem).BinaryWriteTranslator).Write<IDialogBranchGetter>(
+                        item: DialogBranchesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.MusicTracks ?? true)
+            {
+                var MusicTracksItem = item.MusicTracks;
+                if (MusicTracksItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)MusicTracksItem).BinaryWriteTranslator).Write<IMusicTrackGetter>(
+                        item: MusicTracksItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.DialogViews ?? true)
+            {
+                var DialogViewsItem = item.DialogViews;
+                if (DialogViewsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)DialogViewsItem).BinaryWriteTranslator).Write<IDialogViewGetter>(
+                        item: DialogViewsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.WordsOfPower ?? true)
+            {
+                var WordsOfPowerItem = item.WordsOfPower;
+                if (WordsOfPowerItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)WordsOfPowerItem).BinaryWriteTranslator).Write<IWordOfPowerGetter>(
+                        item: WordsOfPowerItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Shouts ?? true)
+            {
+                var ShoutsItem = item.Shouts;
+                if (ShoutsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ShoutsItem).BinaryWriteTranslator).Write<IShoutGetter>(
+                        item: ShoutsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.EquipTypes ?? true)
+            {
+                var EquipTypesItem = item.EquipTypes;
+                if (EquipTypesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)EquipTypesItem).BinaryWriteTranslator).Write<IEquipTypeGetter>(
+                        item: EquipTypesItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Relationships ?? true)
+            {
+                var RelationshipsItem = item.Relationships;
+                if (RelationshipsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
+                        item: RelationshipsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -19594,6 +20781,104 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
                 }
+                case RecordTypeInts.DLBR:
+                {
+                    if (importMask?.DialogBranches ?? true)
+                    {
+                        item.DialogBranches.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                }
+                case RecordTypeInts.MUST:
+                {
+                    if (importMask?.MusicTracks ?? true)
+                    {
+                        item.MusicTracks.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                }
+                case RecordTypeInts.DLVW:
+                {
+                    if (importMask?.DialogViews ?? true)
+                    {
+                        item.DialogViews.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                }
+                case RecordTypeInts.WOOP:
+                {
+                    if (importMask?.WordsOfPower ?? true)
+                    {
+                        item.WordsOfPower.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                }
+                case RecordTypeInts.SHOU:
+                {
+                    if (importMask?.Shouts ?? true)
+                    {
+                        item.Shouts.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                }
+                case RecordTypeInts.EQUP:
+                {
+                    if (importMask?.EquipTypes ?? true)
+                    {
+                        item.EquipTypes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                }
+                case RecordTypeInts.RELA:
+                {
+                    if (importMask?.Relationships ?? true)
+                    {
+                        item.Relationships.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
+                }
                 default:
                     frame.Position += contentLength;
                     return TryGet<int?>.Succeed(null);
@@ -20227,6 +21512,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IStoryManagerEventNodeGetter>? _StoryManagerEventNodes => _StoryManagerEventNodesLocation.HasValue ? GroupBinaryOverlay<IStoryManagerEventNodeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _StoryManagerEventNodesLocation!.Value.Min, _StoryManagerEventNodesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IStoryManagerEventNodeGetter> StoryManagerEventNodes => _StoryManagerEventNodes ?? new Group<StoryManagerEventNode>(this);
         #endregion
+        #region DialogBranches
+        private RangeInt64? _DialogBranchesLocation;
+        private IGroupGetter<IDialogBranchGetter>? _DialogBranches => _DialogBranchesLocation.HasValue ? GroupBinaryOverlay<IDialogBranchGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _DialogBranchesLocation!.Value.Min, _DialogBranchesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IDialogBranchGetter> DialogBranches => _DialogBranches ?? new Group<DialogBranch>(this);
+        #endregion
+        #region MusicTracks
+        private RangeInt64? _MusicTracksLocation;
+        private IGroupGetter<IMusicTrackGetter>? _MusicTracks => _MusicTracksLocation.HasValue ? GroupBinaryOverlay<IMusicTrackGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _MusicTracksLocation!.Value.Min, _MusicTracksLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IMusicTrackGetter> MusicTracks => _MusicTracks ?? new Group<MusicTrack>(this);
+        #endregion
+        #region DialogViews
+        private RangeInt64? _DialogViewsLocation;
+        private IGroupGetter<IDialogViewGetter>? _DialogViews => _DialogViewsLocation.HasValue ? GroupBinaryOverlay<IDialogViewGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _DialogViewsLocation!.Value.Min, _DialogViewsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IDialogViewGetter> DialogViews => _DialogViews ?? new Group<DialogView>(this);
+        #endregion
+        #region WordsOfPower
+        private RangeInt64? _WordsOfPowerLocation;
+        private IGroupGetter<IWordOfPowerGetter>? _WordsOfPower => _WordsOfPowerLocation.HasValue ? GroupBinaryOverlay<IWordOfPowerGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _WordsOfPowerLocation!.Value.Min, _WordsOfPowerLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IWordOfPowerGetter> WordsOfPower => _WordsOfPower ?? new Group<WordOfPower>(this);
+        #endregion
+        #region Shouts
+        private RangeInt64? _ShoutsLocation;
+        private IGroupGetter<IShoutGetter>? _Shouts => _ShoutsLocation.HasValue ? GroupBinaryOverlay<IShoutGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ShoutsLocation!.Value.Min, _ShoutsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IShoutGetter> Shouts => _Shouts ?? new Group<Shout>(this);
+        #endregion
+        #region EquipTypes
+        private RangeInt64? _EquipTypesLocation;
+        private IGroupGetter<IEquipTypeGetter>? _EquipTypes => _EquipTypesLocation.HasValue ? GroupBinaryOverlay<IEquipTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _EquipTypesLocation!.Value.Min, _EquipTypesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IEquipTypeGetter> EquipTypes => _EquipTypes ?? new Group<EquipType>(this);
+        #endregion
+        #region Relationships
+        private RangeInt64? _RelationshipsLocation;
+        private IGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocation.HasValue ? GroupBinaryOverlay<IRelationshipGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _RelationshipsLocation!.Value.Min, _RelationshipsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Group<Relationship>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -20781,6 +22101,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                }
+                case RecordTypeInts.DLBR:
+                {
+                    _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                }
+                case RecordTypeInts.MUST:
+                {
+                    _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                }
+                case RecordTypeInts.DLVW:
+                {
+                    _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                }
+                case RecordTypeInts.WOOP:
+                {
+                    _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                }
+                case RecordTypeInts.SHOU:
+                {
+                    _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                }
+                case RecordTypeInts.EQUP:
+                {
+                    _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                }
+                case RecordTypeInts.RELA:
+                {
+                    _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
                 }
                 default:
                     return TryGet<int?>.Succeed(null);

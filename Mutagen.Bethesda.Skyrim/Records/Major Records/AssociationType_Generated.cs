@@ -34,40 +34,21 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class EquipType :
+    public partial class AssociationType :
         SkyrimMajorRecord,
-        IEquipTypeInternal,
-        ILoquiObjectSetter<EquipType>,
-        IEquatable<EquipType>,
+        IAssociationTypeInternal,
+        ILoquiObjectSetter<AssociationType>,
+        IEquatable<AssociationType>,
         IEqualsMask
     {
         #region Ctor
-        protected EquipType()
+        protected AssociationType()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region SlotParents
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<EquipType>>? _SlotParents;
-        public ExtendedList<IFormLink<EquipType>>? SlotParents
-        {
-            get => this._SlotParents;
-            set => this._SlotParents = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IEquipTypeGetter>>? IEquipTypeGetter.SlotParents => _SlotParents;
-        #endregion
-
-        #endregion
-        #region UseAllParents
-        public Boolean? UseAllParents { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Boolean? IEquipTypeGetter.UseAllParents => this.UseAllParents;
-        #endregion
 
         #region To String
 
@@ -75,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            EquipTypeMixIn.ToString(
+            AssociationTypeMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -85,29 +66,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEquipTypeGetter rhs)) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IAssociationTypeGetter rhs)) return false;
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(EquipType? obj)
+        public bool Equals(AssociationType? obj)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EquipTypeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => AssociationTypeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((EquipTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AssociationTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -116,9 +97,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new EquipType CreateFromXml(
+        public static new AssociationType CreateFromXml(
             XElement node,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -127,27 +108,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             XElement node,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EquipType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static EquipType CreateFromXml(
+        public new static AssociationType CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new EquipType();
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new AssociationType();
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -155,9 +136,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             string path,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -165,10 +146,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             string path,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -177,10 +158,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -189,9 +170,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             Stream stream,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -199,10 +180,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             Stream stream,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -211,10 +192,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static EquipType CreateFromXml(
+        public static AssociationType CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -237,8 +218,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UseAllParents = initialValue;
             }
 
             public Mask(
@@ -247,9 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2,
-                TItem SlotParents,
-                TItem UseAllParents)
+                TItem Version2)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -258,8 +235,6 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.SlotParents = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SlotParents, Enumerable.Empty<(int Index, TItem Value)>());
-                this.UseAllParents = UseAllParents;
             }
 
             #pragma warning disable CS8618
@@ -268,11 +243,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
-            #endregion
-
-            #region Members
-            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SlotParents;
-            public TItem UseAllParents;
             #endregion
 
             #region Equals
@@ -286,15 +256,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.SlotParents, rhs.SlotParents)) return false;
-                if (!object.Equals(this.UseAllParents, rhs.UseAllParents)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.SlotParents);
-                hash.Add(this.UseAllParents);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -305,18 +271,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (this.SlotParents != null)
-                {
-                    if (!eval(this.SlotParents.Overall)) return false;
-                    if (this.SlotParents.Specific != null)
-                    {
-                        foreach (var item in this.SlotParents.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (!eval(this.UseAllParents)) return false;
                 return true;
             }
             #endregion
@@ -325,18 +279,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (this.SlotParents != null)
-                {
-                    if (eval(this.SlotParents.Overall)) return true;
-                    if (this.SlotParents.Specific != null)
-                    {
-                        foreach (var item in this.SlotParents.Specific)
-                        {
-                            if (!eval(item.Value)) return false;
-                        }
-                    }
-                }
-                if (eval(this.UseAllParents)) return true;
                 return false;
             }
             #endregion
@@ -344,7 +286,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new EquipType.Mask<R>();
+                var ret = new AssociationType.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -352,21 +294,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                if (SlotParents != null)
-                {
-                    obj.SlotParents = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.SlotParents.Overall), Enumerable.Empty<(int Index, R Value)>());
-                    if (SlotParents.Specific != null)
-                    {
-                        var l = new List<(int Index, R Item)>();
-                        obj.SlotParents.Specific = l;
-                        foreach (var item in SlotParents.Specific.WithIndex())
-                        {
-                            R mask = eval(item.Item.Value);
-                            l.Add((item.Index, mask));
-                        }
-                    }
-                }
-                obj.UseAllParents = eval(this.UseAllParents);
             }
             #endregion
 
@@ -376,46 +303,19 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(EquipType.Mask<bool>? printMask = null)
+            public string ToString(AssociationType.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, EquipType.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, AssociationType.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(EquipType.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(AssociationType.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if ((printMask?.SlotParents?.Overall ?? true)
-                        && SlotParents.TryGet(out var SlotParentsItem))
-                    {
-                        fg.AppendLine("SlotParents =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(SlotParentsItem.Overall);
-                            if (SlotParentsItem.Specific != null)
-                            {
-                                foreach (var subItem in SlotParentsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendItem(subItem);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
-                    }
-                    if (printMask?.UseAllParents ?? true)
-                    {
-                        fg.AppendItem(UseAllParents, "UseAllParents");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -427,21 +327,12 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
-            #region Members
-            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SlotParents;
-            public Exception? UseAllParents;
-            #endregion
-
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+                AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
-                    case EquipType_FieldIndex.SlotParents:
-                        return SlotParents;
-                    case EquipType_FieldIndex.UseAllParents:
-                        return UseAllParents;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -449,15 +340,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+                AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
-                    case EquipType_FieldIndex.SlotParents:
-                        this.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
-                        break;
-                    case EquipType_FieldIndex.UseAllParents:
-                        this.UseAllParents = ex;
-                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -466,15 +351,9 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+                AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
                 switch (enu)
                 {
-                    case EquipType_FieldIndex.SlotParents:
-                        this.SlotParents = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
-                        break;
-                    case EquipType_FieldIndex.UseAllParents:
-                        this.UseAllParents = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -484,8 +363,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (SlotParents != null) return true;
-                if (UseAllParents != null) return true;
                 return false;
             }
             #endregion
@@ -521,29 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                if (SlotParents.TryGet(out var SlotParentsItem))
-                {
-                    fg.AppendLine("SlotParents =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(SlotParentsItem.Overall);
-                        if (SlotParentsItem.Specific != null)
-                        {
-                            foreach (var subItem in SlotParentsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    fg.AppendItem(subItem);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
-                fg.AppendItem(UseAllParents, "UseAllParents");
             }
             #endregion
 
@@ -552,8 +406,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.SlotParents = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SlotParents?.Overall, rhs.SlotParents?.Overall), ExceptionExt.Combine(this.SlotParents?.Specific, rhs.SlotParents?.Specific));
-                ret.UseAllParents = this.UseAllParents.Combine(rhs.UseAllParents);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -575,50 +427,31 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
-            #region Members
-            public bool SlotParents;
-            public bool UseAllParents;
-            #endregion
-
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.SlotParents = defaultOn;
-                this.UseAllParents = defaultOn;
             }
 
             #endregion
 
-            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
-            {
-                base.GetCrystal(ret);
-                ret.Add((SlotParents, null));
-                ret.Add((UseAllParents, null));
-            }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = EquipType_Registration.TriggeringRecordType;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        public EquipType(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = AssociationType_Registration.TriggeringRecordType;
+        public AssociationType(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public EquipType(IMod mod)
+        public AssociationType(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public EquipType(IMod mod, string editorID)
+        public AssociationType(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -628,31 +461,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => EquipTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AssociationTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EquipTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AssociationTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new EquipType CreateFromBinary(MutagenFrame frame)
+        public static new AssociationType CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static EquipType CreateFromBinary(
+        public new static AssociationType CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new EquipType();
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new AssociationType();
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -663,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out EquipType item,
+            out AssociationType item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -674,90 +507,85 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEquipTypeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAssociationTypeGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new EquipType GetNew()
+        internal static new AssociationType GetNew()
         {
-            return new EquipType();
+            return new AssociationType();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IEquipType :
-        IEquipTypeGetter,
+    public partial interface IAssociationType :
+        IAssociationTypeGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IEquipTypeInternal>
+        ILoquiObjectSetter<IAssociationTypeInternal>
     {
-        new ExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
-        new Boolean? UseAllParents { get; set; }
     }
 
-    public partial interface IEquipTypeInternal :
+    public partial interface IAssociationTypeInternal :
         ISkyrimMajorRecordInternal,
-        IEquipType,
-        IEquipTypeGetter
+        IAssociationType,
+        IAssociationTypeGetter
     {
     }
 
-    public partial interface IEquipTypeGetter :
+    public partial interface IAssociationTypeGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IEquipTypeGetter>,
+        ILoquiObject<IAssociationTypeGetter>,
         IXmlItem,
-        ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => EquipType_Registration.Instance;
-        IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; }
-        Boolean? UseAllParents { get; }
+        static ILoquiRegistration Registration => AssociationType_Registration.Instance;
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class EquipTypeMixIn
+    public static partial class AssociationTypeMixIn
     {
-        public static void Clear(this IEquipTypeInternal item)
+        public static void Clear(this IAssociationTypeInternal item)
         {
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static EquipType.Mask<bool> GetEqualsMask(
-            this IEquipTypeGetter item,
-            IEquipTypeGetter rhs,
+        public static AssociationType.Mask<bool> GetEqualsMask(
+            this IAssociationTypeGetter item,
+            IAssociationTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IEquipTypeGetter item,
+            this IAssociationTypeGetter item,
             string? name = null,
-            EquipType.Mask<bool>? printMask = null)
+            AssociationType.Mask<bool>? printMask = null)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).ToString(
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IEquipTypeGetter item,
+            this IAssociationTypeGetter item,
             FileGeneration fg,
             string? name = null,
-            EquipType.Mask<bool>? printMask = null)
+            AssociationType.Mask<bool>? printMask = null)
         {
-            ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).ToString(
+            ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -765,86 +593,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IEquipTypeGetter item,
-            EquipType.Mask<bool?> checkMask)
+            this IAssociationTypeGetter item,
+            AssociationType.Mask<bool?> checkMask)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).HasBeenSet(
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static EquipType.Mask<bool> GetHasBeenSetMask(this IEquipTypeGetter item)
+        public static AssociationType.Mask<bool> GetHasBeenSetMask(this IAssociationTypeGetter item)
         {
-            var ret = new EquipType.Mask<bool>(false);
-            ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new AssociationType.Mask<bool>(false);
+            ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IEquipTypeGetter item,
-            IEquipTypeGetter rhs)
+            this IAssociationTypeGetter item,
+            IAssociationTypeGetter rhs)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).Equals(
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IEquipTypeInternal lhs,
-            IEquipTypeGetter rhs,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? copyMask = null)
+            this IAssociationTypeInternal lhs,
+            IAssociationTypeGetter rhs,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((EquipTypeSetterTranslationCommon)((IEquipTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AssociationTypeSetterTranslationCommon)((IAssociationTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = EquipType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IEquipTypeInternal lhs,
-            IEquipTypeGetter rhs,
+            this IAssociationTypeInternal lhs,
+            IAssociationTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((EquipTypeSetterTranslationCommon)((IEquipTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((AssociationTypeSetterTranslationCommon)((IAssociationTypeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static EquipType DeepCopy(
-            this IEquipTypeGetter item,
-            EquipType.TranslationMask? copyMask = null)
+        public static AssociationType DeepCopy(
+            this IAssociationTypeGetter item,
+            AssociationType.TranslationMask? copyMask = null)
         {
-            return ((EquipTypeSetterTranslationCommon)((IEquipTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AssociationTypeSetterTranslationCommon)((IAssociationTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static EquipType DeepCopy(
-            this IEquipTypeGetter item,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? copyMask = null)
+        public static AssociationType DeepCopy(
+            this IAssociationTypeGetter item,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? copyMask = null)
         {
-            return ((EquipTypeSetterTranslationCommon)((IEquipTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AssociationTypeSetterTranslationCommon)((IAssociationTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static EquipType DeepCopy(
-            this IEquipTypeGetter item,
+        public static AssociationType DeepCopy(
+            this IAssociationTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((EquipTypeSetterTranslationCommon)((IEquipTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((AssociationTypeSetterTranslationCommon)((IAssociationTypeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -853,9 +681,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             XElement node,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -866,10 +694,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             XElement node,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -877,16 +705,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EquipType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -894,9 +722,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             string path,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -906,10 +734,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             string path,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -920,10 +748,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -934,9 +762,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             Stream stream,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -946,10 +774,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             Stream stream,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -960,10 +788,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            EquipType.TranslationMask? translationMask = null)
+            AssociationType.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -978,7 +806,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -988,11 +816,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IEquipTypeInternal item,
+            this IAssociationTypeInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EquipTypeSetterCommon)((IEquipTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((AssociationTypeSetterCommon)((IAssociationTypeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1008,7 +836,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum EquipType_FieldIndex
+    public enum AssociationType_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1016,46 +844,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        SlotParents = 6,
-        UseAllParents = 7,
     }
     #endregion
 
     #region Registration
-    public partial class EquipType_Registration : ILoquiRegistration
+    public partial class AssociationType_Registration : ILoquiRegistration
     {
-        public static readonly EquipType_Registration Instance = new EquipType_Registration();
+        public static readonly AssociationType_Registration Instance = new AssociationType_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 69,
+            msgID: 462,
             version: 0);
 
-        public const string GUID = "8aeacc80-2d8c-45fc-8cf1-48c04bc3a4ca";
+        public const string GUID = "5de359e7-27e8-4476-9bde-27a98d336b5e";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 0;
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
-        public static readonly Type MaskType = typeof(EquipType.Mask<>);
+        public static readonly Type MaskType = typeof(AssociationType.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EquipType.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(AssociationType.ErrorMask);
 
-        public static readonly Type ClassType = typeof(EquipType);
+        public static readonly Type ClassType = typeof(AssociationType);
 
-        public static readonly Type GetterType = typeof(IEquipTypeGetter);
+        public static readonly Type GetterType = typeof(IAssociationTypeGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IEquipType);
+        public static readonly Type SetterType = typeof(IAssociationType);
 
-        public static readonly Type? InternalSetterType = typeof(IEquipTypeInternal);
+        public static readonly Type? InternalSetterType = typeof(IAssociationTypeInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.EquipType";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.AssociationType";
 
-        public const string Name = "EquipType";
+        public const string Name = "AssociationType";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1067,10 +893,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "SLOTPARENTS":
-                    return (ushort)EquipType_FieldIndex.SlotParents;
-                case "USEALLPARENTS":
-                    return (ushort)EquipType_FieldIndex.UseAllParents;
                 default:
                     return null;
             }
@@ -1078,13 +900,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                    return true;
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -1092,12 +910,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -1105,12 +920,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -1118,13 +930,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                    return "SlotParents";
-                case EquipType_FieldIndex.UseAllParents:
-                    return "UseAllParents";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1132,12 +940,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -1145,12 +950,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                case EquipType_FieldIndex.UseAllParents:
-                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -1158,21 +960,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            EquipType_FieldIndex enu = (EquipType_FieldIndex)index;
+            AssociationType_FieldIndex enu = (AssociationType_FieldIndex)index;
             switch (enu)
             {
-                case EquipType_FieldIndex.SlotParents:
-                    return typeof(ExtendedList<IFormLink<EquipType>>);
-                case EquipType_FieldIndex.UseAllParents:
-                    return typeof(Boolean);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(EquipTypeXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.EQUP;
-        public static readonly Type BinaryWriteTranslation = typeof(EquipTypeBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(AssociationTypeXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.ASTP;
+        public static readonly Type BinaryWriteTranslation = typeof(AssociationTypeBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1205,33 +1003,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class EquipTypeSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class AssociationTypeSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly EquipTypeSetterCommon Instance = new EquipTypeSetterCommon();
+        public new static readonly AssociationTypeSetterCommon Instance = new AssociationTypeSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IEquipTypeInternal item)
+        public void Clear(IAssociationTypeInternal item)
         {
             ClearPartial();
-            item.SlotParents = null;
-            item.UseAllParents = default;
             base.Clear(item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IEquipTypeInternal)item);
+            Clear(item: (IAssociationTypeInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IEquipTypeInternal)item);
+            Clear(item: (IAssociationTypeInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1251,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1266,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    EquipTypeXmlCreateTranslation.FillPublicElementXml(
+                    AssociationTypeXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1288,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (EquipType)item,
+                item: (AssociationType)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1301,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (EquipType)item,
+                item: (AssociationType)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1311,16 +1107,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IEquipTypeInternal>(
+            UtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: EquipTypeBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: EquipTypeBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: AssociationTypeBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: AssociationTypeBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1329,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (EquipType)item,
+                item: (AssociationType)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1340,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (EquipType)item,
+                item: (AssociationType)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1348,17 +1144,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class EquipTypeCommon : SkyrimMajorRecordCommon
+    public partial class AssociationTypeCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly EquipTypeCommon Instance = new EquipTypeCommon();
+        public new static readonly AssociationTypeCommon Instance = new AssociationTypeCommon();
 
-        public EquipType.Mask<bool> GetEqualsMask(
-            IEquipTypeGetter item,
-            IEquipTypeGetter rhs,
+        public AssociationType.Mask<bool> GetEqualsMask(
+            IAssociationTypeGetter item,
+            IAssociationTypeGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new EquipType.Mask<bool>(false);
-            ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new AssociationType.Mask<bool>(false);
+            ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1367,24 +1163,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IEquipTypeGetter item,
-            IEquipTypeGetter rhs,
-            EquipType.Mask<bool> ret,
+            IAssociationTypeGetter item,
+            IAssociationTypeGetter rhs,
+            AssociationType.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.SlotParents = item.SlotParents.CollectionEqualsHelper(
-                rhs.SlotParents,
-                (l, r) => object.Equals(l, r),
-                include);
-            ret.UseAllParents = item.UseAllParents == rhs.UseAllParents;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             string? name = null,
-            EquipType.Mask<bool>? printMask = null)
+            AssociationType.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1396,18 +1187,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             FileGeneration fg,
             string? name = null,
-            EquipType.Mask<bool>? printMask = null)
+            AssociationType.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"EquipType =>");
+                fg.AppendLine($"AssociationType =>");
             }
             else
             {
-                fg.AppendLine($"{name} (EquipType) =>");
+                fg.AppendLine($"{name} (AssociationType) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1421,95 +1212,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             FileGeneration fg,
-            EquipType.Mask<bool>? printMask = null)
+            AssociationType.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.SlotParents?.Overall ?? true)
-                && item.SlotParents.TryGet(out var SlotParentsItem))
-            {
-                fg.AppendLine("SlotParents =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in SlotParentsItem)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(subItem);
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
-            }
-            if ((printMask?.UseAllParents ?? true)
-                && item.UseAllParents.TryGet(out var UseAllParentsItem))
-            {
-                fg.AppendItem(UseAllParentsItem, "UseAllParents");
-            }
         }
         
         public bool HasBeenSet(
-            IEquipTypeGetter item,
-            EquipType.Mask<bool?> checkMask)
+            IAssociationTypeGetter item,
+            AssociationType.Mask<bool?> checkMask)
         {
-            if (checkMask.SlotParents?.Overall.HasValue ?? false && checkMask.SlotParents!.Overall.Value != (item.SlotParents != null)) return false;
-            if (checkMask.UseAllParents.HasValue && checkMask.UseAllParents.Value != (item.UseAllParents != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            IEquipTypeGetter item,
-            EquipType.Mask<bool> mask)
+            IAssociationTypeGetter item,
+            AssociationType.Mask<bool> mask)
         {
-            mask.SlotParents = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.SlotParents != null), default);
-            mask.UseAllParents = (item.UseAllParents != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static EquipType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static AssociationType_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new EquipType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new AssociationType_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (EquipType_FieldIndex)((int)index);
+                    return (AssociationType_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1517,14 +1280,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IEquipTypeGetter? lhs,
-            IEquipTypeGetter? rhs)
+            IAssociationTypeGetter? lhs,
+            IAssociationTypeGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!lhs.SlotParents.SequenceEqual(rhs.SlotParents)) return false;
-            if (lhs.UseAllParents != rhs.UseAllParents) return false;
             return true;
         }
         
@@ -1533,8 +1294,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEquipTypeGetter?)lhs,
-                rhs: rhs as IEquipTypeGetter);
+                lhs: (IAssociationTypeGetter?)lhs,
+                rhs: rhs as IAssociationTypeGetter);
         }
         
         public override bool Equals(
@@ -1542,30 +1303,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IEquipTypeGetter?)lhs,
-                rhs: rhs as IEquipTypeGetter);
+                lhs: (IAssociationTypeGetter?)lhs,
+                rhs: rhs as IAssociationTypeGetter);
         }
         
-        public virtual int GetHashCode(IEquipTypeGetter item)
+        public virtual int GetHashCode(IAssociationTypeGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.SlotParents);
-            if (item.UseAllParents.TryGet(out var UseAllParentsitem))
-            {
-                hash.Add(UseAllParentsitem);
-            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IEquipTypeGetter)item);
+            return GetHashCode(item: (IAssociationTypeGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IEquipTypeGetter)item);
+            return GetHashCode(item: (IAssociationTypeGetter)item);
         }
         
         #endregion
@@ -1573,49 +1329,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return EquipType.GetNew();
+            return AssociationType.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IEquipTypeGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IAssociationTypeGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.SlotParents.TryGet(out var SlotParentsItem))
-            {
-                foreach (var item in SlotParentsItem.Select(f => f.FormKey))
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
-        public void RemapLinks(IEquipTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(EquipType obj, EquipType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(IAssociationTypeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(AssociationType obj, AssociationType rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new EquipType(getNextFormKey());
-            ret.DeepCopyIn((EquipType)item);
+            var ret = new AssociationType(getNextFormKey());
+            ret.DeepCopyIn((AssociationType)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (EquipType)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (AssociationType)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class EquipTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class AssociationTypeSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly EquipTypeSetterTranslationCommon Instance = new EquipTypeSetterTranslationCommon();
+        public new static readonly AssociationTypeSetterTranslationCommon Instance = new AssociationTypeSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IEquipTypeInternal item,
-            IEquipTypeGetter rhs,
+            IAssociationTypeInternal item,
+            IAssociationTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1627,8 +1376,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IEquipType item,
-            IEquipTypeGetter rhs,
+            IAssociationType item,
+            IAssociationTypeGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1637,37 +1386,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
-            {
-                errorMask?.PushIndex((int)EquipType_FieldIndex.SlotParents);
-                try
-                {
-                    if ((rhs.SlotParents != null))
-                    {
-                        item.SlotParents = 
-                            rhs.SlotParents
-                            .Select(r => (IFormLink<EquipType>)new FormLink<EquipType>(r.FormKey))
-                            .ToExtendedList<IFormLink<EquipType>>();
-                    }
-                    else
-                    {
-                        item.SlotParents = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
-            if ((copyMask?.GetShouldTranslate((int)EquipType_FieldIndex.UseAllParents) ?? true))
-            {
-                item.UseAllParents = rhs.UseAllParents;
-            }
         }
         
         public override void DeepCopyIn(
@@ -1677,8 +1395,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEquipTypeInternal)item,
-                rhs: (IEquipTypeGetter)rhs,
+                item: (IAssociationTypeInternal)item,
+                rhs: (IAssociationTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1690,8 +1408,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEquipType)item,
-                rhs: (IEquipTypeGetter)rhs,
+                item: (IAssociationType)item,
+                rhs: (IAssociationTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1703,8 +1421,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEquipTypeInternal)item,
-                rhs: (IEquipTypeGetter)rhs,
+                item: (IAssociationTypeInternal)item,
+                rhs: (IAssociationTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1716,31 +1434,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IEquipType)item,
-                rhs: (IEquipTypeGetter)rhs,
+                item: (IAssociationType)item,
+                rhs: (IAssociationTypeGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public EquipType DeepCopy(
-            IEquipTypeGetter item,
-            EquipType.TranslationMask? copyMask = null)
+        public AssociationType DeepCopy(
+            IAssociationTypeGetter item,
+            AssociationType.TranslationMask? copyMask = null)
         {
-            EquipType ret = (EquipType)((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).GetNew();
+            AssociationType ret = (AssociationType)((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public EquipType DeepCopy(
-            IEquipTypeGetter item,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? copyMask = null)
+        public AssociationType DeepCopy(
+            IAssociationTypeGetter item,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? copyMask = null)
         {
-            EquipType ret = (EquipType)((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).GetNew();
+            AssociationType ret = (AssociationType)((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1748,12 +1466,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public EquipType DeepCopy(
-            IEquipTypeGetter item,
+        public AssociationType DeepCopy(
+            IAssociationTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            EquipType ret = (EquipType)((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).GetNew();
+            AssociationType ret = (AssociationType)((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1768,21 +1486,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class EquipType
+    public partial class AssociationType
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EquipType_Registration.Instance;
-        public new static EquipType_Registration Registration => EquipType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
+        public new static AssociationType_Registration Registration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => EquipTypeCommon.Instance;
+        protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return EquipTypeSetterCommon.Instance;
+            return AssociationTypeSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => EquipTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AssociationTypeSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1793,14 +1511,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EquipTypeXmlWriteTranslation :
+    public partial class AssociationTypeXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static EquipTypeXmlWriteTranslation Instance = new EquipTypeXmlWriteTranslation();
+        public new readonly static AssociationTypeXmlWriteTranslation Instance = new AssociationTypeXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1810,49 +1528,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.SlotParents != null)
-                && (translationMask?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
-            {
-                ListXmlTranslation<IFormLink<IEquipTypeGetter>>.Instance.Write(
-                    node: node,
-                    name: nameof(item.SlotParents),
-                    item: item.SlotParents,
-                    fieldIndex: (int)EquipType_FieldIndex.SlotParents,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)EquipType_FieldIndex.SlotParents),
-                    transl: (XElement subNode, IFormLink<IEquipTypeGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        FormKeyXmlTranslation.Instance.Write(
-                            node: subNode,
-                            name: null,
-                            item: subItem.FormKey,
-                            errorMask: listSubMask);
-                    });
-            }
-            if ((item.UseAllParents != null)
-                && (translationMask?.GetShouldTranslate((int)EquipType_FieldIndex.UseAllParents) ?? true))
-            {
-                BooleanXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.UseAllParents),
-                    item: item.UseAllParents.Value,
-                    fieldIndex: (int)EquipType_FieldIndex.UseAllParents,
-                    errorMask: errorMask);
-            }
         }
 
         public void Write(
             XElement node,
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.EquipType");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.AssociationType");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.EquipType");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.AssociationType");
             }
             WriteToNodeXml(
                 item: item,
@@ -1869,7 +1558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1884,7 +1573,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1899,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1908,12 +1597,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class EquipTypeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class AssociationTypeXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static EquipTypeXmlCreateTranslation Instance = new EquipTypeXmlCreateTranslation();
+        public new readonly static AssociationTypeXmlCreateTranslation Instance = new AssociationTypeXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1922,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    EquipTypeXmlCreateTranslation.FillPublicElementXml(
+                    AssociationTypeXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1938,7 +1627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1946,52 +1635,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "SlotParents":
-                    errorMask?.PushIndex((int)EquipType_FieldIndex.SlotParents);
-                    try
-                    {
-                        if (ListXmlTranslation<IFormLink<EquipType>>.Instance.Parse(
-                            node: node,
-                            enumer: out var SlotParentsItem,
-                            transl: FormKeyXmlTranslation.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.SlotParents = SlotParentsItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.SlotParents = null;
-                        }
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "UseAllParents":
-                    errorMask?.PushIndex((int)EquipType_FieldIndex.UseAllParents);
-                    try
-                    {
-                        item.UseAllParents = BooleanXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -2009,30 +1652,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class EquipTypeXmlTranslationMixIn
+    public static class AssociationTypeXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IEquipTypeGetter item,
+            this IAssociationTypeGetter item,
             XElement node,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((EquipTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((AssociationTypeXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = EquipType.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = AssociationType.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IEquipTypeGetter item,
+            this IAssociationTypeGetter item,
             string path,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2046,10 +1689,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IEquipTypeGetter item,
+            this IAssociationTypeGetter item,
             Stream stream,
-            out EquipType.ErrorMask errorMask,
-            EquipType.TranslationMask? translationMask = null,
+            out AssociationType.ErrorMask errorMask,
+            AssociationType.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2072,52 +1715,26 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EquipTypeBinaryWriteTranslation :
+    public partial class AssociationTypeBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static EquipTypeBinaryWriteTranslation Instance = new EquipTypeBinaryWriteTranslation();
-
-        public static void WriteRecordTypes(
-            IEquipTypeGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IEquipTypeGetter>>.Instance.Write(
-                writer: writer,
-                items: item.SlotParents,
-                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
-                transl: (MutagenWriter subWriter, IFormLink<IEquipTypeGetter> subItem, RecordTypeConverter? conv) =>
-                {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                        writer: subWriter,
-                        item: subItem);
-                });
-            Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.UseAllParents,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
-                byteLength: 4);
-        }
+        public new readonly static AssociationTypeBinaryWriteTranslation Instance = new AssociationTypeBinaryWriteTranslation();
 
         public void Write(
             MutagenWriter writer,
-            IEquipTypeGetter item,
+            IAssociationTypeGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.EQUP),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.ASTP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                WriteRecordTypes(
+                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -2130,7 +1747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2141,7 +1758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2152,62 +1769,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IEquipTypeGetter)item,
+                item: (IAssociationTypeGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class EquipTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class AssociationTypeBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static EquipTypeBinaryCreateTranslation Instance = new EquipTypeBinaryCreateTranslation();
+        public new readonly static AssociationTypeBinaryCreateTranslation Instance = new AssociationTypeBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.EQUP;
+        public override RecordType RecordType => RecordTypes.ASTP;
         public static void FillBinaryStructs(
-            IEquipTypeInternal item,
+            IAssociationTypeInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-        }
-
-        public static TryGet<int?> FillBinaryRecordTypes(
-            IEquipTypeInternal item,
-            MutagenFrame frame,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.PNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SlotParents = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<EquipType>>();
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.SlotParents);
-                }
-                case RecordTypeInts.DATA:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseAllParents = Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        byteLength: 4);
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.UseAllParents);
-                }
-                default:
-                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
-                        item: item,
-                        frame: frame,
-                        nextRecordType: nextRecordType,
-                        contentLength: contentLength);
-            }
         }
 
     }
@@ -2216,7 +1796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class EquipTypeBinaryTranslationMixIn
+    public static class AssociationTypeBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2225,40 +1805,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class EquipTypeBinaryOverlay :
+    public partial class AssociationTypeBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        IEquipTypeGetter
+        IAssociationTypeGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => EquipType_Registration.Instance;
-        public new static EquipType_Registration Registration => EquipType_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => AssociationType_Registration.Instance;
+        public new static AssociationType_Registration Registration => AssociationType_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => EquipTypeCommon.Instance;
+        protected override object CommonInstance() => AssociationTypeCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => EquipTypeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => AssociationTypeSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IEquipTypeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IAssociationTypeGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => EquipTypeCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EquipTypeCommon.Instance.RemapLinks(this, mapping);
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => EquipTypeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => AssociationTypeXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((EquipTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((AssociationTypeXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2266,29 +1840,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => EquipTypeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => AssociationTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((EquipTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((AssociationTypeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLink<IEquipTypeGetter>>? SlotParents { get; private set; }
-        #region UseAllParents
-        private int? _UseAllParentsLocation;
-        public Boolean? UseAllParents => _UseAllParentsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _UseAllParentsLocation.Value, _package.MetaData.Constants)[0] == 1 : default(Boolean?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected EquipTypeBinaryOverlay(
+        protected AssociationTypeBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2298,13 +1867,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static EquipTypeBinaryOverlay EquipTypeFactory(
+        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream);
-            var ret = new EquipTypeBinaryOverlay(
+            var ret = new AssociationTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2323,61 +1892,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static EquipTypeBinaryOverlay EquipTypeFactory(
+        public static AssociationTypeBinaryOverlay AssociationTypeFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return EquipTypeFactory(
+            return AssociationTypeFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.PNAM:
-                {
-                    var subMeta = stream.ReadSubrecord();
-                    var subLen = subMeta.ContentLength;
-                    this.SlotParents = BinaryOverlayList<IFormLink<IEquipTypeGetter>>.FactoryByStartIndex(
-                        mem: stream.RemainingMemory.Slice(0, subLen),
-                        package: _package,
-                        itemLength: 4,
-                        getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.SlotParents);
-                }
-                case RecordTypeInts.DATA:
-                {
-                    _UseAllParentsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.UseAllParents);
-                }
-                default:
-                    return base.FillRecordType(
-                        stream: stream,
-                        finalPos: finalPos,
-                        offset: offset,
-                        type: type,
-                        lastParsed: lastParsed);
-            }
-        }
         #region To String
 
         public override void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            EquipTypeMixIn.ToString(
+            AssociationTypeMixIn.ToString(
                 item: this,
                 name: name);
         }

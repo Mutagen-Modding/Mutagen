@@ -49,6 +49,82 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Type
+        public MusicTrack.TypeEnum Type { get; set; } = default;
+        #endregion
+        #region Duration
+        public Single? Duration { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMusicTrackGetter.Duration => this.Duration;
+        #endregion
+        #region FadeOut
+        public Single? FadeOut { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IMusicTrackGetter.FadeOut => this.FadeOut;
+        #endregion
+        #region TrackFilename
+        public String? TrackFilename { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMusicTrackGetter.TrackFilename => this.TrackFilename;
+        #endregion
+        #region FinaleFilename
+        public String? FinaleFilename { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMusicTrackGetter.FinaleFilename => this.FinaleFilename;
+        #endregion
+        #region LoopData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MusicTrackLoopData? _LoopData;
+        public MusicTrackLoopData? LoopData
+        {
+            get => _LoopData;
+            set => _LoopData = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IMusicTrackLoopDataGetter? IMusicTrackGetter.LoopData => this.LoopData;
+        #endregion
+        #region CuePoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Single>? _CuePoints;
+        public ExtendedList<Single>? CuePoints
+        {
+            get => this._CuePoints;
+            set => this._CuePoints = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<Single>? IMusicTrackGetter.CuePoints => _CuePoints;
+        #endregion
+
+        #endregion
+        #region Conditions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<Condition>? _Conditions;
+        public ExtendedList<Condition>? Conditions
+        {
+            get => this._Conditions;
+            set => this._Conditions = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IConditionGetter>? IMusicTrackGetter.Conditions => _Conditions;
+        #endregion
+
+        #endregion
+        #region Tracks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<IFormLink<MusicTrack>>? _Tracks;
+        public ExtendedList<IFormLink<MusicTrack>>? Tracks
+        {
+            get => this._Tracks;
+            set => this._Tracks = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<IMusicTrackGetter>>? IMusicTrackGetter.Tracks => _Tracks;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +294,15 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Type = initialValue;
+                this.Duration = initialValue;
+                this.FadeOut = initialValue;
+                this.TrackFilename = initialValue;
+                this.FinaleFilename = initialValue;
+                this.LoopData = new MaskItem<TItem, MusicTrackLoopData.Mask<TItem>?>(initialValue, new MusicTrackLoopData.Mask<TItem>(initialValue));
+                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -226,7 +311,16 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Type,
+                TItem Duration,
+                TItem FadeOut,
+                TItem TrackFilename,
+                TItem FinaleFilename,
+                TItem LoopData,
+                TItem CuePoints,
+                TItem Conditions,
+                TItem Tracks)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +329,15 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Type = Type;
+                this.Duration = Duration;
+                this.FadeOut = FadeOut;
+                this.TrackFilename = TrackFilename;
+                this.FinaleFilename = FinaleFilename;
+                this.LoopData = new MaskItem<TItem, MusicTrackLoopData.Mask<TItem>?>(LoopData, new MusicTrackLoopData.Mask<TItem>(LoopData));
+                this.CuePoints = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CuePoints, Enumerable.Empty<(int Index, TItem Value)>());
+                this.Conditions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>(Conditions, Enumerable.Empty<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>());
+                this.Tracks = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(Tracks, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +346,18 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Type;
+            public TItem Duration;
+            public TItem FadeOut;
+            public TItem TrackFilename;
+            public TItem FinaleFilename;
+            public MaskItem<TItem, MusicTrackLoopData.Mask<TItem>?>? LoopData { get; set; }
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CuePoints;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Condition.Mask<TItem>?>>?>? Conditions;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? Tracks;
             #endregion
 
             #region Equals
@@ -256,11 +371,29 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Type, rhs.Type)) return false;
+                if (!object.Equals(this.Duration, rhs.Duration)) return false;
+                if (!object.Equals(this.FadeOut, rhs.FadeOut)) return false;
+                if (!object.Equals(this.TrackFilename, rhs.TrackFilename)) return false;
+                if (!object.Equals(this.FinaleFilename, rhs.FinaleFilename)) return false;
+                if (!object.Equals(this.LoopData, rhs.LoopData)) return false;
+                if (!object.Equals(this.CuePoints, rhs.CuePoints)) return false;
+                if (!object.Equals(this.Conditions, rhs.Conditions)) return false;
+                if (!object.Equals(this.Tracks, rhs.Tracks)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Type);
+                hash.Add(this.Duration);
+                hash.Add(this.FadeOut);
+                hash.Add(this.TrackFilename);
+                hash.Add(this.FinaleFilename);
+                hash.Add(this.LoopData);
+                hash.Add(this.CuePoints);
+                hash.Add(this.Conditions);
+                hash.Add(this.Tracks);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +404,50 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Type)) return false;
+                if (!eval(this.Duration)) return false;
+                if (!eval(this.FadeOut)) return false;
+                if (!eval(this.TrackFilename)) return false;
+                if (!eval(this.FinaleFilename)) return false;
+                if (LoopData != null)
+                {
+                    if (!eval(this.LoopData.Overall)) return false;
+                    if (this.LoopData.Specific != null && !this.LoopData.Specific.All(eval)) return false;
+                }
+                if (this.CuePoints != null)
+                {
+                    if (!eval(this.CuePoints.Overall)) return false;
+                    if (this.CuePoints.Specific != null)
+                    {
+                        foreach (var item in this.CuePoints.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (!eval(this.Conditions.Overall)) return false;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Tracks != null)
+                {
+                    if (!eval(this.Tracks.Overall)) return false;
+                    if (this.Tracks.Specific != null)
+                    {
+                        foreach (var item in this.Tracks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +456,50 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Type)) return true;
+                if (eval(this.Duration)) return true;
+                if (eval(this.FadeOut)) return true;
+                if (eval(this.TrackFilename)) return true;
+                if (eval(this.FinaleFilename)) return true;
+                if (LoopData != null)
+                {
+                    if (eval(this.LoopData.Overall)) return true;
+                    if (this.LoopData.Specific != null && this.LoopData.Specific.Any(eval)) return true;
+                }
+                if (this.CuePoints != null)
+                {
+                    if (eval(this.CuePoints.Overall)) return true;
+                    if (this.CuePoints.Specific != null)
+                    {
+                        foreach (var item in this.CuePoints.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
+                if (this.Conditions != null)
+                {
+                    if (eval(this.Conditions.Overall)) return true;
+                    if (this.Conditions.Specific != null)
+                    {
+                        foreach (var item in this.Conditions.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
+                if (this.Tracks != null)
+                {
+                    if (eval(this.Tracks.Overall)) return true;
+                    if (this.Tracks.Specific != null)
+                    {
+                        foreach (var item in this.Tracks.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +515,55 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Type = eval(this.Type);
+                obj.Duration = eval(this.Duration);
+                obj.FadeOut = eval(this.FadeOut);
+                obj.TrackFilename = eval(this.TrackFilename);
+                obj.FinaleFilename = eval(this.FinaleFilename);
+                obj.LoopData = this.LoopData == null ? null : new MaskItem<R, MusicTrackLoopData.Mask<R>?>(eval(this.LoopData.Overall), this.LoopData.Specific?.Translate(eval));
+                if (CuePoints != null)
+                {
+                    obj.CuePoints = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CuePoints.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CuePoints.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CuePoints.Specific = l;
+                        foreach (var item in CuePoints.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
+                if (Conditions != null)
+                {
+                    obj.Conditions = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Condition.Mask<R>?>>?>(eval(this.Conditions.Overall), Enumerable.Empty<MaskItemIndexed<R, Condition.Mask<R>?>>());
+                    if (Conditions.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, Condition.Mask<R>?>>();
+                        obj.Conditions.Specific = l;
+                        foreach (var item in Conditions.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, Condition.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, Condition.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
+                if (Tracks != null)
+                {
+                    obj.Tracks = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.Tracks.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (Tracks.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.Tracks.Specific = l;
+                        foreach (var item in Tracks.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +586,99 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Type ?? true)
+                    {
+                        fg.AppendItem(Type, "Type");
+                    }
+                    if (printMask?.Duration ?? true)
+                    {
+                        fg.AppendItem(Duration, "Duration");
+                    }
+                    if (printMask?.FadeOut ?? true)
+                    {
+                        fg.AppendItem(FadeOut, "FadeOut");
+                    }
+                    if (printMask?.TrackFilename ?? true)
+                    {
+                        fg.AppendItem(TrackFilename, "TrackFilename");
+                    }
+                    if (printMask?.FinaleFilename ?? true)
+                    {
+                        fg.AppendItem(FinaleFilename, "FinaleFilename");
+                    }
+                    if (printMask?.LoopData?.Overall ?? true)
+                    {
+                        LoopData?.ToString(fg);
+                    }
+                    if ((printMask?.CuePoints?.Overall ?? true)
+                        && CuePoints.TryGet(out var CuePointsItem))
+                    {
+                        fg.AppendLine("CuePoints =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CuePointsItem.Overall);
+                            if (CuePointsItem.Specific != null)
+                            {
+                                foreach (var subItem in CuePointsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Conditions?.Overall ?? true)
+                        && Conditions.TryGet(out var ConditionsItem))
+                    {
+                        fg.AppendLine("Conditions =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(ConditionsItem.Overall);
+                            if (ConditionsItem.Specific != null)
+                            {
+                                foreach (var subItem in ConditionsItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
+                    if ((printMask?.Tracks?.Overall ?? true)
+                        && Tracks.TryGet(out var TracksItem))
+                    {
+                        fg.AppendLine("Tracks =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(TracksItem.Overall);
+                            if (TracksItem.Specific != null)
+                            {
+                                foreach (var subItem in TracksItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +690,42 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Type;
+            public Exception? Duration;
+            public Exception? FadeOut;
+            public Exception? TrackFilename;
+            public Exception? FinaleFilename;
+            public MaskItem<Exception?, MusicTrackLoopData.ErrorMask?>? LoopData;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CuePoints;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>? Conditions;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? Tracks;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.Type:
+                        return Type;
+                    case MusicTrack_FieldIndex.Duration:
+                        return Duration;
+                    case MusicTrack_FieldIndex.FadeOut:
+                        return FadeOut;
+                    case MusicTrack_FieldIndex.TrackFilename:
+                        return TrackFilename;
+                    case MusicTrack_FieldIndex.FinaleFilename:
+                        return FinaleFilename;
+                    case MusicTrack_FieldIndex.LoopData:
+                        return LoopData;
+                    case MusicTrack_FieldIndex.CuePoints:
+                        return CuePoints;
+                    case MusicTrack_FieldIndex.Conditions:
+                        return Conditions;
+                    case MusicTrack_FieldIndex.Tracks:
+                        return Tracks;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +736,33 @@ namespace Mutagen.Bethesda.Skyrim
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.Type:
+                        this.Type = ex;
+                        break;
+                    case MusicTrack_FieldIndex.Duration:
+                        this.Duration = ex;
+                        break;
+                    case MusicTrack_FieldIndex.FadeOut:
+                        this.FadeOut = ex;
+                        break;
+                    case MusicTrack_FieldIndex.TrackFilename:
+                        this.TrackFilename = ex;
+                        break;
+                    case MusicTrack_FieldIndex.FinaleFilename:
+                        this.FinaleFilename = ex;
+                        break;
+                    case MusicTrack_FieldIndex.LoopData:
+                        this.LoopData = new MaskItem<Exception?, MusicTrackLoopData.ErrorMask?>(ex, null);
+                        break;
+                    case MusicTrack_FieldIndex.CuePoints:
+                        this.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
+                    case MusicTrack_FieldIndex.Conditions:
+                        this.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ex, null);
+                        break;
+                    case MusicTrack_FieldIndex.Tracks:
+                        this.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +774,33 @@ namespace Mutagen.Bethesda.Skyrim
                 MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
                 switch (enu)
                 {
+                    case MusicTrack_FieldIndex.Type:
+                        this.Type = (Exception?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.Duration:
+                        this.Duration = (Exception?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.FadeOut:
+                        this.FadeOut = (Exception?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.TrackFilename:
+                        this.TrackFilename = (Exception?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.FinaleFilename:
+                        this.FinaleFilename = (Exception?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.LoopData:
+                        this.LoopData = (MaskItem<Exception?, MusicTrackLoopData.ErrorMask?>?)obj;
+                        break;
+                    case MusicTrack_FieldIndex.CuePoints:
+                        this.CuePoints = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
+                    case MusicTrack_FieldIndex.Conditions:
+                        this.Conditions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>)obj;
+                        break;
+                    case MusicTrack_FieldIndex.Tracks:
+                        this.Tracks = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +810,15 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Type != null) return true;
+                if (Duration != null) return true;
+                if (FadeOut != null) return true;
+                if (TrackFilename != null) return true;
+                if (FinaleFilename != null) return true;
+                if (LoopData != null) return true;
+                if (CuePoints != null) return true;
+                if (Conditions != null) return true;
+                if (Tracks != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +854,78 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Type, "Type");
+                fg.AppendItem(Duration, "Duration");
+                fg.AppendItem(FadeOut, "FadeOut");
+                fg.AppendItem(TrackFilename, "TrackFilename");
+                fg.AppendItem(FinaleFilename, "FinaleFilename");
+                LoopData?.ToString(fg);
+                if (CuePoints.TryGet(out var CuePointsItem))
+                {
+                    fg.AppendLine("CuePoints =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CuePointsItem.Overall);
+                        if (CuePointsItem.Specific != null)
+                        {
+                            foreach (var subItem in CuePointsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Conditions.TryGet(out var ConditionsItem))
+                {
+                    fg.AppendLine("Conditions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(ConditionsItem.Overall);
+                        if (ConditionsItem.Specific != null)
+                        {
+                            foreach (var subItem in ConditionsItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (Tracks.TryGet(out var TracksItem))
+                {
+                    fg.AppendLine("Tracks =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(TracksItem.Overall);
+                        if (TracksItem.Specific != null)
+                        {
+                            foreach (var subItem in TracksItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +934,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Type = this.Type.Combine(rhs.Type);
+                ret.Duration = this.Duration.Combine(rhs.Duration);
+                ret.FadeOut = this.FadeOut.Combine(rhs.FadeOut);
+                ret.TrackFilename = this.TrackFilename.Combine(rhs.TrackFilename);
+                ret.FinaleFilename = this.FinaleFilename.Combine(rhs.FinaleFilename);
+                ret.LoopData = this.LoopData.Combine(rhs.LoopData, (l, r) => l.Combine(r));
+                ret.CuePoints = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CuePoints?.Overall, rhs.CuePoints?.Overall), ExceptionExt.Combine(this.CuePoints?.Specific, rhs.CuePoints?.Specific));
+                ret.Conditions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Condition.ErrorMask?>>?>(ExceptionExt.Combine(this.Conditions?.Overall, rhs.Conditions?.Overall), ExceptionExt.Combine(this.Conditions?.Specific, rhs.Conditions?.Specific));
+                ret.Tracks = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.Tracks?.Overall, rhs.Tracks?.Overall), ExceptionExt.Combine(this.Tracks?.Specific, rhs.Tracks?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +964,59 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Type;
+            public bool Duration;
+            public bool FadeOut;
+            public bool TrackFilename;
+            public bool FinaleFilename;
+            public MaskItem<bool, MusicTrackLoopData.TranslationMask?> LoopData;
+            public bool CuePoints;
+            public MaskItem<bool, Condition.TranslationMask?> Conditions;
+            public bool Tracks;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Type = defaultOn;
+                this.Duration = defaultOn;
+                this.FadeOut = defaultOn;
+                this.TrackFilename = defaultOn;
+                this.FinaleFilename = defaultOn;
+                this.LoopData = new MaskItem<bool, MusicTrackLoopData.TranslationMask?>(defaultOn, null);
+                this.CuePoints = defaultOn;
+                this.Conditions = new MaskItem<bool, Condition.TranslationMask?>(defaultOn, null);
+                this.Tracks = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Type, null));
+                ret.Add((Duration, null));
+                ret.Add((FadeOut, null));
+                ret.Add((TrackFilename, null));
+                ret.Add((FinaleFilename, null));
+                ret.Add((LoopData?.Overall ?? true, LoopData?.Specific?.GetCrystal()));
+                ret.Add((CuePoints, null));
+                ret.Add((Conditions?.Overall ?? true, Conditions?.Specific?.GetCrystal()));
+                ret.Add((Tracks, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = MusicTrack_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
         public MusicTrack(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -528,6 +1105,15 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMusicTrackInternal>
     {
+        new MusicTrack.TypeEnum Type { get; set; }
+        new Single? Duration { get; set; }
+        new Single? FadeOut { get; set; }
+        new String? TrackFilename { get; set; }
+        new String? FinaleFilename { get; set; }
+        new MusicTrackLoopData? LoopData { get; set; }
+        new ExtendedList<Single>? CuePoints { get; set; }
+        new ExtendedList<Condition>? Conditions { get; set; }
+        new ExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :
@@ -541,9 +1127,19 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<IMusicTrackGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => MusicTrack_Registration.Instance;
+        MusicTrack.TypeEnum Type { get; }
+        Single? Duration { get; }
+        Single? FadeOut { get; }
+        String? TrackFilename { get; }
+        String? FinaleFilename { get; }
+        IMusicTrackLoopDataGetter? LoopData { get; }
+        IReadOnlyList<Single>? CuePoints { get; }
+        IReadOnlyList<IConditionGetter>? Conditions { get; }
+        IReadOnlyList<IFormLink<IMusicTrackGetter>>? Tracks { get; }
 
     }
 
@@ -844,6 +1440,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Type = 6,
+        Duration = 7,
+        FadeOut = 8,
+        TrackFilename = 9,
+        FinaleFilename = 10,
+        LoopData = 11,
+        CuePoints = 12,
+        Conditions = 13,
+        Tracks = 14,
     }
     #endregion
 
@@ -861,9 +1466,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "be0b125f-644b-4d58-bcd9-94649f4fa209";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 15;
 
         public static readonly Type MaskType = typeof(MusicTrack.Mask<>);
 
@@ -893,6 +1498,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "TYPE":
+                    return (ushort)MusicTrack_FieldIndex.Type;
+                case "DURATION":
+                    return (ushort)MusicTrack_FieldIndex.Duration;
+                case "FADEOUT":
+                    return (ushort)MusicTrack_FieldIndex.FadeOut;
+                case "TRACKFILENAME":
+                    return (ushort)MusicTrack_FieldIndex.TrackFilename;
+                case "FINALEFILENAME":
+                    return (ushort)MusicTrack_FieldIndex.FinaleFilename;
+                case "LOOPDATA":
+                    return (ushort)MusicTrack_FieldIndex.LoopData;
+                case "CUEPOINTS":
+                    return (ushort)MusicTrack_FieldIndex.CuePoints;
+                case "CONDITIONS":
+                    return (ushort)MusicTrack_FieldIndex.Conditions;
+                case "TRACKS":
+                    return (ushort)MusicTrack_FieldIndex.Tracks;
                 default:
                     return null;
             }
@@ -903,6 +1526,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.CuePoints:
+                case MusicTrack_FieldIndex.Conditions:
+                case MusicTrack_FieldIndex.Tracks:
+                    return true;
+                case MusicTrack_FieldIndex.Type:
+                case MusicTrack_FieldIndex.Duration:
+                case MusicTrack_FieldIndex.FadeOut:
+                case MusicTrack_FieldIndex.TrackFilename:
+                case MusicTrack_FieldIndex.FinaleFilename:
+                case MusicTrack_FieldIndex.LoopData:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1547,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.LoopData:
+                case MusicTrack_FieldIndex.Conditions:
+                    return true;
+                case MusicTrack_FieldIndex.Type:
+                case MusicTrack_FieldIndex.Duration:
+                case MusicTrack_FieldIndex.FadeOut:
+                case MusicTrack_FieldIndex.TrackFilename:
+                case MusicTrack_FieldIndex.FinaleFilename:
+                case MusicTrack_FieldIndex.CuePoints:
+                case MusicTrack_FieldIndex.Tracks:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1568,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.Type:
+                case MusicTrack_FieldIndex.Duration:
+                case MusicTrack_FieldIndex.FadeOut:
+                case MusicTrack_FieldIndex.TrackFilename:
+                case MusicTrack_FieldIndex.FinaleFilename:
+                case MusicTrack_FieldIndex.LoopData:
+                case MusicTrack_FieldIndex.CuePoints:
+                case MusicTrack_FieldIndex.Conditions:
+                case MusicTrack_FieldIndex.Tracks:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1588,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.Type:
+                    return "Type";
+                case MusicTrack_FieldIndex.Duration:
+                    return "Duration";
+                case MusicTrack_FieldIndex.FadeOut:
+                    return "FadeOut";
+                case MusicTrack_FieldIndex.TrackFilename:
+                    return "TrackFilename";
+                case MusicTrack_FieldIndex.FinaleFilename:
+                    return "FinaleFilename";
+                case MusicTrack_FieldIndex.LoopData:
+                    return "LoopData";
+                case MusicTrack_FieldIndex.CuePoints:
+                    return "CuePoints";
+                case MusicTrack_FieldIndex.Conditions:
+                    return "Conditions";
+                case MusicTrack_FieldIndex.Tracks:
+                    return "Tracks";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1616,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.Type:
+                case MusicTrack_FieldIndex.Duration:
+                case MusicTrack_FieldIndex.FadeOut:
+                case MusicTrack_FieldIndex.TrackFilename:
+                case MusicTrack_FieldIndex.FinaleFilename:
+                case MusicTrack_FieldIndex.LoopData:
+                case MusicTrack_FieldIndex.CuePoints:
+                case MusicTrack_FieldIndex.Conditions:
+                case MusicTrack_FieldIndex.Tracks:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1636,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.Type:
+                case MusicTrack_FieldIndex.Duration:
+                case MusicTrack_FieldIndex.FadeOut:
+                case MusicTrack_FieldIndex.TrackFilename:
+                case MusicTrack_FieldIndex.FinaleFilename:
+                case MusicTrack_FieldIndex.LoopData:
+                case MusicTrack_FieldIndex.CuePoints:
+                case MusicTrack_FieldIndex.Conditions:
+                case MusicTrack_FieldIndex.Tracks:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1656,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MusicTrack_FieldIndex enu = (MusicTrack_FieldIndex)index;
             switch (enu)
             {
+                case MusicTrack_FieldIndex.Type:
+                    return typeof(MusicTrack.TypeEnum);
+                case MusicTrack_FieldIndex.Duration:
+                    return typeof(Single);
+                case MusicTrack_FieldIndex.FadeOut:
+                    return typeof(Single);
+                case MusicTrack_FieldIndex.TrackFilename:
+                    return typeof(String);
+                case MusicTrack_FieldIndex.FinaleFilename:
+                    return typeof(String);
+                case MusicTrack_FieldIndex.LoopData:
+                    return typeof(MusicTrackLoopData);
+                case MusicTrack_FieldIndex.CuePoints:
+                    return typeof(ExtendedList<Single>);
+                case MusicTrack_FieldIndex.Conditions:
+                    return typeof(ExtendedList<Condition>);
+                case MusicTrack_FieldIndex.Tracks:
+                    return typeof(ExtendedList<IFormLink<MusicTrack>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1723,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IMusicTrackInternal item)
         {
             ClearPartial();
+            item.Type = default;
+            item.Duration = default;
+            item.FadeOut = default;
+            item.TrackFilename = default;
+            item.FinaleFilename = default;
+            item.LoopData = null;
+            item.CuePoints = null;
+            item.Conditions = null;
+            item.Tracks = null;
             base.Clear(item);
         }
         
@@ -1169,6 +1889,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Type = item.Type == rhs.Type;
+            ret.Duration = item.Duration.EqualsWithin(rhs.Duration);
+            ret.FadeOut = item.FadeOut.EqualsWithin(rhs.FadeOut);
+            ret.TrackFilename = string.Equals(item.TrackFilename, rhs.TrackFilename);
+            ret.FinaleFilename = string.Equals(item.FinaleFilename, rhs.FinaleFilename);
+            ret.LoopData = EqualsMaskHelper.EqualsHelper(
+                item.LoopData,
+                rhs.LoopData,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.CuePoints = item.CuePoints.CollectionEqualsHelper(
+                rhs.CuePoints,
+                (l, r) => l.EqualsWithin(r),
+                include);
+            ret.Conditions = item.Conditions.CollectionEqualsHelper(
+                rhs.Conditions,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
+            ret.Tracks = item.Tracks.CollectionEqualsHelper(
+                rhs.Tracks,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1962,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Type ?? true)
+            {
+                fg.AppendItem(item.Type, "Type");
+            }
+            if ((printMask?.Duration ?? true)
+                && item.Duration.TryGet(out var DurationItem))
+            {
+                fg.AppendItem(DurationItem, "Duration");
+            }
+            if ((printMask?.FadeOut ?? true)
+                && item.FadeOut.TryGet(out var FadeOutItem))
+            {
+                fg.AppendItem(FadeOutItem, "FadeOut");
+            }
+            if ((printMask?.TrackFilename ?? true)
+                && item.TrackFilename.TryGet(out var TrackFilenameItem))
+            {
+                fg.AppendItem(TrackFilenameItem, "TrackFilename");
+            }
+            if ((printMask?.FinaleFilename ?? true)
+                && item.FinaleFilename.TryGet(out var FinaleFilenameItem))
+            {
+                fg.AppendItem(FinaleFilenameItem, "FinaleFilename");
+            }
+            if ((printMask?.LoopData?.Overall ?? true)
+                && item.LoopData.TryGet(out var LoopDataItem))
+            {
+                LoopDataItem?.ToString(fg, "LoopData");
+            }
+            if ((printMask?.CuePoints?.Overall ?? true)
+                && item.CuePoints.TryGet(out var CuePointsItem))
+            {
+                fg.AppendLine("CuePoints =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CuePointsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Conditions?.Overall ?? true)
+                && item.Conditions.TryGet(out var ConditionsItem))
+            {
+                fg.AppendLine("Conditions =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in ConditionsItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if ((printMask?.Tracks?.Overall ?? true)
+                && item.Tracks.TryGet(out var TracksItem))
+            {
+                fg.AppendLine("Tracks =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in TracksItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IMusicTrackGetter item,
             MusicTrack.Mask<bool?> checkMask)
         {
+            if (checkMask.Duration.HasValue && checkMask.Duration.Value != (item.Duration != null)) return false;
+            if (checkMask.FadeOut.HasValue && checkMask.FadeOut.Value != (item.FadeOut != null)) return false;
+            if (checkMask.TrackFilename.HasValue && checkMask.TrackFilename.Value != (item.TrackFilename != null)) return false;
+            if (checkMask.FinaleFilename.HasValue && checkMask.FinaleFilename.Value != (item.FinaleFilename != null)) return false;
+            if (checkMask.LoopData?.Overall.HasValue ?? false && checkMask.LoopData.Overall.Value != (item.LoopData != null)) return false;
+            if (checkMask.LoopData?.Specific != null && (item.LoopData == null || !item.LoopData.HasBeenSet(checkMask.LoopData.Specific))) return false;
+            if (checkMask.CuePoints?.Overall.HasValue ?? false && checkMask.CuePoints!.Overall.Value != (item.CuePoints != null)) return false;
+            if (checkMask.Conditions?.Overall.HasValue ?? false && checkMask.Conditions!.Overall.Value != (item.Conditions != null)) return false;
+            if (checkMask.Tracks?.Overall.HasValue ?? false && checkMask.Tracks!.Overall.Value != (item.Tracks != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +2072,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMusicTrackGetter item,
             MusicTrack.Mask<bool> mask)
         {
+            mask.Type = true;
+            mask.Duration = (item.Duration != null);
+            mask.FadeOut = (item.FadeOut != null);
+            mask.TrackFilename = (item.TrackFilename != null);
+            mask.FinaleFilename = (item.FinaleFilename != null);
+            var itemLoopData = item.LoopData;
+            mask.LoopData = new MaskItem<bool, MusicTrackLoopData.Mask<bool>?>(itemLoopData != null, itemLoopData?.GetHasBeenSetMask());
+            mask.CuePoints = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CuePoints != null), default);
+            if (item.Conditions.TryGet(out var ConditionsItem))
+            {
+                mask.Conditions = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Condition.Mask<bool>?>>?>(true, ConditionsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Condition.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            }
+            mask.Tracks = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.Tracks != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +2136,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (lhs.Type != rhs.Type) return false;
+            if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
+            if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
+            if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
+            if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
+            if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
+            if (!lhs.CuePoints.SequenceEqual(rhs.CuePoints)) return false;
+            if (!lhs.Conditions.SequenceEqual(rhs.Conditions)) return false;
+            if (!lhs.Tracks.SequenceEqual(rhs.Tracks)) return false;
             return true;
         }
         
@@ -1310,6 +2169,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMusicTrackGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Type);
+            if (item.Duration.TryGet(out var Durationitem))
+            {
+                hash.Add(Durationitem);
+            }
+            if (item.FadeOut.TryGet(out var FadeOutitem))
+            {
+                hash.Add(FadeOutitem);
+            }
+            if (item.TrackFilename.TryGet(out var TrackFilenameitem))
+            {
+                hash.Add(TrackFilenameitem);
+            }
+            if (item.FinaleFilename.TryGet(out var FinaleFilenameitem))
+            {
+                hash.Add(FinaleFilenameitem);
+            }
+            if (item.LoopData.TryGet(out var LoopDataitem))
+            {
+                hash.Add(LoopDataitem);
+            }
+            hash.Add(item.CuePoints);
+            hash.Add(item.Conditions);
+            hash.Add(item.Tracks);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1338,6 +2221,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.Conditions.TryGet(out var ConditionsItem))
+            {
+                foreach (var item in ConditionsItem.WhereCastable<IConditionGetter, ILinkedFormKeyContainer> ()
+                    .SelectMany((f) => f.LinkFormKeys))
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Tracks.TryGet(out var TracksItem))
+            {
+                foreach (var item in TracksItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1386,6 +2284,137 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
+            {
+                item.Type = rhs.Type;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
+            {
+                item.Duration = rhs.Duration;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
+            {
+                item.FadeOut = rhs.FadeOut;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
+            {
+                item.TrackFilename = rhs.TrackFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
+            {
+                item.FinaleFilename = rhs.FinaleFilename;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicTrack_FieldIndex.LoopData);
+                try
+                {
+                    if(rhs.LoopData.TryGet(out var rhsLoopData))
+                    {
+                        item.LoopData = rhsLoopData.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData));
+                    }
+                    else
+                    {
+                        item.LoopData = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicTrack_FieldIndex.CuePoints);
+                try
+                {
+                    if ((rhs.CuePoints != null))
+                    {
+                        item.CuePoints = 
+                            rhs.CuePoints
+                            .ToExtendedList<Single>();
+                    }
+                    else
+                    {
+                        item.CuePoints = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicTrack_FieldIndex.Conditions);
+                try
+                {
+                    if ((rhs.Conditions != null))
+                    {
+                        item.Conditions = 
+                            rhs.Conditions
+                            .Select(r =>
+                            {
+                                return r.DeepCopy(
+                                    errorMask: errorMask,
+                                    default(TranslationCrystal));
+                            })
+                            .ToExtendedList<Condition>();
+                    }
+                    else
+                    {
+                        item.Conditions = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
+            {
+                errorMask?.PushIndex((int)MusicTrack_FieldIndex.Tracks);
+                try
+                {
+                    if ((rhs.Tracks != null))
+                    {
+                        item.Tracks = 
+                            rhs.Tracks
+                            .Select(r => (IFormLink<MusicTrack>)new FormLink<MusicTrack>(r.FormKey))
+                            .ToExtendedList<IFormLink<MusicTrack>>();
+                    }
+                    else
+                    {
+                        item.Tracks = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2557,128 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
+            {
+                EnumXmlTranslation<MusicTrack.TypeEnum>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Type),
+                    item: item.Type,
+                    fieldIndex: (int)MusicTrack_FieldIndex.Type,
+                    errorMask: errorMask);
+            }
+            if ((item.Duration != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Duration),
+                    item: item.Duration.Value,
+                    fieldIndex: (int)MusicTrack_FieldIndex.Duration,
+                    errorMask: errorMask);
+            }
+            if ((item.FadeOut != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FadeOut),
+                    item: item.FadeOut.Value,
+                    fieldIndex: (int)MusicTrack_FieldIndex.FadeOut,
+                    errorMask: errorMask);
+            }
+            if ((item.TrackFilename != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.TrackFilename),
+                    item: item.TrackFilename,
+                    fieldIndex: (int)MusicTrack_FieldIndex.TrackFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.FinaleFilename != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FinaleFilename),
+                    item: item.FinaleFilename,
+                    fieldIndex: (int)MusicTrack_FieldIndex.FinaleFilename,
+                    errorMask: errorMask);
+            }
+            if ((item.LoopData != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
+            {
+                if (item.LoopData.TryGet(out var LoopDataItem))
+                {
+                    ((MusicTrackLoopDataXmlWriteTranslation)((IXmlItem)LoopDataItem).XmlWriteTranslator).Write(
+                        item: LoopDataItem,
+                        node: node,
+                        name: nameof(item.LoopData),
+                        fieldIndex: (int)MusicTrack_FieldIndex.LoopData,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData));
+                }
+            }
+            if ((item.CuePoints != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
+            {
+                ListXmlTranslation<Single>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CuePoints),
+                    item: item.CuePoints,
+                    fieldIndex: (int)MusicTrack_FieldIndex.CuePoints,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.CuePoints),
+                    transl: (XElement subNode, Single subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem,
+                            errorMask: listSubMask);
+                    });
+            }
+            if ((item.Conditions != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
+            {
+                ListXmlTranslation<IConditionGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Conditions),
+                    item: item.Conditions,
+                    fieldIndex: (int)MusicTrack_FieldIndex.Conditions,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.Conditions),
+                    transl: (XElement subNode, IConditionGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ConditionXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
+            if ((item.Tracks != null)
+                && (translationMask?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
+            {
+                ListXmlTranslation<IFormLink<IMusicTrackGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Tracks),
+                    item: item.Tracks,
+                    fieldIndex: (int)MusicTrack_FieldIndex.Tracks,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.Tracks),
+                    transl: (XElement subNode, IFormLink<IMusicTrackGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1635,6 +2786,199 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Type":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Type);
+                    try
+                    {
+                        item.Type = EnumXmlTranslation<MusicTrack.TypeEnum>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Duration":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Duration);
+                    try
+                    {
+                        item.Duration = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FadeOut":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.FadeOut);
+                    try
+                    {
+                        item.FadeOut = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "TrackFilename":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.TrackFilename);
+                    try
+                    {
+                        item.TrackFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FinaleFilename":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.FinaleFilename);
+                    try
+                    {
+                        item.FinaleFilename = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LoopData":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.LoopData);
+                    try
+                    {
+                        item.LoopData = LoquiXmlTranslation<MusicTrackLoopData>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CuePoints":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.CuePoints);
+                    try
+                    {
+                        if (ListXmlTranslation<Single>.Instance.Parse(
+                            node: node,
+                            enumer: out var CuePointsItem,
+                            transl: FloatXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CuePoints = CuePointsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CuePoints = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Conditions":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Conditions);
+                    try
+                    {
+                        if (ListXmlTranslation<Condition>.Instance.Parse(
+                            node: node,
+                            enumer: out var ConditionsItem,
+                            transl: LoquiXmlTranslation<Condition>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Conditions = ConditionsItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Conditions = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Tracks":
+                    errorMask?.PushIndex((int)MusicTrack_FieldIndex.Tracks);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<MusicTrack>>.Instance.Parse(
+                            node: node,
+                            enumer: out var TracksItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.Tracks = TracksItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.Tracks = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +3065,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MusicTrackBinaryWriteTranslation Instance = new MusicTrackBinaryWriteTranslation();
 
+        static partial void WriteBinaryConditionsCustom(
+            MutagenWriter writer,
+            IMusicTrackGetter item);
+
+        public static void WriteBinaryConditions(
+            MutagenWriter writer,
+            IMusicTrackGetter item)
+        {
+            WriteBinaryConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteRecordTypes(
+            IMusicTrackGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicTrack.TypeEnum>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Duration,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTV));
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FadeOut,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.TrackFilename,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FinaleFilename,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.LoopData.TryGet(out var LoopDataItem))
+            {
+                ((MusicTrackLoopDataBinaryWriteTranslation)((IBinaryItem)LoopDataItem).BinaryWriteTranslator).Write(
+                    item: LoopDataItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Write(
+                writer: writer,
+                items: item.CuePoints,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
+                transl: FloatBinaryTranslation.Instance.Write);
+            MusicTrackBinaryWriteTranslation.WriteBinaryConditions(
+                writer: writer,
+                item: item);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IMusicTrackGetter>>.Instance.Write(
+                writer: writer,
+                items: item.Tracks,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                transl: (MutagenWriter subWriter, IFormLink<IMusicTrackGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IMusicTrackGetter item,
@@ -1734,7 +3150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +3206,96 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IMusicTrackInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Type = EnumBinaryTranslation<MusicTrack.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                }
+                case RecordTypeInts.FLTV:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Duration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FadeOut = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.TrackFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FinaleFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    item.LoopData = Mutagen.Bethesda.Skyrim.MusicTrackLoopData.CreateFromBinary(frame: frame);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.CuePoints = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FloatBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<Single>();
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    MusicTrackBinaryCreateTranslation.FillBinaryConditionsCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Tracks = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MusicTrack>>.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .ToExtendedList<IFormLink<MusicTrack>>();
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
+        static partial void FillBinaryConditionsCustom(
+            MutagenFrame frame,
+            IMusicTrackInternal item);
+
     }
 
 }
@@ -1825,6 +3331,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IMusicTrackGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => MusicTrackCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MusicTrackCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => MusicTrackXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +3363,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Type
+        private int? _TypeLocation;
+        public MusicTrack.TypeEnum Type => _TypeLocation.HasValue ? (MusicTrack.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(MusicTrack.TypeEnum);
+        #endregion
+        #region Duration
+        private int? _DurationLocation;
+        public Single? Duration => _DurationLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region FadeOut
+        private int? _FadeOutLocation;
+        public Single? FadeOut => _FadeOutLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        #endregion
+        #region TrackFilename
+        private int? _TrackFilenameLocation;
+        public String? TrackFilename => _TrackFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _TrackFilenameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region FinaleFilename
+        private int? _FinaleFilenameLocation;
+        public String? FinaleFilename => _FinaleFilenameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FinaleFilenameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region LoopData
+        private RangeInt32? _LoopDataLocation;
+        public IMusicTrackLoopDataGetter? LoopData => _LoopDataLocation.HasValue ? MusicTrackLoopDataBinaryOverlay.MusicTrackLoopDataFactory(new OverlayStream(_data.Slice(_LoopDataLocation!.Value.Min), _package), _package) : default;
+        public bool LoopData_IsSet => _LoopDataLocation.HasValue;
+        #endregion
+        public IReadOnlyList<Single>? CuePoints { get; private set; }
+        #region Conditions
+        partial void ConditionsCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed);
+        #endregion
+        public IReadOnlyList<IFormLink<IMusicTrackGetter>>? Tracks { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +3450,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.CNAM:
+                {
+                    _TypeLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                }
+                case RecordTypeInts.FLTV:
+                {
+                    _DurationLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                }
+                case RecordTypeInts.DNAM:
+                {
+                    _FadeOutLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _TrackFilenameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _FinaleFilenameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                }
+                case RecordTypeInts.LNAM:
+                {
+                    _LoopDataLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.CuePoints = BinaryOverlayList<Single>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => SpanExt.GetFloat(s));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                }
+                case RecordTypeInts.CTDA:
+                case RecordTypeInts.CITC:
+                {
+                    ConditionsCustomParse(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    var subMeta = stream.ReadSubrecord();
+                    var subLen = subMeta.ContentLength;
+                    this.Tracks = BinaryOverlayList<IFormLink<IMusicTrackGetter>>.FactoryByStartIndex(
+                        mem: stream.RemainingMemory.Slice(0, subLen),
+                        package: _package,
+                        itemLength: 4,
+                        getter: (s, p) => new FormLink<IMusicTrackGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    stream.Position += subLen;
+                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

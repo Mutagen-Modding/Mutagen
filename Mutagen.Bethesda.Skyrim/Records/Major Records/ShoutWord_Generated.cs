@@ -32,40 +32,32 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class StoryManagerQuest :
-        IStoryManagerQuest,
-        ILoquiObjectSetter<StoryManagerQuest>,
-        IEquatable<StoryManagerQuest>,
+    public partial class ShoutWord :
+        IShoutWord,
+        ILoquiObjectSetter<ShoutWord>,
+        IEquatable<ShoutWord>,
         IEqualsMask
     {
         #region Ctor
-        public StoryManagerQuest()
+        public ShoutWord()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Quest
-        public FormLinkNullable<Quest> Quest { get; set; } = new FormLinkNullable<Quest>();
+        #region Word
+        public FormLink<WordOfPower> Word { get; set; } = new FormLink<WordOfPower>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IQuestGetter> IStoryManagerQuestGetter.Quest => this.Quest;
+        IFormLink<IWordOfPowerGetter> IShoutWordGetter.Word => this.Word;
         #endregion
-        #region FNAM
+        #region Spell
+        public FormLink<Spell> Spell { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _FNAM;
-        public MemorySlice<Byte>? FNAM
-        {
-            get => this._FNAM;
-            set => this._FNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IStoryManagerQuestGetter.FNAM => this.FNAM;
+        IFormLink<ISpellGetter> IShoutWordGetter.Spell => this.Spell;
         #endregion
-        #region HoursUntilReset
-        public Single? HoursUntilReset { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Single? IStoryManagerQuestGetter.HoursUntilReset => this.HoursUntilReset;
+        #region RecoveryTime
+        public Single RecoveryTime { get; set; } = default;
         #endregion
 
         #region To String
@@ -74,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            StoryManagerQuestMixIn.ToString(
+            ShoutWordMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -84,22 +76,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IShoutWordGetter rhs)) return false;
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(StoryManagerQuest? obj)
+        public bool Equals(ShoutWord? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => StoryManagerQuestXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ShoutWordXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -108,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((StoryManagerQuestXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -117,9 +109,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             XElement node,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,27 +120,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             XElement node,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ShoutWord.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new StoryManagerQuest();
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new ShoutWord();
+            ((ShoutWordSetterCommon)((IShoutWordGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -156,9 +148,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             string path,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,10 +158,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             string path,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,10 +170,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,9 +182,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             Stream stream,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,10 +192,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             Stream stream,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,10 +204,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerQuest CreateFromXml(
+        public static ShoutWord CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -236,19 +228,19 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Quest = initialValue;
-                this.FNAM = initialValue;
-                this.HoursUntilReset = initialValue;
+                this.Word = initialValue;
+                this.Spell = initialValue;
+                this.RecoveryTime = initialValue;
             }
 
             public Mask(
-                TItem Quest,
-                TItem FNAM,
-                TItem HoursUntilReset)
+                TItem Word,
+                TItem Spell,
+                TItem RecoveryTime)
             {
-                this.Quest = Quest;
-                this.FNAM = FNAM;
-                this.HoursUntilReset = HoursUntilReset;
+                this.Word = Word;
+                this.Spell = Spell;
+                this.RecoveryTime = RecoveryTime;
             }
 
             #pragma warning disable CS8618
@@ -260,9 +252,9 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Quest;
-            public TItem FNAM;
-            public TItem HoursUntilReset;
+            public TItem Word;
+            public TItem Spell;
+            public TItem RecoveryTime;
             #endregion
 
             #region Equals
@@ -275,17 +267,17 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.FNAM, rhs.FNAM)) return false;
-                if (!object.Equals(this.HoursUntilReset, rhs.HoursUntilReset)) return false;
+                if (!object.Equals(this.Word, rhs.Word)) return false;
+                if (!object.Equals(this.Spell, rhs.Spell)) return false;
+                if (!object.Equals(this.RecoveryTime, rhs.RecoveryTime)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Quest);
-                hash.Add(this.FNAM);
-                hash.Add(this.HoursUntilReset);
+                hash.Add(this.Word);
+                hash.Add(this.Spell);
+                hash.Add(this.RecoveryTime);
                 return hash.ToHashCode();
             }
 
@@ -294,9 +286,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Quest)) return false;
-                if (!eval(this.FNAM)) return false;
-                if (!eval(this.HoursUntilReset)) return false;
+                if (!eval(this.Word)) return false;
+                if (!eval(this.Spell)) return false;
+                if (!eval(this.RecoveryTime)) return false;
                 return true;
             }
             #endregion
@@ -304,9 +296,9 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Quest)) return true;
-                if (eval(this.FNAM)) return true;
-                if (eval(this.HoursUntilReset)) return true;
+                if (eval(this.Word)) return true;
+                if (eval(this.Spell)) return true;
+                if (eval(this.RecoveryTime)) return true;
                 return false;
             }
             #endregion
@@ -314,16 +306,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new StoryManagerQuest.Mask<R>();
+                var ret = new ShoutWord.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Quest = eval(this.Quest);
-                obj.FNAM = eval(this.FNAM);
-                obj.HoursUntilReset = eval(this.HoursUntilReset);
+                obj.Word = eval(this.Word);
+                obj.Spell = eval(this.Spell);
+                obj.RecoveryTime = eval(this.RecoveryTime);
             }
             #endregion
 
@@ -333,30 +325,30 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(StoryManagerQuest.Mask<bool>? printMask = null)
+            public string ToString(ShoutWord.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, StoryManagerQuest.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ShoutWord.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(StoryManagerQuest.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ShoutWord.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Quest ?? true)
+                    if (printMask?.Word ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        fg.AppendItem(Word, "Word");
                     }
-                    if (printMask?.FNAM ?? true)
+                    if (printMask?.Spell ?? true)
                     {
-                        fg.AppendItem(FNAM, "FNAM");
+                        fg.AppendItem(Spell, "Spell");
                     }
-                    if (printMask?.HoursUntilReset ?? true)
+                    if (printMask?.RecoveryTime ?? true)
                     {
-                        fg.AppendItem(HoursUntilReset, "HoursUntilReset");
+                        fg.AppendItem(RecoveryTime, "RecoveryTime");
                     }
                 }
                 fg.AppendLine("]");
@@ -383,23 +375,23 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Quest;
-            public Exception? FNAM;
-            public Exception? HoursUntilReset;
+            public Exception? Word;
+            public Exception? Spell;
+            public Exception? RecoveryTime;
             #endregion
 
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+                ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerQuest_FieldIndex.Quest:
-                        return Quest;
-                    case StoryManagerQuest_FieldIndex.FNAM:
-                        return FNAM;
-                    case StoryManagerQuest_FieldIndex.HoursUntilReset:
-                        return HoursUntilReset;
+                    case ShoutWord_FieldIndex.Word:
+                        return Word;
+                    case ShoutWord_FieldIndex.Spell:
+                        return Spell;
+                    case ShoutWord_FieldIndex.RecoveryTime:
+                        return RecoveryTime;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -407,17 +399,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+                ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerQuest_FieldIndex.Quest:
-                        this.Quest = ex;
+                    case ShoutWord_FieldIndex.Word:
+                        this.Word = ex;
                         break;
-                    case StoryManagerQuest_FieldIndex.FNAM:
-                        this.FNAM = ex;
+                    case ShoutWord_FieldIndex.Spell:
+                        this.Spell = ex;
                         break;
-                    case StoryManagerQuest_FieldIndex.HoursUntilReset:
-                        this.HoursUntilReset = ex;
+                    case ShoutWord_FieldIndex.RecoveryTime:
+                        this.RecoveryTime = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -426,17 +418,17 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+                ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerQuest_FieldIndex.Quest:
-                        this.Quest = (Exception?)obj;
+                    case ShoutWord_FieldIndex.Word:
+                        this.Word = (Exception?)obj;
                         break;
-                    case StoryManagerQuest_FieldIndex.FNAM:
-                        this.FNAM = (Exception?)obj;
+                    case ShoutWord_FieldIndex.Spell:
+                        this.Spell = (Exception?)obj;
                         break;
-                    case StoryManagerQuest_FieldIndex.HoursUntilReset:
-                        this.HoursUntilReset = (Exception?)obj;
+                    case ShoutWord_FieldIndex.RecoveryTime:
+                        this.RecoveryTime = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -446,9 +438,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Quest != null) return true;
-                if (FNAM != null) return true;
-                if (HoursUntilReset != null) return true;
+                if (Word != null) return true;
+                if (Spell != null) return true;
+                if (RecoveryTime != null) return true;
                 return false;
             }
             #endregion
@@ -483,9 +475,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(FNAM, "FNAM");
-                fg.AppendItem(HoursUntilReset, "HoursUntilReset");
+                fg.AppendItem(Word, "Word");
+                fg.AppendItem(Spell, "Spell");
+                fg.AppendItem(RecoveryTime, "RecoveryTime");
             }
             #endregion
 
@@ -494,9 +486,9 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.FNAM = this.FNAM.Combine(rhs.FNAM);
-                ret.HoursUntilReset = this.HoursUntilReset.Combine(rhs.HoursUntilReset);
+                ret.Word = this.Word.Combine(rhs.Word);
+                ret.Spell = this.Spell.Combine(rhs.Spell);
+                ret.RecoveryTime = this.RecoveryTime.Combine(rhs.RecoveryTime);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -518,17 +510,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Quest;
-            public bool FNAM;
-            public bool HoursUntilReset;
+            public bool Word;
+            public bool Spell;
+            public bool RecoveryTime;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Quest = defaultOn;
-                this.FNAM = defaultOn;
-                this.HoursUntilReset = defaultOn;
+                this.Word = defaultOn;
+                this.Spell = defaultOn;
+                this.RecoveryTime = defaultOn;
             }
 
             #endregion
@@ -544,51 +536,52 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Quest, null));
-                ret.Add((FNAM, null));
-                ret.Add((HoursUntilReset, null));
+                ret.Add((Word, null));
+                ret.Add((Spell, null));
+                ret.Add((RecoveryTime, null));
             }
         }
         #endregion
 
         #region Mutagen
+        public new static readonly RecordType GrupRecordType = ShoutWord_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => StoryManagerQuestBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ShoutWordBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerQuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ShoutWordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static StoryManagerQuest CreateFromBinary(MutagenFrame frame)
+        public static ShoutWord CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static StoryManagerQuest CreateFromBinary(
+        public static ShoutWord CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new StoryManagerQuest();
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ShoutWord();
+            ((ShoutWordSetterCommon)((IShoutWordGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -599,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out StoryManagerQuest item,
+            out ShoutWord item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -610,34 +603,34 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerQuestGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShoutWordGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ShoutWordSetterCommon)((IShoutWordGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static StoryManagerQuest GetNew()
+        internal static ShoutWord GetNew()
         {
-            return new StoryManagerQuest();
+            return new ShoutWord();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IStoryManagerQuest :
-        IStoryManagerQuestGetter,
-        ILoquiObjectSetter<IStoryManagerQuest>
+    public partial interface IShoutWord :
+        IShoutWordGetter,
+        ILoquiObjectSetter<IShoutWord>
     {
-        new FormLinkNullable<Quest> Quest { get; set; }
-        new MemorySlice<Byte>? FNAM { get; set; }
-        new Single? HoursUntilReset { get; set; }
+        new FormLink<WordOfPower> Word { get; set; }
+        new FormLink<Spell> Spell { get; set; }
+        new Single RecoveryTime { get; set; }
     }
 
-    public partial interface IStoryManagerQuestGetter :
+    public partial interface IShoutWordGetter :
         ILoquiObject,
-        ILoquiObject<IStoryManagerQuestGetter>,
+        ILoquiObject<IShoutWordGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
@@ -648,52 +641,52 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => StoryManagerQuest_Registration.Instance;
-        IFormLinkNullable<IQuestGetter> Quest { get; }
-        ReadOnlyMemorySlice<Byte>? FNAM { get; }
-        Single? HoursUntilReset { get; }
+        static ILoquiRegistration Registration => ShoutWord_Registration.Instance;
+        IFormLink<IWordOfPowerGetter> Word { get; }
+        IFormLink<ISpellGetter> Spell { get; }
+        Single RecoveryTime { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class StoryManagerQuestMixIn
+    public static partial class ShoutWordMixIn
     {
-        public static void Clear(this IStoryManagerQuest item)
+        public static void Clear(this IShoutWord item)
         {
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ShoutWordSetterCommon)((IShoutWordGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static StoryManagerQuest.Mask<bool> GetEqualsMask(
-            this IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs,
+        public static ShoutWord.Mask<bool> GetEqualsMask(
+            this IShoutWordGetter item,
+            IShoutWordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             string? name = null,
-            StoryManagerQuest.Mask<bool>? printMask = null)
+            ShoutWord.Mask<bool>? printMask = null)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).ToString(
+            return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             FileGeneration fg,
             string? name = null,
-            StoryManagerQuest.Mask<bool>? printMask = null)
+            ShoutWord.Mask<bool>? printMask = null)
         {
-            ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).ToString(
+            ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -701,37 +694,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IStoryManagerQuestGetter item,
-            StoryManagerQuest.Mask<bool?> checkMask)
+            this IShoutWordGetter item,
+            ShoutWord.Mask<bool?> checkMask)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static StoryManagerQuest.Mask<bool> GetHasBeenSetMask(this IStoryManagerQuestGetter item)
+        public static ShoutWord.Mask<bool> GetHasBeenSetMask(this IShoutWordGetter item)
         {
-            var ret = new StoryManagerQuest.Mask<bool>(false);
-            ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new ShoutWord.Mask<bool>(false);
+            ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs)
+            this IShoutWordGetter item,
+            IShoutWordGetter rhs)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).Equals(
+            return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerQuest lhs,
-            IStoryManagerQuestGetter rhs)
+            this IShoutWord lhs,
+            IShoutWordGetter rhs)
         {
-            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -739,11 +732,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerQuest lhs,
-            IStoryManagerQuestGetter rhs,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+            this IShoutWord lhs,
+            IShoutWordGetter rhs,
+            ShoutWord.TranslationMask? copyMask = null)
         {
-            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -751,59 +744,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerQuest lhs,
-            IStoryManagerQuestGetter rhs,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+            this IShoutWord lhs,
+            IShoutWordGetter rhs,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ShoutWord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerQuest lhs,
-            IStoryManagerQuestGetter rhs,
+            this IShoutWord lhs,
+            IShoutWordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static StoryManagerQuest DeepCopy(
-            this IStoryManagerQuestGetter item,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+        public static ShoutWord DeepCopy(
+            this IShoutWordGetter item,
+            ShoutWord.TranslationMask? copyMask = null)
         {
-            return ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static StoryManagerQuest DeepCopy(
-            this IStoryManagerQuestGetter item,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+        public static ShoutWord DeepCopy(
+            this IShoutWordGetter item,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? copyMask = null)
         {
-            return ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static StoryManagerQuest DeepCopy(
-            this IStoryManagerQuestGetter item,
+        public static ShoutWord DeepCopy(
+            this IShoutWordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((StoryManagerQuestSetterTranslationCommon)((IStoryManagerQuestGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ShoutWordSetterTranslationCommon)((IShoutWordGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -812,9 +805,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             XElement node,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -825,10 +818,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             XElement node,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -836,16 +829,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ShoutWord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ShoutWordSetterCommon)((IShoutWordGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -853,9 +846,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             string path,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -865,10 +858,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             string path,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -879,10 +872,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             string path,
             ErrorMaskBuilder? errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -893,9 +886,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             Stream stream,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -905,10 +898,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             Stream stream,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -919,10 +912,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -937,7 +930,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -947,11 +940,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IStoryManagerQuest item,
+            this IShoutWord item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerQuestSetterCommon)((IStoryManagerQuestGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ShoutWordSetterCommon)((IShoutWordGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -967,49 +960,49 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum StoryManagerQuest_FieldIndex
+    public enum ShoutWord_FieldIndex
     {
-        Quest = 0,
-        FNAM = 1,
-        HoursUntilReset = 2,
+        Word = 0,
+        Spell = 1,
+        RecoveryTime = 2,
     }
     #endregion
 
     #region Registration
-    public partial class StoryManagerQuest_Registration : ILoquiRegistration
+    public partial class ShoutWord_Registration : ILoquiRegistration
     {
-        public static readonly StoryManagerQuest_Registration Instance = new StoryManagerQuest_Registration();
+        public static readonly ShoutWord_Registration Instance = new ShoutWord_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 457,
+            msgID: 461,
             version: 0);
 
-        public const string GUID = "b4d160cb-2899-46b7-b717-a555f48bcba1";
+        public const string GUID = "82a57854-bbc8-49ab-b134-0da4b2c9a661";
 
         public const ushort AdditionalFieldCount = 3;
 
         public const ushort FieldCount = 3;
 
-        public static readonly Type MaskType = typeof(StoryManagerQuest.Mask<>);
+        public static readonly Type MaskType = typeof(ShoutWord.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(StoryManagerQuest.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ShoutWord.ErrorMask);
 
-        public static readonly Type ClassType = typeof(StoryManagerQuest);
+        public static readonly Type ClassType = typeof(ShoutWord);
 
-        public static readonly Type GetterType = typeof(IStoryManagerQuestGetter);
+        public static readonly Type GetterType = typeof(IShoutWordGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IStoryManagerQuest);
+        public static readonly Type SetterType = typeof(IShoutWord);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.StoryManagerQuest";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ShoutWord";
 
-        public const string Name = "StoryManagerQuest";
+        public const string Name = "ShoutWord";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1021,12 +1014,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "QUEST":
-                    return (ushort)StoryManagerQuest_FieldIndex.Quest;
-                case "FNAM":
-                    return (ushort)StoryManagerQuest_FieldIndex.FNAM;
-                case "HOURSUNTILRESET":
-                    return (ushort)StoryManagerQuest_FieldIndex.HoursUntilReset;
+                case "WORD":
+                    return (ushort)ShoutWord_FieldIndex.Word;
+                case "SPELL":
+                    return (ushort)ShoutWord_FieldIndex.Spell;
+                case "RECOVERYTIME":
+                    return (ushort)ShoutWord_FieldIndex.RecoveryTime;
                 default:
                     return null;
             }
@@ -1034,12 +1027,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                case StoryManagerQuest_FieldIndex.FNAM:
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                case ShoutWord_FieldIndex.Spell:
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1048,12 +1041,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                case StoryManagerQuest_FieldIndex.FNAM:
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                case ShoutWord_FieldIndex.Spell:
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,12 +1055,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                case StoryManagerQuest_FieldIndex.FNAM:
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                case ShoutWord_FieldIndex.Spell:
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1076,15 +1069,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                    return "Quest";
-                case StoryManagerQuest_FieldIndex.FNAM:
-                    return "FNAM";
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
-                    return "HoursUntilReset";
+                case ShoutWord_FieldIndex.Word:
+                    return "Word";
+                case ShoutWord_FieldIndex.Spell:
+                    return "Spell";
+                case ShoutWord_FieldIndex.RecoveryTime:
+                    return "RecoveryTime";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1092,12 +1085,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                case StoryManagerQuest_FieldIndex.FNAM:
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                case ShoutWord_FieldIndex.Spell:
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1106,12 +1099,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                case StoryManagerQuest_FieldIndex.FNAM:
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                case ShoutWord_FieldIndex.Spell:
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1120,35 +1113,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            StoryManagerQuest_FieldIndex enu = (StoryManagerQuest_FieldIndex)index;
+            ShoutWord_FieldIndex enu = (ShoutWord_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerQuest_FieldIndex.Quest:
-                    return typeof(FormLinkNullable<Quest>);
-                case StoryManagerQuest_FieldIndex.FNAM:
-                    return typeof(MemorySlice<Byte>);
-                case StoryManagerQuest_FieldIndex.HoursUntilReset:
+                case ShoutWord_FieldIndex.Word:
+                    return typeof(FormLink<WordOfPower>);
+                case ShoutWord_FieldIndex.Spell:
+                    return typeof(FormLink<Spell>);
+                case ShoutWord_FieldIndex.RecoveryTime:
                     return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(StoryManagerQuestXmlWriteTranslation);
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        RecordTypes.NNAM,
-                        RecordTypes.FNAM,
-                        RecordTypes.RNAM
-                    })
-            );
-        });
-        public static readonly Type BinaryWriteTranslation = typeof(StoryManagerQuestBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ShoutWordXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SNAM;
+        public static readonly Type BinaryWriteTranslation = typeof(ShoutWordBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1181,23 +1162,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StoryManagerQuestSetterCommon
+    public partial class ShoutWordSetterCommon
     {
-        public static readonly StoryManagerQuestSetterCommon Instance = new StoryManagerQuestSetterCommon();
+        public static readonly ShoutWordSetterCommon Instance = new ShoutWordSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IStoryManagerQuest item)
+        public void Clear(IShoutWord item)
         {
             ClearPartial();
-            item.Quest = FormLinkNullable<Quest>.Null;
-            item.FNAM = default;
-            item.HoursUntilReset = default;
+            item.Word = FormLink<WordOfPower>.Null;
+            item.Spell = FormLink<Spell>.Null;
+            item.RecoveryTime = default;
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IStoryManagerQuest item,
+            IShoutWord item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1206,7 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    StoryManagerQuestXmlCreateTranslation.FillPublicElementXml(
+                    ShoutWordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1225,32 +1206,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IStoryManagerQuest item,
+            IShoutWord item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(RecordTypes.SNAM)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: StoryManagerQuestBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: StoryManagerQuestBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: ShoutWordBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class StoryManagerQuestCommon
+    public partial class ShoutWordCommon
     {
-        public static readonly StoryManagerQuestCommon Instance = new StoryManagerQuestCommon();
+        public static readonly ShoutWordCommon Instance = new ShoutWordCommon();
 
-        public StoryManagerQuest.Mask<bool> GetEqualsMask(
-            IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs,
+        public ShoutWord.Mask<bool> GetEqualsMask(
+            IShoutWordGetter item,
+            IShoutWordGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new StoryManagerQuest.Mask<bool>(false);
-            ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ShoutWord.Mask<bool>(false);
+            ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1259,21 +1242,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs,
-            StoryManagerQuest.Mask<bool> ret,
+            IShoutWordGetter item,
+            IShoutWordGetter rhs,
+            ShoutWord.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
-            ret.FNAM = MemorySliceExt.Equal(item.FNAM, rhs.FNAM);
-            ret.HoursUntilReset = item.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset);
+            ret.Word = object.Equals(item.Word, rhs.Word);
+            ret.Spell = object.Equals(item.Spell, rhs.Spell);
+            ret.RecoveryTime = item.RecoveryTime.EqualsWithin(rhs.RecoveryTime);
         }
         
         public string ToString(
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             string? name = null,
-            StoryManagerQuest.Mask<bool>? printMask = null)
+            ShoutWord.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1285,18 +1268,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             FileGeneration fg,
             string? name = null,
-            StoryManagerQuest.Mask<bool>? printMask = null)
+            ShoutWord.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"StoryManagerQuest =>");
+                fg.AppendLine($"ShoutWord =>");
             }
             else
             {
-                fg.AppendLine($"{name} (StoryManagerQuest) =>");
+                fg.AppendLine($"{name} (ShoutWord) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1310,74 +1293,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             FileGeneration fg,
-            StoryManagerQuest.Mask<bool>? printMask = null)
+            ShoutWord.Mask<bool>? printMask = null)
         {
-            if ((printMask?.Quest ?? true)
-                && item.Quest.TryGet(out var QuestItem))
+            if (printMask?.Word ?? true)
             {
-                fg.AppendItem(QuestItem, "Quest");
+                fg.AppendItem(item.Word, "Word");
             }
-            if ((printMask?.FNAM ?? true)
-                && item.FNAM.TryGet(out var FNAMItem))
+            if (printMask?.Spell ?? true)
             {
-                fg.AppendLine($"FNAM => {SpanExt.ToHexString(FNAMItem)}");
+                fg.AppendItem(item.Spell, "Spell");
             }
-            if ((printMask?.HoursUntilReset ?? true)
-                && item.HoursUntilReset.TryGet(out var HoursUntilResetItem))
+            if (printMask?.RecoveryTime ?? true)
             {
-                fg.AppendItem(HoursUntilResetItem, "HoursUntilReset");
+                fg.AppendItem(item.RecoveryTime, "RecoveryTime");
             }
         }
         
         public bool HasBeenSet(
-            IStoryManagerQuestGetter item,
-            StoryManagerQuest.Mask<bool?> checkMask)
+            IShoutWordGetter item,
+            ShoutWord.Mask<bool?> checkMask)
         {
-            if (checkMask.Quest.HasValue && checkMask.Quest.Value != (item.Quest.FormKey != null)) return false;
-            if (checkMask.FNAM.HasValue && checkMask.FNAM.Value != (item.FNAM != null)) return false;
-            if (checkMask.HoursUntilReset.HasValue && checkMask.HoursUntilReset.Value != (item.HoursUntilReset != null)) return false;
             return true;
         }
         
         public void FillHasBeenSetMask(
-            IStoryManagerQuestGetter item,
-            StoryManagerQuest.Mask<bool> mask)
+            IShoutWordGetter item,
+            ShoutWord.Mask<bool> mask)
         {
-            mask.Quest = (item.Quest.FormKey != null);
-            mask.FNAM = (item.FNAM != null);
-            mask.HoursUntilReset = (item.HoursUntilReset != null);
+            mask.Word = true;
+            mask.Spell = true;
+            mask.RecoveryTime = true;
         }
         
         #region Equals and Hash
         public virtual bool Equals(
-            IStoryManagerQuestGetter? lhs,
-            IStoryManagerQuestGetter? rhs)
+            IShoutWordGetter? lhs,
+            IShoutWordGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
-            if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
+            if (!lhs.Word.Equals(rhs.Word)) return false;
+            if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
             return true;
         }
         
-        public virtual int GetHashCode(IStoryManagerQuestGetter item)
+        public virtual int GetHashCode(IShoutWordGetter item)
         {
             var hash = new HashCode();
-            if (item.Quest.TryGet(out var Questitem))
-            {
-                hash.Add(Questitem);
-            }
-            if (item.FNAM.TryGet(out var FNAMItem))
-            {
-                hash.Add(FNAMItem);
-            }
-            if (item.HoursUntilReset.TryGet(out var HoursUntilResetitem))
-            {
-                hash.Add(HoursUntilResetitem);
-            }
+            hash.Add(item.Word);
+            hash.Add(item.Spell);
+            hash.Add(item.RecoveryTime);
             return hash.ToHashCode();
         }
         
@@ -1386,74 +1354,65 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return StoryManagerQuest.GetNew();
+            return ShoutWord.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerQuestGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IShoutWordGetter obj)
         {
-            if (obj.Quest.FormKey.TryGet(out var QuestKey))
-            {
-                yield return QuestKey;
-            }
+            yield return obj.Word.FormKey;
+            yield return obj.Spell.FormKey;
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerQuestGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IShoutWordGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class StoryManagerQuestSetterTranslationCommon
+    public partial class ShoutWordSetterTranslationCommon
     {
-        public static readonly StoryManagerQuestSetterTranslationCommon Instance = new StoryManagerQuestSetterTranslationCommon();
+        public static readonly ShoutWordSetterTranslationCommon Instance = new ShoutWordSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IStoryManagerQuest item,
-            IStoryManagerQuestGetter rhs,
+            IShoutWord item,
+            IShoutWordGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Word = rhs.Word.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                if(rhs.FNAM.TryGet(out var FNAMrhs))
-                {
-                    item.FNAM = FNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.FNAM = default;
-                }
+                item.Spell = rhs.Spell.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {
-                item.HoursUntilReset = rhs.HoursUntilReset;
+                item.RecoveryTime = rhs.RecoveryTime;
             }
         }
         
         #endregion
         
-        public StoryManagerQuest DeepCopy(
-            IStoryManagerQuestGetter item,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+        public ShoutWord DeepCopy(
+            IShoutWordGetter item,
+            ShoutWord.TranslationMask? copyMask = null)
         {
-            StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
+            ShoutWord ret = (ShoutWord)((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public StoryManagerQuest DeepCopy(
-            IStoryManagerQuestGetter item,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? copyMask = null)
+        public ShoutWord DeepCopy(
+            IShoutWordGetter item,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? copyMask = null)
         {
-            StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
+            ShoutWord ret = (ShoutWord)((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1461,12 +1420,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public StoryManagerQuest DeepCopy(
-            IStoryManagerQuestGetter item,
+        public ShoutWord DeepCopy(
+            IShoutWordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            StoryManagerQuest ret = (StoryManagerQuest)((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).GetNew();
+            ShoutWord ret = (ShoutWord)((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1481,27 +1440,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StoryManagerQuest
+    public partial class ShoutWord
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration Registration => StoryManagerQuest_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => StoryManagerQuestCommon.Instance;
+        protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return StoryManagerQuestSetterCommon.Instance;
+            return ShoutWordSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => StoryManagerQuestSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ShoutWordSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IStoryManagerQuestGetter.CommonInstance() => this.CommonInstance();
+        object IShoutWordGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IStoryManagerQuestGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IShoutWordGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IStoryManagerQuestGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IShoutWordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1512,60 +1471,57 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerQuestXmlWriteTranslation : IXmlWriteTranslator
+    public partial class ShoutWordXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static StoryManagerQuestXmlWriteTranslation Instance = new StoryManagerQuestXmlWriteTranslation();
+        public readonly static ShoutWordXmlWriteTranslation Instance = new ShoutWordXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((item.Quest.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Quest),
-                    item: item.Quest.FormKey,
-                    fieldIndex: (int)StoryManagerQuest_FieldIndex.Quest,
+                    name: nameof(item.Word),
+                    item: item.Word.FormKey,
+                    fieldIndex: (int)ShoutWord_FieldIndex.Word,
                     errorMask: errorMask);
             }
-            if ((item.FNAM != null)
-                && (translationMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.FNAM),
-                    item: item.FNAM.Value,
-                    fieldIndex: (int)StoryManagerQuest_FieldIndex.FNAM,
+                    name: nameof(item.Spell),
+                    item: item.Spell.FormKey,
+                    fieldIndex: (int)ShoutWord_FieldIndex.Spell,
                     errorMask: errorMask);
             }
-            if ((item.HoursUntilReset != null)
-                && (translationMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.HoursUntilReset),
-                    item: item.HoursUntilReset.Value,
-                    fieldIndex: (int)StoryManagerQuest_FieldIndex.HoursUntilReset,
+                    name: nameof(item.RecoveryTime),
+                    item: item.RecoveryTime,
+                    fieldIndex: (int)ShoutWord_FieldIndex.RecoveryTime,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.StoryManagerQuest");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ShoutWord");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.StoryManagerQuest");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ShoutWord");
             }
             WriteToNodeXml(
                 item: item,
@@ -1582,7 +1538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IStoryManagerQuestGetter)item,
+                item: (IShoutWordGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1591,7 +1547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1601,7 +1557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IStoryManagerQuestGetter)item,
+                    item: (IShoutWordGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1620,12 +1576,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StoryManagerQuestXmlCreateTranslation
+    public partial class ShoutWordXmlCreateTranslation
     {
-        public readonly static StoryManagerQuestXmlCreateTranslation Instance = new StoryManagerQuestXmlCreateTranslation();
+        public readonly static ShoutWordXmlCreateTranslation Instance = new ShoutWordXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IStoryManagerQuest item,
+            IShoutWord item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1634,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    StoryManagerQuestXmlCreateTranslation.FillPublicElementXml(
+                    ShoutWordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1650,7 +1606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IStoryManagerQuest item,
+            IShoutWord item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1658,11 +1614,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Quest":
-                    errorMask?.PushIndex((int)StoryManagerQuest_FieldIndex.Quest);
+                case "Word":
+                    errorMask?.PushIndex((int)ShoutWord_FieldIndex.Word);
                     try
                     {
-                        item.Quest = FormKeyXmlTranslation.Instance.Parse(
+                        item.Word = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1676,11 +1632,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "FNAM":
-                    errorMask?.PushIndex((int)StoryManagerQuest_FieldIndex.FNAM);
+                case "Spell":
+                    errorMask?.PushIndex((int)ShoutWord_FieldIndex.Spell);
                     try
                     {
-                        item.FNAM = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Spell = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1694,11 +1650,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "HoursUntilReset":
-                    errorMask?.PushIndex((int)StoryManagerQuest_FieldIndex.HoursUntilReset);
+                case "RecoveryTime":
+                    errorMask?.PushIndex((int)ShoutWord_FieldIndex.RecoveryTime);
                     try
                     {
-                        item.HoursUntilReset = FloatXmlTranslation.Instance.Parse(
+                        item.RecoveryTime = FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1723,30 +1679,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class StoryManagerQuestXmlTranslationMixIn
+    public static class ShoutWordXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             XElement node,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((StoryManagerQuestXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerQuest.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ShoutWord.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             string path,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1760,7 +1716,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1777,10 +1733,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             Stream stream,
-            out StoryManagerQuest.ErrorMask errorMask,
-            StoryManagerQuest.TranslationMask? translationMask = null,
+            out ShoutWord.ErrorMask errorMask,
+            ShoutWord.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1794,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1811,13 +1767,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((StoryManagerQuestXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1826,12 +1782,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             XElement node,
             string? name = null,
-            StoryManagerQuest.TranslationMask? translationMask = null)
+            ShoutWord.TranslationMask? translationMask = null)
         {
-            ((StoryManagerQuestXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1840,12 +1796,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((StoryManagerQuestXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1855,12 +1811,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((StoryManagerQuestXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1879,38 +1835,39 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerQuestBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ShoutWordBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static StoryManagerQuestBinaryWriteTranslation Instance = new StoryManagerQuestBinaryWriteTranslation();
+        public readonly static ShoutWordBinaryWriteTranslation Instance = new ShoutWordBinaryWriteTranslation();
 
-        public static void WriteRecordTypes(
-            IStoryManagerQuestGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
+        public static void WriteEmbedded(
+            IShoutWordGetter item,
+            MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                item: item.Word);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+                item: item.Spell);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.HoursUntilReset,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                item: item.RecoveryTime);
         }
 
         public void Write(
             MutagenWriter writer,
-            IStoryManagerQuestGetter item,
+            IShoutWordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteRecordTypes(
-                item: item,
+            using (HeaderExport.Header(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -1919,60 +1876,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IStoryManagerQuestGetter)item,
+                item: (IShoutWordGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class StoryManagerQuestBinaryCreateTranslation
+    public partial class ShoutWordBinaryCreateTranslation
     {
-        public readonly static StoryManagerQuestBinaryCreateTranslation Instance = new StoryManagerQuestBinaryCreateTranslation();
+        public readonly static ShoutWordBinaryCreateTranslation Instance = new ShoutWordBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IStoryManagerQuest item,
+            IShoutWord item,
             MutagenFrame frame)
         {
-        }
-
-        public static TryGet<int?> FillBinaryRecordTypes(
-            IStoryManagerQuest item,
-            MutagenFrame frame,
-            int? lastParsed,
-            RecordType nextRecordType,
-            int contentLength,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
-            switch (nextRecordType.TypeInt)
-            {
-                case RecordTypeInts.NNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.Quest) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.Quest);
-                }
-                case RecordTypeInts.FNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.FNAM) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.FNAM);
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.HoursUntilReset) return TryGet<int?>.Failure;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.HoursUntilReset);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
+            item.Word = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                frame: frame,
+                defaultVal: FormKey.Null);
+            item.RecoveryTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }
@@ -1981,13 +1906,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class StoryManagerQuestBinaryTranslationMixIn
+    public static class ShoutWordBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IStoryManagerQuestGetter item,
+            this IShoutWordGetter item,
             MutagenWriter writer)
         {
-            ((StoryManagerQuestBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ShoutWordBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2000,39 +1925,39 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerQuestBinaryOverlay :
+    public partial class ShoutWordBinaryOverlay :
         BinaryOverlay,
-        IStoryManagerQuestGetter
+        IShoutWordGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => StoryManagerQuest_Registration.Instance;
-        public static StoryManagerQuest_Registration Registration => StoryManagerQuest_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ShoutWord_Registration.Instance;
+        public static ShoutWord_Registration Registration => ShoutWord_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => StoryManagerQuestCommon.Instance;
+        protected object CommonInstance() => ShoutWordCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => StoryManagerQuestSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ShoutWordSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IStoryManagerQuestGetter.CommonInstance() => this.CommonInstance();
+        object IShoutWordGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IStoryManagerQuestGetter.CommonSetterInstance() => null;
+        object? IShoutWordGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IStoryManagerQuestGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IShoutWordGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerQuestGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShoutWordGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => StoryManagerQuestCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => StoryManagerQuestCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutWordCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutWordCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => StoryManagerQuestXmlWriteTranslation.Instance;
+        protected object XmlWriteTranslator => ShoutWordXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2041,7 +1966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((StoryManagerQuestXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ShoutWordXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2049,39 +1974,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => StoryManagerQuestBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ShoutWordBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerQuestBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ShoutWordBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Quest
-        private int? _QuestLocation;
-        public bool Quest_IsSet => _QuestLocation.HasValue;
-        public IFormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
-        #endregion
-        #region FNAM
-        private int? _FNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? FNAM => _FNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
-        #endregion
-        #region HoursUntilReset
-        private int? _HoursUntilResetLocation;
-        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants)) : default(Single?);
-        #endregion
+        public IFormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected StoryManagerQuestBinaryOverlay(
+        protected ShoutWordBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2091,75 +2006,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static StoryManagerQuestBinaryOverlay StoryManagerQuestFactory(
+        public static ShoutWordBinaryOverlay ShoutWordFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new StoryManagerQuestBinaryOverlay(
-                bytes: stream.RemainingMemory,
+            var ret = new ShoutWordBinaryOverlay(
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            int offset = stream.Position;
-            ret.FillTypelessSubrecordTypes(
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
+            ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
-                offset: offset,
-                recordTypeConverter: recordTypeConverter,
-                fill: ret.FillRecordType);
+                offset: offset);
             return ret;
         }
 
-        public static StoryManagerQuestBinaryOverlay StoryManagerQuestFactory(
+        public static ShoutWordBinaryOverlay ShoutWordFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return StoryManagerQuestFactory(
+            return ShoutWordFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
-            OverlayStream stream,
-            int finalPos,
-            int offset,
-            RecordType type,
-            int? lastParsed,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            type = recordTypeConverter.ConvertToStandard(type);
-            switch (type.TypeInt)
-            {
-                case RecordTypeInts.NNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.Quest) return TryGet<int?>.Failure;
-                    _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.Quest);
-                }
-                case RecordTypeInts.FNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.FNAM) return TryGet<int?>.Failure;
-                    _FNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.FNAM);
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.HoursUntilReset) return TryGet<int?>.Failure;
-                    _HoursUntilResetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuest_FieldIndex.HoursUntilReset);
-                }
-                default:
-                    return TryGet<int?>.Failure;
-            }
-        }
         #region To String
 
         public void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            StoryManagerQuestMixIn.ToString(
+            ShoutWordMixIn.ToString(
                 item: this,
                 name: name);
         }

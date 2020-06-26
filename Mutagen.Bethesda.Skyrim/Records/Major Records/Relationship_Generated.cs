@@ -34,40 +34,47 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class DialogBranch :
+    public partial class Relationship :
         SkyrimMajorRecord,
-        IDialogBranchInternal,
-        ILoquiObjectSetter<DialogBranch>,
-        IEquatable<DialogBranch>,
+        IRelationshipInternal,
+        ILoquiObjectSetter<Relationship>,
+        IEquatable<Relationship>,
         IEqualsMask
     {
         #region Ctor
-        protected DialogBranch()
+        protected Relationship()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Quest
-        public FormLink<Quest> Quest { get; set; } = new FormLink<Quest>();
+        #region Parent
+        public FormLink<Npc> Parent { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLink<IQuestGetter> IDialogBranchGetter.Quest => this.Quest;
+        IFormLink<INpcGetter> IRelationshipGetter.Parent => this.Parent;
         #endregion
-        #region TNAM
-        public Int32? TNAM { get; set; }
+        #region Child
+        public FormLink<Npc> Child { get; set; } = new FormLink<Npc>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IDialogBranchGetter.TNAM => this.TNAM;
+        IFormLink<INpcGetter> IRelationshipGetter.Child => this.Child;
+        #endregion
+        #region Rank
+        public Relationship.RankType Rank { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Byte Unknown { get; set; } = default;
         #endregion
         #region Flags
-        public DialogBranch.Flag? Flags { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        DialogBranch.Flag? IDialogBranchGetter.Flags => this.Flags;
+        public Relationship.Flag Flags { get; set; } = default;
         #endregion
-        #region StartingTopic
-        public FormLinkNullable<DialogTopic> StartingTopic { get; set; } = new FormLinkNullable<DialogTopic>();
+        #region AssociationType
+        public FormLink<AssociationType> AssociationType { get; set; } = new FormLink<AssociationType>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IDialogTopicGetter> IDialogBranchGetter.StartingTopic => this.StartingTopic;
+        IFormLink<IAssociationTypeGetter> IRelationshipGetter.AssociationType => this.AssociationType;
+        #endregion
+        #region DATADataTypeState
+        public Relationship.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
 
         #region To String
@@ -76,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            DialogBranchMixIn.ToString(
+            RelationshipMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -86,29 +93,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogBranchGetter rhs)) return false;
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IRelationshipGetter rhs)) return false;
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogBranch? obj)
+        public bool Equals(Relationship? obj)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogBranchXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => RelationshipXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogBranchXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((RelationshipXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -117,9 +124,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new DialogBranch CreateFromXml(
+        public static new Relationship CreateFromXml(
             XElement node,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -128,27 +135,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             XElement node,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogBranch.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relationship.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static DialogBranch CreateFromXml(
+        public new static Relationship CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new DialogBranch();
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new Relationship();
+            ((RelationshipSetterCommon)((IRelationshipGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -156,9 +163,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             string path,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -166,10 +173,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             string path,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -178,10 +185,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -190,9 +197,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             Stream stream,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -200,10 +207,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             Stream stream,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -212,10 +219,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogBranch CreateFromXml(
+        public static Relationship CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -238,10 +245,13 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Quest = initialValue;
-                this.TNAM = initialValue;
+                this.Parent = initialValue;
+                this.Child = initialValue;
+                this.Rank = initialValue;
+                this.Unknown = initialValue;
                 this.Flags = initialValue;
-                this.StartingTopic = initialValue;
+                this.AssociationType = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -251,10 +261,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Quest,
-                TItem TNAM,
+                TItem Parent,
+                TItem Child,
+                TItem Rank,
+                TItem Unknown,
                 TItem Flags,
-                TItem StartingTopic)
+                TItem AssociationType,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -263,10 +276,13 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.Quest = Quest;
-                this.TNAM = TNAM;
+                this.Parent = Parent;
+                this.Child = Child;
+                this.Rank = Rank;
+                this.Unknown = Unknown;
                 this.Flags = Flags;
-                this.StartingTopic = StartingTopic;
+                this.AssociationType = AssociationType;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -278,10 +294,13 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Quest;
-            public TItem TNAM;
+            public TItem Parent;
+            public TItem Child;
+            public TItem Rank;
+            public TItem Unknown;
             public TItem Flags;
-            public TItem StartingTopic;
+            public TItem AssociationType;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -295,19 +314,25 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Quest, rhs.Quest)) return false;
-                if (!object.Equals(this.TNAM, rhs.TNAM)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.Child, rhs.Child)) return false;
+                if (!object.Equals(this.Rank, rhs.Rank)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.StartingTopic, rhs.StartingTopic)) return false;
+                if (!object.Equals(this.AssociationType, rhs.AssociationType)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Quest);
-                hash.Add(this.TNAM);
+                hash.Add(this.Parent);
+                hash.Add(this.Child);
+                hash.Add(this.Rank);
+                hash.Add(this.Unknown);
                 hash.Add(this.Flags);
-                hash.Add(this.StartingTopic);
+                hash.Add(this.AssociationType);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -318,10 +343,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Quest)) return false;
-                if (!eval(this.TNAM)) return false;
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.Child)) return false;
+                if (!eval(this.Rank)) return false;
+                if (!eval(this.Unknown)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.StartingTopic)) return false;
+                if (!eval(this.AssociationType)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -330,10 +358,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Quest)) return true;
-                if (eval(this.TNAM)) return true;
+                if (eval(this.Parent)) return true;
+                if (eval(this.Child)) return true;
+                if (eval(this.Rank)) return true;
+                if (eval(this.Unknown)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.StartingTopic)) return true;
+                if (eval(this.AssociationType)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -341,7 +372,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new DialogBranch.Mask<R>();
+                var ret = new Relationship.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -349,10 +380,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Quest = eval(this.Quest);
-                obj.TNAM = eval(this.TNAM);
+                obj.Parent = eval(this.Parent);
+                obj.Child = eval(this.Child);
+                obj.Rank = eval(this.Rank);
+                obj.Unknown = eval(this.Unknown);
                 obj.Flags = eval(this.Flags);
-                obj.StartingTopic = eval(this.StartingTopic);
+                obj.AssociationType = eval(this.AssociationType);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -362,34 +396,46 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(DialogBranch.Mask<bool>? printMask = null)
+            public string ToString(Relationship.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogBranch.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, Relationship.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogBranch.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(Relationship.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Quest ?? true)
+                    if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Quest, "Quest");
+                        fg.AppendItem(Parent, "Parent");
                     }
-                    if (printMask?.TNAM ?? true)
+                    if (printMask?.Child ?? true)
                     {
-                        fg.AppendItem(TNAM, "TNAM");
+                        fg.AppendItem(Child, "Child");
+                    }
+                    if (printMask?.Rank ?? true)
+                    {
+                        fg.AppendItem(Rank, "Rank");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.StartingTopic ?? true)
+                    if (printMask?.AssociationType ?? true)
                     {
-                        fg.AppendItem(StartingTopic, "StartingTopic");
+                        fg.AppendItem(AssociationType, "AssociationType");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
                     }
                 }
                 fg.AppendLine("]");
@@ -403,26 +449,35 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Quest;
-            public Exception? TNAM;
+            public Exception? Parent;
+            public Exception? Child;
+            public Exception? Rank;
+            public Exception? Unknown;
             public Exception? Flags;
-            public Exception? StartingTopic;
+            public Exception? AssociationType;
+            public Exception? DATADataTypeState;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+                Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogBranch_FieldIndex.Quest:
-                        return Quest;
-                    case DialogBranch_FieldIndex.TNAM:
-                        return TNAM;
-                    case DialogBranch_FieldIndex.Flags:
+                    case Relationship_FieldIndex.Parent:
+                        return Parent;
+                    case Relationship_FieldIndex.Child:
+                        return Child;
+                    case Relationship_FieldIndex.Rank:
+                        return Rank;
+                    case Relationship_FieldIndex.Unknown:
+                        return Unknown;
+                    case Relationship_FieldIndex.Flags:
                         return Flags;
-                    case DialogBranch_FieldIndex.StartingTopic:
-                        return StartingTopic;
+                    case Relationship_FieldIndex.AssociationType:
+                        return AssociationType;
+                    case Relationship_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -430,20 +485,29 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+                Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogBranch_FieldIndex.Quest:
-                        this.Quest = ex;
+                    case Relationship_FieldIndex.Parent:
+                        this.Parent = ex;
                         break;
-                    case DialogBranch_FieldIndex.TNAM:
-                        this.TNAM = ex;
+                    case Relationship_FieldIndex.Child:
+                        this.Child = ex;
                         break;
-                    case DialogBranch_FieldIndex.Flags:
+                    case Relationship_FieldIndex.Rank:
+                        this.Rank = ex;
+                        break;
+                    case Relationship_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case Relationship_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case DialogBranch_FieldIndex.StartingTopic:
-                        this.StartingTopic = ex;
+                    case Relationship_FieldIndex.AssociationType:
+                        this.AssociationType = ex;
+                        break;
+                    case Relationship_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -453,20 +517,29 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+                Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogBranch_FieldIndex.Quest:
-                        this.Quest = (Exception?)obj;
+                    case Relationship_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
                         break;
-                    case DialogBranch_FieldIndex.TNAM:
-                        this.TNAM = (Exception?)obj;
+                    case Relationship_FieldIndex.Child:
+                        this.Child = (Exception?)obj;
                         break;
-                    case DialogBranch_FieldIndex.Flags:
+                    case Relationship_FieldIndex.Rank:
+                        this.Rank = (Exception?)obj;
+                        break;
+                    case Relationship_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case Relationship_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case DialogBranch_FieldIndex.StartingTopic:
-                        this.StartingTopic = (Exception?)obj;
+                    case Relationship_FieldIndex.AssociationType:
+                        this.AssociationType = (Exception?)obj;
+                        break;
+                    case Relationship_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -477,10 +550,13 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Quest != null) return true;
-                if (TNAM != null) return true;
+                if (Parent != null) return true;
+                if (Child != null) return true;
+                if (Rank != null) return true;
+                if (Unknown != null) return true;
                 if (Flags != null) return true;
-                if (StartingTopic != null) return true;
+                if (AssociationType != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -516,10 +592,13 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Quest, "Quest");
-                fg.AppendItem(TNAM, "TNAM");
+                fg.AppendItem(Parent, "Parent");
+                fg.AppendItem(Child, "Child");
+                fg.AppendItem(Rank, "Rank");
+                fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(StartingTopic, "StartingTopic");
+                fg.AppendItem(AssociationType, "AssociationType");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -528,10 +607,13 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Quest = this.Quest.Combine(rhs.Quest);
-                ret.TNAM = this.TNAM.Combine(rhs.TNAM);
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.Child = this.Child.Combine(rhs.Child);
+                ret.Rank = this.Rank.Combine(rhs.Rank);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.StartingTopic = this.StartingTopic.Combine(rhs.StartingTopic);
+                ret.AssociationType = this.AssociationType.Combine(rhs.AssociationType);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -554,20 +636,26 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public bool Quest;
-            public bool TNAM;
+            public bool Parent;
+            public bool Child;
+            public bool Rank;
+            public bool Unknown;
             public bool Flags;
-            public bool StartingTopic;
+            public bool AssociationType;
+            public bool DATADataTypeState;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Quest = defaultOn;
-                this.TNAM = defaultOn;
+                this.Parent = defaultOn;
+                this.Child = defaultOn;
+                this.Rank = defaultOn;
+                this.Unknown = defaultOn;
                 this.Flags = defaultOn;
-                this.StartingTopic = defaultOn;
+                this.AssociationType = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
@@ -575,68 +663,80 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Quest, null));
-                ret.Add((TNAM, null));
+                ret.Add((Parent, null));
+                ret.Add((Child, null));
+                ret.Add((Rank, null));
+                ret.Add((Unknown, null));
                 ret.Add((Flags, null));
-                ret.Add((StartingTopic, null));
+                ret.Add((AssociationType, null));
+                ret.Add((DATADataTypeState, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogBranch_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = Relationship_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        public DialogBranch(FormKey formKey)
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        public Relationship(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public DialogBranch(IMod mod)
+        public Relationship(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public DialogBranch(IMod mod, string editorID)
+        public Relationship(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RelationshipBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new DialogBranch CreateFromBinary(MutagenFrame frame)
+        public static new Relationship CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static DialogBranch CreateFromBinary(
+        public new static Relationship CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new DialogBranch();
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new Relationship();
+            ((RelationshipSetterCommon)((IRelationshipGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -647,7 +747,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out DialogBranch item,
+            out Relationship item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -658,94 +758,108 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogBranchGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationshipGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)this).CommonSetterInstance()!).Clear(this);
+            ((RelationshipSetterCommon)((IRelationshipGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new DialogBranch GetNew()
+        internal static new Relationship GetNew()
         {
-            return new DialogBranch();
+            return new Relationship();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IDialogBranch :
-        IDialogBranchGetter,
+    public partial interface IRelationship :
+        IRelationshipGetter,
         ISkyrimMajorRecord,
-        ILoquiObjectSetter<IDialogBranchInternal>
+        ILoquiObjectSetter<IRelationshipInternal>
     {
-        new FormLink<Quest> Quest { get; set; }
-        new Int32? TNAM { get; set; }
-        new DialogBranch.Flag? Flags { get; set; }
-        new FormLinkNullable<DialogTopic> StartingTopic { get; set; }
+        new FormLink<Npc> Parent { get; set; }
+        new FormLink<Npc> Child { get; set; }
+        new Relationship.RankType Rank { get; set; }
+        new Byte Unknown { get; set; }
+        new Relationship.Flag Flags { get; set; }
+        new FormLink<AssociationType> AssociationType { get; set; }
+        new Relationship.DATADataType DATADataTypeState { get; set; }
+        #region Mutagen
+        new Relationship.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
-    public partial interface IDialogBranchInternal :
+    public partial interface IRelationshipInternal :
         ISkyrimMajorRecordInternal,
-        IDialogBranch,
-        IDialogBranchGetter
+        IRelationship,
+        IRelationshipGetter
     {
     }
 
-    public partial interface IDialogBranchGetter :
+    public partial interface IRelationshipGetter :
         ISkyrimMajorRecordGetter,
-        ILoquiObject<IDialogBranchGetter>,
+        ILoquiObject<IRelationshipGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogBranch_Registration.Instance;
-        IFormLink<IQuestGetter> Quest { get; }
-        Int32? TNAM { get; }
-        DialogBranch.Flag? Flags { get; }
-        IFormLinkNullable<IDialogTopicGetter> StartingTopic { get; }
+        static ILoquiRegistration Registration => Relationship_Registration.Instance;
+        IFormLink<INpcGetter> Parent { get; }
+        IFormLink<INpcGetter> Child { get; }
+        Relationship.RankType Rank { get; }
+        Byte Unknown { get; }
+        Relationship.Flag Flags { get; }
+        IFormLink<IAssociationTypeGetter> AssociationType { get; }
+        Relationship.DATADataType DATADataTypeState { get; }
+
+        #region Mutagen
+        Relationship.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class DialogBranchMixIn
+    public static partial class RelationshipMixIn
     {
-        public static void Clear(this IDialogBranchInternal item)
+        public static void Clear(this IRelationshipInternal item)
         {
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((RelationshipSetterCommon)((IRelationshipGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static DialogBranch.Mask<bool> GetEqualsMask(
-            this IDialogBranchGetter item,
-            IDialogBranchGetter rhs,
+        public static Relationship.Mask<bool> GetEqualsMask(
+            this IRelationshipGetter item,
+            IRelationshipGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IDialogBranchGetter item,
+            this IRelationshipGetter item,
             string? name = null,
-            DialogBranch.Mask<bool>? printMask = null)
+            Relationship.Mask<bool>? printMask = null)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).ToString(
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IDialogBranchGetter item,
+            this IRelationshipGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogBranch.Mask<bool>? printMask = null)
+            Relationship.Mask<bool>? printMask = null)
         {
-            ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).ToString(
+            ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -753,86 +867,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IDialogBranchGetter item,
-            DialogBranch.Mask<bool?> checkMask)
+            this IRelationshipGetter item,
+            Relationship.Mask<bool?> checkMask)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).HasBeenSet(
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DialogBranch.Mask<bool> GetHasBeenSetMask(this IDialogBranchGetter item)
+        public static Relationship.Mask<bool> GetHasBeenSetMask(this IRelationshipGetter item)
         {
-            var ret = new DialogBranch.Mask<bool>(false);
-            ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new Relationship.Mask<bool>(false);
+            ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IDialogBranchGetter item,
-            IDialogBranchGetter rhs)
+            this IRelationshipGetter item,
+            IRelationshipGetter rhs)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).Equals(
+            return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IDialogBranchInternal lhs,
-            IDialogBranchGetter rhs,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? copyMask = null)
+            this IRelationshipInternal lhs,
+            IRelationshipGetter rhs,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogBranchSetterTranslationCommon)((IDialogBranchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RelationshipSetterTranslationCommon)((IRelationshipGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = DialogBranch.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relationship.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IDialogBranchInternal lhs,
-            IDialogBranchGetter rhs,
+            this IRelationshipInternal lhs,
+            IRelationshipGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DialogBranchSetterTranslationCommon)((IDialogBranchGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((RelationshipSetterTranslationCommon)((IRelationshipGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static DialogBranch DeepCopy(
-            this IDialogBranchGetter item,
-            DialogBranch.TranslationMask? copyMask = null)
+        public static Relationship DeepCopy(
+            this IRelationshipGetter item,
+            Relationship.TranslationMask? copyMask = null)
         {
-            return ((DialogBranchSetterTranslationCommon)((IDialogBranchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RelationshipSetterTranslationCommon)((IRelationshipGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static DialogBranch DeepCopy(
-            this IDialogBranchGetter item,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? copyMask = null)
+        public static Relationship DeepCopy(
+            this IRelationshipGetter item,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? copyMask = null)
         {
-            return ((DialogBranchSetterTranslationCommon)((IDialogBranchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RelationshipSetterTranslationCommon)((IRelationshipGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static DialogBranch DeepCopy(
-            this IDialogBranchGetter item,
+        public static Relationship DeepCopy(
+            this IRelationshipGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((DialogBranchSetterTranslationCommon)((IDialogBranchGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((RelationshipSetterTranslationCommon)((IRelationshipGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -841,9 +955,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             XElement node,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -854,10 +968,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             XElement node,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -865,16 +979,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogBranch.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relationship.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((RelationshipSetterCommon)((IRelationshipGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -882,9 +996,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             string path,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -894,10 +1008,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             string path,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -908,10 +1022,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -922,9 +1036,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             Stream stream,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -934,10 +1048,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             Stream stream,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -948,10 +1062,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogBranch.TranslationMask? translationMask = null)
+            Relationship.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -966,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -976,11 +1090,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IDialogBranchInternal item,
+            this IRelationshipInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogBranchSetterCommon)((IDialogBranchGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((RelationshipSetterCommon)((IRelationshipGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -996,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum DialogBranch_FieldIndex
+    public enum Relationship_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1004,48 +1118,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Quest = 6,
-        TNAM = 7,
-        Flags = 8,
-        StartingTopic = 9,
+        Parent = 6,
+        Child = 7,
+        Rank = 8,
+        Unknown = 9,
+        Flags = 10,
+        AssociationType = 11,
+        DATADataTypeState = 12,
     }
     #endregion
 
     #region Registration
-    public partial class DialogBranch_Registration : ILoquiRegistration
+    public partial class Relationship_Registration : ILoquiRegistration
     {
-        public static readonly DialogBranch_Registration Instance = new DialogBranch_Registration();
+        public static readonly Relationship_Registration Instance = new Relationship_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 349,
+            msgID: 463,
             version: 0);
 
-        public const string GUID = "84dcef28-d603-4bf3-90e2-bc5ac1a36ff2";
+        public const string GUID = "8d5e6837-c926-4b13-9d68-132c96ca3319";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 7;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 13;
 
-        public static readonly Type MaskType = typeof(DialogBranch.Mask<>);
+        public static readonly Type MaskType = typeof(Relationship.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DialogBranch.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Relationship.ErrorMask);
 
-        public static readonly Type ClassType = typeof(DialogBranch);
+        public static readonly Type ClassType = typeof(Relationship);
 
-        public static readonly Type GetterType = typeof(IDialogBranchGetter);
+        public static readonly Type GetterType = typeof(IRelationshipGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IDialogBranch);
+        public static readonly Type SetterType = typeof(IRelationship);
 
-        public static readonly Type? InternalSetterType = typeof(IDialogBranchInternal);
+        public static readonly Type? InternalSetterType = typeof(IRelationshipInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.DialogBranch";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.Relationship";
 
-        public const string Name = "DialogBranch";
+        public const string Name = "Relationship";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1057,14 +1174,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "QUEST":
-                    return (ushort)DialogBranch_FieldIndex.Quest;
-                case "TNAM":
-                    return (ushort)DialogBranch_FieldIndex.TNAM;
+                case "PARENT":
+                    return (ushort)Relationship_FieldIndex.Parent;
+                case "CHILD":
+                    return (ushort)Relationship_FieldIndex.Child;
+                case "RANK":
+                    return (ushort)Relationship_FieldIndex.Rank;
+                case "UNKNOWN":
+                    return (ushort)Relationship_FieldIndex.Unknown;
                 case "FLAGS":
-                    return (ushort)DialogBranch_FieldIndex.Flags;
-                case "STARTINGTOPIC":
-                    return (ushort)DialogBranch_FieldIndex.StartingTopic;
+                    return (ushort)Relationship_FieldIndex.Flags;
+                case "ASSOCIATIONTYPE":
+                    return (ushort)Relationship_FieldIndex.AssociationType;
+                case "DATADATATYPESTATE":
+                    return (ushort)Relationship_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -1072,13 +1195,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                case DialogBranch_FieldIndex.TNAM:
-                case DialogBranch_FieldIndex.Flags:
-                case DialogBranch_FieldIndex.StartingTopic:
+                case Relationship_FieldIndex.Parent:
+                case Relationship_FieldIndex.Child:
+                case Relationship_FieldIndex.Rank:
+                case Relationship_FieldIndex.Unknown:
+                case Relationship_FieldIndex.Flags:
+                case Relationship_FieldIndex.AssociationType:
+                case Relationship_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1087,13 +1213,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                case DialogBranch_FieldIndex.TNAM:
-                case DialogBranch_FieldIndex.Flags:
-                case DialogBranch_FieldIndex.StartingTopic:
+                case Relationship_FieldIndex.Parent:
+                case Relationship_FieldIndex.Child:
+                case Relationship_FieldIndex.Rank:
+                case Relationship_FieldIndex.Unknown:
+                case Relationship_FieldIndex.Flags:
+                case Relationship_FieldIndex.AssociationType:
+                case Relationship_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1102,13 +1231,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                case DialogBranch_FieldIndex.TNAM:
-                case DialogBranch_FieldIndex.Flags:
-                case DialogBranch_FieldIndex.StartingTopic:
+                case Relationship_FieldIndex.Parent:
+                case Relationship_FieldIndex.Child:
+                case Relationship_FieldIndex.Rank:
+                case Relationship_FieldIndex.Unknown:
+                case Relationship_FieldIndex.Flags:
+                case Relationship_FieldIndex.AssociationType:
+                case Relationship_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1117,17 +1249,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                    return "Quest";
-                case DialogBranch_FieldIndex.TNAM:
-                    return "TNAM";
-                case DialogBranch_FieldIndex.Flags:
+                case Relationship_FieldIndex.Parent:
+                    return "Parent";
+                case Relationship_FieldIndex.Child:
+                    return "Child";
+                case Relationship_FieldIndex.Rank:
+                    return "Rank";
+                case Relationship_FieldIndex.Unknown:
+                    return "Unknown";
+                case Relationship_FieldIndex.Flags:
                     return "Flags";
-                case DialogBranch_FieldIndex.StartingTopic:
-                    return "StartingTopic";
+                case Relationship_FieldIndex.AssociationType:
+                    return "AssociationType";
+                case Relationship_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1135,13 +1273,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                case DialogBranch_FieldIndex.TNAM:
-                case DialogBranch_FieldIndex.Flags:
-                case DialogBranch_FieldIndex.StartingTopic:
+                case Relationship_FieldIndex.Parent:
+                case Relationship_FieldIndex.Child:
+                case Relationship_FieldIndex.Rank:
+                case Relationship_FieldIndex.Unknown:
+                case Relationship_FieldIndex.Flags:
+                case Relationship_FieldIndex.AssociationType:
+                case Relationship_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1150,13 +1291,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                case DialogBranch_FieldIndex.TNAM:
-                case DialogBranch_FieldIndex.Flags:
-                case DialogBranch_FieldIndex.StartingTopic:
+                case Relationship_FieldIndex.Parent:
+                case Relationship_FieldIndex.Child:
+                case Relationship_FieldIndex.Rank:
+                case Relationship_FieldIndex.Unknown:
+                case Relationship_FieldIndex.Flags:
+                case Relationship_FieldIndex.AssociationType:
+                case Relationship_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1165,25 +1309,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            DialogBranch_FieldIndex enu = (DialogBranch_FieldIndex)index;
+            Relationship_FieldIndex enu = (Relationship_FieldIndex)index;
             switch (enu)
             {
-                case DialogBranch_FieldIndex.Quest:
-                    return typeof(FormLink<Quest>);
-                case DialogBranch_FieldIndex.TNAM:
-                    return typeof(Int32);
-                case DialogBranch_FieldIndex.Flags:
-                    return typeof(DialogBranch.Flag);
-                case DialogBranch_FieldIndex.StartingTopic:
-                    return typeof(FormLinkNullable<DialogTopic>);
+                case Relationship_FieldIndex.Parent:
+                    return typeof(FormLink<Npc>);
+                case Relationship_FieldIndex.Child:
+                    return typeof(FormLink<Npc>);
+                case Relationship_FieldIndex.Rank:
+                    return typeof(Relationship.RankType);
+                case Relationship_FieldIndex.Unknown:
+                    return typeof(Byte);
+                case Relationship_FieldIndex.Flags:
+                    return typeof(Relationship.Flag);
+                case Relationship_FieldIndex.AssociationType:
+                    return typeof(FormLink<AssociationType>);
+                case Relationship_FieldIndex.DATADataTypeState:
+                    return typeof(Relationship.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogBranchXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.DLBR;
-        public static readonly Type BinaryWriteTranslation = typeof(DialogBranchBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(RelationshipXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.RELA;
+        public static readonly Type BinaryWriteTranslation = typeof(RelationshipBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1216,35 +1366,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogBranchSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class RelationshipSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly DialogBranchSetterCommon Instance = new DialogBranchSetterCommon();
+        public new static readonly RelationshipSetterCommon Instance = new RelationshipSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IDialogBranchInternal item)
+        public void Clear(IRelationshipInternal item)
         {
             ClearPartial();
-            item.Quest = FormLink<Quest>.Null;
-            item.TNAM = default;
+            item.Parent = FormLink<Npc>.Null;
+            item.Child = FormLink<Npc>.Null;
+            item.Rank = default;
+            item.Unknown = default;
             item.Flags = default;
-            item.StartingTopic = FormLinkNullable<DialogTopic>.Null;
+            item.AssociationType = FormLink<AssociationType>.Null;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IDialogBranchInternal)item);
+            Clear(item: (IRelationshipInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IDialogBranchInternal)item);
+            Clear(item: (IRelationshipInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1264,7 +1417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1279,7 +1432,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    DialogBranchXmlCreateTranslation.FillPublicElementXml(
+                    RelationshipXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1301,7 +1454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (DialogBranch)item,
+                item: (Relationship)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1314,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (DialogBranch)item,
+                item: (Relationship)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1324,16 +1477,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IDialogBranchInternal>(
+            UtilityTranslation.MajorRecordParse<IRelationshipInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: DialogBranchBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: DialogBranchBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: RelationshipBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: RelationshipBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1342,7 +1495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (DialogBranch)item,
+                item: (Relationship)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1353,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (DialogBranch)item,
+                item: (Relationship)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1361,17 +1514,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogBranchCommon : SkyrimMajorRecordCommon
+    public partial class RelationshipCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly DialogBranchCommon Instance = new DialogBranchCommon();
+        public new static readonly RelationshipCommon Instance = new RelationshipCommon();
 
-        public DialogBranch.Mask<bool> GetEqualsMask(
-            IDialogBranchGetter item,
-            IDialogBranchGetter rhs,
+        public Relationship.Mask<bool> GetEqualsMask(
+            IRelationshipGetter item,
+            IRelationshipGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DialogBranch.Mask<bool>(false);
-            ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new Relationship.Mask<bool>(false);
+            ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1380,23 +1533,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IDialogBranchGetter item,
-            IDialogBranchGetter rhs,
-            DialogBranch.Mask<bool> ret,
+            IRelationshipGetter item,
+            IRelationshipGetter rhs,
+            Relationship.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Quest = object.Equals(item.Quest, rhs.Quest);
-            ret.TNAM = item.TNAM == rhs.TNAM;
+            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.Child = object.Equals(item.Child, rhs.Child);
+            ret.Rank = item.Rank == rhs.Rank;
+            ret.Unknown = item.Unknown == rhs.Unknown;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.StartingTopic = object.Equals(item.StartingTopic, rhs.StartingTopic);
+            ret.AssociationType = object.Equals(item.AssociationType, rhs.AssociationType);
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             string? name = null,
-            DialogBranch.Mask<bool>? printMask = null)
+            Relationship.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1408,18 +1564,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogBranch.Mask<bool>? printMask = null)
+            Relationship.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogBranch =>");
+                fg.AppendLine($"Relationship =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogBranch) =>");
+                fg.AppendLine($"{name} (Relationship) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1433,93 +1589,102 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             FileGeneration fg,
-            DialogBranch.Mask<bool>? printMask = null)
+            Relationship.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.Quest ?? true)
+            if (printMask?.Parent ?? true)
             {
-                fg.AppendItem(item.Quest, "Quest");
+                fg.AppendItem(item.Parent, "Parent");
             }
-            if ((printMask?.TNAM ?? true)
-                && item.TNAM.TryGet(out var TNAMItem))
+            if (printMask?.Child ?? true)
             {
-                fg.AppendItem(TNAMItem, "TNAM");
+                fg.AppendItem(item.Child, "Child");
             }
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if (printMask?.Rank ?? true)
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(item.Rank, "Rank");
             }
-            if ((printMask?.StartingTopic ?? true)
-                && item.StartingTopic.TryGet(out var StartingTopicItem))
+            if (printMask?.Unknown ?? true)
             {
-                fg.AppendItem(StartingTopicItem, "StartingTopic");
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.AssociationType ?? true)
+            {
+                fg.AppendItem(item.AssociationType, "AssociationType");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
             }
         }
         
         public bool HasBeenSet(
-            IDialogBranchGetter item,
-            DialogBranch.Mask<bool?> checkMask)
+            IRelationshipGetter item,
+            Relationship.Mask<bool?> checkMask)
         {
-            if (checkMask.TNAM.HasValue && checkMask.TNAM.Value != (item.TNAM != null)) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.StartingTopic.HasValue && checkMask.StartingTopic.Value != (item.StartingTopic.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            IDialogBranchGetter item,
-            DialogBranch.Mask<bool> mask)
+            IRelationshipGetter item,
+            Relationship.Mask<bool> mask)
         {
-            mask.Quest = true;
-            mask.TNAM = (item.TNAM != null);
-            mask.Flags = (item.Flags != null);
-            mask.StartingTopic = (item.StartingTopic.FormKey != null);
+            mask.Parent = true;
+            mask.Child = true;
+            mask.Rank = true;
+            mask.Unknown = true;
+            mask.Flags = true;
+            mask.AssociationType = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static DialogBranch_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static Relationship_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new DialogBranch_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new Relationship_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (DialogBranch_FieldIndex)((int)index);
+                    return (Relationship_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1527,16 +1692,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDialogBranchGetter? lhs,
-            IDialogBranchGetter? rhs)
+            IRelationshipGetter? lhs,
+            IRelationshipGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.TNAM != rhs.TNAM) return false;
+            if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            if (!lhs.Child.Equals(rhs.Child)) return false;
+            if (lhs.Rank != rhs.Rank) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.StartingTopic.Equals(rhs.StartingTopic)) return false;
+            if (!lhs.AssociationType.Equals(rhs.AssociationType)) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1545,8 +1713,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IDialogBranchGetter?)lhs,
-                rhs: rhs as IDialogBranchGetter);
+                lhs: (IRelationshipGetter?)lhs,
+                rhs: rhs as IRelationshipGetter);
         }
         
         public override bool Equals(
@@ -1554,38 +1722,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IDialogBranchGetter?)lhs,
-                rhs: rhs as IDialogBranchGetter);
+                lhs: (IRelationshipGetter?)lhs,
+                rhs: rhs as IRelationshipGetter);
         }
         
-        public virtual int GetHashCode(IDialogBranchGetter item)
+        public virtual int GetHashCode(IRelationshipGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Quest);
-            if (item.TNAM.TryGet(out var TNAMitem))
-            {
-                hash.Add(TNAMitem);
-            }
-            if (item.Flags.TryGet(out var Flagsitem))
-            {
-                hash.Add(Flagsitem);
-            }
-            if (item.StartingTopic.TryGet(out var StartingTopicitem))
-            {
-                hash.Add(StartingTopicitem);
-            }
+            hash.Add(item.Parent);
+            hash.Add(item.Child);
+            hash.Add(item.Rank);
+            hash.Add(item.Unknown);
+            hash.Add(item.Flags);
+            hash.Add(item.AssociationType);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IDialogBranchGetter)item);
+            return GetHashCode(item: (IRelationshipGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IDialogBranchGetter)item);
+            return GetHashCode(item: (IRelationshipGetter)item);
         }
         
         #endregion
@@ -1593,47 +1755,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return DialogBranch.GetNew();
+            return Relationship.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogBranchGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IRelationshipGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            yield return obj.Quest.FormKey;
-            if (obj.StartingTopic.FormKey.TryGet(out var StartingTopicKey))
-            {
-                yield return StartingTopicKey;
-            }
+            yield return obj.Parent.FormKey;
+            yield return obj.Child.FormKey;
+            yield return obj.AssociationType.FormKey;
             yield break;
         }
         
-        public void RemapLinks(IDialogBranchGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(DialogBranch obj, DialogBranch rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(IRelationshipGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(Relationship obj, Relationship rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new DialogBranch(getNextFormKey());
-            ret.DeepCopyIn((DialogBranch)item);
+            var ret = new Relationship(getNextFormKey());
+            ret.DeepCopyIn((Relationship)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (DialogBranch)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (Relationship)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class DialogBranchSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class RelationshipSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly DialogBranchSetterTranslationCommon Instance = new DialogBranchSetterTranslationCommon();
+        public new static readonly RelationshipSetterTranslationCommon Instance = new RelationshipSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IDialogBranchInternal item,
-            IDialogBranchGetter rhs,
+            IRelationshipInternal item,
+            IRelationshipGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1645,8 +1805,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IDialogBranch item,
-            IDialogBranchGetter rhs,
+            IRelationship item,
+            IRelationshipGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1655,21 +1815,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
-                item.Quest = rhs.Quest.FormKey;
+                item.Parent = rhs.Parent.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                item.TNAM = rhs.TNAM;
+                item.Child = rhs.Child.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
+            {
+                item.Rank = rhs.Rank;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
-                item.StartingTopic = rhs.StartingTopic.FormKey;
+                item.AssociationType = rhs.AssociationType.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
             }
         }
         
@@ -1680,8 +1852,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IDialogBranchInternal)item,
-                rhs: (IDialogBranchGetter)rhs,
+                item: (IRelationshipInternal)item,
+                rhs: (IRelationshipGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1693,8 +1865,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IDialogBranch)item,
-                rhs: (IDialogBranchGetter)rhs,
+                item: (IRelationship)item,
+                rhs: (IRelationshipGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1706,8 +1878,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IDialogBranchInternal)item,
-                rhs: (IDialogBranchGetter)rhs,
+                item: (IRelationshipInternal)item,
+                rhs: (IRelationshipGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1719,31 +1891,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IDialogBranch)item,
-                rhs: (IDialogBranchGetter)rhs,
+                item: (IRelationship)item,
+                rhs: (IRelationshipGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public DialogBranch DeepCopy(
-            IDialogBranchGetter item,
-            DialogBranch.TranslationMask? copyMask = null)
+        public Relationship DeepCopy(
+            IRelationshipGetter item,
+            Relationship.TranslationMask? copyMask = null)
         {
-            DialogBranch ret = (DialogBranch)((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).GetNew();
+            Relationship ret = (Relationship)((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public DialogBranch DeepCopy(
-            IDialogBranchGetter item,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? copyMask = null)
+        public Relationship DeepCopy(
+            IRelationshipGetter item,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? copyMask = null)
         {
-            DialogBranch ret = (DialogBranch)((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).GetNew();
+            Relationship ret = (Relationship)((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1751,12 +1923,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public DialogBranch DeepCopy(
-            IDialogBranchGetter item,
+        public Relationship DeepCopy(
+            IRelationshipGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            DialogBranch ret = (DialogBranch)((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).GetNew();
+            Relationship ret = (Relationship)((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1771,21 +1943,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogBranch
+    public partial class Relationship
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration Registration => DialogBranch_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => DialogBranchCommon.Instance;
+        protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return DialogBranchSetterCommon.Instance;
+            return RelationshipSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => DialogBranchSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RelationshipSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1796,14 +1968,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogBranchXmlWriteTranslation :
+    public partial class RelationshipXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static DialogBranchXmlWriteTranslation Instance = new DialogBranchXmlWriteTranslation();
+        public new readonly static RelationshipXmlWriteTranslation Instance = new RelationshipXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1813,59 +1985,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Quest),
-                    item: item.Quest.FormKey,
-                    fieldIndex: (int)DialogBranch_FieldIndex.Quest,
+                    name: nameof(item.Parent),
+                    item: item.Parent.FormKey,
+                    fieldIndex: (int)Relationship_FieldIndex.Parent,
                     errorMask: errorMask);
             }
-            if ((item.TNAM != null)
-                && (translationMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
             {
-                Int32XmlTranslation.Instance.Write(
+                FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.TNAM),
-                    item: item.TNAM.Value,
-                    fieldIndex: (int)DialogBranch_FieldIndex.TNAM,
+                    name: nameof(item.Child),
+                    item: item.Child.FormKey,
+                    fieldIndex: (int)Relationship_FieldIndex.Child,
                     errorMask: errorMask);
             }
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
             {
-                EnumXmlTranslation<DialogBranch.Flag>.Instance.Write(
+                EnumXmlTranslation<Relationship.RankType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Rank),
+                    item: item.Rank,
+                    fieldIndex: (int)Relationship_FieldIndex.Rank,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.Unknown) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)Relationship_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Relationship.Flag>.Instance.Write(
                     node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
-                    fieldIndex: (int)DialogBranch_FieldIndex.Flags,
+                    fieldIndex: (int)Relationship_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((item.StartingTopic.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.StartingTopic),
-                    item: item.StartingTopic.FormKey,
-                    fieldIndex: (int)DialogBranch_FieldIndex.StartingTopic,
+                    name: nameof(item.AssociationType),
+                    item: item.AssociationType.FormKey,
+                    fieldIndex: (int)Relationship_FieldIndex.AssociationType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<Relationship.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)Relationship_FieldIndex.DATADataTypeState,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DialogBranch");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.Relationship");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DialogBranch");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.Relationship");
             }
             WriteToNodeXml(
                 item: item,
@@ -1882,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1897,7 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1912,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1921,12 +2117,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogBranchXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class RelationshipXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static DialogBranchXmlCreateTranslation Instance = new DialogBranchXmlCreateTranslation();
+        public new readonly static RelationshipXmlCreateTranslation Instance = new RelationshipXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1935,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogBranchXmlCreateTranslation.FillPublicElementXml(
+                    RelationshipXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1951,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1959,11 +2155,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Quest":
-                    errorMask?.PushIndex((int)DialogBranch_FieldIndex.Quest);
+                case "Parent":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.Parent);
                     try
                     {
-                        item.Quest = FormKeyXmlTranslation.Instance.Parse(
+                        item.Parent = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1977,11 +2173,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "TNAM":
-                    errorMask?.PushIndex((int)DialogBranch_FieldIndex.TNAM);
+                case "Child":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.Child);
                     try
                     {
-                        item.TNAM = Int32XmlTranslation.Instance.Parse(
+                        item.Child = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Rank":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.Rank);
+                    try
+                    {
+                        item.Rank = EnumXmlTranslation<Relationship.RankType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = ByteXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1996,10 +2228,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
-                    errorMask?.PushIndex((int)DialogBranch_FieldIndex.Flags);
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<DialogBranch.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<Relationship.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2013,11 +2245,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "StartingTopic":
-                    errorMask?.PushIndex((int)DialogBranch_FieldIndex.StartingTopic);
+                case "AssociationType":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.AssociationType);
                     try
                     {
-                        item.StartingTopic = FormKeyXmlTranslation.Instance.Parse(
+                        item.AssociationType = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)Relationship_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<Relationship.DATADataType>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2048,30 +2298,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class DialogBranchXmlTranslationMixIn
+    public static class RelationshipXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IDialogBranchGetter item,
+            this IRelationshipGetter item,
             XElement node,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogBranchXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((RelationshipXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogBranch.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = Relationship.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IDialogBranchGetter item,
+            this IRelationshipGetter item,
             string path,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2085,10 +2335,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogBranchGetter item,
+            this IRelationshipGetter item,
             Stream stream,
-            out DialogBranch.ErrorMask errorMask,
-            DialogBranch.TranslationMask? translationMask = null,
+            out Relationship.ErrorMask errorMask,
+            Relationship.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2111,14 +2361,23 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogBranchBinaryWriteTranslation :
+    public partial class RelationshipBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DialogBranchBinaryWriteTranslation Instance = new DialogBranchBinaryWriteTranslation();
+        public new readonly static RelationshipBinaryWriteTranslation Instance = new RelationshipBinaryWriteTranslation();
+
+        public static void WriteEmbedded(
+            IRelationshipGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
 
         public static void WriteRecordTypes(
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2126,36 +2385,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Quest,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.TNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogBranch.Flag>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.StartingTopic,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Parent);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Child);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Relationship.RankType>.Instance.Write(
+                    writer,
+                    item.Rank,
+                    length: 2);
+                writer.Write(item.Unknown);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Relationship.Flag>.Instance.Write(
+                    writer,
+                    item.Flags,
+                    length: 1);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.AssociationType);
+            }
         }
 
         public void Write(
             MutagenWriter writer,
-            IDialogBranchGetter item,
+            IRelationshipGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.DLBR),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.RELA),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
                 WriteRecordTypes(
@@ -2171,7 +2434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2182,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2193,20 +2456,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogBranchGetter)item,
+                item: (IRelationshipGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class DialogBranchBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class RelationshipBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static DialogBranchBinaryCreateTranslation Instance = new DialogBranchBinaryCreateTranslation();
+        public new readonly static RelationshipBinaryCreateTranslation Instance = new RelationshipBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.DLBR;
+        public override RecordType RecordType => RecordTypes.RELA;
         public static void FillBinaryStructs(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -2215,7 +2478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static TryGet<int?> FillBinaryRecordTypes(
-            IDialogBranchInternal item,
+            IRelationshipInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2224,33 +2487,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.QNAM:
+                case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Quest);
-                }
-                case RecordTypeInts.TNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.TNAM);
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<DialogBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Flags);
-                }
-                case RecordTypeInts.SNAM:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StartingTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Child = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.StartingTopic);
+                    item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Unknown = dataFrame.ReadUInt8();
+                    item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.AssociationType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Relationship_FieldIndex.AssociationType);
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2267,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class DialogBranchBinaryTranslationMixIn
+    public static class RelationshipBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2276,40 +2529,40 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogBranchBinaryOverlay :
+    public partial class RelationshipBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        IDialogBranchGetter
+        IRelationshipGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogBranch_Registration.Instance;
-        public new static DialogBranch_Registration Registration => DialogBranch_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Relationship_Registration.Instance;
+        public new static Relationship_Registration Registration => Relationship_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => DialogBranchCommon.Instance;
+        protected override object CommonInstance() => RelationshipCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => DialogBranchSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => RelationshipSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogBranchGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IRelationshipGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DialogBranchCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogBranchCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => RelationshipCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogBranchXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => RelationshipXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogBranchXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((RelationshipXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2317,34 +2570,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => DialogBranchBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogBranchBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((RelationshipBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Relationship.MajorFlag MajorFlags => (Relationship.MajorFlag)this.MajorRecordFlagsRaw;
 
-        #region Quest
-        private int? _QuestLocation;
-        public bool Quest_IsSet => _QuestLocation.HasValue;
-        public IFormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        private int? _DATALocation;
+        public Relationship.DATADataType DATADataTypeState { get; private set; }
+        #region Parent
+        private int _ParentLocation => _DATALocation!.Value;
+        private bool _Parent_IsSet => _DATALocation.HasValue;
+        public IFormLink<INpcGetter> Parent => _Parent_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ParentLocation, 0x4)))) : FormLink<INpcGetter>.Null;
         #endregion
-        #region TNAM
-        private int? _TNAMLocation;
-        public Int32? TNAM => _TNAMLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TNAMLocation.Value, _package.MetaData.Constants)) : default(Int32?);
+        #region Child
+        private int _ChildLocation => _DATALocation!.Value + 0x4;
+        private bool _Child_IsSet => _DATALocation.HasValue;
+        public IFormLink<INpcGetter> Child => _Child_IsSet ? new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ChildLocation, 0x4)))) : FormLink<INpcGetter>.Null;
+        #endregion
+        #region Rank
+        private int _RankLocation => _DATALocation!.Value + 0x8;
+        private bool _Rank_IsSet => _DATALocation.HasValue;
+        public Relationship.RankType Rank => _Rank_IsSet ? (Relationship.RankType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(_RankLocation, 0x2)) : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0xA;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
         #endregion
         #region Flags
-        private int? _FlagsLocation;
-        public DialogBranch.Flag? Flags => _FlagsLocation.HasValue ? (DialogBranch.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(DialogBranch.Flag?);
+        private int _FlagsLocation => _DATALocation!.Value + 0xB;
+        private bool _Flags_IsSet => _DATALocation.HasValue;
+        public Relationship.Flag Flags => _Flags_IsSet ? (Relationship.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
         #endregion
-        #region StartingTopic
-        private int? _StartingTopicLocation;
-        public bool StartingTopic_IsSet => _StartingTopicLocation.HasValue;
-        public IFormLinkNullable<IDialogTopicGetter> StartingTopic => _StartingTopicLocation.HasValue ? new FormLinkNullable<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _StartingTopicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IDialogTopicGetter>.Null;
+        #region AssociationType
+        private int _AssociationTypeLocation => _DATALocation!.Value + 0xC;
+        private bool _AssociationType_IsSet => _DATALocation.HasValue;
+        public IFormLink<IAssociationTypeGetter> AssociationType => _AssociationType_IsSet ? new FormLink<IAssociationTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AssociationTypeLocation, 0x4)))) : FormLink<IAssociationTypeGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2352,7 +2620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected DialogBranchBinaryOverlay(
+        protected RelationshipBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2362,13 +2630,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static DialogBranchBinaryOverlay DialogBranchFactory(
+        public static RelationshipBinaryOverlay RelationshipFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream);
-            var ret = new DialogBranchBinaryOverlay(
+            var ret = new RelationshipBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2387,12 +2655,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static DialogBranchBinaryOverlay DialogBranchFactory(
+        public static RelationshipBinaryOverlay RelationshipFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return DialogBranchFactory(
+            return RelationshipFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2409,25 +2677,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.QNAM:
+                case RecordTypeInts.DATA:
                 {
-                    _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Quest);
-                }
-                case RecordTypeInts.TNAM:
-                {
-                    _TNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.TNAM);
-                }
-                case RecordTypeInts.DNAM:
-                {
-                    _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Flags);
-                }
-                case RecordTypeInts.SNAM:
-                {
-                    _StartingTopicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.StartingTopic);
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return TryGet<int?>.Succeed((int)Relationship_FieldIndex.AssociationType);
                 }
                 default:
                     return base.FillRecordType(
@@ -2444,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            DialogBranchMixIn.ToString(
+            RelationshipMixIn.ToString(
                 item: this,
                 name: name);
         }

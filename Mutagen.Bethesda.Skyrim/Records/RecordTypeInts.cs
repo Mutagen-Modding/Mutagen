@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int ARMO = 0x4F4D5241;
         public const int ARTO = 0x4F545241;
         public const int ASPC = 0x43505341;
+        public const int ASTP = 0x50545341;
         public const int ATKD = 0x444B5441;
         public const int ATKE = 0x454B5441;
         public const int ATKR = 0x524B5441;
@@ -114,6 +115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int DIAD = 0x44414944;
         public const int DIAL = 0x4C414944;
         public const int DLBR = 0x52424C44;
+        public const int DLVW = 0x57564C44;
         public const int DMDL = 0x4C444D44;
         public const int DNAM = 0x4D414E44;
         public const int DOBJ = 0x4A424F44;
@@ -361,6 +363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int RDWT = 0x54574452;
         public const int REFR = 0x52464552;
         public const int REGN = 0x4E474552;
+        public const int RELA = 0x414C4552;
         public const int REVB = 0x42564552;
         public const int RFCT = 0x54434652;
         public const int RIAD = 0x44414952;
@@ -454,6 +457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int WKMV = 0x564D4B57;
         public const int WLST = 0x54534C57;
         public const int WNAM = 0x4D414E57;
+        public const int WOOP = 0x504F4F57;
         public const int WRLD = 0x444C5257;
         public const int WTHR = 0x52485457;
         public const int XACT = 0x54434158;

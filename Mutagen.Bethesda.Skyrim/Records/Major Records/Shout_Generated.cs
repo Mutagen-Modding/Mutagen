@@ -49,6 +49,35 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public TranslatedString? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IShoutGetter.Name => this.Name;
+        #endregion
+        #region MenuDisplayObject
+        public FormLinkNullable<Static> MenuDisplayObject { get; set; } = new FormLinkNullable<Static>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IStaticGetter> IShoutGetter.MenuDisplayObject => this.MenuDisplayObject;
+        #endregion
+        #region Description
+        public TranslatedString? Description { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        TranslatedString? IShoutGetter.Description => this.Description;
+        #endregion
+        #region WordsOfPower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ExtendedList<ShoutWord> _WordsOfPower = new ExtendedList<ShoutWord>();
+        public ExtendedList<ShoutWord> WordsOfPower
+        {
+            get => this._WordsOfPower;
+            protected set => this._WordsOfPower = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IShoutWordGetter> IShoutGetter.WordsOfPower => _WordsOfPower;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +247,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.MenuDisplayObject = initialValue;
+                this.Description = initialValue;
+                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>());
             }
 
             public Mask(
@@ -226,7 +259,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem MenuDisplayObject,
+                TItem Description,
+                TItem WordsOfPower)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +272,10 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.MenuDisplayObject = MenuDisplayObject;
+                this.Description = Description;
+                this.WordsOfPower = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>(WordsOfPower, Enumerable.Empty<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +284,13 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem MenuDisplayObject;
+            public TItem Description;
+            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ShoutWord.Mask<TItem>?>>?>? WordsOfPower;
             #endregion
 
             #region Equals
@@ -256,11 +304,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.MenuDisplayObject, rhs.MenuDisplayObject)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.WordsOfPower, rhs.WordsOfPower)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.MenuDisplayObject);
+                hash.Add(this.Description);
+                hash.Add(this.WordsOfPower);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +327,21 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.MenuDisplayObject)) return false;
+                if (!eval(this.Description)) return false;
+                if (this.WordsOfPower != null)
+                {
+                    if (!eval(this.WordsOfPower.Overall)) return false;
+                    if (this.WordsOfPower.Specific != null)
+                    {
+                        foreach (var item in this.WordsOfPower.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +350,21 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.MenuDisplayObject)) return true;
+                if (eval(this.Description)) return true;
+                if (this.WordsOfPower != null)
+                {
+                    if (eval(this.WordsOfPower.Overall)) return true;
+                    if (this.WordsOfPower.Specific != null)
+                    {
+                        foreach (var item in this.WordsOfPower.Specific)
+                        {
+                            if (!eval(item.Overall)) return false;
+                            if (item.Specific != null && !item.Specific.All(eval)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +380,24 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.MenuDisplayObject = eval(this.MenuDisplayObject);
+                obj.Description = eval(this.Description);
+                if (WordsOfPower != null)
+                {
+                    obj.WordsOfPower = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ShoutWord.Mask<R>?>>?>(eval(this.WordsOfPower.Overall), Enumerable.Empty<MaskItemIndexed<R, ShoutWord.Mask<R>?>>());
+                    if (WordsOfPower.Specific != null)
+                    {
+                        var l = new List<MaskItemIndexed<R, ShoutWord.Mask<R>?>>();
+                        obj.WordsOfPower.Specific = l;
+                        foreach (var item in WordsOfPower.Specific.WithIndex())
+                        {
+                            MaskItemIndexed<R, ShoutWord.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ShoutWord.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
+                            if (mask == null) continue;
+                            l.Add(mask);
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +420,41 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.MenuDisplayObject ?? true)
+                    {
+                        fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                    }
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if ((printMask?.WordsOfPower?.Overall ?? true)
+                        && WordsOfPower.TryGet(out var WordsOfPowerItem))
+                    {
+                        fg.AppendLine("WordsOfPower =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(WordsOfPowerItem.Overall);
+                            if (WordsOfPowerItem.Specific != null)
+                            {
+                                foreach (var subItem in WordsOfPowerItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        subItem?.ToString(fg);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +466,27 @@ namespace Mutagen.Bethesda.Skyrim
             ASpell.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? MenuDisplayObject;
+            public Exception? Description;
+            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>? WordsOfPower;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 Shout_FieldIndex enu = (Shout_FieldIndex)index;
                 switch (enu)
                 {
+                    case Shout_FieldIndex.Name:
+                        return Name;
+                    case Shout_FieldIndex.MenuDisplayObject:
+                        return MenuDisplayObject;
+                    case Shout_FieldIndex.Description:
+                        return Description;
+                    case Shout_FieldIndex.WordsOfPower:
+                        return WordsOfPower;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +497,18 @@ namespace Mutagen.Bethesda.Skyrim
                 Shout_FieldIndex enu = (Shout_FieldIndex)index;
                 switch (enu)
                 {
+                    case Shout_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Shout_FieldIndex.MenuDisplayObject:
+                        this.MenuDisplayObject = ex;
+                        break;
+                    case Shout_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case Shout_FieldIndex.WordsOfPower:
+                        this.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +520,18 @@ namespace Mutagen.Bethesda.Skyrim
                 Shout_FieldIndex enu = (Shout_FieldIndex)index;
                 switch (enu)
                 {
+                    case Shout_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Shout_FieldIndex.MenuDisplayObject:
+                        this.MenuDisplayObject = (Exception?)obj;
+                        break;
+                    case Shout_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case Shout_FieldIndex.WordsOfPower:
+                        this.WordsOfPower = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +541,10 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (MenuDisplayObject != null) return true;
+                if (Description != null) return true;
+                if (WordsOfPower != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +580,31 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(MenuDisplayObject, "MenuDisplayObject");
+                fg.AppendItem(Description, "Description");
+                if (WordsOfPower.TryGet(out var WordsOfPowerItem))
+                {
+                    fg.AppendLine("WordsOfPower =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(WordsOfPowerItem.Overall);
+                        if (WordsOfPowerItem.Specific != null)
+                        {
+                            foreach (var subItem in WordsOfPowerItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +613,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.MenuDisplayObject = this.MenuDisplayObject.Combine(rhs.MenuDisplayObject);
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.WordsOfPower = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ShoutWord.ErrorMask?>>?>(ExceptionExt.Combine(this.WordsOfPower?.Overall, rhs.WordsOfPower?.Overall), ExceptionExt.Combine(this.WordsOfPower?.Specific, rhs.WordsOfPower?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +638,44 @@ namespace Mutagen.Bethesda.Skyrim
             ASpell.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool MenuDisplayObject;
+            public bool Description;
+            public MaskItem<bool, ShoutWord.TranslationMask?> WordsOfPower;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Name = defaultOn;
+                this.MenuDisplayObject = defaultOn;
+                this.Description = defaultOn;
+                this.WordsOfPower = new MaskItem<bool, ShoutWord.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((MenuDisplayObject, null));
+                ret.Add((Description, null));
+                ret.Add((WordsOfPower?.Overall ?? true, WordsOfPower?.Specific?.GetCrystal()));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = Shout_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ShoutCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
         public Shout(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +693,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public MajorFlag MajorFlags
+        {
+            get => (MajorFlag)this.MajorRecordFlagsRaw;
+            set => this.MajorRecordFlagsRaw = (int)value;
+        }
         #endregion
 
         #region Binary Translation
@@ -527,8 +768,17 @@ namespace Mutagen.Bethesda.Skyrim
         IShoutGetter,
         IASpell,
         IObjectId,
+        ITranslatedNamed,
         ILoquiObjectSetter<IShoutInternal>
     {
+        new TranslatedString? Name { get; set; }
+        new FormLinkNullable<Static> MenuDisplayObject { get; set; }
+        new TranslatedString? Description { get; set; }
+        new ExtendedList<ShoutWord> WordsOfPower { get; }
+        #region Mutagen
+        new Shout.MajorFlag MajorFlags { get; set; }
+        #endregion
+
     }
 
     public partial interface IShoutInternal :
@@ -541,11 +791,21 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IShoutGetter :
         IASpellGetter,
         IObjectIdGetter,
+        ITranslatedNamedGetter,
         ILoquiObject<IShoutGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => Shout_Registration.Instance;
+        TranslatedString? Name { get; }
+        IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
+        TranslatedString? Description { get; }
+        IReadOnlyList<IShoutWordGetter> WordsOfPower { get; }
+
+        #region Mutagen
+        Shout.MajorFlag MajorFlags { get; }
+        #endregion
 
     }
 
@@ -846,6 +1106,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        MenuDisplayObject = 7,
+        Description = 8,
+        WordsOfPower = 9,
     }
     #endregion
 
@@ -863,9 +1127,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "61a903b0-ef7c-4014-a0b3-ed1fbc0c4a81";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 10;
 
         public static readonly Type MaskType = typeof(Shout.Mask<>);
 
@@ -895,6 +1159,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Shout_FieldIndex.Name;
+                case "MENUDISPLAYOBJECT":
+                    return (ushort)Shout_FieldIndex.MenuDisplayObject;
+                case "DESCRIPTION":
+                    return (ushort)Shout_FieldIndex.Description;
+                case "WORDSOFPOWER":
+                    return (ushort)Shout_FieldIndex.WordsOfPower;
                 default:
                     return null;
             }
@@ -905,6 +1177,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.WordsOfPower:
+                    return true;
+                case Shout_FieldIndex.Name:
+                case Shout_FieldIndex.MenuDisplayObject:
+                case Shout_FieldIndex.Description:
+                    return false;
                 default:
                     return ASpell_Registration.GetNthIsEnumerable(index);
             }
@@ -915,6 +1193,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.WordsOfPower:
+                    return true;
+                case Shout_FieldIndex.Name:
+                case Shout_FieldIndex.MenuDisplayObject:
+                case Shout_FieldIndex.Description:
+                    return false;
                 default:
                     return ASpell_Registration.GetNthIsLoqui(index);
             }
@@ -925,6 +1209,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.Name:
+                case Shout_FieldIndex.MenuDisplayObject:
+                case Shout_FieldIndex.Description:
+                case Shout_FieldIndex.WordsOfPower:
+                    return false;
                 default:
                     return ASpell_Registration.GetNthIsSingleton(index);
             }
@@ -935,6 +1224,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.Name:
+                    return "Name";
+                case Shout_FieldIndex.MenuDisplayObject:
+                    return "MenuDisplayObject";
+                case Shout_FieldIndex.Description:
+                    return "Description";
+                case Shout_FieldIndex.WordsOfPower:
+                    return "WordsOfPower";
                 default:
                     return ASpell_Registration.GetNthName(index);
             }
@@ -945,6 +1242,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.Name:
+                case Shout_FieldIndex.MenuDisplayObject:
+                case Shout_FieldIndex.Description:
+                case Shout_FieldIndex.WordsOfPower:
+                    return false;
                 default:
                     return ASpell_Registration.IsNthDerivative(index);
             }
@@ -955,6 +1257,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.Name:
+                case Shout_FieldIndex.MenuDisplayObject:
+                case Shout_FieldIndex.Description:
+                case Shout_FieldIndex.WordsOfPower:
+                    return false;
                 default:
                     return ASpell_Registration.IsProtected(index);
             }
@@ -965,6 +1272,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Shout_FieldIndex enu = (Shout_FieldIndex)index;
             switch (enu)
             {
+                case Shout_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case Shout_FieldIndex.MenuDisplayObject:
+                    return typeof(FormLinkNullable<Static>);
+                case Shout_FieldIndex.Description:
+                    return typeof(TranslatedString);
+                case Shout_FieldIndex.WordsOfPower:
+                    return typeof(ExtendedList<ShoutWord>);
                 default:
                     return ASpell_Registration.GetNthType(index);
             }
@@ -1014,6 +1329,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IShoutInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.MenuDisplayObject = FormLinkNullable<Static>.Null;
+            item.Description = default;
+            item.WordsOfPower.Clear();
             base.Clear(item);
         }
         
@@ -1200,6 +1519,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.MenuDisplayObject = object.Equals(item.MenuDisplayObject, rhs.MenuDisplayObject);
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.WordsOfPower = item.WordsOfPower.CollectionEqualsHelper(
+                rhs.WordsOfPower,
+                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1251,12 +1577,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if ((printMask?.MenuDisplayObject ?? true)
+                && item.MenuDisplayObject.TryGet(out var MenuDisplayObjectItem))
+            {
+                fg.AppendItem(MenuDisplayObjectItem, "MenuDisplayObject");
+            }
+            if ((printMask?.Description ?? true)
+                && item.Description.TryGet(out var DescriptionItem))
+            {
+                fg.AppendItem(DescriptionItem, "Description");
+            }
+            if (printMask?.WordsOfPower?.Overall ?? true)
+            {
+                fg.AppendLine("WordsOfPower =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in item.WordsOfPower)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg, "Item");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             IShoutGetter item,
             Shout.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.MenuDisplayObject.HasValue && checkMask.MenuDisplayObject.Value != (item.MenuDisplayObject.FormKey != null)) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1266,6 +1628,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShoutGetter item,
             Shout.Mask<bool> mask)
         {
+            mask.Name = (item.Name != null);
+            mask.MenuDisplayObject = (item.MenuDisplayObject.FormKey != null);
+            mask.Description = (item.Description != null);
+            var WordsOfPowerItem = item.WordsOfPower;
+            mask.WordsOfPower = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ShoutWord.Mask<bool>?>>?>(true, WordsOfPowerItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ShoutWord.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1338,6 +1705,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (!lhs.WordsOfPower.SequenceEqual(rhs.WordsOfPower)) return false;
             return true;
         }
         
@@ -1371,6 +1742,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IShoutGetter item)
         {
             var hash = new HashCode();
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            if (item.MenuDisplayObject.TryGet(out var MenuDisplayObjectitem))
+            {
+                hash.Add(MenuDisplayObjectitem);
+            }
+            if (item.Description.TryGet(out var Descriptionitem))
+            {
+                hash.Add(Descriptionitem);
+            }
+            hash.Add(item.WordsOfPower);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1402,6 +1786,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(IShoutGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
+            {
+                yield return item;
+            }
+            if (obj.MenuDisplayObject.FormKey.TryGet(out var MenuDisplayObjectKey))
+            {
+                yield return MenuDisplayObjectKey;
+            }
+            foreach (var item in obj.WordsOfPower.SelectMany(f => f.LinkFormKeys))
             {
                 yield return item;
             }
@@ -1452,6 +1844,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (IASpellGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                item.MenuDisplayObject = rhs.MenuDisplayObject.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
+            {
+                errorMask?.PushIndex((int)Shout_FieldIndex.WordsOfPower);
+                try
+                {
+                    item.WordsOfPower.SetTo(
+                        rhs.WordsOfPower
+                        .Select(r =>
+                        {
+                            return r.DeepCopy(
+                                errorMask: errorMask,
+                                default(TranslationCrystal));
+                        }));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1620,6 +2048,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Shout_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.MenuDisplayObject.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MenuDisplayObject),
+                    item: item.MenuDisplayObject.FormKey,
+                    fieldIndex: (int)Shout_FieldIndex.MenuDisplayObject,
+                    errorMask: errorMask);
+            }
+            if ((item.Description != null)
+                && (translationMask?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)Shout_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
+            {
+                ListXmlTranslation<IShoutWordGetter>.Instance.Write(
+                    node: node,
+                    name: nameof(item.WordsOfPower),
+                    item: item.WordsOfPower,
+                    fieldIndex: (int)Shout_FieldIndex.WordsOfPower,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)Shout_FieldIndex.WordsOfPower),
+                    transl: (XElement subNode, IShoutWordGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        var Item = subItem;
+                        ((ShoutWordXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
+                            item: Item,
+                            node: subNode,
+                            name: null,
+                            errorMask: listSubMask,
+                            translationMask: listTranslMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1742,6 +2220,88 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Name":
+                    errorMask?.PushIndex((int)Shout_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "MenuDisplayObject":
+                    errorMask?.PushIndex((int)Shout_FieldIndex.MenuDisplayObject);
+                    try
+                    {
+                        item.MenuDisplayObject = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Description":
+                    errorMask?.PushIndex((int)Shout_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "WordsOfPower":
+                    errorMask?.PushIndex((int)Shout_FieldIndex.WordsOfPower);
+                    try
+                    {
+                        if (ListXmlTranslation<ShoutWord>.Instance.Parse(
+                            node: node,
+                            enumer: out var WordsOfPowerItem,
+                            transl: LoquiXmlTranslation<ShoutWord>.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.WordsOfPower.SetTo(WordsOfPowerItem);
+                        }
+                        else
+                        {
+                            item.WordsOfPower.Clear();
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     ASpellXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1828,6 +2388,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ShoutBinaryWriteTranslation Instance = new ShoutBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IShoutGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MenuDisplayObject,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MDOB));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IShoutWordGetter>.Instance.Write(
+                writer: writer,
+                items: item.WordsOfPower,
+                transl: (MutagenWriter subWriter, IShoutWordGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ShoutWordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             IShoutGetter item,
@@ -1841,7 +2439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1908,6 +2506,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static TryGet<int?> FillBinaryRecordTypes(
+            IShoutInternal item,
+            MutagenFrame frame,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Name);
+                }
+                case RecordTypeInts.MDOB:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.MenuDisplayObject);
+                }
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Description);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    item.WordsOfPower.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ShoutWord>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: RecordTypes.SNAM,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: ShoutWord.TryCreateFromBinary));
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.WordsOfPower);
+                }
+                default:
+                    return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1943,6 +2596,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IShoutGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => ShoutCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ShoutCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ShoutCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => ShoutXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1968,7 +2627,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
+        public Shout.MajorFlag MajorFlags => (Shout.MajorFlag)this.MajorRecordFlagsRaw;
 
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        #region MenuDisplayObject
+        private int? _MenuDisplayObjectLocation;
+        public bool MenuDisplayObject_IsSet => _MenuDisplayObjectLocation.HasValue;
+        public IFormLinkNullable<IStaticGetter> MenuDisplayObject => _MenuDisplayObjectLocation.HasValue ? new FormLinkNullable<IStaticGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MenuDisplayObjectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IStaticGetter>.Null;
+        #endregion
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
+        #endregion
+        public IReadOnlyList<IShoutWordGetter> WordsOfPower { get; private set; } = ListExt.Empty<ShoutWordBinaryOverlay>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2021,6 +2695,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override TryGet<int?> FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Name);
+                }
+                case RecordTypeInts.MDOB:
+                {
+                    _MenuDisplayObjectLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.MenuDisplayObject);
+                }
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Description);
+                }
+                case RecordTypeInts.SNAM:
+                {
+                    this.WordsOfPower = BinaryOverlayList<ShoutWordBinaryOverlay>.FactoryByArray(
+                        mem: stream.RemainingMemory,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter,
+                        getter: (s, p, recConv) => ShoutWordBinaryOverlay.ShoutWordFactory(new OverlayStream(s, p), p, recConv),
+                        locs: ParseRecordLocations(
+                            stream: stream,
+                            trigger: type,
+                            constants: _package.MetaData.Constants.SubConstants,
+                            skipHeader: false));
+                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.WordsOfPower);
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed);
+            }
+        }
         #region To String
 
         public override void ToString(

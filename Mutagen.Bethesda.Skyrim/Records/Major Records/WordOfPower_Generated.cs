@@ -34,36 +34,28 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class StoryManagerBranchNode :
-        AStoryManagerNode,
-        IStoryManagerBranchNodeInternal,
-        ILoquiObjectSetter<StoryManagerBranchNode>,
-        IEquatable<StoryManagerBranchNode>,
+    public partial class WordOfPower :
+        SkyrimMajorRecord,
+        IWordOfPowerInternal,
+        ILoquiObjectSetter<WordOfPower>,
+        IEquatable<WordOfPower>,
         IEqualsMask
     {
         #region Ctor
-        protected StoryManagerBranchNode()
+        protected WordOfPower()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        public AStoryManagerNode.Flag? Flags { get; set; }
+        #region Name
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        AStoryManagerNode.Flag? IStoryManagerBranchNodeGetter.Flags => this.Flags;
+        TranslatedString? IWordOfPowerGetter.Name => this.Name;
         #endregion
-        #region XNAM
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected MemorySlice<Byte>? _XNAM;
-        public MemorySlice<Byte>? XNAM
-        {
-            get => this._XNAM;
-            set => this._XNAM = value;
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IStoryManagerBranchNodeGetter.XNAM => this.XNAM;
+        #region Translation
+        public TranslatedString Translation { get; set; } = string.Empty;
         #endregion
 
         #region To String
@@ -72,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            StoryManagerBranchNodeMixIn.ToString(
+            WordOfPowerMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -82,29 +74,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerBranchNodeGetter rhs)) return false;
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IWordOfPowerGetter rhs)) return false;
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(StoryManagerBranchNode? obj)
+        public bool Equals(WordOfPower? obj)
         {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => StoryManagerBranchNodeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => WordOfPowerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((StoryManagerBranchNodeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WordOfPowerXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -113,9 +105,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new StoryManagerBranchNode CreateFromXml(
+        public static new WordOfPower CreateFromXml(
             XElement node,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -124,27 +116,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             XElement node,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerBranchNode.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WordOfPower.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static StoryManagerBranchNode CreateFromXml(
+        public new static WordOfPower CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new StoryManagerBranchNode();
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new WordOfPower();
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -152,9 +144,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             string path,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -162,10 +154,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             string path,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,10 +166,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,9 +178,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             Stream stream,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -196,10 +188,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             Stream stream,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,10 +200,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static StoryManagerBranchNode CreateFromXml(
+        public static WordOfPower CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -226,7 +218,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mask
         public new class Mask<TItem> :
-            AStoryManagerNode.Mask<TItem>,
+            SkyrimMajorRecord.Mask<TItem>,
             IMask<TItem>,
             IEquatable<Mask<TItem>>
         {
@@ -234,8 +226,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.Flags = initialValue;
-                this.XNAM = initialValue;
+                this.Name = initialValue;
+                this.Translation = initialValue;
             }
 
             public Mask(
@@ -245,24 +237,18 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem Parent,
-                TItem PreviousSibling,
-                TItem Conditions,
-                TItem Flags,
-                TItem XNAM)
+                TItem Name,
+                TItem Translation)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
                 Version: Version,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
-                Version2: Version2,
-                Parent: Parent,
-                PreviousSibling: PreviousSibling,
-                Conditions: Conditions)
+                Version2: Version2)
             {
-                this.Flags = Flags;
-                this.XNAM = XNAM;
+                this.Name = Name;
+                this.Translation = Translation;
             }
 
             #pragma warning disable CS8618
@@ -274,8 +260,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Flags;
-            public TItem XNAM;
+            public TItem Name;
+            public TItem Translation;
             #endregion
 
             #region Equals
@@ -289,15 +275,15 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.XNAM, rhs.XNAM)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Translation, rhs.Translation)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Flags);
-                hash.Add(this.XNAM);
+                hash.Add(this.Name);
+                hash.Add(this.Translation);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -308,8 +294,8 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (!eval(this.Flags)) return false;
-                if (!eval(this.XNAM)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Translation)) return false;
                 return true;
             }
             #endregion
@@ -318,8 +304,8 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (eval(this.Flags)) return true;
-                if (eval(this.XNAM)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Translation)) return true;
                 return false;
             }
             #endregion
@@ -327,7 +313,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new StoryManagerBranchNode.Mask<R>();
+                var ret = new WordOfPower.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -335,8 +321,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.Flags = eval(this.Flags);
-                obj.XNAM = eval(this.XNAM);
+                obj.Name = eval(this.Name);
+                obj.Translation = eval(this.Translation);
             }
             #endregion
 
@@ -346,26 +332,26 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(StoryManagerBranchNode.Mask<bool>? printMask = null)
+            public string ToString(WordOfPower.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, StoryManagerBranchNode.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, WordOfPower.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(StoryManagerBranchNode.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(WordOfPower.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Flags ?? true)
+                    if (printMask?.Name ?? true)
                     {
-                        fg.AppendItem(Flags, "Flags");
+                        fg.AppendItem(Name, "Name");
                     }
-                    if (printMask?.XNAM ?? true)
+                    if (printMask?.Translation ?? true)
                     {
-                        fg.AppendItem(XNAM, "XNAM");
+                        fg.AppendItem(Translation, "Translation");
                     }
                 }
                 fg.AppendLine("]");
@@ -375,24 +361,24 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public new class ErrorMask :
-            AStoryManagerNode.ErrorMask,
+            SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
-            public Exception? Flags;
-            public Exception? XNAM;
+            public Exception? Name;
+            public Exception? Translation;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+                WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerBranchNode_FieldIndex.Flags:
-                        return Flags;
-                    case StoryManagerBranchNode_FieldIndex.XNAM:
-                        return XNAM;
+                    case WordOfPower_FieldIndex.Name:
+                        return Name;
+                    case WordOfPower_FieldIndex.Translation:
+                        return Translation;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -400,14 +386,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+                WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerBranchNode_FieldIndex.Flags:
-                        this.Flags = ex;
+                    case WordOfPower_FieldIndex.Name:
+                        this.Name = ex;
                         break;
-                    case StoryManagerBranchNode_FieldIndex.XNAM:
-                        this.XNAM = ex;
+                    case WordOfPower_FieldIndex.Translation:
+                        this.Translation = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -417,14 +403,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+                WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
                 switch (enu)
                 {
-                    case StoryManagerBranchNode_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
+                    case WordOfPower_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
-                    case StoryManagerBranchNode_FieldIndex.XNAM:
-                        this.XNAM = (Exception?)obj;
+                    case WordOfPower_FieldIndex.Translation:
+                        this.Translation = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -435,8 +421,8 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Flags != null) return true;
-                if (XNAM != null) return true;
+                if (Name != null) return true;
+                if (Translation != null) return true;
                 return false;
             }
             #endregion
@@ -472,8 +458,8 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(XNAM, "XNAM");
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Translation, "Translation");
             }
             #endregion
 
@@ -482,8 +468,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.XNAM = this.XNAM.Combine(rhs.XNAM);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Translation = this.Translation.Combine(rhs.Translation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -502,20 +488,20 @@ namespace Mutagen.Bethesda.Skyrim
 
         }
         public new class TranslationMask :
-            AStoryManagerNode.TranslationMask,
+            SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
-            public bool Flags;
-            public bool XNAM;
+            public bool Name;
+            public bool Translation;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.Flags = defaultOn;
-                this.XNAM = defaultOn;
+                this.Name = defaultOn;
+                this.Translation = defaultOn;
             }
 
             #endregion
@@ -523,26 +509,26 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((Flags, null));
-                ret.Add((XNAM, null));
+                ret.Add((Name, null));
+                ret.Add((Translation, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = StoryManagerBranchNode_Registration.TriggeringRecordType;
-        public StoryManagerBranchNode(FormKey formKey)
+        public new static readonly RecordType GrupRecordType = WordOfPower_Registration.TriggeringRecordType;
+        public WordOfPower(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public StoryManagerBranchNode(IMod mod)
+        public WordOfPower(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public StoryManagerBranchNode(IMod mod, string editorID)
+        public WordOfPower(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -552,31 +538,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => StoryManagerBranchNodeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WordOfPowerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerBranchNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WordOfPowerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new StoryManagerBranchNode CreateFromBinary(MutagenFrame frame)
+        public static new WordOfPower CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static StoryManagerBranchNode CreateFromBinary(
+        public new static WordOfPower CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new StoryManagerBranchNode();
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new WordOfPower();
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -587,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out StoryManagerBranchNode item,
+            out WordOfPower item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -598,89 +584,91 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerBranchNodeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWordOfPowerGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)this).CommonSetterInstance()!).Clear(this);
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new StoryManagerBranchNode GetNew()
+        internal static new WordOfPower GetNew()
         {
-            return new StoryManagerBranchNode();
+            return new WordOfPower();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IStoryManagerBranchNode :
-        IStoryManagerBranchNodeGetter,
-        IAStoryManagerNode,
-        ILoquiObjectSetter<IStoryManagerBranchNodeInternal>
+    public partial interface IWordOfPower :
+        IWordOfPowerGetter,
+        ISkyrimMajorRecord,
+        ITranslatedNamed,
+        ILoquiObjectSetter<IWordOfPowerInternal>
     {
-        new AStoryManagerNode.Flag? Flags { get; set; }
-        new MemorySlice<Byte>? XNAM { get; set; }
+        new TranslatedString? Name { get; set; }
+        new TranslatedString Translation { get; set; }
     }
 
-    public partial interface IStoryManagerBranchNodeInternal :
-        IAStoryManagerNodeInternal,
-        IStoryManagerBranchNode,
-        IStoryManagerBranchNodeGetter
+    public partial interface IWordOfPowerInternal :
+        ISkyrimMajorRecordInternal,
+        IWordOfPower,
+        IWordOfPowerGetter
     {
     }
 
-    public partial interface IStoryManagerBranchNodeGetter :
-        IAStoryManagerNodeGetter,
-        ILoquiObject<IStoryManagerBranchNodeGetter>,
+    public partial interface IWordOfPowerGetter :
+        ISkyrimMajorRecordGetter,
+        ITranslatedNamedGetter,
+        ILoquiObject<IWordOfPowerGetter>,
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => StoryManagerBranchNode_Registration.Instance;
-        AStoryManagerNode.Flag? Flags { get; }
-        ReadOnlyMemorySlice<Byte>? XNAM { get; }
+        static ILoquiRegistration Registration => WordOfPower_Registration.Instance;
+        TranslatedString? Name { get; }
+        TranslatedString Translation { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class StoryManagerBranchNodeMixIn
+    public static partial class WordOfPowerMixIn
     {
-        public static void Clear(this IStoryManagerBranchNodeInternal item)
+        public static void Clear(this IWordOfPowerInternal item)
         {
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static StoryManagerBranchNode.Mask<bool> GetEqualsMask(
-            this IStoryManagerBranchNodeGetter item,
-            IStoryManagerBranchNodeGetter rhs,
+        public static WordOfPower.Mask<bool> GetEqualsMask(
+            this IWordOfPowerGetter item,
+            IWordOfPowerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IStoryManagerBranchNodeGetter item,
+            this IWordOfPowerGetter item,
             string? name = null,
-            StoryManagerBranchNode.Mask<bool>? printMask = null)
+            WordOfPower.Mask<bool>? printMask = null)
         {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).ToString(
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IStoryManagerBranchNodeGetter item,
+            this IWordOfPowerGetter item,
             FileGeneration fg,
             string? name = null,
-            StoryManagerBranchNode.Mask<bool>? printMask = null)
+            WordOfPower.Mask<bool>? printMask = null)
         {
-            ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).ToString(
+            ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -688,86 +676,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool?> checkMask)
+            this IWordOfPowerGetter item,
+            WordOfPower.Mask<bool?> checkMask)
         {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).HasBeenSet(
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static StoryManagerBranchNode.Mask<bool> GetHasBeenSetMask(this IStoryManagerBranchNodeGetter item)
+        public static WordOfPower.Mask<bool> GetHasBeenSetMask(this IWordOfPowerGetter item)
         {
-            var ret = new StoryManagerBranchNode.Mask<bool>(false);
-            ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new WordOfPower.Mask<bool>(false);
+            ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IStoryManagerBranchNodeGetter item,
-            IStoryManagerBranchNodeGetter rhs)
+            this IWordOfPowerGetter item,
+            IWordOfPowerGetter rhs)
         {
-            return ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).Equals(
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerBranchNodeInternal lhs,
-            IStoryManagerBranchNodeGetter rhs,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? copyMask = null)
+            this IWordOfPowerInternal lhs,
+            IWordOfPowerGetter rhs,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((StoryManagerBranchNodeSetterTranslationCommon)((IStoryManagerBranchNodeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WordOfPowerSetterTranslationCommon)((IWordOfPowerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = StoryManagerBranchNode.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WordOfPower.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IStoryManagerBranchNodeInternal lhs,
-            IStoryManagerBranchNodeGetter rhs,
+            this IWordOfPowerInternal lhs,
+            IWordOfPowerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((StoryManagerBranchNodeSetterTranslationCommon)((IStoryManagerBranchNodeGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((WordOfPowerSetterTranslationCommon)((IWordOfPowerGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static StoryManagerBranchNode DeepCopy(
-            this IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.TranslationMask? copyMask = null)
+        public static WordOfPower DeepCopy(
+            this IWordOfPowerGetter item,
+            WordOfPower.TranslationMask? copyMask = null)
         {
-            return ((StoryManagerBranchNodeSetterTranslationCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WordOfPowerSetterTranslationCommon)((IWordOfPowerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static StoryManagerBranchNode DeepCopy(
-            this IStoryManagerBranchNodeGetter item,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? copyMask = null)
+        public static WordOfPower DeepCopy(
+            this IWordOfPowerGetter item,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? copyMask = null)
         {
-            return ((StoryManagerBranchNodeSetterTranslationCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WordOfPowerSetterTranslationCommon)((IWordOfPowerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static StoryManagerBranchNode DeepCopy(
-            this IStoryManagerBranchNodeGetter item,
+        public static WordOfPower DeepCopy(
+            this IWordOfPowerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((StoryManagerBranchNodeSetterTranslationCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((WordOfPowerSetterTranslationCommon)((IWordOfPowerGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -776,9 +764,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             XElement node,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -789,10 +777,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             XElement node,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -800,16 +788,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerBranchNode.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WordOfPower.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -817,9 +805,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             string path,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -829,10 +817,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             string path,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -843,10 +831,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -857,9 +845,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             Stream stream,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -869,10 +857,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             Stream stream,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -883,10 +871,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null)
+            WordOfPower.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -901,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -911,11 +899,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IStoryManagerBranchNodeInternal item,
+            this IWordOfPowerInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerBranchNodeSetterCommon)((IStoryManagerBranchNodeGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((WordOfPowerSetterCommon)((IWordOfPowerGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -931,7 +919,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum StoryManagerBranchNode_FieldIndex
+    public enum WordOfPower_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -939,49 +927,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        Parent = 6,
-        PreviousSibling = 7,
-        Conditions = 8,
-        Flags = 9,
-        XNAM = 10,
+        Name = 6,
+        Translation = 7,
     }
     #endregion
 
     #region Registration
-    public partial class StoryManagerBranchNode_Registration : ILoquiRegistration
+    public partial class WordOfPower_Registration : ILoquiRegistration
     {
-        public static readonly StoryManagerBranchNode_Registration Instance = new StoryManagerBranchNode_Registration();
+        public static readonly WordOfPower_Registration Instance = new WordOfPower_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 453,
+            msgID: 460,
             version: 0);
 
-        public const string GUID = "d5eb571d-6f2f-4286-9efa-0a5fab8eddb6";
+        public const string GUID = "029b7d4f-6d1d-42fe-b905-fed84112fbd5";
 
         public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 8;
 
-        public static readonly Type MaskType = typeof(StoryManagerBranchNode.Mask<>);
+        public static readonly Type MaskType = typeof(WordOfPower.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(StoryManagerBranchNode.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(WordOfPower.ErrorMask);
 
-        public static readonly Type ClassType = typeof(StoryManagerBranchNode);
+        public static readonly Type ClassType = typeof(WordOfPower);
 
-        public static readonly Type GetterType = typeof(IStoryManagerBranchNodeGetter);
+        public static readonly Type GetterType = typeof(IWordOfPowerGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IStoryManagerBranchNode);
+        public static readonly Type SetterType = typeof(IWordOfPower);
 
-        public static readonly Type? InternalSetterType = typeof(IStoryManagerBranchNodeInternal);
+        public static readonly Type? InternalSetterType = typeof(IWordOfPowerInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.StoryManagerBranchNode";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.WordOfPower";
 
-        public const string Name = "StoryManagerBranchNode";
+        public const string Name = "WordOfPower";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -993,10 +978,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "FLAGS":
-                    return (ushort)StoryManagerBranchNode_FieldIndex.Flags;
-                case "XNAM":
-                    return (ushort)StoryManagerBranchNode_FieldIndex.XNAM;
+                case "NAME":
+                    return (ushort)WordOfPower_FieldIndex.Name;
+                case "TRANSLATION":
+                    return (ushort)WordOfPower_FieldIndex.Translation;
                 default:
                     return null;
             }
@@ -1004,100 +989,100 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                case StoryManagerBranchNode_FieldIndex.XNAM:
+                case WordOfPower_FieldIndex.Name:
+                case WordOfPower_FieldIndex.Translation:
                     return false;
                 default:
-                    return AStoryManagerNode_Registration.GetNthIsEnumerable(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                case StoryManagerBranchNode_FieldIndex.XNAM:
+                case WordOfPower_FieldIndex.Name:
+                case WordOfPower_FieldIndex.Translation:
                     return false;
                 default:
-                    return AStoryManagerNode_Registration.GetNthIsLoqui(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                case StoryManagerBranchNode_FieldIndex.XNAM:
+                case WordOfPower_FieldIndex.Name:
+                case WordOfPower_FieldIndex.Translation:
                     return false;
                 default:
-                    return AStoryManagerNode_Registration.GetNthIsSingleton(index);
+                    return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                    return "Flags";
-                case StoryManagerBranchNode_FieldIndex.XNAM:
-                    return "XNAM";
+                case WordOfPower_FieldIndex.Name:
+                    return "Name";
+                case WordOfPower_FieldIndex.Translation:
+                    return "Translation";
                 default:
-                    return AStoryManagerNode_Registration.GetNthName(index);
+                    return SkyrimMajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                case StoryManagerBranchNode_FieldIndex.XNAM:
+                case WordOfPower_FieldIndex.Name:
+                case WordOfPower_FieldIndex.Translation:
                     return false;
                 default:
-                    return AStoryManagerNode_Registration.IsNthDerivative(index);
+                    return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                case StoryManagerBranchNode_FieldIndex.XNAM:
+                case WordOfPower_FieldIndex.Name:
+                case WordOfPower_FieldIndex.Translation:
                     return false;
                 default:
-                    return AStoryManagerNode_Registration.IsProtected(index);
+                    return SkyrimMajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            StoryManagerBranchNode_FieldIndex enu = (StoryManagerBranchNode_FieldIndex)index;
+            WordOfPower_FieldIndex enu = (WordOfPower_FieldIndex)index;
             switch (enu)
             {
-                case StoryManagerBranchNode_FieldIndex.Flags:
-                    return typeof(AStoryManagerNode.Flag);
-                case StoryManagerBranchNode_FieldIndex.XNAM:
-                    return typeof(MemorySlice<Byte>);
+                case WordOfPower_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case WordOfPower_FieldIndex.Translation:
+                    return typeof(TranslatedString);
                 default:
-                    return AStoryManagerNode_Registration.GetNthType(index);
+                    return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(StoryManagerBranchNodeXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.SMBN;
-        public static readonly Type BinaryWriteTranslation = typeof(StoryManagerBranchNodeBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(WordOfPowerXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.WOOP;
+        public static readonly Type BinaryWriteTranslation = typeof(WordOfPowerBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1130,38 +1115,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class StoryManagerBranchNodeSetterCommon : AStoryManagerNodeSetterCommon
+    public partial class WordOfPowerSetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly StoryManagerBranchNodeSetterCommon Instance = new StoryManagerBranchNodeSetterCommon();
+        public new static readonly WordOfPowerSetterCommon Instance = new WordOfPowerSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IStoryManagerBranchNodeInternal item)
+        public void Clear(IWordOfPowerInternal item)
         {
             ClearPartial();
-            item.Flags = default;
-            item.XNAM = default;
+            item.Name = default;
+            item.Translation.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IAStoryManagerNodeInternal item)
-        {
-            Clear(item: (IStoryManagerBranchNodeInternal)item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (IStoryManagerBranchNodeInternal)item);
+            Clear(item: (IWordOfPowerInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (IStoryManagerBranchNodeInternal)item);
+            Clear(item: (IWordOfPowerInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1170,7 +1150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 default:
-                    AStoryManagerNodeSetterCommon.FillPrivateElementXml(
+                    SkyrimMajorRecordSetterCommon.FillPrivateElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1181,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1196,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    StoryManagerBranchNodeXmlCreateTranslation.FillPublicElementXml(
+                    WordOfPowerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1212,26 +1192,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override void CopyInFromXml(
-            IAStoryManagerNodeInternal item,
-            XElement node,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask)
-        {
-            CopyInFromXml(
-                item: (StoryManagerBranchNode)item,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-        
-        public override void CopyInFromXml(
             ISkyrimMajorRecordInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (StoryManagerBranchNode)item,
+                item: (WordOfPower)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1244,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (StoryManagerBranchNode)item,
+                item: (WordOfPower)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1254,27 +1221,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IStoryManagerBranchNodeInternal>(
+            UtilityTranslation.MajorRecordParse<IWordOfPowerInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: StoryManagerBranchNodeBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: StoryManagerBranchNodeBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IAStoryManagerNodeInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (StoryManagerBranchNode)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
+                fillStructs: WordOfPowerBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: WordOfPowerBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1283,7 +1239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (StoryManagerBranchNode)item,
+                item: (WordOfPower)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1294,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (StoryManagerBranchNode)item,
+                item: (WordOfPower)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1302,17 +1258,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class StoryManagerBranchNodeCommon : AStoryManagerNodeCommon
+    public partial class WordOfPowerCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly StoryManagerBranchNodeCommon Instance = new StoryManagerBranchNodeCommon();
+        public new static readonly WordOfPowerCommon Instance = new WordOfPowerCommon();
 
-        public StoryManagerBranchNode.Mask<bool> GetEqualsMask(
-            IStoryManagerBranchNodeGetter item,
-            IStoryManagerBranchNodeGetter rhs,
+        public WordOfPower.Mask<bool> GetEqualsMask(
+            IWordOfPowerGetter item,
+            IWordOfPowerGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new StoryManagerBranchNode.Mask<bool>(false);
-            ((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new WordOfPower.Mask<bool>(false);
+            ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1321,21 +1277,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IStoryManagerBranchNodeGetter item,
-            IStoryManagerBranchNodeGetter rhs,
-            StoryManagerBranchNode.Mask<bool> ret,
+            IWordOfPowerGetter item,
+            IWordOfPowerGetter rhs,
+            WordOfPower.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags == rhs.Flags;
-            ret.XNAM = MemorySliceExt.Equal(item.XNAM, rhs.XNAM);
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Translation = string.Equals(item.Translation, rhs.Translation);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             string? name = null,
-            StoryManagerBranchNode.Mask<bool>? printMask = null)
+            WordOfPower.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1347,18 +1303,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             FileGeneration fg,
             string? name = null,
-            StoryManagerBranchNode.Mask<bool>? printMask = null)
+            WordOfPower.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"StoryManagerBranchNode =>");
+                fg.AppendLine($"WordOfPower =>");
             }
             else
             {
-                fg.AppendLine($"{name} (StoryManagerBranchNode) =>");
+                fg.AppendLine($"{name} (WordOfPower) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1372,108 +1328,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             FileGeneration fg,
-            StoryManagerBranchNode.Mask<bool>? printMask = null)
+            WordOfPower.Mask<bool>? printMask = null)
         {
-            AStoryManagerNodeCommon.ToStringFields(
+            SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if ((printMask?.Flags ?? true)
-                && item.Flags.TryGet(out var FlagsItem))
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                fg.AppendItem(FlagsItem, "Flags");
+                fg.AppendItem(NameItem, "Name");
             }
-            if ((printMask?.XNAM ?? true)
-                && item.XNAM.TryGet(out var XNAMItem))
+            if (printMask?.Translation ?? true)
             {
-                fg.AppendLine($"XNAM => {SpanExt.ToHexString(XNAMItem)}");
+                fg.AppendItem(item.Translation, "Translation");
             }
         }
         
         public bool HasBeenSet(
-            IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool?> checkMask)
+            IWordOfPowerGetter item,
+            WordOfPower.Mask<bool?> checkMask)
         {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
-            if (checkMask.XNAM.HasValue && checkMask.XNAM.Value != (item.XNAM != null)) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.Mask<bool> mask)
+            IWordOfPowerGetter item,
+            WordOfPower.Mask<bool> mask)
         {
-            mask.Flags = (item.Flags != null);
-            mask.XNAM = (item.XNAM != null);
+            mask.Name = (item.Name != null);
+            mask.Translation = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static StoryManagerBranchNode_FieldIndex ConvertFieldIndex(AStoryManagerNode_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AStoryManagerNode_FieldIndex.MajorRecordFlagsRaw:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.FormKey:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.Version:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.EditorID:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.FormVersion:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.Version2:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.Parent:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.PreviousSibling:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                case AStoryManagerNode_FieldIndex.Conditions:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new StoryManagerBranchNode_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static WordOfPower_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new StoryManagerBranchNode_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new WordOfPower_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (StoryManagerBranchNode_FieldIndex)((int)index);
+                    return (WordOfPower_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1481,24 +1408,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IStoryManagerBranchNodeGetter? lhs,
-            IStoryManagerBranchNodeGetter? rhs)
+            IWordOfPowerGetter? lhs,
+            IWordOfPowerGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemorySliceExt.Equal(lhs.XNAM, rhs.XNAM)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!string.Equals(lhs.Translation, rhs.Translation)) return false;
             return true;
-        }
-        
-        public override bool Equals(
-            IAStoryManagerNodeGetter? lhs,
-            IAStoryManagerNodeGetter? rhs)
-        {
-            return Equals(
-                lhs: (IStoryManagerBranchNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerBranchNodeGetter);
         }
         
         public override bool Equals(
@@ -1506,8 +1424,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IStoryManagerBranchNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerBranchNodeGetter);
+                lhs: (IWordOfPowerGetter?)lhs,
+                rhs: rhs as IWordOfPowerGetter);
         }
         
         public override bool Equals(
@@ -1515,38 +1433,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (IStoryManagerBranchNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerBranchNodeGetter);
+                lhs: (IWordOfPowerGetter?)lhs,
+                rhs: rhs as IWordOfPowerGetter);
         }
         
-        public virtual int GetHashCode(IStoryManagerBranchNodeGetter item)
+        public virtual int GetHashCode(IWordOfPowerGetter item)
         {
             var hash = new HashCode();
-            if (item.Flags.TryGet(out var Flagsitem))
+            if (item.Name.TryGet(out var Nameitem))
             {
-                hash.Add(Flagsitem);
+                hash.Add(Nameitem);
             }
-            if (item.XNAM.TryGet(out var XNAMItem))
-            {
-                hash.Add(XNAMItem);
-            }
+            hash.Add(item.Translation);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
-        public override int GetHashCode(IAStoryManagerNodeGetter item)
-        {
-            return GetHashCode(item: (IStoryManagerBranchNodeGetter)item);
-        }
-        
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (IStoryManagerBranchNodeGetter)item);
+            return GetHashCode(item: (IWordOfPowerGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (IStoryManagerBranchNodeGetter)item);
+            return GetHashCode(item: (IWordOfPowerGetter)item);
         }
         
         #endregion
@@ -1554,11 +1464,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return StoryManagerBranchNode.GetNew();
+            return WordOfPower.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IStoryManagerBranchNodeGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IWordOfPowerGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1567,29 +1477,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IStoryManagerBranchNodeGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(StoryManagerBranchNode obj, StoryManagerBranchNode rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(IWordOfPowerGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(WordOfPower obj, WordOfPower rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new StoryManagerBranchNode(getNextFormKey());
-            ret.DeepCopyIn((StoryManagerBranchNode)item);
+            var ret = new WordOfPower(getNextFormKey());
+            ret.DeepCopyIn((WordOfPower)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (StoryManagerBranchNode)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (WordOfPower)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class StoryManagerBranchNodeSetterTranslationCommon : AStoryManagerNodeSetterTranslationCommon
+    public partial class WordOfPowerSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly StoryManagerBranchNodeSetterTranslationCommon Instance = new StoryManagerBranchNodeSetterTranslationCommon();
+        public new static readonly WordOfPowerSetterTranslationCommon Instance = new WordOfPowerSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IStoryManagerBranchNodeInternal item,
-            IStoryManagerBranchNodeGetter rhs,
+            IWordOfPowerInternal item,
+            IWordOfPowerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1601,57 +1511,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            IStoryManagerBranchNode item,
-            IStoryManagerBranchNodeGetter rhs,
+            IWordOfPower item,
+            IWordOfPowerGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
             base.DeepCopyIn(
-                (IAStoryManagerNode)item,
-                (IAStoryManagerNodeGetter)rhs,
+                (ISkyrimMajorRecord)item,
+                (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerBranchNode_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WordOfPower_FieldIndex.Name) ?? true))
             {
-                item.Flags = rhs.Flags;
+                item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)StoryManagerBranchNode_FieldIndex.XNAM) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)WordOfPower_FieldIndex.Translation) ?? true))
             {
-                if(rhs.XNAM.TryGet(out var XNAMrhs))
-                {
-                    item.XNAM = XNAMrhs.ToArray();
-                }
-                else
-                {
-                    item.XNAM = default;
-                }
+                item.Translation = rhs.Translation;
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAStoryManagerNodeInternal item,
-            IAStoryManagerNodeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IStoryManagerBranchNodeInternal)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
-        }
-        
-        public override void DeepCopyIn(
-            IAStoryManagerNode item,
-            IAStoryManagerNodeGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask)
-        {
-            this.DeepCopyIn(
-                item: (IStoryManagerBranchNode)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask);
         }
         
         public override void DeepCopyIn(
@@ -1661,8 +1538,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IStoryManagerBranchNodeInternal)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
+                item: (IWordOfPowerInternal)item,
+                rhs: (IWordOfPowerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1674,8 +1551,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IStoryManagerBranchNode)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
+                item: (IWordOfPower)item,
+                rhs: (IWordOfPowerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1687,8 +1564,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IStoryManagerBranchNodeInternal)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
+                item: (IWordOfPowerInternal)item,
+                rhs: (IWordOfPowerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1700,31 +1577,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IStoryManagerBranchNode)item,
-                rhs: (IStoryManagerBranchNodeGetter)rhs,
+                item: (IWordOfPower)item,
+                rhs: (IWordOfPowerGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public StoryManagerBranchNode DeepCopy(
-            IStoryManagerBranchNodeGetter item,
-            StoryManagerBranchNode.TranslationMask? copyMask = null)
+        public WordOfPower DeepCopy(
+            IWordOfPowerGetter item,
+            WordOfPower.TranslationMask? copyMask = null)
         {
-            StoryManagerBranchNode ret = (StoryManagerBranchNode)((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).GetNew();
+            WordOfPower ret = (WordOfPower)((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public StoryManagerBranchNode DeepCopy(
-            IStoryManagerBranchNodeGetter item,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? copyMask = null)
+        public WordOfPower DeepCopy(
+            IWordOfPowerGetter item,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? copyMask = null)
         {
-            StoryManagerBranchNode ret = (StoryManagerBranchNode)((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).GetNew();
+            WordOfPower ret = (WordOfPower)((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1732,12 +1609,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public StoryManagerBranchNode DeepCopy(
-            IStoryManagerBranchNodeGetter item,
+        public WordOfPower DeepCopy(
+            IWordOfPowerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            StoryManagerBranchNode ret = (StoryManagerBranchNode)((StoryManagerBranchNodeCommon)((IStoryManagerBranchNodeGetter)item).CommonInstance()!).GetNew();
+            WordOfPower ret = (WordOfPower)((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1752,21 +1629,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class StoryManagerBranchNode
+    public partial class WordOfPower
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => StoryManagerBranchNode_Registration.Instance;
-        public new static StoryManagerBranchNode_Registration Registration => StoryManagerBranchNode_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
+        public new static WordOfPower_Registration Registration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => StoryManagerBranchNodeCommon.Instance;
+        protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return StoryManagerBranchNodeSetterCommon.Instance;
+            return WordOfPowerSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => StoryManagerBranchNodeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WordOfPowerSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1777,57 +1654,56 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerBranchNodeXmlWriteTranslation :
-        AStoryManagerNodeXmlWriteTranslation,
+    public partial class WordOfPowerXmlWriteTranslation :
+        SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static StoryManagerBranchNodeXmlWriteTranslation Instance = new StoryManagerBranchNodeXmlWriteTranslation();
+        public new readonly static WordOfPowerXmlWriteTranslation Instance = new WordOfPowerXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            AStoryManagerNodeXmlWriteTranslation.WriteToNodeXml(
+            SkyrimMajorRecordXmlWriteTranslation.WriteToNodeXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((item.Flags != null)
-                && (translationMask?.GetShouldTranslate((int)StoryManagerBranchNode_FieldIndex.Flags) ?? true))
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)WordOfPower_FieldIndex.Name) ?? true))
             {
-                EnumXmlTranslation<AStoryManagerNode.Flag>.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)StoryManagerBranchNode_FieldIndex.Flags,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)WordOfPower_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((item.XNAM != null)
-                && (translationMask?.GetShouldTranslate((int)StoryManagerBranchNode_FieldIndex.XNAM) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)WordOfPower_FieldIndex.Translation) ?? true))
             {
-                ByteArrayXmlTranslation.Instance.Write(
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.XNAM),
-                    item: item.XNAM.Value,
-                    fieldIndex: (int)StoryManagerBranchNode_FieldIndex.XNAM,
+                    name: nameof(item.Translation),
+                    item: item.Translation,
+                    fieldIndex: (int)WordOfPower_FieldIndex.Translation,
                     errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.StoryManagerBranchNode");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.WordOfPower");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.StoryManagerBranchNode");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.WordOfPower");
             }
             WriteToNodeXml(
                 item: item,
@@ -1844,22 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
-                name: name,
-                node: node,
-                errorMask: errorMask,
-                translationMask: translationMask);
-        }
-
-        public override void Write(
-            XElement node,
-            IAStoryManagerNodeGetter item,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? translationMask,
-            string? name = null)
-        {
-            Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1874,7 +1735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1889,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1898,12 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class StoryManagerBranchNodeXmlCreateTranslation : AStoryManagerNodeXmlCreateTranslation
+    public partial class WordOfPowerXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static StoryManagerBranchNodeXmlCreateTranslation Instance = new StoryManagerBranchNodeXmlCreateTranslation();
+        public new readonly static WordOfPowerXmlCreateTranslation Instance = new WordOfPowerXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1912,7 +1773,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    StoryManagerBranchNodeXmlCreateTranslation.FillPublicElementXml(
+                    WordOfPowerXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1928,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1936,11 +1797,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Flags":
-                    errorMask?.PushIndex((int)StoryManagerBranchNode_FieldIndex.Flags);
+                case "Name":
+                    errorMask?.PushIndex((int)WordOfPower_FieldIndex.Name);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<AStoryManagerNode.Flag>.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1954,11 +1815,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "XNAM":
-                    errorMask?.PushIndex((int)StoryManagerBranchNode_FieldIndex.XNAM);
+                case "Translation":
+                    errorMask?.PushIndex((int)WordOfPower_FieldIndex.Translation);
                     try
                     {
-                        item.XNAM = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Translation = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1973,7 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 default:
-                    AStoryManagerNodeXmlCreateTranslation.FillPublicElementXml(
+                    SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: node,
                         name: name,
@@ -1989,30 +1850,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class StoryManagerBranchNodeXmlTranslationMixIn
+    public static class WordOfPowerXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IStoryManagerBranchNodeGetter item,
+            this IWordOfPowerGetter item,
             XElement node,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((StoryManagerBranchNodeXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((WordOfPowerXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = StoryManagerBranchNode.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = WordOfPower.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IStoryManagerBranchNodeGetter item,
+            this IWordOfPowerGetter item,
             string path,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2026,10 +1887,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IStoryManagerBranchNodeGetter item,
+            this IWordOfPowerGetter item,
             Stream stream,
-            out StoryManagerBranchNode.ErrorMask errorMask,
-            StoryManagerBranchNode.TranslationMask? translationMask = null,
+            out WordOfPower.ErrorMask errorMask,
+            WordOfPower.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2052,40 +1913,43 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerBranchNodeBinaryWriteTranslation :
-        AStoryManagerNodeBinaryWriteTranslation,
+    public partial class WordOfPowerBinaryWriteTranslation :
+        SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static StoryManagerBranchNodeBinaryWriteTranslation Instance = new StoryManagerBranchNodeBinaryWriteTranslation();
+        public new readonly static WordOfPowerBinaryWriteTranslation Instance = new WordOfPowerBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            AStoryManagerNodeBinaryWriteTranslation.WriteRecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AStoryManagerNode.Flag>.Instance.WriteNullable(
-                writer,
-                item.Flags,
-                length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.XNAM,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Translation,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
         }
 
         public void Write(
             MutagenWriter writer,
-            IStoryManagerBranchNodeGetter item,
+            IWordOfPowerGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.SMBN),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.WOOP),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2104,18 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IAStoryManagerNodeGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2126,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2137,29 +1990,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IStoryManagerBranchNodeGetter)item,
+                item: (IWordOfPowerGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class StoryManagerBranchNodeBinaryCreateTranslation : AStoryManagerNodeBinaryCreateTranslation
+    public partial class WordOfPowerBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static StoryManagerBranchNodeBinaryCreateTranslation Instance = new StoryManagerBranchNodeBinaryCreateTranslation();
+        public new readonly static WordOfPowerBinaryCreateTranslation Instance = new WordOfPowerBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.SMBN;
+        public override RecordType RecordType => RecordTypes.WOOP;
         public static void FillBinaryStructs(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             MutagenFrame frame)
         {
-            AStoryManagerNodeBinaryCreateTranslation.FillBinaryStructs(
+            SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
 
         public static TryGet<int?> FillBinaryRecordTypes(
-            IStoryManagerBranchNodeInternal item,
+            IWordOfPowerInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
@@ -2168,20 +2021,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.DNAM:
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AStoryManagerNode.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerBranchNode_FieldIndex.Flags);
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Name);
                 }
-                case RecordTypeInts.XNAM:
+                case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerBranchNode_FieldIndex.XNAM);
+                    item.Translation = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Translation);
                 }
                 default:
-                    return AStoryManagerNodeBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         nextRecordType: nextRecordType,
@@ -2195,7 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class StoryManagerBranchNodeBinaryTranslationMixIn
+    public static class WordOfPowerBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2204,34 +2063,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class StoryManagerBranchNodeBinaryOverlay :
-        AStoryManagerNodeBinaryOverlay,
-        IStoryManagerBranchNodeGetter
+    public partial class WordOfPowerBinaryOverlay :
+        SkyrimMajorRecordBinaryOverlay,
+        IWordOfPowerGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => StoryManagerBranchNode_Registration.Instance;
-        public new static StoryManagerBranchNode_Registration Registration => StoryManagerBranchNode_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => WordOfPower_Registration.Instance;
+        public new static WordOfPower_Registration Registration => WordOfPower_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => StoryManagerBranchNodeCommon.Instance;
+        protected override object CommonInstance() => WordOfPowerCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => StoryManagerBranchNodeSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => WordOfPowerSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IStoryManagerBranchNodeGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IWordOfPowerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => StoryManagerBranchNodeXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => WordOfPowerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((StoryManagerBranchNodeXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((WordOfPowerXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2239,24 +2098,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => StoryManagerBranchNodeBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => WordOfPowerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((StoryManagerBranchNodeBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((WordOfPowerBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region Flags
-        private int? _FlagsLocation;
-        public AStoryManagerNode.Flag? Flags => _FlagsLocation.HasValue ? (AStoryManagerNode.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(AStoryManagerNode.Flag?);
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
-        #region XNAM
-        private int? _XNAMLocation;
-        public ReadOnlyMemorySlice<Byte>? XNAM => _XNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
+        #region Translation
+        private int? _TranslationLocation;
+        public TranslatedString Translation => _TranslationLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _TranslationLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : string.Empty;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2264,7 +2123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected StoryManagerBranchNodeBinaryOverlay(
+        protected WordOfPowerBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2274,13 +2133,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static StoryManagerBranchNodeBinaryOverlay StoryManagerBranchNodeFactory(
+        public static WordOfPowerBinaryOverlay WordOfPowerFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream);
-            var ret = new StoryManagerBranchNodeBinaryOverlay(
+            var ret = new WordOfPowerBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2299,12 +2158,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static StoryManagerBranchNodeBinaryOverlay StoryManagerBranchNodeFactory(
+        public static WordOfPowerBinaryOverlay WordOfPowerFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return StoryManagerBranchNodeFactory(
+            return WordOfPowerFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2321,15 +2180,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.DNAM:
+                case RecordTypeInts.FULL:
                 {
-                    _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerBranchNode_FieldIndex.Flags);
+                    _NameLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Name);
                 }
-                case RecordTypeInts.XNAM:
+                case RecordTypeInts.TNAM:
                 {
-                    _XNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerBranchNode_FieldIndex.XNAM);
+                    _TranslationLocation = (stream.Position - offset);
+                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Translation);
                 }
                 default:
                     return base.FillRecordType(
@@ -2346,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            StoryManagerBranchNodeMixIn.ToString(
+            WordOfPowerMixIn.ToString(
                 item: this,
                 name: name);
         }

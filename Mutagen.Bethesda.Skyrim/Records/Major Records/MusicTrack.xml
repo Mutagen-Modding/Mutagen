@@ -2,6 +2,26 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MusicTrack" recordType="MUST" objType="Record" baseClass="SkyrimMajorRecord" GUID="be0b125f-644b-4d58-bcd9-94649f4fa209" ID="450">
     <Fields>
+      <Enum name="Type" recordType="CNAM" enumName="MusicTrack.TypeEnum" byteLength="4" hasBeenSet="False" />
+      <Float name="Duration" recordType="FLTV" />
+      <Float name="FadeOut" recordType="DNAM" />
+      <String name="TrackFilename" recordType="ANAM" />
+      <String name="FinaleFilename" recordType="BNAM" />
+      <RefDirect name="LoopData" refName="MusicTrackLoopData" />
+      <List name="CuePoints" recordType="FNAM">
+        <Float />
+      </List>
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
+      <List name="Tracks" recordType="SNAM">
+        <FormLink refName="MusicTrack" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="MusicTrackLoopData" recordType="LNAM" objType="Subrecord" GUID="7345156e-df59-4a07-98c1-555be353c1e6" ID="458">
+    <Fields>
+      <Float name="Begins" />
+      <Float name="Ends" />
+      <UInt32 name="Count" />
     </Fields>
   </Object>
 </Loqui>

@@ -54,6 +54,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType ARMO = new RecordType(0x4F4D5241);
         public static readonly RecordType ARTO = new RecordType(0x4F545241);
         public static readonly RecordType ASPC = new RecordType(0x43505341);
+        public static readonly RecordType ASTP = new RecordType(0x50545341);
         public static readonly RecordType ATKD = new RecordType(0x444B5441);
         public static readonly RecordType ATKE = new RecordType(0x454B5441);
         public static readonly RecordType ATKR = new RecordType(0x524B5441);
@@ -114,6 +115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType DIAD = new RecordType(0x44414944);
         public static readonly RecordType DIAL = new RecordType(0x4C414944);
         public static readonly RecordType DLBR = new RecordType(0x52424C44);
+        public static readonly RecordType DLVW = new RecordType(0x57564C44);
         public static readonly RecordType DMDL = new RecordType(0x4C444D44);
         public static readonly RecordType DNAM = new RecordType(0x4D414E44);
         public static readonly RecordType DOBJ = new RecordType(0x4A424F44);
@@ -361,6 +363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType RDWT = new RecordType(0x54574452);
         public static readonly RecordType REFR = new RecordType(0x52464552);
         public static readonly RecordType REGN = new RecordType(0x4E474552);
+        public static readonly RecordType RELA = new RecordType(0x414C4552);
         public static readonly RecordType REVB = new RecordType(0x42564552);
         public static readonly RecordType RFCT = new RecordType(0x54434652);
         public static readonly RecordType RIAD = new RecordType(0x44414952);
@@ -454,6 +457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType WKMV = new RecordType(0x564D4B57);
         public static readonly RecordType WLST = new RecordType(0x54534C57);
         public static readonly RecordType WNAM = new RecordType(0x4D414E57);
+        public static readonly RecordType WOOP = new RecordType(0x504F4F57);
         public static readonly RecordType WRLD = new RecordType(0x444C5257);
         public static readonly RecordType WTHR = new RecordType(0x52485457);
         public static readonly RecordType XACT = new RecordType(0x54434158);

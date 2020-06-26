@@ -10,6 +10,7 @@ namespace Mutagen.Bethesda.Generation
     public class BoolType : Loqui.Generation.BoolType
     {
         public RecordType? BoolAsMarker;
+        public int ByteLength { get; private set; }
 
         public override async Task Load(XElement node, bool requireName = true)
         {
@@ -20,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
                 this.HasBeenSetProperty.OnNext((false, true));
             }
             this.TryCreateFieldData().RecordType = BoolAsMarker;
+            ByteLength = node.GetAttribute<int>(Constants.ByteLength, 1);
         }
     }
 }
