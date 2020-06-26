@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Disposables;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -26,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
     }
 
-    public class Linking_Tests : IClassFixture<LinkingInit>
+    public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
     {
         public static FormKey UnusedFormKey = new FormKey(Utility.ModKey, 123456);
         public static string PathToTestFile = "../../../test.esp";
@@ -34,11 +35,14 @@ namespace Mutagen.Bethesda.UnitTests
         public static FormKey TestFileFormKey = new FormKey(ModKey.Factory("test.esp"), 0xD62);
         public static FormKey TestFileFormKey2 = new FormKey(ModKey.Factory("test.esp"), 0xD63);
 
+        public abstract IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter);
+
         #region Direct Mod
         [Fact]
         public void Direct_Empty()
         {
-            var package = new DirectModLinkCache<SkyrimMod>(new SkyrimMod(Utility.ModKey));
+            using var disp = ConvertMod(new SkyrimMod(Utility.ModKey), out var mod);
+            var package = new DirectModLinkCache<ISkyrimModGetter>(mod);
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -62,9 +66,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_NoMatch()
         {
-            var mod = new SkyrimMod(Utility.ModKey);
-            mod.ObjectEffects.AddNew();
-            var package = new DirectModLinkCache<SkyrimMod>(mod);
+            var prototype = new SkyrimMod(Utility.ModKey);
+            prototype.ObjectEffects.AddNew();
+            using var disp = ConvertMod(prototype, out var mod);
+            var package = new DirectModLinkCache<ISkyrimModGetter>(mod);
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -88,10 +93,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void Direct_Typical()
         {
-            var mod = new SkyrimMod(Utility.ModKey);
-            var objEffect1 = mod.ObjectEffects.AddNew();
-            var objEffect2 = mod.ObjectEffects.AddNew();
-            var package = new DirectModLinkCache<SkyrimMod>(mod);
+            var prototype = new SkyrimMod(Utility.ModKey);
+            var objEffect1 = prototype.ObjectEffects.AddNew();
+            var objEffect2 = prototype.ObjectEffects.AddNew();
+            using var disp = ConvertMod(prototype, out var mod);
+            var package = new DirectModLinkCache<ISkyrimModGetter>(mod);
 
             {
                 Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
@@ -194,11 +200,12 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_NoMatch()
         {
-            var mod = new SkyrimMod(Utility.ModKey);
-            mod.Npcs.AddNew();
-            var loadOrder = new LoadOrder<SkyrimMod>();
+            var prototype = new SkyrimMod(Utility.ModKey);
+            prototype.Npcs.AddNew();
+            using var disp = ConvertMod(prototype, out var mod);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
 
             // Test query fails
             Assert.False(package.TryLookup(UnusedFormKey, out var _));
@@ -212,12 +219,13 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_Single()
         {
-            var mod = new SkyrimMod(Utility.ModKey);
-            var objEffect1 = mod.ObjectEffects.AddNew();
-            var objEffect2 = mod.ObjectEffects.AddNew();
-            var loadOrder = new LoadOrder<SkyrimMod>();
+            var prototype = new SkyrimMod(Utility.ModKey);
+            var objEffect1 = prototype.ObjectEffects.AddNew();
+            var objEffect2 = prototype.ObjectEffects.AddNew();
+            using var disp = ConvertMod(prototype, out var mod);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod);
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
 
             // Test query successes
             {
@@ -289,14 +297,16 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_OneInEach()
         {
-            var mod1 = new SkyrimMod(Utility.ModKey);
-            var mod2 = new SkyrimMod(new ModKey("Dummy2", true));
-            var objEffect1 = mod1.ObjectEffects.AddNew();
-            var objEffect2 = mod2.ObjectEffects.AddNew();
-            var loadOrder = new LoadOrder<SkyrimMod>();
+            var prototype1 = new SkyrimMod(Utility.ModKey);
+            var prototype2 = new SkyrimMod(new ModKey("Dummy2", true));
+            var objEffect1 = prototype1.ObjectEffects.AddNew();
+            var objEffect2 = prototype2.ObjectEffects.AddNew();
+            using var disp1 = ConvertMod(prototype1, out var mod1);
+            using var disp2 = ConvertMod(prototype2, out var mod2);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
 
             // Test query successes
             {
@@ -368,17 +378,19 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrder_Overridden()
         {
-            var mod1 = new SkyrimMod(Utility.ModKey);
-            var mod2 = new SkyrimMod(new ModKey("Dummy2", true));
-            var unoverriddenRec = mod1.ObjectEffects.AddNew();
-            var overriddenRec = mod1.ObjectEffects.AddNew();
-            var topModRec = mod2.ObjectEffects.AddNew();
+            var prototype1 = new SkyrimMod(Utility.ModKey);
+            var prototype2 = new SkyrimMod(new ModKey("Dummy2", true));
+            var unoverriddenRec = prototype1.ObjectEffects.AddNew();
+            var overriddenRec = prototype1.ObjectEffects.AddNew();
+            var topModRec = prototype2.ObjectEffects.AddNew();
             var overrideRec = (ObjectEffect)overriddenRec.DeepCopy();
-            mod2.ObjectEffects.RecordCache.Set(overrideRec);
-            var loadOrder = new LoadOrder<SkyrimMod>();
+            prototype2.ObjectEffects.RecordCache.Set(overrideRec);
+            using var disp1 = ConvertMod(prototype1, out var mod1);
+            using var disp2 = ConvertMod(prototype2, out var mod2);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
-            var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
+            var package = new LoadOrderLinkCache<ISkyrimModGetter>(loadOrder);
 
             // Test query successes
             {
@@ -980,5 +992,14 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Same(effect, link.Resolve(package));
         }
         #endregion
+    }
+
+    public class Linking_Direct_Tests : Linking_Abstract_Tests
+    {
+        public override IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter)
+        {
+            getter = mod;
+            return Disposable.Empty;
+        }
     }
 }
