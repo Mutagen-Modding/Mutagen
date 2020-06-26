@@ -33,25 +33,43 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
+
+            // Gamemode member
             fg.AppendLine($"public override {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
+
+            // Interfaces
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
 
+            // Localization enabled member
             fg.AppendLine($"public override bool CanUseLocalization => {(obj.GetObjectData().UsesStringFiles ? "true" : "false")};");
 
-            if (obj.GetObjectType() == ObjectType.Mod)
+            // Master references member
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;");
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;");
+
+            // NextObjectID member
+            fg.AppendLine($"[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
+            fg.AppendLine($"uint IMod.NextObjectID");
+            using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"public {obj.Name}({nameof(ModKey)} modKey)");
-                using (new DepthWrapper(fg))
-                {
-                    fg.AppendLine(": base(modKey)");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    await obj.GenerateInitializer(fg);
-                }
+                fg.AppendLine($"get => this.ModHeader.Stats.NextObjectID;");
+                fg.AppendLine($"set => this.ModHeader.Stats.NextObjectID = value;");
+            }
+
+            fg.AppendLine($"public {obj.Name}({nameof(ModKey)} modKey)");
+            using (new DepthWrapper(fg))
+            {
+                fg.AppendLine(": base(modKey)");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();");
+                await obj.GenerateInitializer(fg);
             }
 
             using (var args = new FunctionWrapper(fg,

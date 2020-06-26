@@ -16,16 +16,8 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class SkyrimMod : AMod
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        uint IMod.NextObjectID
-        {
-            get => this.ModHeader.Stats.NextObjectID;
-            set => this.ModHeader.Stats.NextObjectID = value;
-        }
+        public const uint DefaultInitialNextObjectID = 0x800;
+        private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
     }
 
     namespace Internals

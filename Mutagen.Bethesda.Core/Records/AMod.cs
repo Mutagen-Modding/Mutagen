@@ -20,12 +20,12 @@ namespace Mutagen.Bethesda
         /// </summary> 
         public abstract GameMode GameMode { get; }
 
-        private IFormKeyAllocator allocator;
+        private readonly IFormKeyAllocator _allocator;
 
         protected AMod()
         {
             this.ModKey = ModKey.Null;
-            this.allocator = new SimpleFormKeyAllocator(this);
+            this._allocator = new SimpleFormKeyAllocator(this);
         }
 
         /// <summary> 
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         public AMod(ModKey modKey, IFormKeyAllocator? allocator = null)
         {
             this.ModKey = modKey;
-            this.allocator = allocator ?? new SimpleFormKeyAllocator(this);
+            this._allocator = allocator ?? new SimpleFormKeyAllocator(this);
         }
 
         #region NonImplemented IMod 
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
         /// <returns>An unused FormKey</returns> 
         public FormKey GetNextFormKey()
         {
-            return allocator.GetNextFormKey();
+            return _allocator.GetNextFormKey();
         }
 
         /// <summary> 
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda
         /// <returns>An unused FormKey</returns> 
         public FormKey GetNextFormKey(string editorID)
         {
-            return allocator.GetNextFormKey(editorID);
+            return _allocator.GetNextFormKey(editorID);
         }
     }
 }

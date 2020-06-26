@@ -2963,9 +2963,20 @@ namespace Mutagen.Bethesda.Oblivion
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
         public override bool CanUseLocalization => false;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IMod.NextObjectID
+        {
+            get => this.ModHeader.Stats.NextObjectID;
+            set => this.ModHeader.Stats.NextObjectID = value;
+        }
         public OblivionMod(ModKey modKey)
             : base(modKey)
         {
+            this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
             _GameSettings_Object = new Group<GameSetting>(this);
             _Globals_Object = new Group<Global>(this);
             _Classes_Object = new Group<Class>(this);

@@ -4547,9 +4547,20 @@ namespace Mutagen.Bethesda.Skyrim
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
         public override bool CanUseLocalization => true;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IMod.NextObjectID
+        {
+            get => this.ModHeader.Stats.NextObjectID;
+            set => this.ModHeader.Stats.NextObjectID = value;
+        }
         public SkyrimMod(ModKey modKey)
             : base(modKey)
         {
+            this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
