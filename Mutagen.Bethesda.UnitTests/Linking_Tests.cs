@@ -47,17 +47,23 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IObjectEffectGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IObjectEffectGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<ObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<ObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IEffectRecord>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IEffectRecord>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IEffectRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IEffectRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
         public void Direct_NoMatch()
         {
             var mod = new SkyrimMod(Utility.ModKey);
-            mod.Npcs.AddNew();
+            mod.ObjectEffects.AddNew();
             var package = new DirectModLinkCache<SkyrimMod>(mod);
 
             // Test query fails
@@ -67,59 +73,89 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.False(package.TryLookup<IMajorRecordCommonGetter>(FormKey.Null, out var _));
             Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(UnusedFormKey, out var _));
             Assert.False(package.TryLookup<ISkyrimMajorRecordGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<INpcGetter>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<INpcGetter>(FormKey.Null, out var _));
-            Assert.False(package.TryLookup<Npc>(UnusedFormKey, out var _));
-            Assert.False(package.TryLookup<Npc>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IObjectEffectGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IObjectEffectGetter>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<ObjectEffect>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<ObjectEffect>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IEffectRecord>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IEffectRecord>(FormKey.Null, out var _));
+            Assert.False(package.TryLookup<IEffectRecordGetter>(UnusedFormKey, out var _));
+            Assert.False(package.TryLookup<IEffectRecordGetter>(FormKey.Null, out var _));
         }
 
         [Fact]
         public void Direct_Typical()
         {
             var mod = new SkyrimMod(Utility.ModKey);
-            var npc1 = mod.Npcs.AddNew();
-            var npc2 = mod.Npcs.AddNew();
+            var objEffect1 = mod.ObjectEffects.AddNew();
+            var objEffect2 = mod.ObjectEffects.AddNew();
             var package = new DirectModLinkCache<SkyrimMod>(mod);
 
             {
-                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
         }
 
@@ -130,6 +166,9 @@ namespace Mutagen.Bethesda.UnitTests
             var package = wrapper.CreateLinkCache();
             {
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey, out var rec));
+            }
+            {
+                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey, out var rec));
             }
             {
                 Assert.False(package.TryLookup<Oblivion.Npc>(TestFileFormKey, out var rec));
@@ -174,52 +213,76 @@ namespace Mutagen.Bethesda.UnitTests
         public void LoadOrder_Single()
         {
             var mod = new SkyrimMod(Utility.ModKey);
-            var npc1 = mod.Npcs.AddNew();
-            var npc2 = mod.Npcs.AddNew();
+            var objEffect1 = mod.ObjectEffects.AddNew();
+            var objEffect2 = mod.ObjectEffects.AddNew();
             var loadOrder = new LoadOrder<SkyrimMod>();
             loadOrder.Add(mod);
             var package = new LoadOrderLinkCache<SkyrimMod>(loadOrder);
 
             // Test query successes
             {
-                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
         }
 
@@ -228,8 +291,8 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod1 = new SkyrimMod(Utility.ModKey);
             var mod2 = new SkyrimMod(new ModKey("Dummy2", true));
-            var npc1 = mod1.Npcs.AddNew();
-            var npc2 = mod2.Npcs.AddNew();
+            var objEffect1 = mod1.ObjectEffects.AddNew();
+            var objEffect2 = mod2.ObjectEffects.AddNew();
             var loadOrder = new LoadOrder<SkyrimMod>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
@@ -237,44 +300,68 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryLookup(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc1.FormKey, out var rec));
-                Assert.Same(rec, npc1);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
             }
             {
-                Assert.True(package.TryLookup<Npc>(npc2.FormKey, out var rec));
-                Assert.Same(rec, npc2);
+                Assert.True(package.TryLookup<IObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect1.FormKey, out var rec));
+                Assert.Same(rec, objEffect1);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(objEffect2.FormKey, out var rec));
+                Assert.Same(rec, objEffect2);
             }
         }
 
@@ -283,11 +370,11 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod1 = new SkyrimMod(Utility.ModKey);
             var mod2 = new SkyrimMod(new ModKey("Dummy2", true));
-            var unoverriddenNpc = mod1.Npcs.AddNew();
-            var overriddenNpc = mod1.Npcs.AddNew();
-            var topModNpc = mod2.Npcs.AddNew();
-            var overrideNpc = (Npc)overriddenNpc.DeepCopy();
-            mod2.Npcs.RecordCache.Set(overrideNpc);
+            var unoverriddenRec = mod1.ObjectEffects.AddNew();
+            var overriddenRec = mod1.ObjectEffects.AddNew();
+            var topModRec = mod2.ObjectEffects.AddNew();
+            var overrideRec = (ObjectEffect)overriddenRec.DeepCopy();
+            mod2.ObjectEffects.RecordCache.Set(overrideRec);
             var loadOrder = new LoadOrder<SkyrimMod>();
             loadOrder.Add(mod1);
             loadOrder.Add(mod2);
@@ -295,49 +382,76 @@ namespace Mutagen.Bethesda.UnitTests
 
             // Test query successes
             {
-                Assert.True(package.TryLookup(overriddenNpc.FormKey, out var rec));
-                Assert.Same(rec, overrideNpc);
-                Assert.NotSame(rec, overriddenNpc);
-                Assert.True(package.TryLookup(unoverriddenNpc.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNpc);
-                Assert.True(package.TryLookup(topModNpc.FormKey, out rec));
-                Assert.Same(rec, topModNpc);
+                Assert.True(package.TryLookup(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
             }
             {
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenNpc.FormKey, out var rec));
-                Assert.Same(rec, overrideNpc);
-                Assert.NotSame(rec, overriddenNpc);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenNpc.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNpc);
-                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModNpc.FormKey, out rec));
-                Assert.Same(rec, topModNpc);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<IMajorRecordCommonGetter>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
             }
             {
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(overriddenNpc.FormKey, out var rec));
-                Assert.Same(rec, overrideNpc);
-                Assert.NotSame(rec, overriddenNpc);
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(unoverriddenNpc.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNpc);
-                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(topModNpc.FormKey, out rec));
-                Assert.Same(rec, topModNpc);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<ISkyrimMajorRecordGetter>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
             }
             {
-                Assert.True(package.TryLookup<INpcGetter>(overriddenNpc.FormKey, out var rec));
-                Assert.Same(rec, overrideNpc);
-                Assert.NotSame(rec, overriddenNpc);
-                Assert.True(package.TryLookup<INpcGetter>(unoverriddenNpc.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNpc);
-                Assert.True(package.TryLookup<INpcGetter>(topModNpc.FormKey, out rec));
-                Assert.Same(rec, topModNpc);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<IObjectEffectGetter>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
             }
             {
-                Assert.True(package.TryLookup<Npc>(overriddenNpc.FormKey, out var rec));
-                Assert.Same(rec, overrideNpc);
-                Assert.NotSame(rec, overriddenNpc);
-                Assert.True(package.TryLookup<Npc>(unoverriddenNpc.FormKey, out rec));
-                Assert.Same(rec, unoverriddenNpc);
-                Assert.True(package.TryLookup<Npc>(topModNpc.FormKey, out rec));
-                Assert.Same(rec, topModNpc);
+                Assert.True(package.TryLookup<IObjectEffect>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<IObjectEffect>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<IObjectEffect>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
+            }
+            {
+                Assert.True(package.TryLookup<ObjectEffect>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<ObjectEffect>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<ObjectEffect>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecordGetter>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<IEffectRecordGetter>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<IEffectRecordGetter>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
+            }
+            {
+                Assert.True(package.TryLookup<IEffectRecord>(overriddenRec.FormKey, out var rec));
+                Assert.Same(rec, overrideRec);
+                Assert.NotSame(rec, overriddenRec);
+                Assert.True(package.TryLookup<IEffectRecord>(unoverriddenRec.FormKey, out rec));
+                Assert.Same(rec, unoverriddenRec);
+                Assert.True(package.TryLookup<IEffectRecord>(topModRec.FormKey, out rec));
+                Assert.Same(rec, topModRec);
             }
         }
 
@@ -355,6 +469,10 @@ namespace Mutagen.Bethesda.UnitTests
                 Assert.True(package.TryLookup<Oblivion.INpcGetter>(TestFileFormKey2, out rec));
                 Assert.True(rec.Name.TryGet(out var name));
                 Assert.Equal("A Name", name);
+            }
+            {
+                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey, out var rec));
+                Assert.False(package.TryLookup<Oblivion.INpc>(TestFileFormKey2, out rec));
             }
             {
                 Assert.False(package.TryLookup<Oblivion.Npc>(TestFileFormKey, out var rec));
