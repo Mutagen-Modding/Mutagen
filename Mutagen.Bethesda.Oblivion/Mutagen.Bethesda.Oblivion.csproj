@@ -47,116 +47,38 @@
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\Condition_LoquiGenerated.cs">
-      <DependentUpon>Condition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\DistantLODData_LoquiGenerated.cs">
-      <DependentUpon>DistantLODData.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Effect.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\EffectData_LoquiGenerated.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\Effect_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\EnableParent.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\EnableParent_LoquiGenerated.cs">
-      <DependentUpon>EnableParent.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\LeveledEntry_LoquiGenerated.cs">
-      <DependentUpon>LeveledEntry.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\Location_LoquiGenerated.cs">
-      <DependentUpon>Location.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\Model_LoquiGenerated.cs">
-      <DependentUpon>Model.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\Relation_LoquiGenerated.cs">
-      <DependentUpon>Relation.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEffectData_LoquiGenerated.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\ScriptEffect_LoquiGenerated.cs">
-      <DependentUpon>Effect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\WeatherType_LoquiGenerated.cs">
-      <DependentUpon>WeatherType.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Group.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Group_LoquiGenerated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ListGroup.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ListGroup_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AClothing.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AClothing_LoquiGenerated.cs">
       <DependentUpon>AClothing.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Activator.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Activator_LoquiGenerated.cs">
-      <DependentUpon>Activator.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AIData_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AIPackage.cs">
-      <DependentUpon>AIPackage.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AIPackageData_LoquiGenerated.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\AIPackageLocation.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AIPackageLocation_LoquiGenerated.cs">
-      <DependentUpon>AIPackage.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AIPackageSchedule_LoquiGenerated.cs">
-      <DependentUpon>AIPackage.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AIPackageTarget.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AIPackageTarget_LoquiGenerated.cs">
-      <DependentUpon>AIPackage.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AIPackage_LoquiGenerated.cs">
-      <DependentUpon>AIPackage.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AItem_LoquiGenerated.cs">
-      <DependentUpon>AItem.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlchemicalApparatusData_LoquiGenerated.cs">
-      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
-      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AlphaLayer_LoquiGenerated.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Ammunition.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
@@ -164,55 +86,13 @@
     <Compile Include="Records\Major Records\AmmunitionData.cs">
       <DependentUpon>Ammunition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AmmunitionData_LoquiGenerated.cs">
-      <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Ammunition_LoquiGenerated.cs">
-      <DependentUpon>Ammunition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AnimatedObject_LoquiGenerated.cs">
-      <DependentUpon>AnimatedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANpcSpawn_LoquiGenerated.cs">
-      <DependentUpon>ANpcSpawn.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANpc_LoquiGenerated.cs">
-      <DependentUpon>ANpc.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ArmorData.cs">
       <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ArmorData_LoquiGenerated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Armor_LoquiGenerated.cs">
-      <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ASpell_LoquiGenerated.cs">
-      <DependentUpon>ASpell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BaseLayer_LoquiGenerated.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Birthsign.cs">
       <DependentUpon>Birthsign.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Birthsign_LoquiGenerated.cs">
-      <DependentUpon>Birthsign.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyData_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BodyPart_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Book.cs">
-      <DependentUpon>Book.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\BookData_LoquiGenerated.cs">
-      <DependentUpon>Book.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Book_LoquiGenerated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Cell.cs">
@@ -221,25 +101,10 @@
     <Compile Include="Records\Major Records\CellBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CellBlock_LoquiGenerated.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CellLighting_LoquiGenerated.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\CellSubBlock.cs">
       <DependentUpon>Cell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CellSubBlock_LoquiGenerated.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Cell_LoquiGenerated.cs">
-      <DependentUpon>Cell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Class.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ClassData_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ClassFlag.cs">
@@ -248,154 +113,46 @@
     <Compile Include="Records\Major Records\ClassService.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ClassTraining_LoquiGenerated.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Climate.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ClimateData_LoquiGenerated.cs">
-      <DependentUpon>Climate.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Climate_LoquiGenerated.cs">
-      <DependentUpon>Climate.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ClothingData_LoquiGenerated.cs">
-      <DependentUpon>Clothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ClothingFlags_LoquiGenerated.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Clothing_LoquiGenerated.cs">
-      <DependentUpon>Clothing.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\CombatStyle.cs">
-      <DependentUpon>CombatStyle.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CombatStyleAdvanced_LoquiGenerated.cs">
-      <DependentUpon>CombatStyle.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CombatStyleData_LoquiGenerated.cs">
-      <DependentUpon>CombatStyle.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CombatStyle_LoquiGenerated.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ContainerData_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ContainerItem_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Container_LoquiGenerated.cs">
-      <DependentUpon>Container.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Creature.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CreatureAIData_LoquiGenerated.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CreatureConfiguration_LoquiGenerated.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\CreatureData_LoquiGenerated.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\CreatureSound.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\CreatureSound_LoquiGenerated.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Creature_LoquiGenerated.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\DialogItem.cs">
-      <DependentUpon>DialogTopic.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogItemData_LoquiGenerated.cs">
-      <DependentUpon>DialogTopic.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogItem_LoquiGenerated.cs">
-      <DependentUpon>DialogTopic.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogResponseData_LoquiGenerated.cs">
-      <DependentUpon>DialogTopic.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogResponse_LoquiGenerated.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogTopic.cs">
       <DependentUpon>DialogTopic.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\DialogTopic_LoquiGenerated.cs">
-      <DependentUpon>DialogTopic.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Dimensions_LoquiGenerated.cs">
-      <DependentUpon>Tree.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Door.cs">
-      <DependentUpon>Door.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Door_LoquiGenerated.cs">
       <DependentUpon>Door.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\EffectShader.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\EffectShaderData_LoquiGenerated.cs">
-      <DependentUpon>EffectShader.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EffectShader_LoquiGenerated.cs">
-      <DependentUpon>EffectShader.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EnchantmentData_LoquiGenerated.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Enchantment_LoquiGenerated.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Eye.cs">
       <DependentUpon>Eye.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Eye_LoquiGenerated.cs">
-      <DependentUpon>Eye.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FaceGenData_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FacePart_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Faction.cs">
-      <DependentUpon>Faction.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Faction_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Flora.cs">
       <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Flora_LoquiGenerated.cs">
-      <DependentUpon>Flora.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\FogDistance_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Furniture.cs">
-      <DependentUpon>Furniture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Furniture_LoquiGenerated.cs">
       <DependentUpon>Furniture.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
@@ -404,22 +161,10 @@
     <Compile Include="Records\Major Records\GameSettingFloat.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GameSettingFloat_LoquiGenerated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\GameSettingInt.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GameSettingInt_LoquiGenerated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\GameSettingString.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSettingString_LoquiGenerated.cs">
-      <DependentUpon>GameSetting.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GameSetting_LoquiGenerated.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Global.cs">
@@ -428,170 +173,53 @@
     <Compile Include="Records\Major Records\GlobalFloat.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GlobalFloat_LoquiGenerated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\GlobalInt.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GlobalInt_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\GlobalShort_LoquiGenerated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
-      <DependentUpon>Global.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Grass.cs">
-      <DependentUpon>Grass.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\GrassData_LoquiGenerated.cs">
-      <DependentUpon>Grass.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Grass_LoquiGenerated.cs">
       <DependentUpon>Grass.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Hair.cs">
       <DependentUpon>Hair.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Hair_LoquiGenerated.cs">
-      <DependentUpon>Hair.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\HavokData.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\HavokData_LoquiGenerated.cs">
-      <DependentUpon>LandTexture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\HDRData_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\IdleAnimation.cs">
-      <DependentUpon>IdleAnimation.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\IdleAnimation_LoquiGenerated.cs">
       <DependentUpon>IdleAnimation.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\IngredientData_LoquiGenerated.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Ingredient_LoquiGenerated.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\InterCellPoint_LoquiGenerated.cs">
-      <DependentUpon>PathGrid.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ItemEntry_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\KeyData_LoquiGenerated.cs">
-      <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Key_LoquiGenerated.cs">
-      <DependentUpon>Key.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Landscape_LoquiGenerated.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LandTexture_LoquiGenerated.cs">
-      <DependentUpon>LandTexture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LayerHeader_LoquiGenerated.cs">
-      <DependentUpon>Landscape.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LeveledCreature_LoquiGenerated.cs">
-      <DependentUpon>LeveledCreature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LeveledItem_LoquiGenerated.cs">
-      <DependentUpon>LeveledItem.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LeveledSpell_LoquiGenerated.cs">
-      <DependentUpon>LeveledSpell.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LightData_LoquiGenerated.cs">
-      <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Light_LoquiGenerated.cs">
-      <DependentUpon>Light.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LoadScreenLocation_LoquiGenerated.cs">
-      <DependentUpon>LoadScreen.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LoadScreen_LoquiGenerated.cs">
-      <DependentUpon>LoadScreen.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocalVariableData_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LocalVariable_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\LockInformation.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LockInformation_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LogEntry.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\LogEntry_LoquiGenerated.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicEffectData_LoquiGenerated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffectSubData_LoquiGenerated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MapData_LoquiGenerated.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MapMarker.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MapMarker_LoquiGenerated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Miscellaneous.cs">
       <DependentUpon>Miscellaneous.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MiscellaneousData_LoquiGenerated.cs">
-      <DependentUpon>Miscellaneous.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Miscellaneous_LoquiGenerated.cs">
-      <DependentUpon>Miscellaneous.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Npc.cs">
       <DependentUpon>Npc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\NpcConfiguration_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\NpcData_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\PathGrid.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
@@ -599,136 +227,34 @@
     <Compile Include="Records\Major Records\PathGridPoint.cs">
       <DependentUpon>PathGrid.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PathGridPoint_LoquiGenerated.cs">
-      <DependentUpon>PathGrid.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PathGrid_LoquiGenerated.cs">
-      <DependentUpon>PathGrid.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlacedCreature_LoquiGenerated.cs">
-      <DependentUpon>PlacedCreature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PlacedNPC_LoquiGenerated.cs">
-      <DependentUpon>Place.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\PlacedObject.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\PlacedObject_LoquiGenerated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Place_LoquiGenerated.cs">
-      <DependentUpon>Place.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PointToReferenceMapping_LoquiGenerated.cs">
-      <DependentUpon>PathGrid.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Potion.cs">
-      <DependentUpon>Potion.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\PotionData_LoquiGenerated.cs">
-      <DependentUpon>Potion.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Potion_LoquiGenerated.cs">
       <DependentUpon>Potion.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Quest.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\QuestData_LoquiGenerated.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\QuestStage_LoquiGenerated.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\QuestTarget.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\QuestTargetData_LoquiGenerated.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\QuestTarget_LoquiGenerated.cs">
-      <DependentUpon>Quest.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Quest_LoquiGenerated.cs">
       <DependentUpon>Quest.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\RaceData_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RaceRelation_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RaceStats_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Race_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RankPlacement_LoquiGenerated.cs">
-      <DependentUpon>NPC.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Rank_LoquiGenerated.cs">
-      <DependentUpon>Faction.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Region.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionArea_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionData.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\RegionDataHeader_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionData_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionGrasses_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionMap_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\RegionObject.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionObjects_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionObject_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\RegionSounds_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionSound_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionWeather_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Region_LoquiGenerated.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RelatedWaters_LoquiGenerated.cs">
-      <DependentUpon>Water.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Road.cs">
-      <DependentUpon>Road.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RoadPoint_LoquiGenerated.cs">
-      <DependentUpon>Road.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Road_LoquiGenerated.cs">
       <DependentUpon>Road.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Script.cs">
@@ -737,52 +263,13 @@
     <Compile Include="Records\Major Records\ScriptFields.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ScriptFields_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
       <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ScriptMetaSummary_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ScriptObjectReference_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ScriptVariableReference_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Script_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SeasonalIngredientProduction_LoquiGenerated.cs">
-      <DependentUpon>Flora.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SigilStone.cs">
       <DependentUpon>SigilStone.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SigilStoneData_LoquiGenerated.cs">
-      <DependentUpon>SigilStone.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SigilStone_LoquiGenerated.cs">
-      <DependentUpon>SigilStone.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SkillBoost_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SkillData_LoquiGenerated.cs">
-      <DependentUpon>SkillRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SkillRecord_LoquiGenerated.cs">
-      <DependentUpon>SkillRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\SoulGem.cs">
-      <DependentUpon>SoulGem.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoulGemData_LoquiGenerated.cs">
-      <DependentUpon>SoulGem.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoulGem_LoquiGenerated.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SoundData.cs">
@@ -791,133 +278,646 @@
     <Compile Include="Records\Major Records\SoundDataExtended.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SoundDataExtended_LoquiGenerated.cs">
-      <DependentUpon>Sound.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoundData_LoquiGenerated.cs">
-      <DependentUpon>Sound.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SoundItem_LoquiGenerated.cs">
-      <DependentUpon>Creature.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Sound_LoquiGenerated.cs">
-      <DependentUpon>Sound.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\SpellData_LoquiGenerated.cs">
-      <DependentUpon>SpellUnleveled.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SpellLeveled_LoquiGenerated.cs">
-      <DependentUpon>SpellLeveled.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SpellUnleveled_LoquiGenerated.cs">
-      <DependentUpon>SpellUnleveled.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Spell_LoquiGenerated.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Static_LoquiGenerated.cs">
-      <DependentUpon>Static.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Subspace_LoquiGenerated.cs">
-      <DependentUpon>Subspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\TeleportDestination_LoquiGenerated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\TreeData_LoquiGenerated.cs">
-      <DependentUpon>Tree.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Tree_LoquiGenerated.cs">
-      <DependentUpon>Tree.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Water.cs">
-      <DependentUpon>Water.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WaterData_LoquiGenerated.cs">
-      <DependentUpon>Water.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Water_LoquiGenerated.cs">
       <DependentUpon>Water.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeaponData_LoquiGenerated.cs">
-      <DependentUpon>Weapon.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Weapon_LoquiGenerated.cs">
-      <DependentUpon>Weapon.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Weather.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WeatherColors_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WeatherData_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WeatherSound.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherSound_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Weather_LoquiGenerated.cs">
-      <DependentUpon>Weather.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Worldspace.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\WorldspaceBlock_LoquiGenerated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WorldspaceSubBlock_LoquiGenerated.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Worldspace_LoquiGenerated.cs">
-      <DependentUpon>Worldspace.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\ModHeader.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ModHeader_LoquiGenerated.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\ModStats_LoquiGenerated.cs">
       <DependentUpon>ModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\OblivionMajorRecord.cs">
       <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\OblivionMajorRecord_LoquiGenerated.cs">
-      <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\OblivionMod.cs">
-      <DependentUpon>OblivionMod.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Oblivion.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
-    <Compile Include="Records\Major Records\AScriptReference_LoquiGenerated.cs">
-      <DependentUpon>Script.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Npc_LoquiGenerated.cs">
-      <DependentUpon>Npc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Interfaces\IOwner_LoquiGenerated.cs" />
-    <Compile Include="Interfaces\IPlaced_LoquiGenerated.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="WarmupOblivion.cs" />
+    <Compile Include="Records\Group_Generated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ListGroup_Generated.cs">
+      <DependentUpon>Group.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModHeader_Generated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\ModStats_Generated.cs">
+      <DependentUpon>ModHeader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\OblivionMajorRecord_Generated.cs">
+      <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\OblivionMod_Generated.cs">
+      <DependentUpon>OblivionMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Condition_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\DistantLODData_Generated.cs">
+      <DependentUpon>DistantLODData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Effect_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EffectData_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptEffect_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptEffectData_Generated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\EnableParent_Generated.cs">
+      <DependentUpon>EnableParent.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LeveledEntry_Generated.cs">
+      <DependentUpon>LeveledEntry.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Location_Generated.cs">
+      <DependentUpon>Location.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Model_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Relation_Generated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WeatherType_Generated.cs">
+      <DependentUpon>WeatherType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AClothing_Generated.cs">
+      <DependentUpon>AClothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClothingFlags_Generated.cs">
+      <DependentUpon>AClothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Activator_Generated.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackage_Generated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageLocation_Generated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageSchedule_Generated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageTarget_Generated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackageData_Generated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AItem_Generated.cs">
+      <DependentUpon>AItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlchemicalApparatus_Generated.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlchemicalApparatusData_Generated.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Ammunition_Generated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AmmunitionData_Generated.cs">
+      <DependentUpon>Ammunition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AnimatedObject_Generated.cs">
+      <DependentUpon>AnimatedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANpc_Generated.cs">
+      <DependentUpon>ANpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ANpcSpawn_Generated.cs">
+      <DependentUpon>ANpcSpawn.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ArmorData_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ASpell_Generated.cs">
+      <DependentUpon>ASpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Birthsign_Generated.cs">
+      <DependentUpon>Birthsign.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Book_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BookData_Generated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellSubBlock_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Cell_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CellLighting_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Class_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClassTraining_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClassData_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Climate_Generated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClimateData_Generated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Clothing_Generated.cs">
+      <DependentUpon>Clothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ClothingData_Generated.cs">
+      <DependentUpon>Clothing.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyle_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleAdvanced_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyleData_Generated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Container_Generated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerItem_Generated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerData_Generated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Creature_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureConfiguration_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureAIData_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureData_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureSound_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundItem_Generated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogTopic_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogItem_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogItemData_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponse_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DialogResponseData_Generated.cs">
+      <DependentUpon>DialogTopic.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Door_Generated.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EffectShader_Generated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EffectShaderData_Generated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Enchantment_Generated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnchantmentData_Generated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Eye_Generated.cs">
+      <DependentUpon>Eye.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Rank_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Flora_Generated.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SeasonalIngredientProduction_Generated.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Furniture_Generated.cs">
+      <DependentUpon>Furniture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSetting_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString_Generated.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Global_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat_Generated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Grass_Generated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GrassData_Generated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Hair_Generated.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\IdleAnimation_Generated.cs">
+      <DependentUpon>IdleAnimation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Ingredient_Generated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\IngredientData_Generated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Key_Generated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\KeyData_Generated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Landscape_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BaseLayer_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AlphaLayer_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LayerHeader_Generated.cs">
+      <DependentUpon>Landscape.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LandTexture_Generated.cs">
+      <DependentUpon>LandTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HavokData_Generated.cs">
+      <DependentUpon>LandTexture.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledCreature_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledItem_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpell_Generated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Light_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LightData_Generated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LoadScreen_Generated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LoadScreenLocation_Generated.cs">
+      <DependentUpon>LoadScreen.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffect_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectData_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffectSubData_Generated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Miscellaneous_Generated.cs">
+      <DependentUpon>Miscellaneous.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MiscellaneousData_Generated.cs">
+      <DependentUpon>Miscellaneous.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Npc_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcConfiguration_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIData_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NpcData_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RankPlacement_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ItemEntry_Generated.cs">
+      <DependentUpon>Npc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PathGrid_Generated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PathGridPoint_Generated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\InterCellPoint_Generated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PointToReferenceMapping_Generated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Place_Generated.cs">
+      <DependentUpon>Place.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedCreature_Generated.cs">
+      <DependentUpon>PlacedCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedNpc_Generated.cs">
+      <DependentUpon>PlacedNpc.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObject_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TeleportDestination_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LockInformation_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MapMarker_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Potion_Generated.cs">
+      <DependentUpon>Potion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PotionData_Generated.cs">
+      <DependentUpon>Potion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Quest_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestStage_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LogEntry_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestTarget_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestTargetData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\QuestData_Generated.cs">
+      <DependentUpon>Quest.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RaceData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SkillBoost_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RaceStats_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FacePart_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\BodyPart_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FaceGenData_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RaceRelation_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Region_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionArea_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionData_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataHeader_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionObjects_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionObject_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionMap_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionGrasses_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSounds_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSound_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionWeather_Generated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Road_Generated.cs">
+      <DependentUpon>Road.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RoadPoint_Generated.cs">
+      <DependentUpon>Road.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Script_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptFields_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptMetaSummary_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocalVariable_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocalVariableData_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AScriptReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptVariableReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptObjectReference_Generated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SigilStone_Generated.cs">
+      <DependentUpon>SigilStone.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SigilStoneData_Generated.cs">
+      <DependentUpon>SigilStone.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SkillRecord_Generated.cs">
+      <DependentUpon>SkillRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SkillData_Generated.cs">
+      <DependentUpon>SkillRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoulGem_Generated.cs">
+      <DependentUpon>SoulGem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoulGemData_Generated.cs">
+      <DependentUpon>SoulGem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Sound_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundData_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDataExtended_Generated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Spell_Generated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellLeveled_Generated.cs">
+      <DependentUpon>SpellLeveled.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellUnleveled_Generated.cs">
+      <DependentUpon>SpellUnleveled.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellData_Generated.cs">
+      <DependentUpon>SpellUnleveled.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Static_Generated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Subspace_Generated.cs">
+      <DependentUpon>Subspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Tree_Generated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TreeData_Generated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Dimensions_Generated.cs">
+      <DependentUpon>Tree.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Water_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WaterData_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RelatedWaters_Generated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weapon_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeaponData_Generated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weather_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherColors_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherSound_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FogDistance_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HDRData_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherData_Generated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Worldspace_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WorldspaceSubBlock_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MapData_Generated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\IPlaced_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.15" />
