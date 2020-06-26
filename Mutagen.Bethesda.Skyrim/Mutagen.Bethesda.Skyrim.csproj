@@ -1770,7 +1770,6 @@
     <Compile Include="Records\SkyrimMod_LoquiGenerated.cs">
       <DependentUpon>SkyrimMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="Warmup.cs" />
     <Compile Include="Records\Major Records\KeyFrame_LoquiGenerated.cs">
       <DependentUpon>ImageSpaceAdapter.xml</DependentUpon>
     </Compile>
@@ -1964,6 +1963,7 @@
     <Compile Include="Interfaces\ISpellSpawn_LoquiGenerated.cs" />
     <Compile Include="Interfaces\ISound_LoquiGenerated.cs" />
     <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
+    <Compile Include="WarmupSkyrim.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.15" />

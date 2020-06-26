@@ -21,7 +21,8 @@
     <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Warmup.cs" />
+    <Compile Include="Records\ProtocolDefinition_All.cs" />
+    <Compile Include="WarmupAll.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
