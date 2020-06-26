@@ -2632,9 +2632,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
-            if ((obj.MapData != null))
-            {
-            }
             if ((obj.Road != null))
             {
                 if (obj.Road.TryGet(out var Roaditem))

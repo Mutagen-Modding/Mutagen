@@ -3767,24 +3767,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IWorldspaceGetter obj)
         {
-            if ((obj.MaxHeight != null))
-            {
-            }
-            if ((obj.Parent != null))
-            {
-            }
-            if ((obj.LandDefaults != null))
-            {
-            }
-            if ((obj.CloudModel != null))
-            {
-            }
-            if ((obj.MapData != null))
-            {
-            }
-            if ((obj.ObjectBounds != null))
-            {
-            }
             if ((obj.TopCell != null))
             {
                 if (obj.TopCell.TryGet(out var TopCellitem))

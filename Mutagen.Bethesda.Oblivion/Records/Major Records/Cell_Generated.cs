@@ -3295,12 +3295,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
         {
-            if ((obj.Lighting != null))
-            {
-            }
-            if ((obj.Regions != null))
-            {
-            }
             if ((obj.PathGrid != null))
             {
                 if (obj.PathGrid.TryGet(out var PathGriditem))

@@ -321,102 +321,109 @@ namespace Mutagen.Bethesda.Generation
                     {
                         switch (field)
                         {
-                            case LoquiType loqui:
-                            case ContainerType cont:
-                            case DictType dict:
+                            case LoquiType _:
+                            case ContainerType _:
+                            case DictType _:
                                 break;
                             default:
                                 continue;
                         }
-                        if (field.HasBeenSet)
+
+                        FileGeneration fieldFg = new FileGeneration();
+                        if (field is LoquiType loqui)
                         {
-                            fg.AppendLine($"if ({field.HasBeenSetAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
+                            var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
+                            if (isMajorRecord
+                                || await HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
+                            {
+                                var subFg = new FileGeneration();
+                                var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                                await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: null);
+                                if (subFg.Count == 0) continue;
+                                if (loqui.Singleton
+                                    || !loqui.HasBeenSet)
+                                {
+                                    fieldFg.AppendLines(subFg);
+                                }
+                                else
+                                {
+                                    fieldFg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
+                                    using (new BraceWrapper(fieldFg))
+                                    {
+                                        fieldFg.AppendLines(subFg);
+                                    }
+                                }
+                            }
                         }
-                        using (new BraceWrapper(fg, doIt: field.HasBeenSet))
+                        else if (field is ContainerType cont)
                         {
-                            if (field is LoquiType loqui)
+                            if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
+                            var isMajorRecord = contLoqui.TargetObjectGeneration != null && await contLoqui.TargetObjectGeneration.IsMajorRecord();
+                            if (isMajorRecord
+                                || await HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
                             {
-                                var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
-                                if (isMajorRecord
-                                    || await HasMajorRecords(loqui, includeBaseClass: true) != Case.No)
+                                switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
                                 {
-                                    var subFg = new FileGeneration();
-                                    var fieldAccessor = loqui.HasBeenSet ? $"{loqui.Name}item" : $"{accessor}.{loqui.Name}";
-                                    await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: null);
-                                    if (subFg.Count == 0) continue;
-                                    if (loqui.Singleton
-                                        || !loqui.HasBeenSet)
-                                    {
-                                        fg.AppendLines(subFg);
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"if ({accessor}.{loqui.Name}.TryGet(out var {loqui.Name}item))");
-                                        using (new BraceWrapper(fg))
+                                    case Case.Yes:
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
+                                        using (new BraceWrapper(fieldFg))
                                         {
-                                            fg.AppendLines(subFg);
+                                            await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null);
                                         }
-                                    }
+                                        break;
+                                    case Case.Maybe:
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                        using (new BraceWrapper(fieldFg))
+                                        {
+                                            await LoquiTypeHandler(fieldFg, $"subItem", contLoqui, generic: null);
+                                        }
+                                        break;
+                                    case Case.No:
+                                    default:
+                                        break;
                                 }
                             }
-                            else if (field is ContainerType cont)
+                        }
+                        else if (field is DictType dict)
+                        {
+                            if (dict.Mode != DictMode.KeyedValue) continue;
+                            if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
+                            var isMajorRecord = dictLoqui.TargetObjectGeneration != null && await dictLoqui.TargetObjectGeneration.IsMajorRecord();
+                            if (isMajorRecord
+                                || await HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
                             {
-                                if (!(cont.SubTypeGeneration is LoquiType contLoqui)) continue;
-                                var isMajorRecord = contLoqui.TargetObjectGeneration != null && await contLoqui.TargetObjectGeneration.IsMajorRecord();
-                                if (isMajorRecord
-                                    || await HasMajorRecords(contLoqui, includeBaseClass: true) != Case.No)
+                                switch (await HasMajorRecords(dictLoqui, includeBaseClass: true))
                                 {
-                                    switch (await HasMajorRecords(contLoqui, includeBaseClass: true))
-                                    {
-                                        case Case.Yes:
-                                            fg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)})");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                await LoquiTypeHandler(fg, $"subItem", contLoqui, generic: null);
-                                            }
-                                            break;
-                                        case Case.Maybe:
-                                            fg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}{(field.HasBeenSet ? ".TryIterate()" : null)}.WhereCastable<{contLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                await LoquiTypeHandler(fg, $"subItem", contLoqui, generic: null);
-                                            }
-                                            break;
-                                        case Case.No:
-                                        default:
-                                            break;
-                                    }
+                                    case Case.Yes:
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items)");
+                                        using (new BraceWrapper(fieldFg))
+                                        {
+                                            await LoquiTypeHandler(fieldFg, $"subItem", dictLoqui, generic: null);
+                                        }
+                                        break;
+                                    case Case.Maybe:
+                                        fieldFg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
+                                        using (new BraceWrapper(fieldFg))
+                                        {
+                                            await LoquiTypeHandler(fieldFg, $"subItem", dictLoqui, generic: null);
+                                        }
+                                        break;
+                                    case Case.No:
+                                    default:
+                                        break;
                                 }
                             }
-                            else if (field is DictType dict)
+                        }
+
+                        if (fieldFg.Count > 0)
+                        {
+                            if (field.HasBeenSet)
                             {
-                                if (dict.Mode != DictMode.KeyedValue) continue;
-                                if (!(dict.ValueTypeGen is LoquiType dictLoqui)) continue;
-                                var isMajorRecord = dictLoqui.TargetObjectGeneration != null && await dictLoqui.TargetObjectGeneration.IsMajorRecord();
-                                if (isMajorRecord
-                                    || await HasMajorRecords(dictLoqui, includeBaseClass: true) != Case.No)
-                                {
-                                    switch (await HasMajorRecords(dictLoqui, includeBaseClass: true))
-                                    {
-                                        case Case.Yes:
-                                            fg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items)");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                await LoquiTypeHandler(fg, $"subItem", dictLoqui, generic: null);
-                                            }
-                                            break;
-                                        case Case.Maybe:
-                                            fg.AppendLine($"foreach (var subItem in {accessor}.{field.Name}.Items.WhereCastable<{dictLoqui.TypeName(getter: false)}, {(getter ? nameof(IMajorRecordGetterEnumerable) : nameof(IMajorRecordEnumerable))}>())");
-                                            using (new BraceWrapper(fg))
-                                            {
-                                                await LoquiTypeHandler(fg, $"subItem", dictLoqui, generic: null);
-                                            }
-                                            break;
-                                        case Case.No:
-                                        default:
-                                            break;
-                                    }
-                                }
+                                fg.AppendLine($"if ({field.HasBeenSetAccessor(getter: true, Accessor.FromType(field, accessor.ToString()))})");
+                            }
+                            using (new BraceWrapper(fg, doIt: field.HasBeenSet))
+                            {
+                                fg.AppendLines(fieldFg);
                             }
                         }
                     }

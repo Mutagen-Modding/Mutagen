@@ -4106,21 +4106,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(ICellGetter obj)
         {
-            if ((obj.Grid != null))
-            {
-            }
-            if ((obj.Lighting != null))
-            {
-            }
-            if ((obj.Regions != null))
-            {
-            }
-            if ((obj.WaterVelocity != null))
-            {
-            }
-            if ((obj.Ownership != null))
-            {
-            }
             if ((obj.Landscape != null))
             {
                 if (obj.Landscape.TryGet(out var Landscapeitem))
