@@ -18,21 +18,8 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class OblivionMod : AMod
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IList<MasterReference> IMod.MasterReferences => this.ModHeader.MasterReferences;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        uint IMod.NextObjectID
-        {
-            get => this.ModHeader.Stats.NextObjectID;
-            set => this.ModHeader.Stats.NextObjectID = value;
-        }
-
-        partial void CustomCtor()
-        {
-            this.ModHeader.Stats.NextObjectID = 0xD62; // first available ID on empty CS plugins
-        }
+        public const uint DefaultInitialNextObjectID = 0xD62;
+        private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
 
         partial void GetCustomRecordCount(Action<int> setter)
         {

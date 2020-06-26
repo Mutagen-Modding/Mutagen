@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// A static readonly singleton representing a null ModKey
         /// </summary>
-        public static readonly ModKey Null = new ModKey(string.Empty, master: false);
+        public static readonly ModKey Null = new ModKey(null!, master: false);
 
         private readonly string? name_;
 
@@ -56,14 +56,22 @@ namespace Mutagen.Bethesda
             string name,
             bool master)
         {
-            this.name_ = string.Intern(name);
+            this.name_ = name == null ? null : string.Intern(name);
             this.Master = master;
 
             // Cache the hash on construction, as ModKeys are typically created rarely, but hashed often.
-            HashCode hash = new HashCode();
-            hash.Add((name_ ?? string.Empty).GetHashCode(StringComparison.OrdinalIgnoreCase));
-            hash.Add(Master);
-            this._hash = hash.ToHashCode();
+            var nameHash = (name_?.Equals(string.Empty) ?? true) ? 0 : name_.GetHashCode(StringComparison.OrdinalIgnoreCase);
+            if (nameHash != 0)
+            {
+                HashCode hash = new HashCode();
+                hash.Add(nameHash);
+                hash.Add(Master);
+                this._hash = hash.ToHashCode();
+            }
+            else
+            {
+                this._hash = 0;
+            }
         }
 
         /// <summary>

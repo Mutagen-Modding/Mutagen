@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" recordType="REFR" baseClass="SkyrimMajorRecord" objType="Record" GUID="15cab6c0-7390-410a-b2a8-7ee0e58569a6" ID="30">
-    <Interface>ILocationTargetable</Interface>
-    <Interface>IPlaced</Interface>
-    <Interface>IPlacedThing</Interface>
-    <Interface>ILinkedReference</Interface>
     <Interface>IPositionRotation</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
@@ -87,6 +83,11 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>ILinkedReference</LinkInterface>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedSimple</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+    <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
   <Object name="PlacedPrimitive" objType="Subrecord" recordType="XPRM" GUID="0714886f-0394-47a5-9d24-61178136903e" ID="300">
     <Fields>

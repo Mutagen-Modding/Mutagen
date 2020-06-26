@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "return Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Pa";
+            string testString = "ch (var item in GroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(ob";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -103,9 +103,23 @@ namespace Mutagen.Bethesda.Generation
             bethesdaProto.AddProjectToModify(
                 new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
 
+            if (ShouldRun("All"))
+            {
+                var proto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("All"),
+                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records"))
+                {
+                    DefaultNamespace = "Mutagen.Bethesda",
+                });
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
+            }
+
             if (ShouldRun("Oblivion"))
             {
-                var oblivProto = gen.AddProtocol(
+                var proto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Oblivion"),
@@ -113,14 +127,13 @@ namespace Mutagen.Bethesda.Generation
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 });
-                oblivProto.AddProjectToModify(
-                    new FileInfo(Path.Combine(oblivProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Oblivion.csproj")));
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Oblivion.csproj")));
             }
-
 
             if (ShouldRun("Skyrim"))
             {
-                var skyrimProto = gen.AddProtocol(
+                var proto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Skyrim"),
@@ -128,8 +141,8 @@ namespace Mutagen.Bethesda.Generation
                 {
                     DefaultNamespace = "Mutagen.Bethesda.Skyrim",
                 });
-                skyrimProto.AddProjectToModify(
-                    new FileInfo(Path.Combine(skyrimProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
             }
 
             gen.Generate().Wait();

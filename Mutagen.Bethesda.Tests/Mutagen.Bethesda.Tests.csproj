@@ -16,7 +16,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
-    <PackageReference Include="Loqui" Version="1.1.14" />
+    <PackageReference Include="Loqui" Version="1.1.16" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
@@ -52,12 +52,6 @@
     <Compile Include="Settings\Target.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\TestingSettings_LoquiGenerated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\PassthroughSettings_LoquiGenerated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
     <Compile Include="Passthrough Tests\OtherTests.cs" />
     <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
@@ -65,16 +59,22 @@
     <Compile Include="Passthrough Tests\SkyrimPassthroughTest.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
-    <Compile Include="Settings\DataFolderLocations_LoquiGenerated.cs">
+    <Compile Include="Settings\TestingSettings_Generated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\TargetGroup_LoquiGenerated.cs">
+    <Compile Include="Settings\PassthroughSettings_Generated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Target_LoquiGenerated.cs">
+    <Compile Include="Settings\DataFolderLocations_Generated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\RecordInterest_LoquiGenerated.cs">
+    <Compile Include="Settings\TargetGroup_Generated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Target_Generated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\RecordInterest_Generated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
   </ItemGroup>

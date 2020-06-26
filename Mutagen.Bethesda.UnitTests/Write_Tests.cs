@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck
                 });
         }
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck
                 });
         }
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     }));
         }
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.ThrowIfMisaligned,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.ThrowIfMisaligned,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     }));
         }
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     }));
         }
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.UnitTests
                     tmp.File.Path,
                     new BinaryWriteParameters()
                     {
-                        MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                        ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                         MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                     }));
         }
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
                 });
         }
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.UnitTests
                 tmp.File.Path,
                 new BinaryWriteParameters()
                 {
-                    MasterFlagSync = BinaryWriteParameters.MasterFlagSyncOption.NoCheck,
+                    ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.Iterate,
                 });
         }

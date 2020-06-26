@@ -110,6 +110,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
+            bool hasCustom = false;
             List<string> extraArgs = new List<string>();
             extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
             foreach (var writeParam in this.AdditionalCopyInParams)
@@ -119,13 +120,14 @@ namespace Mutagen.Bethesda.Generation
                     typeGen: typeGen);
                 if (get.Failed) continue;
                 extraArgs.Add(get.Value);
+                hasCustom = true;
             }
 
             if (CustomRead != null)
             {
                 if (CustomRead(fg, objGen, typeGen, frameAccessor, itemAccessor)) return;
             }
-            if (PreferDirectTranslation)
+            if (PreferDirectTranslation && !hasCustom)
             {
                 fg.AppendLine($"{itemAccessor.DirectAccess} = {frameAccessor.DirectAccess}.Read{typeName}();");
             }

@@ -134,6 +134,7 @@ namespace Mutagen.Bethesda.Binary
                     4 => BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content),
                     _ => throw new NotImplementedException(),
                 };
+                stream.Position += initialHeader.TotalLength;
                 return FactoryByArray(
                     mem: stream.RemainingMemory,
                     package: package,

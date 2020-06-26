@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="APlacedTrap" baseClass="SkyrimMajorRecord" abstract="true" objType="Record" majorFlag="true" GUID="29f40f03-4046-4b2d-b061-b0c5c48d253b" ID="294">
-    <Interface>IPlaced</Interface>
-    <Interface>IPlacedThing</Interface>
-    <Interface>ILinkedReference</Interface>
     <Interface>IPositionRotation</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
@@ -38,6 +35,9 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
+    <LinkInterface>IPlacedThing</LinkInterface>
+    <LinkInterface>ILinkedReference</LinkInterface>
   </Object>
   <Object name="PlacedArrow" recordType="PARW" baseClass="APlacedTrap" objType="Record" GUID="0262d5fe-f5c8-4fcb-97ed-f717b2f6eb23" ID="327">
     <Fields>

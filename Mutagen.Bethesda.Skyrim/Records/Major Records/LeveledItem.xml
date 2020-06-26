@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="LeveledItem" recordType="LVLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="dbc7006d-3752-43d0-9e4f-95268f3353ab" ID="166">
-    <Interface>IItem</Interface>
-    <Interface>IHarvestTarget</Interface>
     <Interface>IObjectBounded</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -11,6 +9,8 @@
       <FormLink name="Global" recordType="LVLG" refName="Global" />
       <RefList name="Entries" counterRecType="LLCT" refName="LeveledItemEntry" counterLength="1" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IHarvestTarget</LinkInterface>
   </Object>
   <Object name="LeveledItemEntry" objType="Subrecord" GUID="a077418e-1fb2-4956-abe3-a48f9d76449b" ID="239">
     <Fields>

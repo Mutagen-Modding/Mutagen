@@ -278,5 +278,6 @@ Mutagen.Bethesda.Tests/TestingSettings.xml
 *.orig
 
 Mutagen.Bethesda.Core/Mutagen.Bethesda.Core.xml
-
 Mutagen.Bethesda/Mutagen.Bethesda.xml
+Mutagen.Bethesda.Oblivion/Mutagen.Bethesda.Oblivion.xml
+Mutagen.Bethesda.Skyrim/Mutagen.Bethesda.Skyrim.xml

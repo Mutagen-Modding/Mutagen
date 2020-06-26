@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TextureSet" recordType="TXST" objType="Record" baseClass="SkyrimMajorRecord" GUID="7d698f54-6430-49c7-ab37-7649204e689b" ID="22">
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Diffuse" recordType="TX00" />
@@ -16,5 +15,6 @@
       <RefDirect name="Decal" refName="Decal" />
       <Enum name="Flags" enumName="TextureSet.Flag" byteLength="2" recordType="DNAM" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

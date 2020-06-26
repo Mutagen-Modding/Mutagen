@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Microsoft.VisualBasic.CompilerServices;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -14,6 +15,24 @@ namespace Mutagen.Bethesda.Generation
         public BooleanBinaryTranslationGeneration() 
             : base(expectedLen: 1)
         {
+            this.AdditionalCopyInParams.Add((o, t) =>
+            {
+                BoolType b = t as BoolType;
+                if (b.ByteLength != 1) return TryGet<string>.Succeed($"byteLength: {b.ByteLength}");
+                return TryGet<string>.Failure;
+            });
+            this.AdditionalWriteParams.Add((o, t) =>
+            {
+                BoolType b = t as BoolType;
+                if (b.ByteLength != 1) return TryGet<string>.Succeed($"byteLength: {b.ByteLength}");
+                return TryGet<string>.Failure;
+            });
+        }
+
+        public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
+        {
+            var bType = typeGen as BoolType;
+            return bType.ByteLength;
         }
 
         public override string GenerateForTypicalWrapper(

@@ -2,8 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Key" recordType="KEYM" baseClass="SkyrimMajorRecord" majorFlag="true" objType="Record" GUID="aae23e29-1f5c-44c3-aa51-ae68f15be91b" ID="165">
     <Interface>ITranslatedNamedRequired</Interface>
-    <Interface>IItem</Interface>
-    <Interface>IObjectId</Interface>
     <Interface>IObjectBounded</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
@@ -25,5 +23,7 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
+    <LinkInterface>IObjectId</LinkInterface>
   </Object>
 </Loqui>

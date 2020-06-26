@@ -652,6 +652,7 @@ namespace Mutagen.Bethesda.Binary
             ICollectionGetter<RecordType>? triggeringRecord = null,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            if (amount == 0) return Enumerable.Empty<T>();
             var ret = new List<T>();
             var startingPos = frame.Position;
             for (int i = 0; i < amount; i++)

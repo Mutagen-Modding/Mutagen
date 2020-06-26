@@ -1,9 +1,11 @@
 using Loqui;
+using Mutagen.Bethesda.Core;
 using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda
@@ -31,6 +33,8 @@ namespace Mutagen.Bethesda
         }
 
         private readonly LoadOrder<TMod> _loadOrder;
+        private readonly bool _hasAny;
+        private readonly GameMode _gameMode;
 
         private int _processedUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
@@ -45,6 +49,9 @@ namespace Mutagen.Bethesda
             this._loadOrder = loadOrder;
             this._loadOrderUntypedMajorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(m => m.FormKey);
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
+            var firstMod = _loadOrder.FirstOrDefault(m => m.Mod != null);
+            this._hasAny = firstMod?.Mod != null;
+            this._gameMode = firstMod?.Mod?.GameMode ?? GameMode.Oblivion;
         }
 
         /// <summary>
@@ -57,8 +64,14 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey to search for</param>
         /// <param name="majorRec">MajorRecord if found</param>
         /// <returns>True if record was found</returns>
-        public bool TryLookup(FormKey formKey, out IMajorRecordCommonGetter majorRec)
+        public bool TryLookup(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec)
         {
+            if (!_hasAny)
+            {
+                majorRec = default;
+                return false;
+            }
+
             lock (this._loadOrderUntypedMajorRecords)
             {
                 if (this._loadOrderUntypedMajorRecords.TryGetValue(formKey, out majorRec)) return true;
@@ -104,6 +117,12 @@ namespace Mutagen.Bethesda
         public bool TryLookup<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
             where TMajor : class, IMajorRecordCommonGetter
         {
+            if (!_hasAny)
+            {
+                majorRec = default;
+                return false;
+            }
+
             lock (this._loadOrderMajorRecords)
             {
                 // Get cache object by type
@@ -116,10 +135,8 @@ namespace Mutagen.Bethesda
                         this._loadOrderMajorRecords[typeof(IMajorRecordCommon)] = cache;
                         this._loadOrderMajorRecords[typeof(IMajorRecordCommonGetter)] = cache;
                     }
-                    else
+                    else if (LoquiRegistration.TryGetRegister(typeof(TMajor), out var registration))
                     {
-                        var registration = LoquiRegistration.GetRegister(typeof(TMajor));
-                        if (registration == null) throw new ArgumentException();
                         this._loadOrderMajorRecords[registration.ClassType] = cache;
                         this._loadOrderMajorRecords[registration.GetterType] = cache;
                         this._loadOrderMajorRecords[registration.SetterType] = cache;
@@ -131,6 +148,15 @@ namespace Mutagen.Bethesda
                         {
                             this._loadOrderMajorRecords[registration.InternalSetterType] = cache;
                         }
+                    }
+                    else
+                    {
+                        var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(_gameMode);
+                        if (!interfaceMappings.TryGetValue(typeof(TMajor), out var objs))
+                        {
+                            throw new ArgumentException($"A lookup was queried for an unregistered type: {typeof(TMajor).Name}");
+                        }
+                        this._loadOrderMajorRecords[typeof(TMajor)] = cache;
                     }
                 }
 
@@ -153,13 +179,29 @@ namespace Mutagen.Bethesda
                     var targetMod = this._loadOrder[targetIndex];
                     cache.Depth++;
                     if (targetMod.Mod == null) continue;
-                    // Add records from that mod that aren't already cached
-                    foreach (var record in targetMod.Mod.EnumerateMajorRecords<TMajor>())
+                    
+                    void AddRecords(TMod mod, Type type)
                     {
-                        if (!cache.Dictionary.ContainsKey(record.FormKey))
+                        foreach (var record in mod.EnumerateMajorRecords(type))
                         {
-                            cache.Dictionary[record.FormKey] = record;
+                            if (!cache.Dictionary.ContainsKey(record.FormKey))
+                            {
+                                cache.Dictionary[record.FormKey] = record;
+                            }
                         }
+                    }
+
+                    // Add records from that mod that aren't already cached
+                    if (LinkInterfaceMapping.InterfaceToObjectTypes(_gameMode).TryGetValue(typeof(TMajor), out var objs))
+                    {
+                        foreach (var objType in objs)
+                        {
+                            AddRecords(targetMod.Mod, LoquiRegistration.GetRegister(objType).GetterType);
+                        }
+                    }
+                    else
+                    {
+                        AddRecords(targetMod.Mod, typeof(MajorRecord));
                     }
                     // Check again
                     if (cache.Dictionary.TryGetValue(formKey, out majorRecObj))
@@ -176,6 +218,11 @@ namespace Mutagen.Bethesda
 
         IEnumerator IEnumerable.GetEnumerator()
         {
+            if (!_hasAny)
+            {
+                yield break;
+            }
+
             foreach (var listing in this._loadOrder)
             {
                 if (listing.Mod != null) yield return listing.Mod;
@@ -184,6 +231,11 @@ namespace Mutagen.Bethesda
 
         IEnumerator<IModGetter> IEnumerable<IModGetter>.GetEnumerator()
         {
+            if (!_hasAny)
+            {
+                yield break;
+            }
+
             foreach (var listing in this._loadOrder)
             {
                 if (listing.Mod != null) yield return listing.Mod;

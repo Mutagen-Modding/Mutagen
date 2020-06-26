@@ -5,7 +5,6 @@
     <Interface>IHarvestable</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IRegionTarget</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -26,5 +25,6 @@
         </Fields>
       </Data>
     </Fields>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

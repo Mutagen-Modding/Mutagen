@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DialogTopic" recordType="DIAL" objType="Record" baseClass="SkyrimMajorRecord" customBinaryEnd="Normal" GUID="29f5de6a-ecd3-4ce8-8ffb-b443aad13295" ID="314">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IDialog</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <Float name="Priority" recordType="PNAM" hasBeenSet="False" multiplier="50" />
@@ -21,5 +20,6 @@
       <Int32 name="Unknown" binary="NoGeneration" />
       <RefList name="Responses" binary="NoGeneration" refName="DialogResponses" />
     </Fields>
+    <LinkInterface>IDialog</LinkInterface>
   </Object>
 </Loqui>

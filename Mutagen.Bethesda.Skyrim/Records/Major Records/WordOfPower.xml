@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="WordOfPower" recordType="WOOP" objType="Record" baseClass="SkyrimMajorRecord" GUID="029b7d4f-6d1d-42fe-b905-fed84112fbd5" ID="460">
+    <Interface>ITranslatedNamed</Interface>
+    <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <String name="Translation" recordType="TNAM" translated="Normal" hasBeenSet="False" />
+    </Fields>
+  </Object>
+</Loqui>

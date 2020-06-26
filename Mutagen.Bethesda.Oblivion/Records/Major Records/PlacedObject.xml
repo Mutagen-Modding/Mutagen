@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedObject" baseClass="OblivionMajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
-    <Interface>IPlaced</Interface>
     <Fields>
       <FormLink name="Base" recordType="NAME" refName="OblivionMajorRecord" />
       <ByteArray name="XPCIFluff" recordType="XPCI" />
@@ -32,6 +31,7 @@
       <FormLink name="ContainedSoul" recordType="XSOL" refName="SoulGem" />
       <RefDirect name="Location" refName="Location" recordType="DATA" />
     </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
   </Object>
   <Object name="TeleportDestination" recordType="XTEL" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
     <Fields>

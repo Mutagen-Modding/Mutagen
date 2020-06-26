@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedCreature" baseClass="OblivionMajorRecord" objType="Record" recordType="ACRE" GUID="b0f41e71-09f4-46b3-8769-7252455d209f" ID="128">
-    <Interface>IPlaced</Interface>
     <Fields>
       <FormLink name="Base" recordType="NAME" refName="Creature" />
       <FormLink name="Owner" recordType="XOWN" refName="Faction" />
@@ -12,5 +11,6 @@
       <Float name="Scale" recordType="XSCL" />
       <RefDirect name="Location" refName="Location" recordType="DATA" />
     </Fields>
+    <LinkInterface>IPlaced</LinkInterface>
   </Object>
 </Loqui>

@@ -2,10 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scroll" recordType="SCRL" objType="Record" baseClass="SkyrimMajorRecord" GUID="966367fb-9898-41f3-a250-d453749a138b" ID="139">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IItem</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
     <Interface>IWeightValue</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -41,5 +39,7 @@
       </Data>
       <RefList name="Effects" refName="Effect" hasBeenSet="False" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
 </Loqui>

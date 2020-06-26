@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override Task Load(XElement node, bool requireName = true)
         {
-            this.Length = node.GetAttribute<int>("byteLength", throwException: true);
+            this.Length = node.GetAttribute<int>(Constants.ByteLength, throwException: true);
             return base.Load(node, requireName);
         }
 

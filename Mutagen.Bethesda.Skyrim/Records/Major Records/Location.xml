@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Location" objType="Record" recordType="LCTN" baseClass="SkyrimMajorRecord" GUID="9450f7b5-2485-4eb3-ad52-910e7f254018" ID="286">
-    <Interface>ILocationRecord</Interface>
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <RefList name="ActorCellPersistentReferences" refName="LocationReference" recordType="ACPR" />
@@ -58,6 +57,7 @@
       <FormLink name="HorseMarkerRef" recordType="NAM0" refName="PlacedObject" />
       <Color name="Color" recordType="CNAM" binaryType="Alpha" />
     </Fields>
+    <LinkInterface>ILocationRecord</LinkInterface>
   </Object>
   <Object name="LocationReference" objType="Subrecord" GUID="9eabb96c-a6a9-4367-b785-5a605234d4bf" ID="442">
     <Fields>

@@ -4,8 +4,6 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>ILocationTargetable</Interface>
-    <Interface>IObjectId</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
@@ -17,5 +15,7 @@
       <FormLink name="LoopSound" refName="SoundDescriptor" recordType="BNAM" />
       <Enum name="Flags" enumName="Door.Flag" byteLength="1" recordType="FNAM" hasBeenSet="False" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>ILocationTargetable</LinkInterface>
   </Object>
 </Loqui>

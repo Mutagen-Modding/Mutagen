@@ -4,8 +4,6 @@
     <Interface>ITranslatedNamed</Interface>
     <Interface>IModeled</Interface>
     <Interface>IObjectBounded</Interface>
-    <Interface>IObjectId</Interface>
-    <Interface>IRegionTarget</Interface>
     <Fields>
       <RefDirect name="ObjectBounds" refName="ObjectBounds" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
@@ -14,5 +12,7 @@
       <Enum name="Flags" enumName="MoveableStatic.Flag" byteLength="1" recordType="DATA" hasBeenSet="False" />
       <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
     </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>IRegionTarget</LinkInterface>
   </Object>
 </Loqui>

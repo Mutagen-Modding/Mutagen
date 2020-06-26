@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" recordType="RACE" objType="Record" baseClass="SkyrimMajorRecord" majorFlag="true" GUID="54b1dfac-1494-41b6-b6d3-653bc47987eb" ID="49">
     <Interface>ITranslatedNamed</Interface>
-    <Interface>IRelatable</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
       <String name="Description" recordType="DESC" hasBeenSet="False" />
@@ -164,6 +163,7 @@
         </Fields>
       </Gendered>
     </Fields>
+    <LinkInterface>IRelatable</LinkInterface>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="8397e320-5ee6-4314-b35a-b69c871fa3ec" ID="53">
     <Fields>

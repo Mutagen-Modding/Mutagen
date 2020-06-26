@@ -7,6 +7,7 @@ namespace Mutagen.Bethesda.UnitTests
     public static class Utility
     {
         public static readonly ModKey ModKey = new ModKey("MutagenDummyKey", master: false);
+        public static readonly ModKey ModKey2 = new ModKey("MutagenDummyKey2", master: false);
         public static readonly string Edid1 = "AnEdid1";
         public static readonly string Edid2 = "AnEdid2";
         public static readonly string Edid3 = "AnEdid2";

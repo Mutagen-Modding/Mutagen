@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Footstep" recordType="FSTP" objType="Record" baseClass="SkyrimMajorRecord" GUID="ad347b2a-f924-4d81-8edd-98f3a9035ee2" ID="452">
+    <Fields>
+      <FormLink name="ImpactDataSet" recordType="DATA" refName="ImpactDataSet" hasBeenSet="False" />
+      <String name="Tag" recordType="ANAM" hasBeenSet="False" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -94,6 +94,18 @@
       <Group name="DefaultObjectManagers" refName="DefaultObjectManager" />
       <Group name="LightingTemplates" refName="LightingTemplate" />
       <Group name="MusicTypes" refName="MusicType" />
+      <Group name="Footsteps" refName="Footstep" />
+      <Group name="FootstepSets" refName="FootstepSet" />
+      <Group name="StoryManagerBranchNodes" refName="StoryManagerBranchNode" />
+      <Group name="StoryManagerQuestNodes" refName="StoryManagerQuestNode" />
+      <Group name="StoryManagerEventNodes" refName="StoryManagerEventNode" />
+      <Group name="DialogBranches" refName="DialogBranch" />
+      <Group name="MusicTracks" refName="MusicTrack" />
+      <Group name="DialogViews" refName="DialogView" />
+      <Group name="WordsOfPower" refName="WordOfPower" />
+      <Group name="Shouts" refName="Shout" />
+      <Group name="EquipTypes" refName="EquipType" />
+      <Group name="Relationships" refName="Relationship" />
     </Fields>
   </Object>
 </Loqui>

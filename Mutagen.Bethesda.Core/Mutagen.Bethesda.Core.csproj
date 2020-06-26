@@ -10,12 +10,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
-    <PackageReference Include="Loqui" Version="1.1.14" />
+    <PackageReference Include="Loqui" Version="1.1.16" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.9</Version>
+    <Version>0.10.0.0</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -47,6 +47,8 @@
     <Compile Include="Records\Interfaces\INamedRequired.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamed.cs" />
     <Compile Include="Records\Interfaces\ITranslatedNamedRequired.cs" />
+    <Compile Include="Records\Interfaces\ILinkInterfaceMapping.cs" />
+    <Compile Include="Records\Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
@@ -94,7 +96,7 @@
     <Compile Include="Translations\Binary\Headers\ModHeader.cs" />
     <Compile Include="Translations\Binary\Headers\RecordConstants.cs" />
     <Compile Include="Translations\Binary\Headers\SubrecordHeader.cs" />
-    <Compile Include="Translations\Binary\Headers\VariableHeader.cs" /> 
+    <Compile Include="Translations\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\GameConstants.cs" />
     <Compile Include="Records\Interfaces\IGroup.cs" />
@@ -131,9 +133,6 @@
     <Compile Include="Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\MasterReference_LoquiGenerated.cs">
-      <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="Structs\RecordType.cs" />
     <Compile Include="Translations\Binary\RecordTypeConverter.cs" />
@@ -183,10 +182,13 @@
     <Compile Include="Translations\XML\FormKeyXmlTranslation.cs" />
     <Compile Include="Translations\Folder\IXmlFolderItem.cs" />
     <Compile Include="Translations\Folder\LoquiXmlFolderTranslation.cs" />
-    <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Translations\XML\ModKeyXmlTranslation.cs" />
     <Compile Include="String Lookup\StringsLookupOverlay.cs" />
+    <Compile Include="Records\MajorRecord_Generated.cs">
+      <DependentUpon>MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\MasterReference_Generated.cs">
+      <DependentUpon>MasterReference.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
