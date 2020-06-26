@@ -74,6 +74,12 @@ namespace Mutagen.Bethesda.Generation
                                 args.Add($"new ProtocolDefinition_Bethesda()");
                                 args.Add($"new ProtocolDefinition_{proto.Protocol.Namespace}()");
                             }
+                            fg.AppendLine($"Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;");
+                            using (var args = new ArgsWrapper(fg,
+                                $"Mutagen.Bethesda.Core.LinkInterfaceMapping.Register"))
+                            {
+                                args.Add($"new {proto.DefaultNamespace}.Internals.LinkInterfaceMapping()");
+                            }
                         }
                     }
                 }

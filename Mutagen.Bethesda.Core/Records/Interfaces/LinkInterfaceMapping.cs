@@ -23,11 +23,16 @@ namespace Mutagen.Bethesda.Core
 
     public static class LinkInterfaceMapping
     {
-        internal static bool AutomaticRegistration = true;
+        public static bool AutomaticRegistration = true;
 
         public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameMode mode)
         {
             return LinkInterfaceMappingInternal.Mappings[mode];
+        }
+
+        public static void Register(ILinkInterfaceMapping mapping)
+        {
+            LinkInterfaceMappingInternal.Mappings[mapping!.GameMode] = mapping!.InterfaceToObjectTypes;
         }
     }
 }
