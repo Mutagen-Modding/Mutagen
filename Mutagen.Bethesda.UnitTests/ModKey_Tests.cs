@@ -111,5 +111,18 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Contains(modKey2, set);
         }
         #endregion
+
+        [Fact]
+        public void NullHashDesync()
+        {
+            var modKey = new ModKey(null, master: false);
+            var modKey2 = new ModKey(string.Empty, master: false);
+            Assert.Equal(ModKey.Null, modKey);
+            Assert.Equal(ModKey.Null.GetHashCode(), modKey.GetHashCode());
+            Assert.Equal(ModKey.Null, modKey2);
+            Assert.Equal(ModKey.Null.GetHashCode(), modKey2.GetHashCode());
+            Assert.Equal(ModKey.Null, default(ModKey));
+            Assert.Equal(ModKey.Null.GetHashCode(), default(ModKey).GetHashCode());
+        }
     }
 }
