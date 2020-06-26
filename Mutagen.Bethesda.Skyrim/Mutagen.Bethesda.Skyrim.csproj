@@ -17,7 +17,7 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>Mutagen.Bethesa.Skyrim.xml</DocumentationFile>
+    <DocumentationFile>Mutagen.Bethesda.Skyrim.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
