@@ -5,6 +5,7 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>

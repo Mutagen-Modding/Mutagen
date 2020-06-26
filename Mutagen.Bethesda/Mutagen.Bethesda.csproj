@@ -18,7 +18,7 @@
     <Authors>Noggog</Authors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Levia\Documents\Repos\Mutagen\Mutagen.Bethesda\Mutagen.Bethesda.xml</DocumentationFile>
+    <DocumentationFile>Mutagen.Bethesda.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Records\ProtocolDefinition_All.cs" />
