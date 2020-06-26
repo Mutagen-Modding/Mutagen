@@ -12,10 +12,10 @@ using System.Text;
 using Loqui;
 using Loqui.Internal;
 using Noggog;
-using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Oblivion.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -30,7 +30,7 @@ using Mutagen.Bethesda.Internals;
 #endregion
 
 #nullable enable
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class BaseLayer :
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 }
 
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
     public enum BaseLayer_FieldIndex
@@ -911,14 +911,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public static readonly BaseLayer_Registration Instance = new BaseLayer_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 346,
+            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
+            msgID: 145,
             version: 0);
 
-        public const string GUID = "689f0717-0560-4275-a721-cc7c612062ae";
+        public const string GUID = "4b14f70e-5702-4ed0-b691-09996696e4d9";
 
         public const ushort AdditionalFieldCount = 1;
 
@@ -938,11 +938,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.BaseLayer";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.BaseLayer";
 
         public const string Name = "BaseLayer";
 
-        public const string Namespace = "Mutagen.Bethesda.Skyrim";
+        public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
         public const byte GenericCount = 0;
 
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 }
 
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Oblivion
 {
     public partial class BaseLayer
     {
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 #region Modules
 #region Xml Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BaseLayerXmlWriteTranslation : IXmlWriteTranslator
     {
@@ -1441,11 +1441,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.BaseLayer");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Oblivion.BaseLayer");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.BaseLayer");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Oblivion.BaseLayer");
             }
             WriteToNodeXml(
                 item: item,
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Xml Write Mixins
     public static class BaseLayerXmlTranslationMixIn
@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim
 #endregion
 
 #region Binary Translation
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BaseLayerBinaryWriteTranslation : IBinaryWriteTranslator
     {
@@ -1790,7 +1790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BTXT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
-                    item.Header = Mutagen.Bethesda.Skyrim.LayerHeader.CreateFromBinary(
+                    item.Header = Mutagen.Bethesda.Oblivion.LayerHeader.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     }
 
 }
-namespace Mutagen.Bethesda.Skyrim
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Binary Write Mixins
     public static class BaseLayerBinaryTranslationMixIn
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Skyrim
 
 
 }
-namespace Mutagen.Bethesda.Skyrim.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BaseLayerBinaryOverlay :
         BinaryOverlay,
