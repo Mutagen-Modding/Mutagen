@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Wabbajack.Common;
 
 namespace Mutagen.Bethesda
 {
@@ -28,6 +29,16 @@ namespace Mutagen.Bethesda
         public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsFileFormat type)
         {
             Init(data, type);
+        }
+
+        /// <summary>
+        /// Overlays onto a set of bytes assumed to be in Strings file format
+        /// </summary>
+        /// <param name="data">Data to wrap</param>
+        /// <param name="source">Source type</param>
+        public StringsLookupOverlay(ReadOnlyMemorySlice<byte> data, StringsSource source)
+        {
+            Init(data, StringsUtility.GetFormat(source));
         }
 
         /// <summary>
