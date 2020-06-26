@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
                     var majorRecords = new Cache<IMajorRecordCommonGetter, FormKey>(x => x.FormKey);
                     foreach (var objType in objs)
                     {
-                        majorRecords.Set(GetCache(objType).Items);
+                        majorRecords.Set(GetCache(LoquiRegistration.GetRegister(objType).GetterType).Items);
                     }
                     _majorRecords[type] = majorRecords;
                     cache = majorRecords;

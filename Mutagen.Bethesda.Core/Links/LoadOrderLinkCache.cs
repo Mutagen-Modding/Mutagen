@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda
                     {
                         foreach (var objType in objs)
                         {
-                            AddRecords(targetMod.Mod, objType);
+                            AddRecords(targetMod.Mod, LoquiRegistration.GetRegister(objType).GetterType);
                         }
                     }
                     else
