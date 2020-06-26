@@ -506,13 +506,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -845,18 +845,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: typeof(TMajor))
+                type: typeof(TMajor),
+                throwIfUnknown: true)
                 .Select(m => (TMajor)m);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             this IOblivionMajorRecordGetter obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown = true)
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: type)
+                type: type,
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommonGetter)m);
         }
 
@@ -872,18 +875,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: typeof(TMajor))
+                type: typeof(TMajor),
+                throwIfUnknown: true)
                 .Select(m => (TMajor)m);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this IOblivionMajorRecordInternal obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown = true)
         {
             return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: type)
+                type: type,
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m);
         }
 
@@ -1199,9 +1205,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IOblivionMajorRecordInternal obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown)
         {
-            foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords(obj, type))
+            foreach (var item in OblivionMajorRecordCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1417,7 +1424,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IOblivionMajorRecordGetter obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown)
         {
             switch (type.Name)
             {
@@ -1433,7 +1441,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {type}");
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
             }
         }
         
@@ -1900,7 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => OblivionMajorRecordXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(

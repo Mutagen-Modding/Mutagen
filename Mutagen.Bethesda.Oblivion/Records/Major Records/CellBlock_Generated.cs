@@ -671,13 +671,13 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         #endregion
 
         #region Binary Translation
@@ -1071,18 +1071,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ((CellBlockCommon)((ICellBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: typeof(TMajor))
+                type: typeof(TMajor),
+                throwIfUnknown: true)
                 .Select(m => (TMajor)m);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             this ICellBlockGetter obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown = true)
         {
             return ((CellBlockCommon)((ICellBlockGetter)obj).CommonInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: type)
+                type: type,
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommonGetter)m);
         }
 
@@ -1098,18 +1101,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: typeof(TMajor))
+                type: typeof(TMajor),
+                throwIfUnknown: true)
                 .Select(m => (TMajor)m);
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this ICellBlock obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown = true)
         {
             return ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
                 obj: obj,
-                type: type)
+                type: type,
+                throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m);
         }
 
@@ -1418,9 +1424,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             ICellBlock obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown)
         {
-            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj, type))
+            foreach (var item in CellBlockCommon.Instance.EnumerateMajorRecords(obj, type, throwIfUnknown))
             {
                 yield return item;
             }
@@ -1629,7 +1636,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             ICellBlockGetter obj,
-            Type type)
+            Type type,
+            bool throwIfUnknown)
         {
             switch (type.Name)
             {
@@ -1649,14 +1657,93 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "ICellSubBlock":
                     foreach (var subItem in obj.SubBlocks)
                     {
-                        foreach (var item in subItem.EnumerateMajorRecords(type))
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "Cell":
+                case "ICellGetter":
+                case "ICell":
+                case "ICellInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PathGrid":
+                case "IPathGridGetter":
+                case "IPathGrid":
+                case "IPathGridInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "Landscape":
+                case "ILandscapeGetter":
+                case "ILandscape":
+                case "ILandscapeInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedCreature":
+                case "IPlacedCreatureGetter":
+                case "IPlacedCreature":
+                case "IPlacedCreatureInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedNpc":
+                case "IPlacedNpcGetter":
+                case "IPlacedNpc":
+                case "IPlacedNpcInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
+                        {
+                            yield return item;
+                        }
+                    }
+                    yield break;
+                case "PlacedObject":
+                case "IPlacedObjectGetter":
+                case "IPlacedObject":
+                case "IPlacedObjectInternal":
+                    foreach (var subItem in obj.SubBlocks)
+                    {
+                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
                         {
                             yield return item;
                         }
                     }
                     yield break;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {type}");
+                    if (throwIfUnknown)
+                    {
+                        throw new ArgumentException($"Unknown major record type: {type}");
+                    }
+                    else
+                    {
+                        yield break;
+                    }
             }
         }
         
@@ -2369,7 +2456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordGetterEnumerable.EnumerateMajorRecords<TMajor>() => this.EnumerateMajorRecords<TMajor>();
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type) => this.EnumerateMajorRecords(type);
+        IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type, throwIfUnknown);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object XmlWriteTranslator => CellBlockXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
