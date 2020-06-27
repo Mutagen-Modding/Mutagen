@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEquipTypeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<EquipType>>();
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.SlotParents);
+                    return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UseAllParents = Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.UseAllParents);
+                    return (int)EquipType_FieldIndex.UseAllParents;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2355,12 +2355,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.SlotParents);
+                    return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _UseAllParentsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EquipType_FieldIndex.UseAllParents);
+                    return (int)EquipType_FieldIndex.UseAllParents;
                 }
                 default:
                     return base.FillRecordType(

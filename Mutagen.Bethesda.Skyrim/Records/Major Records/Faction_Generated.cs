@@ -4040,7 +4040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFactionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -4057,7 +4057,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -4067,13 +4067,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: Relation.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JAIL:
                 {
@@ -4081,7 +4081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
+                    return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
@@ -4089,7 +4089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
+                    return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
@@ -4097,7 +4097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
+                    return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
@@ -4105,7 +4105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
+                    return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
@@ -4113,7 +4113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
+                    return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
@@ -4121,12 +4121,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
+                    return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
                 {
                     item.CrimeValues = Mutagen.Bethesda.Skyrim.CrimeValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
+                    return (int)Faction_FieldIndex.CrimeValues;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -4139,7 +4139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Rank.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 case RecordTypeInts.VEND:
                 {
@@ -4147,7 +4147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
+                    return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
@@ -4155,18 +4155,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {
                     item.VendorValues = Mutagen.Bethesda.Skyrim.VendorValues.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
+                    return (int)Faction_FieldIndex.VendorValues;
                 }
                 case RecordTypeInts.PLVD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.VendorLocation = Mutagen.Bethesda.Skyrim.LocationTargetRadius.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
+                    return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -4174,7 +4174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     FactionBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
+                    return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4377,7 +4377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4391,7 +4391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -4405,47 +4405,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.JAIL:
                 {
                     _ExteriorJailMarkerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.ExteriorJailMarker);
+                    return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
                     _FollowerWaitMarkerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.FollowerWaitMarker);
+                    return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
                     _StolenGoodsContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.StolenGoodsContainer);
+                    return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
                     _PlayerInventoryContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.PlayerInventoryContainer);
+                    return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
                     _SharedCrimeFactionListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.SharedCrimeFactionList);
+                    return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
                     _JailOutfitLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.JailOutfit);
+                    return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
                 {
                     _CrimeValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeValues);
+                    return (int)Faction_FieldIndex.CrimeValues;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -4457,22 +4457,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryOverlay.RankFactory);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 case RecordTypeInts.VEND:
                 {
                     _VendorBuySellListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorBuySellList);
+                    return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     _MerchantContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.MerchantContainer);
+                    return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
                 {
                     _VendorValuesLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorValues);
+                    return (int)Faction_FieldIndex.VendorValues;
                 }
                 case RecordTypeInts.PLVD:
                 {
@@ -4481,7 +4481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.VendorLocation);
+                    return (int)Faction_FieldIndex.VendorLocation;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -4492,7 +4492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Conditions);
+                    return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(

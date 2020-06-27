@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGameSettingStringInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2042,7 +2042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
+                    return (int)GameSettingString_FieldIndex.Data;
                 }
                 default:
                     return GameSettingBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2170,7 +2170,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)GameSettingString_FieldIndex.Data);
+                    return (int)GameSettingString_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

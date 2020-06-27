@@ -2644,7 +2644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IConstructibleObjectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2666,14 +2666,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
                         .ToExtendedList<ContainerEntry>();
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Items);
+                    return (int)ConstructibleObject_FieldIndex.Items;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     ConstructibleObjectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Conditions);
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -2681,7 +2681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CreatedObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObject);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2689,13 +2689,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WorkbenchKeyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.WorkbenchKeyword);
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CreatedObjectCount = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObjectCount);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObjectCount;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2852,7 +2852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2875,7 +2875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => ContainerEntryBinaryOverlay.ContainerEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Items);
+                    return (int)ConstructibleObject_FieldIndex.Items;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -2885,22 +2885,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.Conditions);
+                    return (int)ConstructibleObject_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CreatedObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObject);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObject;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _WorkbenchKeywordLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.WorkbenchKeyword);
+                    return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _CreatedObjectCountLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ConstructibleObject_FieldIndex.CreatedObjectCount);
+                    return (int)ConstructibleObject_FieldIndex.CreatedObjectCount;
                 }
                 default:
                     return base.FillRecordType(

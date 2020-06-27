@@ -1950,7 +1950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionArea item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1963,24 +1963,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EdgeFallOff = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
+                    return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPointListData = 
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: P2FloatBinaryTranslation.Instance.Parse)
                         .ToExtendedList<P2Float>();
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPointListData);
+                    return (int)RegionArea_FieldIndex.RegionPointListData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2128,13 +2128,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RPLI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.EdgeFallOff) return ParseResult.Stop;
                     _EdgeFallOffLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.EdgeFallOff);
+                    return (int)RegionArea_FieldIndex.EdgeFallOff;
                 }
                 case RecordTypeInts.RPLD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
                     this.RegionPointListData = BinaryOverlayList<P2Float>.FactoryByStartIndex(
@@ -2143,10 +2143,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 8,
                         getter: (s, p) => P2FloatBinaryTranslation.Read(s));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionArea_FieldIndex.RegionPointListData);
+                    return (int)RegionArea_FieldIndex.RegionPointListData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

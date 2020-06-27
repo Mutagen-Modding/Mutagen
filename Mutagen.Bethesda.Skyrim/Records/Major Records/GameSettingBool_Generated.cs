@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGameSettingBoolInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     GameSettingBoolBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
+                    return (int)GameSettingBool_FieldIndex.Data;
                 }
                 default:
                     return GameSettingBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)GameSettingBool_FieldIndex.Data);
+                    return (int)GameSettingBool_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

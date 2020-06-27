@@ -5425,7 +5425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -5441,19 +5441,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
+                    return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Model);
+                    return (int)Npc_FieldIndex.Model;
                 }
                 case RecordTypeInts.ACBS:
                 {
                     item.Configuration = Mutagen.Bethesda.Oblivion.NpcConfiguration.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
+                    return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -5463,7 +5463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: RankPlacement.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
+                    return (int)Npc_FieldIndex.Factions;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -5471,7 +5471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
+                    return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -5479,7 +5479,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
+                    return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
                 {
@@ -5488,7 +5488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Spells);
+                    return (int)Npc_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -5496,7 +5496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Script);
+                    return (int)Npc_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
                 {
@@ -5506,12 +5506,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ItemEntry.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
+                    return (int)Npc_FieldIndex.Items;
                 }
                 case RecordTypeInts.AIDT:
                 {
                     item.AIData = Mutagen.Bethesda.Oblivion.AIData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
+                    return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
                 {
@@ -5520,7 +5520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIPackages);
+                    return (int)Npc_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.KFFZ:
                 {
@@ -5536,7 +5536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     parseWhole: false);
                             })
                         .ToExtendedList<String>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Animations);
+                    return (int)Npc_FieldIndex.Animations;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -5544,12 +5544,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Class = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
+                    return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Stats = Mutagen.Bethesda.Oblivion.NpcData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Stats);
+                    return (int)Npc_FieldIndex.Stats;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -5557,13 +5557,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Hair = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Hair);
+                    return (int)Npc_FieldIndex.Hair;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HairLength = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairLength);
+                    return (int)Npc_FieldIndex.HairLength;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -5573,13 +5573,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Eye>>();
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Eyes);
+                    return (int)Npc_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.HCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HairColor = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
+                    return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -5587,31 +5587,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
+                    return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.FGGS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenGeometrySymmetric = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometrySymmetric);
+                    return (int)Npc_FieldIndex.FaceGenGeometrySymmetric;
                 }
                 case RecordTypeInts.FGGA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenGeometryAsymmetric = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometryAsymmetric);
+                    return (int)Npc_FieldIndex.FaceGenGeometryAsymmetric;
                 }
                 case RecordTypeInts.FGTS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FaceGenTextureSymmetric = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenTextureSymmetric);
+                    return (int)Npc_FieldIndex.FaceGenTextureSymmetric;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FNAM);
+                    return (int)Npc_FieldIndex.FNAM;
                 }
                 default:
                     return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5821,7 +5821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -5835,7 +5835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Name);
+                    return (int)Npc_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -5843,12 +5843,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Model);
+                    return (int)Npc_FieldIndex.Model;
                 }
                 case RecordTypeInts.ACBS:
                 {
                     _ConfigurationLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Configuration);
+                    return (int)Npc_FieldIndex.Configuration;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -5862,17 +5862,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Factions);
+                    return (int)Npc_FieldIndex.Factions;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _DeathItemLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.DeathItem);
+                    return (int)Npc_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _RaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Race);
+                    return (int)Npc_FieldIndex.Race;
                 }
                 case RecordTypeInts.SPLO:
                 {
@@ -5886,12 +5886,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Spells);
+                    return (int)Npc_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Script);
+                    return (int)Npc_FieldIndex.Script;
                 }
                 case RecordTypeInts.CNTO:
                 {
@@ -5905,12 +5905,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Items);
+                    return (int)Npc_FieldIndex.Items;
                 }
                 case RecordTypeInts.AIDT:
                 {
                     _AIDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIData);
+                    return (int)Npc_FieldIndex.AIData;
                 }
                 case RecordTypeInts.PKID:
                 {
@@ -5924,7 +5924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.AIPackages);
+                    return (int)Npc_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.KFFZ:
                 {
@@ -5935,27 +5935,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Animations);
+                    return (int)Npc_FieldIndex.Animations;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ClassLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Class);
+                    return (int)Npc_FieldIndex.Class;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Stats);
+                    return (int)Npc_FieldIndex.Stats;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HairLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Hair);
+                    return (int)Npc_FieldIndex.Hair;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _HairLengthLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairLength);
+                    return (int)Npc_FieldIndex.HairLength;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -5967,37 +5967,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IEyeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.Eyes);
+                    return (int)Npc_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.HCLR:
                 {
                     _HairColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.HairColor);
+                    return (int)Npc_FieldIndex.HairColor;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _CombatStyleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.CombatStyle);
+                    return (int)Npc_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.FGGS:
                 {
                     _FaceGenGeometrySymmetricLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometrySymmetric);
+                    return (int)Npc_FieldIndex.FaceGenGeometrySymmetric;
                 }
                 case RecordTypeInts.FGGA:
                 {
                     _FaceGenGeometryAsymmetricLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenGeometryAsymmetric);
+                    return (int)Npc_FieldIndex.FaceGenGeometryAsymmetric;
                 }
                 case RecordTypeInts.FGTS:
                 {
                     _FaceGenTextureSymmetricLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FaceGenTextureSymmetric);
+                    return (int)Npc_FieldIndex.FaceGenTextureSymmetric;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Npc_FieldIndex.FNAM);
+                    return (int)Npc_FieldIndex.FNAM;
                 }
                 default:
                     return base.FillRecordType(

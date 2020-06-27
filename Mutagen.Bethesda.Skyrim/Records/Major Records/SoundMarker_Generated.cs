@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISoundMarkerInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2288,19 +2288,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.ObjectBounds);
+                    return (int)SoundMarker_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.FNAM);
+                    return (int)SoundMarker_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.SNDD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SNDD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SNDD);
+                    return (int)SoundMarker_FieldIndex.SNDD;
                 }
                 case RecordTypeInts.SDSC:
                 {
@@ -2308,7 +2308,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SoundDescriptor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SoundDescriptor);
+                    return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2456,7 +2456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2470,22 +2470,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.ObjectBounds);
+                    return (int)SoundMarker_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.FNAM);
+                    return (int)SoundMarker_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.SNDD:
                 {
                     _SNDDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SNDD);
+                    return (int)SoundMarker_FieldIndex.SNDD;
                 }
                 case RecordTypeInts.SDSC:
                 {
                     _SoundDescriptorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SoundMarker_FieldIndex.SoundDescriptor);
+                    return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:
                     return base.FillRecordType(

@@ -3298,7 +3298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Version2 = frame.ReadUInt16();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3311,19 +3311,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3331,7 +3331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3339,7 +3339,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -3349,7 +3349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.MAST,
                             recordTypeConverter: recordTypeConverter,
                             transl: MasterReference.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3359,23 +3359,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                    return (int)ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                    return (int)ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
+                    return (int)ModHeader_FieldIndex.INCC;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -3553,7 +3553,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3567,27 +3567,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -3596,7 +3596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3608,20 +3608,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.OverriddenForms);
+                    return (int)ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     _INTVLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INTV);
+                    return (int)ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     _INCCLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.INCC);
+                    return (int)ModHeader_FieldIndex.INCC;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

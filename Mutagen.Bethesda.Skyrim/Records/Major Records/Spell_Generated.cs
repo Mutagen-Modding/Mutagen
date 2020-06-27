@@ -3860,7 +3860,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISpellInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3873,7 +3873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
+                    return (int)Spell_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3882,7 +3882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return (int)Spell_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -3895,7 +3895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
+                    return (int)Spell_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:
                 {
@@ -3903,7 +3903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
+                    return (int)Spell_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.ETYP:
                 {
@@ -3911,7 +3911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
+                    return (int)Spell_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -3919,7 +3919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
+                    return (int)Spell_FieldIndex.Description;
                 }
                 case RecordTypeInts.SPIT:
                 {
@@ -3936,7 +3936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HalfCostPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.HalfCostPerk);
+                    return (int)Spell_FieldIndex.HalfCostPerk;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -3948,7 +3948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Effects);
+                    return (int)Spell_FieldIndex.Effects;
                 }
                 default:
                     return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4150,7 +4150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4164,12 +4164,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.ObjectBounds);
+                    return (int)Spell_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return (int)Spell_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -4182,27 +4182,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Keywords);
+                    return (int)Spell_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     _MenuDisplayObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.MenuDisplayObject);
+                    return (int)Spell_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.EquipmentType);
+                    return (int)Spell_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Description);
+                    return (int)Spell_FieldIndex.Description;
                 }
                 case RecordTypeInts.SPIT:
                 {
                     _SPITLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.HalfCostPerk);
+                    return (int)Spell_FieldIndex.HalfCostPerk;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -4213,7 +4213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Effects);
+                    return (int)Spell_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

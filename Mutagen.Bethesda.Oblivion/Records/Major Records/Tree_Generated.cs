@@ -2590,7 +2590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2605,7 +2605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2613,7 +2613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                    return (int)Tree_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2623,17 +2623,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: UInt32BinaryTranslation.Instance.Parse)
                         .ToExtendedList<UInt32>();
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                    return (int)Tree_FieldIndex.SpeedTreeSeeds;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.TreeData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
+                    return (int)Tree_FieldIndex.Data;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     item.BillboardDimensions = Mutagen.Bethesda.Oblivion.Dimensions.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
+                    return (int)Tree_FieldIndex.BillboardDimensions;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2790,12 +2790,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Icon);
+                    return (int)Tree_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2807,17 +2807,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 4,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.SpeedTreeSeeds);
+                    return (int)Tree_FieldIndex.SpeedTreeSeeds;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Data);
+                    return (int)Tree_FieldIndex.Data;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _BillboardDimensionsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.BillboardDimensions);
+                    return (int)Tree_FieldIndex.BillboardDimensions;
                 }
                 default:
                     return base.FillRecordType(

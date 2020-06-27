@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWordOfPowerInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Name);
+                    return (int)WordOfPower_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Translation);
+                    return (int)WordOfPower_FieldIndex.Translation;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2183,12 +2183,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Name);
+                    return (int)WordOfPower_FieldIndex.Name;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TranslationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)WordOfPower_FieldIndex.Translation);
+                    return (int)WordOfPower_FieldIndex.Translation;
                 }
                 default:
                     return base.FillRecordType(

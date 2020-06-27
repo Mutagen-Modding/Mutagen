@@ -1992,7 +1992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static SpellBinaryCreateTranslation Instance = new SpellBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISpellInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2008,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return (int)Spell_FieldIndex.Name;
                 }
                 default:
                     return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Spell_FieldIndex.Name);
+                    return (int)Spell_FieldIndex.Name;
                 }
                 default:
                     return base.FillRecordType(

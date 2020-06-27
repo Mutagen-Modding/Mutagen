@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionWeather item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherType.TryCreateFromBinary)
                         .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
+                    return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionWeather_FieldIndex.Weathers);
+                    return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:
                     return base.FillRecordType(

@@ -10,14 +10,14 @@ namespace Mutagen.Bethesda.Binary
 {
     public abstract class BinaryOverlay
     {
-        public delegate TryGet<int?> RecordTypeFillWrapper(
+        public delegate ParseResult RecordTypeFillWrapper(
             OverlayStream stream,
             int finalPos,
             int offset,
             RecordType type,
             int? lastParsed,
             RecordTypeConverter? recordTypeConverter);
-        public delegate TryGet<int?> ModTypeFillWrapper(
+        public delegate ParseResult ModTypeFillWrapper(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
@@ -72,12 +72,13 @@ namespace Mutagen.Bethesda.Binary
                     type: groupMeta.ContainedRecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: null);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -100,12 +101,12 @@ namespace Mutagen.Bethesda.Binary
                     type: majorMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = checked((int)minimumFinalPos);
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -132,8 +133,8 @@ namespace Mutagen.Bethesda.Binary
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
                 stream.Position += subStream.Position;
-                if (parsed.Failed) break;
-                lastParsed = parsed.Value;
+                if (!parsed.KeepParsing) break;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -156,12 +157,12 @@ namespace Mutagen.Bethesda.Binary
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = minimumFinalPos;
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 
@@ -184,12 +185,12 @@ namespace Mutagen.Bethesda.Binary
                     type: subMeta.RecordType,
                     lastParsed: lastParsed,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (minimumFinalPos > stream.Position)
                 {
                     stream.Position = minimumFinalPos;
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
         }
 

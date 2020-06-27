@@ -3180,7 +3180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICameraShotInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3195,7 +3195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.Model);
+                    return (int)CameraShot_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3214,10 +3214,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= CameraShot.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.TargetPercentBetweenActors);
+                        return (int)CameraShot_FieldIndex.TargetPercentBetweenActors;
                     }
                     item.NearTargetDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.NearTargetDistance);
+                    return (int)CameraShot_FieldIndex.NearTargetDistance;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.ImageSpaceModifier);
+                    return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3418,7 +3418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3435,7 +3435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.Model);
+                    return (int)CameraShot_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3445,12 +3445,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= CameraShot.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.NearTargetDistance);
+                    return (int)CameraShot_FieldIndex.NearTargetDistance;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _ImageSpaceModifierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CameraShot_FieldIndex.ImageSpaceModifier);
+                    return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }
                 default:
                     return base.FillRecordType(

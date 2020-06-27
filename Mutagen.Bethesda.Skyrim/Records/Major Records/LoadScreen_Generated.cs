@@ -2964,7 +2964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILoadScreenInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2979,7 +2979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
+                    return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2988,14 +2988,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     LoadScreenBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
+                    return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -3003,31 +3003,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LoadingScreenNif = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
+                    return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
+                    return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialRotation = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
+                    return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.RotationOffsetConstraints = Mutagen.Bethesda.Skyrim.Int16MinMax.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
+                    return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InitialTranslationOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
+                    return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
                 {
@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CameraPath = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.CameraPath);
+                    return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3205,7 +3205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3222,12 +3222,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icons);
+                    return (int)LoadScreen_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -3237,22 +3237,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Conditions);
+                    return (int)LoadScreen_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _LoadingScreenNifLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.LoadingScreenNif);
+                    return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _InitialScaleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialScale);
+                    return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _InitialRotationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialRotation);
+                    return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3261,17 +3261,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.RotationOffsetConstraints);
+                    return (int)LoadScreen_FieldIndex.RotationOffsetConstraints;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _InitialTranslationOffsetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.InitialTranslationOffset);
+                    return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     _CameraPathLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.CameraPath);
+                    return (int)LoadScreen_FieldIndex.CameraPath;
                 }
                 default:
                     return base.FillRecordType(

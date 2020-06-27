@@ -2542,7 +2542,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWorldspaceBlock item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2561,11 +2561,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,
                             transl: WorldspaceSubBlock.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
+                    return (int)WorldspaceBlock_FieldIndex.Items;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2719,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2742,10 +2742,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.GroupConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)WorldspaceBlock_FieldIndex.Items);
+                    return (int)WorldspaceBlock_FieldIndex.Items;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

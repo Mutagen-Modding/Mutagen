@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMusicTrackInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3220,19 +3220,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<MusicTrack.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                    return (int)MusicTrack_FieldIndex.Type;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Duration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                    return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FadeOut = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                    return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -3240,7 +3240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TrackFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                    return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -3248,12 +3248,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FinaleFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                    return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     item.LoopData = Mutagen.Bethesda.Skyrim.MusicTrackLoopData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                    return (int)MusicTrack_FieldIndex.LoopData;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3263,7 +3263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FloatBinaryTranslation.Instance.Parse)
                         .ToExtendedList<Single>();
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                    return (int)MusicTrack_FieldIndex.CuePoints;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3271,7 +3271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     MusicTrackBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                    return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3281,7 +3281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<MusicTrack>>();
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                    return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3450,7 +3450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3464,32 +3464,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Type);
+                    return (int)MusicTrack_FieldIndex.Type;
                 }
                 case RecordTypeInts.FLTV:
                 {
                     _DurationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Duration);
+                    return (int)MusicTrack_FieldIndex.Duration;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FadeOutLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FadeOut);
+                    return (int)MusicTrack_FieldIndex.FadeOut;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _TrackFilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.TrackFilename);
+                    return (int)MusicTrack_FieldIndex.TrackFilename;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _FinaleFilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.FinaleFilename);
+                    return (int)MusicTrack_FieldIndex.FinaleFilename;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _LoopDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.LoopData);
+                    return (int)MusicTrack_FieldIndex.LoopData;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3501,7 +3501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => SpanExt.GetFloat(s));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.CuePoints);
+                    return (int)MusicTrack_FieldIndex.CuePoints;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3512,7 +3512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Conditions);
+                    return (int)MusicTrack_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3524,7 +3524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IMusicTrackGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MusicTrack_FieldIndex.Tracks);
+                    return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:
                     return base.FillRecordType(

@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPart item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1826,22 +1826,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
+                    return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Part_FieldIndex.FileName);
+                    return (int)Part_FieldIndex.FileName;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1992,18 +1992,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
                     _PartTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Part_FieldIndex.PartType);
+                    return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Part_FieldIndex.FileName);
+                    return (int)Part_FieldIndex.FileName;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

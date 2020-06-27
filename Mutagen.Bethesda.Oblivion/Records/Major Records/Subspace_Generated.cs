@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISubspaceInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1925,7 +1925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Point);
+                    return (int)Subspace_FieldIndex.Point;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2053,7 +2053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _PointLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Subspace_FieldIndex.Point);
+                    return (int)Subspace_FieldIndex.Point;
                 }
                 default:
                     return base.FillRecordType(

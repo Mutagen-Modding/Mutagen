@@ -2008,7 +2008,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFootstepInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2024,7 +2024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Footstep_FieldIndex.ImpactDataSet);
+                    return (int)Footstep_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Tag = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Footstep_FieldIndex.Tag);
+                    return (int)Footstep_FieldIndex.Tag;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2185,12 +2185,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _ImpactDataSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Footstep_FieldIndex.ImpactDataSet);
+                    return (int)Footstep_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _TagLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Footstep_FieldIndex.Tag);
+                    return (int)Footstep_FieldIndex.Tag;
                 }
                 default:
                     return base.FillRecordType(

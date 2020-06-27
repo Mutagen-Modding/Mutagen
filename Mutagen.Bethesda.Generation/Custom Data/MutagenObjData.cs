@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Generation
         public CustomEnd CustomBinaryEnd;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
+        public TaskCompletionSource DataTypeModuleComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
         public RecordType? EndMarkerType;
         public bool MajorRecordFlags;

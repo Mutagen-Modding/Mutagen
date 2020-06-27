@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFactionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2624,7 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -2634,19 +2634,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: Relation.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CrimeGoldMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                    return (int)Faction_FieldIndex.CrimeGoldMultiplier;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Rank.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2803,7 +2803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2817,7 +2817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Name);
+                    return (int)Faction_FieldIndex.Name;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -2831,17 +2831,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Relations);
+                    return (int)Faction_FieldIndex.Relations;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Flags);
+                    return (int)Faction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CrimeGoldMultiplierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.CrimeGoldMultiplier);
+                    return (int)Faction_FieldIndex.CrimeGoldMultiplier;
                 }
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.MNAM:
@@ -2853,7 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Rank_Registration.TriggeringRecordTypes,
                         factory:  RankBinaryOverlay.RankFactory);
-                    return TryGet<int?>.Succeed((int)Faction_FieldIndex.Ranks);
+                    return (int)Faction_FieldIndex.Ranks;
                 }
                 default:
                     return base.FillRecordType(

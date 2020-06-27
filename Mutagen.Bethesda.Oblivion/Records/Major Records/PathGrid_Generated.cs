@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPathGridInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2706,7 +2706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     PathGridBinaryCreateTranslation.FillBinaryPointToPointConnectionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
+                    return (int)PathGrid_FieldIndex.PointToPointConnections;
                 }
                 case RecordTypeInts.PGRI:
                 {
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: InterCellPoint.TryCreateFromBinary)
                         .ToExtendedList<InterCellPoint>();
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
+                    return (int)PathGrid_FieldIndex.InterCellConnections;
                 }
                 case RecordTypeInts.PGRL:
                 {
@@ -2726,7 +2726,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.PGRL,
                             recordTypeConverter: recordTypeConverter,
                             transl: PointToReferenceMapping.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                    return (int)PathGrid_FieldIndex.PointToReferenceMappings;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2870,7 +2870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2889,7 +2889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToPointConnections);
+                    return (int)PathGrid_FieldIndex.PointToPointConnections;
                 }
                 case RecordTypeInts.PGRI:
                 {
@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 16,
                         getter: (s, p) => InterCellPointBinaryOverlay.InterCellPointFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.InterCellConnections);
+                    return (int)PathGrid_FieldIndex.InterCellConnections;
                 }
                 case RecordTypeInts.PGRL:
                 {
@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)PathGrid_FieldIndex.PointToReferenceMappings);
+                    return (int)PathGrid_FieldIndex.PointToReferenceMappings;
                 }
                 default:
                     return base.FillRecordType(

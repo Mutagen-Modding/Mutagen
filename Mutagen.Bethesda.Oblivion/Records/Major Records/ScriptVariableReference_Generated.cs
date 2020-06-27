@@ -1655,7 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IScriptVariableReference item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1668,13 +1668,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VariableIndex = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                    return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1801,12 +1801,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.SCRV:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ScriptVariableReference_FieldIndex.VariableIndex) return ParseResult.Stop;
                     _VariableIndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ScriptVariableReference_FieldIndex.VariableIndex);
+                    return (int)ScriptVariableReference_FieldIndex.VariableIndex;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

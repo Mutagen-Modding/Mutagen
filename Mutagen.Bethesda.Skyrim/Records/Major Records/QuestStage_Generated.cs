@@ -2228,7 +2228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestStage item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2241,13 +2241,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Index = dataFrame.ReadUInt16();
                     item.Flags = EnumBinaryTranslation<QuestStage.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Unknown);
+                    return (int)QuestStage_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -2263,10 +2263,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: QuestLogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestLogEntry.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2420,7 +2420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2433,9 +2433,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Unknown) return ParseResult.Stop;
                     _INDXLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Unknown);
+                    return (int)QuestStage_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -2450,10 +2450,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: QuestLogEntry_Registration.TriggeringRecordTypes,
                         factory:  QuestLogEntryBinaryOverlay.QuestLogEntryFactory);
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

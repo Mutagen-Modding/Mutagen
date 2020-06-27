@@ -4127,7 +4127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -4140,12 +4140,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.VirtualMachineAdapter);
+                    return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.ObjectBounds);
+                    return (int)Book_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -4154,21 +4154,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icons);
+                    return (int)Book_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -4177,7 +4177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.BookText);
+                    return (int)Book_FieldIndex.BookText;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4186,7 +4186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Destructible);
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -4194,7 +4194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PickUpSound);
+                    return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -4202,7 +4202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PutDownSound);
+                    return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -4215,7 +4215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Keywords);
+                    return (int)Book_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item);
                     item.Value = dataFrame.ReadUInt32();
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -4239,7 +4239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.InventoryArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.InventoryArt);
+                    return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -4247,7 +4247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4456,7 +4456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4470,17 +4470,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.VirtualMachineAdapter);
+                    return (int)Book_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.ObjectBounds);
+                    return (int)Book_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4488,7 +4488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -4496,12 +4496,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icons);
+                    return (int)Book_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _BookTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.BookText);
+                    return (int)Book_FieldIndex.BookText;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4511,17 +4511,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Destructible);
+                    return (int)Book_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PickUpSound);
+                    return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.PutDownSound);
+                    return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -4534,22 +4534,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Keywords);
+                    return (int)Book_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Weight);
+                    return (int)Book_FieldIndex.Weight;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _InventoryArtLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.InventoryArt);
+                    return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 default:
                     return base.FillRecordType(

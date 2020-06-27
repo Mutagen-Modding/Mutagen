@@ -2521,7 +2521,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILeveledSpellInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2534,19 +2534,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ObjectBounds);
+                    return (int)LeveledSpell_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ChanceNone);
+                    return (int)LeveledSpell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LeveledSpell.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Flags);
+                    return (int)LeveledSpell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.COED:
@@ -2561,7 +2561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledSpellEntry.TryCreateFromBinary)
                         .ToExtendedList<LeveledSpellEntry>();
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
+                    return (int)LeveledSpell_FieldIndex.Entries;
                 }
                 default:
                     return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2705,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2719,17 +2719,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ObjectBounds);
+                    return (int)LeveledSpell_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.ChanceNone);
+                    return (int)LeveledSpell_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Flags);
+                    return (int)LeveledSpell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.COED:
@@ -2744,7 +2744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledSpellEntryBinaryOverlay.LeveledSpellEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)LeveledSpell_FieldIndex.Entries);
+                    return (int)LeveledSpell_FieldIndex.Entries;
                 }
                 default:
                     return base.FillRecordType(

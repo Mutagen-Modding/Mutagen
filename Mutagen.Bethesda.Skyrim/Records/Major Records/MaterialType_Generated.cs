@@ -2420,7 +2420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMaterialTypeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2436,7 +2436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Parent);
+                    return (int)MaterialType_FieldIndex.Parent;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2444,25 +2444,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Name);
+                    return (int)MaterialType_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HavokDisplayColor = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokDisplayColor);
+                    return (int)MaterialType_FieldIndex.HavokDisplayColor;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Buoyancy = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Buoyancy);
+                    return (int)MaterialType_FieldIndex.Buoyancy;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MaterialType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Flags);
+                    return (int)MaterialType_FieldIndex.Flags;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -2470,7 +2470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HavokImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokImpactDataSet);
+                    return (int)MaterialType_FieldIndex.HavokImpactDataSet;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2640,32 +2640,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     _ParentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Parent);
+                    return (int)MaterialType_FieldIndex.Parent;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Name);
+                    return (int)MaterialType_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _HavokDisplayColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokDisplayColor);
+                    return (int)MaterialType_FieldIndex.HavokDisplayColor;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _BuoyancyLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Buoyancy);
+                    return (int)MaterialType_FieldIndex.Buoyancy;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.Flags);
+                    return (int)MaterialType_FieldIndex.Flags;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HavokImpactDataSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MaterialType_FieldIndex.HavokImpactDataSet);
+                    return (int)MaterialType_FieldIndex.HavokImpactDataSet;
                 }
                 default:
                     return base.FillRecordType(

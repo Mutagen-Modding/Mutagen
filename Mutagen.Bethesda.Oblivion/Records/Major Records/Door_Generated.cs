@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDoorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2822,14 +2822,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Name);
+                    return (int)Door_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
+                    return (int)Door_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
+                    return (int)Door_FieldIndex.Script;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
+                    return (int)Door_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2853,7 +2853,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.CloseSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
+                    return (int)Door_FieldIndex.CloseSound;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2861,13 +2861,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.LoopSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
+                    return (int)Door_FieldIndex.LoopSound;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
+                    return (int)Door_FieldIndex.Flags;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2876,7 +2876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
+                    return (int)Door_FieldIndex.RandomTeleportDestinations;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3036,7 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3050,7 +3050,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Name);
+                    return (int)Door_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3058,32 +3058,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Model);
+                    return (int)Door_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Script);
+                    return (int)Door_FieldIndex.Script;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _OpenSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.OpenSound);
+                    return (int)Door_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _CloseSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.CloseSound);
+                    return (int)Door_FieldIndex.CloseSound;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _LoopSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.LoopSound);
+                    return (int)Door_FieldIndex.LoopSound;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.Flags);
+                    return (int)Door_FieldIndex.Flags;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -3097,7 +3097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Door_FieldIndex.RandomTeleportDestinations);
+                    return (int)Door_FieldIndex.RandomTeleportDestinations;
                 }
                 default:
                     return base.FillRecordType(

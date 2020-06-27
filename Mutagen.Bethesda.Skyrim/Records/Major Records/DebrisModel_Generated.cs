@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDebrisModel item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2121,7 +2121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
@@ -2132,19 +2132,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.ModelFilename);
+                        return (int)DebrisModel_FieldIndex.ModelFilename;
                     }
                     item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
+                    return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFileHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.TextureFileHashes);
+                    return (int)DebrisModel_FieldIndex.TextureFileHashes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2309,22 +2309,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.DATA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DebrisModel_FieldIndex.Flags) return ParseResult.Stop;
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
                     if (subLen <= ModelFilenameEndingPos)
                     {
                         this.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.Flags);
+                    return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:
                 {
                     _TextureFileHashesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DebrisModel_FieldIndex.TextureFileHashes);
+                    return (int)DebrisModel_FieldIndex.TextureFileHashes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

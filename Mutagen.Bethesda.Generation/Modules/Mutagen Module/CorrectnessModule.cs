@@ -13,7 +13,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task LoadWrapup(ObjectGeneration obj)
         {
             var objData = obj.GetObjectData();
-            await objData.WiringComplete.Task;
+            await Task.WhenAll(
+                objData.WiringComplete.Task,
+                objData.DataTypeModuleComplete.Task);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())

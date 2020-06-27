@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBaseLayer item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1789,14 +1789,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
                     item.Header = Mutagen.Bethesda.Skyrim.LayerHeader.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
+                    return (int)BaseLayer_FieldIndex.Header;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1950,12 +1950,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.BTXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BaseLayer_FieldIndex.Header) return ParseResult.Stop;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)BaseLayer_FieldIndex.Header);
+                    return (int)BaseLayer_FieldIndex.Header;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

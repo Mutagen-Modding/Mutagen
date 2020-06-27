@@ -2049,7 +2049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageIdles item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2062,17 +2062,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<PackageIdles.Types>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
+                    return (int)PackageIdles_FieldIndex.Type;
                 }
                 case RecordTypeInts.IDLT:
                 {
                     PackageIdlesBinaryCreateTranslation.FillBinaryTimerSettingCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
+                    return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
@@ -2080,10 +2080,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     PackageIdlesBinaryCreateTranslation.FillBinaryAnimationsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Animations);
+                    return (int)PackageIdles_FieldIndex.Animations;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2259,9 +2259,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.IDLF:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Type);
+                    return (int)PackageIdles_FieldIndex.Type;
                 }
                 case RecordTypeInts.IDLT:
                 {
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.TimerSetting);
+                    return (int)PackageIdles_FieldIndex.TimerSetting;
                 }
                 case RecordTypeInts.IDLA:
                 case RecordTypeInts.IDLC:
@@ -2280,10 +2280,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PackageIdles_FieldIndex.Animations);
+                    return (int)PackageIdles_FieldIndex.Animations;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

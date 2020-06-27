@@ -2518,7 +2518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IImageSpaceInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2532,27 +2532,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ENAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.ENAM);
+                    return (int)ImageSpace_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     item.Hdr = Mutagen.Bethesda.Skyrim.ImageSpaceHdr.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Hdr);
+                    return (int)ImageSpace_FieldIndex.Hdr;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     item.Cinematic = Mutagen.Bethesda.Skyrim.ImageSpaceCinematic.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Cinematic);
+                    return (int)ImageSpace_FieldIndex.Cinematic;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     item.Tint = Mutagen.Bethesda.Skyrim.ImageSpaceTint.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Tint);
+                    return (int)ImageSpace_FieldIndex.Tint;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     item.DepthOfField = Mutagen.Bethesda.Skyrim.ImageSpaceDepthOfField.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.DepthOfField);
+                    return (int)ImageSpace_FieldIndex.DepthOfField;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2714,27 +2714,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ENAM:
                 {
                     _ENAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.ENAM);
+                    return (int)ImageSpace_FieldIndex.ENAM;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HdrLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Hdr);
+                    return (int)ImageSpace_FieldIndex.Hdr;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CinematicLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Cinematic);
+                    return (int)ImageSpace_FieldIndex.Cinematic;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TintLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.Tint);
+                    return (int)ImageSpace_FieldIndex.Tint;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DepthOfFieldLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ImageSpace_FieldIndex.DepthOfField);
+                    return (int)ImageSpace_FieldIndex.DepthOfField;
                 }
                 default:
                     return base.FillRecordType(

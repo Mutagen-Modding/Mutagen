@@ -4586,7 +4586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBodyPart item,
             MutagenFrame frame,
             int? lastParsed,
@@ -4599,13 +4599,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Name);
+                    return (int)BodyPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -4613,7 +4613,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PoseMatching = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.PoseMatching);
+                    return (int)BodyPart_FieldIndex.PoseMatching;
                 }
                 case RecordTypeInts.BPNN:
                 {
@@ -4621,7 +4621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PartNode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.PartNode);
+                    return (int)BodyPart_FieldIndex.PartNode;
                 }
                 case RecordTypeInts.BPNT:
                 {
@@ -4629,7 +4629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.VatsTarget = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.VatsTarget);
+                    return (int)BodyPart_FieldIndex.VatsTarget;
                 }
                 case RecordTypeInts.BPNI:
                 {
@@ -4637,7 +4637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.IkStartNode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.IkStartNode);
+                    return (int)BodyPart_FieldIndex.IkStartNode;
                 }
                 case RecordTypeInts.BPND:
                 {
@@ -4679,7 +4679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadUInt16();
                     item.LimbReplacementScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.LimbReplacementScale);
+                    return (int)BodyPart_FieldIndex.LimbReplacementScale;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -4687,7 +4687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LimbReplacementModel = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.LimbReplacementModel);
+                    return (int)BodyPart_FieldIndex.LimbReplacementModel;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -4695,16 +4695,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GoreTargetBone = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.GoreTargetBone);
+                    return (int)BodyPart_FieldIndex.GoreTargetBone;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFilesHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.TextureFilesHashes);
+                    return (int)BodyPart_FieldIndex.TextureFilesHashes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -4994,7 +4994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -5007,52 +5007,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.BPTN:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.Name);
+                    return (int)BodyPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PoseMatchingLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.PoseMatching);
+                    return (int)BodyPart_FieldIndex.PoseMatching;
                 }
                 case RecordTypeInts.BPNN:
                 {
                     _PartNodeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.PartNode);
+                    return (int)BodyPart_FieldIndex.PartNode;
                 }
                 case RecordTypeInts.BPNT:
                 {
                     _VatsTargetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.VatsTarget);
+                    return (int)BodyPart_FieldIndex.VatsTarget;
                 }
                 case RecordTypeInts.BPNI:
                 {
                     _IkStartNodeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.IkStartNode);
+                    return (int)BodyPart_FieldIndex.IkStartNode;
                 }
                 case RecordTypeInts.BPND:
                 {
                     _BPNDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.LimbReplacementScale);
+                    return (int)BodyPart_FieldIndex.LimbReplacementScale;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _LimbReplacementModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.LimbReplacementModel);
+                    return (int)BodyPart_FieldIndex.LimbReplacementModel;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     _GoreTargetBoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.GoreTargetBone);
+                    return (int)BodyPart_FieldIndex.GoreTargetBone;
                 }
                 case RecordTypeInts.NAM5:
                 {
                     _TextureFilesHashesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)BodyPart_FieldIndex.TextureFilesHashes);
+                    return (int)BodyPart_FieldIndex.TextureFilesHashes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

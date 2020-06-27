@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEffect item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2144,29 +2144,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BaseEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
+                    return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.EffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                    return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
                     EffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Conditions);
+                    return (int)Effect_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2324,7 +2324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2337,29 +2337,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
                     _BaseEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.BaseEffect);
+                    return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                    return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
                     ConditionsCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Conditions);
+                    return (int)Effect_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

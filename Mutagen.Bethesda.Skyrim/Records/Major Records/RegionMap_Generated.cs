@@ -1692,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionMap item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Name);
+                    return (int)RegionMap_FieldIndex.Name;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1845,7 +1845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDMP:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Name);
+                    return (int)RegionMap_FieldIndex.Name;
                 }
                 default:
                     return base.FillRecordType(

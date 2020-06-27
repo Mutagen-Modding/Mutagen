@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRank item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2023,40 +2023,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                    return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
+                    return (int)Rank_FieldIndex.MaleRankTitle;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FemaleRankTitle = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
+                    return (int)Rank_FieldIndex.FemaleRankTitle;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2215,30 +2215,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
                     _RankNumberLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                    return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.MaleRankTitle) return ParseResult.Stop;
                     _MaleRankTitleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.MaleRankTitle);
+                    return (int)Rank_FieldIndex.MaleRankTitle;
                 }
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.FemaleRankTitle) return ParseResult.Stop;
                     _FemaleRankTitleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.FemaleRankTitle);
+                    return (int)Rank_FieldIndex.FemaleRankTitle;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

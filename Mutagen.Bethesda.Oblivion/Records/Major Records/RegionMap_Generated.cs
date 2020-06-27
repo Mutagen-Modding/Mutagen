@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionMap item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1696,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Map = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Map);
+                    return (int)RegionMap_FieldIndex.Map;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1818,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDMP:
                 {
                     _MapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)RegionMap_FieldIndex.Map);
+                    return (int)RegionMap_FieldIndex.Map;
                 }
                 default:
                     return base.FillRecordType(

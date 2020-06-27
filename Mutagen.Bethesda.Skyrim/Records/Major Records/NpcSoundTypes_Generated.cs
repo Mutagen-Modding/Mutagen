@@ -1830,7 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcSoundTypes item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1845,17 +1845,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
                     item.Types.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: NpcSoundType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: NpcSoundType.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)NpcSoundTypes_FieldIndex.Types);
+                    return (int)NpcSoundTypes_FieldIndex.Types;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1987,16 +1987,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
                     this.Types = this.ParseRepeatedTypelessSubrecord<NpcSoundTypeBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: NpcSoundType_Registration.TriggeringRecordTypes,
                         factory:  NpcSoundTypeBinaryOverlay.NpcSoundTypeFactory);
-                    return TryGet<int?>.Succeed((int)NpcSoundTypes_FieldIndex.Types);
+                    return (int)NpcSoundTypes_FieldIndex.Types;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

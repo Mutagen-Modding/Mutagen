@@ -3664,7 +3664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICombatStyleInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3683,7 +3683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.DefensiveMult);
+                        return (int)CombatStyle_FieldIndex.DefensiveMult;
                     }
                     item.GroupOffensiveMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.EquipmentScoreMultMelee = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -3694,44 +3694,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
-                        return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed);
+                        return (int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed;
                     }
                     item.EquipmentScoreMultStaff = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.AvoidThreatChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
+                    return (int)CombatStyle_FieldIndex.AvoidThreatChance;
                 }
                 case RecordTypeInts.CSMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CSMD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
+                    return (int)CombatStyle_FieldIndex.CSMD;
                 }
                 case RecordTypeInts.CSME:
                 {
                     item.Melee = Mutagen.Bethesda.Skyrim.CombatStyleMelee.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
+                    return (int)CombatStyle_FieldIndex.Melee;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     item.CloseRange = Mutagen.Bethesda.Skyrim.CombatStyleCloseRange.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
+                    return (int)CombatStyle_FieldIndex.CloseRange;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LongRangeStrafeMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
+                    return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     item.Flight = Mutagen.Bethesda.Skyrim.CombatStyleFlight.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
+                    return (int)CombatStyle_FieldIndex.Flight;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flags);
+                    return (int)CombatStyle_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3935,7 +3935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3958,37 +3958,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.AvoidThreatChance);
+                    return (int)CombatStyle_FieldIndex.AvoidThreatChance;
                 }
                 case RecordTypeInts.CSMD:
                 {
                     _CSMDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CSMD);
+                    return (int)CombatStyle_FieldIndex.CSMD;
                 }
                 case RecordTypeInts.CSME:
                 {
                     _MeleeLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Melee);
+                    return (int)CombatStyle_FieldIndex.Melee;
                 }
                 case RecordTypeInts.CSCR:
                 {
                     _CloseRangeLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.CloseRange);
+                    return (int)CombatStyle_FieldIndex.CloseRange;
                 }
                 case RecordTypeInts.CSLR:
                 {
                     _LongRangeStrafeMultLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.LongRangeStrafeMult);
+                    return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:
                 {
                     _FlightLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flight);
+                    return (int)CombatStyle_FieldIndex.Flight;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Flags);
+                    return (int)CombatStyle_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

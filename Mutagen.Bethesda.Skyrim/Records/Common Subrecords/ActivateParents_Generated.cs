@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IActivateParents item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1969,10 +1969,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XAPD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<ActivateParents.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
+                    return (int)ActivateParents_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XAPR:
                 {
@@ -1982,10 +1982,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.XAPR,
                             recordTypeConverter: recordTypeConverter,
                             transl: ActivateParent.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Parents);
+                    return (int)ActivateParents_FieldIndex.Parents;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2126,7 +2126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2139,9 +2139,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XAPD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActivateParents_FieldIndex.Flags) return ParseResult.Stop;
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Flags);
+                    return (int)ActivateParents_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XAPR:
                 {
@@ -2155,10 +2155,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)ActivateParents_FieldIndex.Parents);
+                    return (int)ActivateParents_FieldIndex.Parents;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -3277,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITreeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3290,19 +3290,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
+                    return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
+                    return (int)Tree_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
                 {
@@ -3310,7 +3310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
+                    return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3318,12 +3318,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HarvestSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
+                    return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     item.Production = Mutagen.Bethesda.Skyrim.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
+                    return (int)Tree_FieldIndex.Production;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3332,7 +3332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
+                    return (int)Tree_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3343,7 +3343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(32));
                     item.LeafAmplitude = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.LeafFrequency = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
+                    return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3531,7 +3531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3545,12 +3545,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.VirtualMachineAdapter);
+                    return (int)Tree_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.ObjectBounds);
+                    return (int)Tree_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3558,32 +3558,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Model);
+                    return (int)Tree_FieldIndex.Model;
                 }
                 case RecordTypeInts.PFIG:
                 {
                     _IngredientLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Ingredient);
+                    return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _HarvestSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.HarvestSound);
+                    return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     _ProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Production);
+                    return (int)Tree_FieldIndex.Production;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.Name);
+                    return (int)Tree_FieldIndex.Name;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Tree_FieldIndex.LeafFrequency);
+                    return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:
                     return base.FillRecordType(

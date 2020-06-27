@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcSound item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1838,22 +1838,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
+                    return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundChance = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.SoundChance);
+                    return (int)NpcSound_FieldIndex.SoundChance;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2011,18 +2011,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
                     _SoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.Sound);
+                    return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.SoundChance) return ParseResult.Stop;
                     _SoundChanceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NpcSound_FieldIndex.SoundChance);
+                    return (int)NpcSound_FieldIndex.SoundChance;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

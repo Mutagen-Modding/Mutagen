@@ -3161,7 +3161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IClimateInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3179,7 +3179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherType.TryCreateFromBinary)
                         .ToExtendedList<WeatherType>();
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.WeatherTypes);
+                    return (int)Climate_FieldIndex.WeatherTypes;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -3187,7 +3187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SunTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                    return (int)Climate_FieldIndex.SunTexture;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -3195,14 +3195,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SunGlareTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                    return (int)Climate_FieldIndex.SunGlareTexture;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                    return (int)Climate_FieldIndex.Model;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -3216,7 +3216,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ClimateBinaryCreateTranslation.FillBinaryMoonAndPhaseLengthCustom(
                         frame: dataFrame,
                         item: item);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                    return (int)Climate_FieldIndex.PhaseLength;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3395,7 +3395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3416,17 +3416,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => WeatherTypeBinaryOverlay.WeatherTypeFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.WeatherTypes);
+                    return (int)Climate_FieldIndex.WeatherTypes;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _SunTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunTexture);
+                    return (int)Climate_FieldIndex.SunTexture;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _SunGlareTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.SunGlareTexture);
+                    return (int)Climate_FieldIndex.SunGlareTexture;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3434,12 +3434,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.Model);
+                    return (int)Climate_FieldIndex.Model;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Climate_FieldIndex.PhaseLength);
+                    return (int)Climate_FieldIndex.PhaseLength;
                 }
                 default:
                     return base.FillRecordType(

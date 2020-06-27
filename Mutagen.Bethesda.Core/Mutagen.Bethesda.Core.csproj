@@ -68,6 +68,7 @@
     <Compile Include="Translations\Binary\ExtraLengthHeaderExport.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
     <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />

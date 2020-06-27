@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static AlphaLayerBinaryCreateTranslation Instance = new AlphaLayerBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAlphaLayer item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1704,7 +1704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlphaLayerData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                    return (int)AlphaLayer_FieldIndex.AlphaLayerData;
                 }
                 default:
                     return BaseLayerBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.VTXT:
                 {
                     _AlphaLayerDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AlphaLayer_FieldIndex.AlphaLayerData);
+                    return (int)AlphaLayer_FieldIndex.AlphaLayerData;
                 }
                 default:
                     return base.FillRecordType(

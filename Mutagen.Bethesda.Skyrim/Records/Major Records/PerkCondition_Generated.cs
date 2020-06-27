@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPerkCondition item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1974,20 +1974,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RunOnTabIndex = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)PerkCondition_FieldIndex.RunOnTabIndex);
+                    return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     PerkConditionBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PerkCondition_FieldIndex.Conditions);
+                    return (int)PerkCondition_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2152,9 +2152,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PerkCondition_FieldIndex.RunOnTabIndex) return ParseResult.Stop;
                     _RunOnTabIndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PerkCondition_FieldIndex.RunOnTabIndex);
+                    return (int)PerkCondition_FieldIndex.RunOnTabIndex;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -2164,10 +2164,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PerkCondition_FieldIndex.Conditions);
+                    return (int)PerkCondition_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

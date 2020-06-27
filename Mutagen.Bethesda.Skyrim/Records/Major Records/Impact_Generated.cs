@@ -3442,7 +3442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IImpactInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3457,7 +3457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Model);
+                    return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3471,12 +3471,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Impact.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Result = EnumBinaryTranslation<Impact.ResultType>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown = dataFrame.ReadInt16();
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Unknown);
+                    return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:
                 {
                     item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Decal);
+                    return (int)Impact_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3484,7 +3484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.TextureSet);
+                    return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -3492,7 +3492,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SecondaryTextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.SecondaryTextureSet);
+                    return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3500,7 +3500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound1 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound1);
+                    return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -3508,7 +3508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound2);
+                    return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -3516,7 +3516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Hazard = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Hazard);
+                    return (int)Impact_FieldIndex.Hazard;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3719,7 +3719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3736,42 +3736,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Model);
+                    return (int)Impact_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Unknown);
+                    return (int)Impact_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DODT:
                 {
                     _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Decal);
+                    return (int)Impact_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.TextureSet);
+                    return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _SecondaryTextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.SecondaryTextureSet);
+                    return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _Sound1Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound1);
+                    return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _Sound2Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Sound2);
+                    return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _HazardLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Impact_FieldIndex.Hazard);
+                    return (int)Impact_FieldIndex.Hazard;
                 }
                 default:
                     return base.FillRecordType(

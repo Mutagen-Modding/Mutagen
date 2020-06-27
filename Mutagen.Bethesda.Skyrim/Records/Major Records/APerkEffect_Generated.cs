@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAPerkEffect item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2106,18 +2106,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    return TryGet<int?>.Succeed((int)APerkEffect_FieldIndex.Priority);
+                    return (int)APerkEffect_FieldIndex.Priority;
                 }
                 case 0x464B5250: // PRKF: End Marker
                 {
                     frame.ReadSubrecordFrame();
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2240,17 +2240,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PRKE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)APerkEffect_FieldIndex.Priority) return ParseResult.Stop;
                     _PRKELocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)APerkEffect_FieldIndex.Priority);
+                    return (int)APerkEffect_FieldIndex.Priority;
                 }
                 case 0x464B5250: // PRKF: End Marker
                 {
                     _package.MetaData.Constants.ReadSubrecordFrame(stream);
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

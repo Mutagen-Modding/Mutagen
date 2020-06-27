@@ -3636,7 +3636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAmmunitionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3649,7 +3649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ObjectBounds);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3658,21 +3658,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
+                    return (int)Ammunition_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
+                    return (int)Ammunition_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icons);
+                    return (int)Ammunition_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -3681,7 +3681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Destructible);
+                    return (int)Ammunition_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -3689,7 +3689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PickUpSound);
+                    return (int)Ammunition_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -3697,7 +3697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PutDownSound);
+                    return (int)Ammunition_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -3706,7 +3706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
+                    return (int)Ammunition_FieldIndex.Description;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -3719,7 +3719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Keywords);
+                    return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3731,7 +3731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
+                    return (int)Ammunition_FieldIndex.Value;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3739,7 +3739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ShortName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ShortName);
+                    return (int)Ammunition_FieldIndex.ShortName;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3923,7 +3923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3937,12 +3937,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ObjectBounds);
+                    return (int)Ammunition_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Name);
+                    return (int)Ammunition_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3950,7 +3950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Model);
+                    return (int)Ammunition_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3958,7 +3958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Icons);
+                    return (int)Ammunition_FieldIndex.Icons;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -3968,22 +3968,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Destructible);
+                    return (int)Ammunition_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PickUpSound);
+                    return (int)Ammunition_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.PutDownSound);
+                    return (int)Ammunition_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Description);
+                    return (int)Ammunition_FieldIndex.Description;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -3996,17 +3996,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Keywords);
+                    return (int)Ammunition_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.Value);
+                    return (int)Ammunition_FieldIndex.Value;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ShortNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Ammunition_FieldIndex.ShortName);
+                    return (int)Ammunition_FieldIndex.ShortName;
                 }
                 default:
                     return base.FillRecordType(

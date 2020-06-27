@@ -3182,7 +3182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IClassInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3199,7 +3199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                    return (int)Class_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -3207,7 +3207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                    return (int)Class_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3215,7 +3215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                    return (int)Class_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3235,7 +3235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item.StatWeights,
                         transl: ByteBinaryTranslation.Instance.Parse);
                     item.Unknown2 = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Unknown2);
+                    return (int)Class_FieldIndex.Unknown2;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3427,7 +3427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3441,22 +3441,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Name);
+                    return (int)Class_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Description);
+                    return (int)Class_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Icon);
+                    return (int)Class_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Class_FieldIndex.Unknown2);
+                    return (int)Class_FieldIndex.Unknown2;
                 }
                 default:
                     return base.FillRecordType(

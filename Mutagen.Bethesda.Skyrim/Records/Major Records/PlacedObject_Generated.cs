@@ -9472,7 +9472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPlacedObjectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -9485,7 +9485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                    return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -9493,30 +9493,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Base = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                    return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BoundHalfExtents = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                    return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
                 {
                     item.Primitive = Mutagen.Bethesda.Skyrim.PlacedPrimitive.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
+                    return (int)PlacedObject_FieldIndex.Primitive;
                 }
                 case RecordTypeInts.XORD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XORD = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XORD);
+                    return (int)PlacedObject_FieldIndex.XORD;
                 }
                 case RecordTypeInts.XOCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
+                    return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XPOD:
                 {
@@ -9526,43 +9526,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: Portal.TryCreateFromBinary)
                         .ToExtendedList<Portal>();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
+                    return (int)PlacedObject_FieldIndex.Portals;
                 }
                 case RecordTypeInts.XPTL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.RoomPortal = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
+                    return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XRMR:
                 {
                     PlacedObjectBinaryCreateTranslation.FillBinaryBoundDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.XMBP:
                 {
                     item.MultiBoundPrimitive = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                    return (int)PlacedObject_FieldIndex.MultiBoundPrimitive;
                 }
                 case RecordTypeInts.XRGD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RagdollData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                    return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RagdollBipedData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
+                    return (int)PlacedObject_FieldIndex.RagdollBipedData;
                 }
                 case RecordTypeInts.XRDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
+                    return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XPWR:
                 {
@@ -9572,7 +9572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.XPWR,
                             recordTypeConverter: recordTypeConverter,
                             transl: WaterReflection.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
+                    return (int)PlacedObject_FieldIndex.Reflections;
                 }
                 case RecordTypeInts.XLTW:
                 {
@@ -9581,7 +9581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
+                    return (int)PlacedObject_FieldIndex.LitWater;
                 }
                 case RecordTypeInts.XEMI:
                 {
@@ -9589,22 +9589,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Emittance = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
+                    return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
                 {
                     item.LightData = Mutagen.Bethesda.Skyrim.LightData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
+                    return (int)PlacedObject_FieldIndex.LightData;
                 }
                 case RecordTypeInts.XALP:
                 {
                     item.Alpha = Mutagen.Bethesda.Skyrim.Alpha.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
+                    return (int)PlacedObject_FieldIndex.Alpha;
                 }
                 case RecordTypeInts.XTEL:
                 {
                     item.TeleportDestination = Mutagen.Bethesda.Skyrim.TeleportDestination.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                    return (int)PlacedObject_FieldIndex.TeleportDestination;
                 }
                 case RecordTypeInts.XTNM:
                 {
@@ -9612,7 +9612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TeleportMessageBox = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                    return (int)PlacedObject_FieldIndex.TeleportMessageBox;
                 }
                 case RecordTypeInts.XMBR:
                 {
@@ -9620,30 +9620,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MultiboundReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
+                    return (int)PlacedObject_FieldIndex.MultiboundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCN = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCN);
+                    return (int)PlacedObject_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCS = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCS);
+                    return (int)PlacedObject_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     item.WaterVelocity = Mutagen.Bethesda.Skyrim.WaterVelocity.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
+                    return (int)PlacedObject_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCVL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XCVL = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCVL);
+                    return (int)PlacedObject_FieldIndex.XCVL;
                 }
                 case RecordTypeInts.XCZR:
                 {
@@ -9651,13 +9651,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.XCZR = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZR);
+                    return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XCZA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZA);
+                    return (int)PlacedObject_FieldIndex.XCZA;
                 }
                 case RecordTypeInts.XCZC:
                 {
@@ -9665,13 +9665,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.XCZC = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZC);
+                    return (int)PlacedObject_FieldIndex.XCZC;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                    return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XSPC:
                 {
@@ -9679,14 +9679,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpawnContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
+                    return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
                 {
                     item.ActivateParents = Mutagen.Bethesda.Skyrim.ActivateParents.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
+                    return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
                 {
@@ -9694,13 +9694,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LeveledItemBaseObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                    return (int)PlacedObject_FieldIndex.LeveledItemBaseObject;
                 }
                 case RecordTypeInts.XLCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LevelModifier = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                    return (int)PlacedObject_FieldIndex.LevelModifier;
                 }
                 case RecordTypeInts.XLCN:
                 {
@@ -9708,18 +9708,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PersistentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
+                    return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CollisionLayer = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
+                    return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
                 {
                     item.Lock = Mutagen.Bethesda.Skyrim.LockData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                    return (int)PlacedObject_FieldIndex.Lock;
                 }
                 case RecordTypeInts.XEZN:
                 {
@@ -9727,12 +9727,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
+                    return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
                 {
                     item.NavigationDoorLink = Mutagen.Bethesda.Skyrim.NavigationDoorLink.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                    return (int)PlacedObject_FieldIndex.NavigationDoorLink;
                 }
                 case RecordTypeInts.XLRT:
                 {
@@ -9742,12 +9742,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LocationReferenceType>>();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
+                    return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:
                 {
                     item.IgnoredBySandbox = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                    return (int)PlacedObject_FieldIndex.IgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -9755,19 +9755,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
+                    return (int)PlacedObject_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XCNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ItemCount = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
+                    return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XCHG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Charge = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                    return (int)PlacedObject_FieldIndex.Charge;
                 }
                 case RecordTypeInts.XLRL:
                 {
@@ -9775,12 +9775,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
+                    return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XESP:
                 {
                     item.EnableParent = Mutagen.Bethesda.Skyrim.EnableParent.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                    return (int)PlacedObject_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XLKR:
                 {
@@ -9790,37 +9790,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.XLKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: LinkedReferences.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
+                    return (int)PlacedObject_FieldIndex.LinkedReferences;
                 }
                 case RecordTypeInts.XPRD:
                 {
                     item.Patrol = Mutagen.Bethesda.Skyrim.Patrol.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
+                    return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
+                    return (int)PlacedObject_FieldIndex.Action;
                 }
                 case RecordTypeInts.XHTW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HeadTrackingWeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                    return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FavorCost = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
+                    return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     item.OpenByDefault = true;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                    return (int)PlacedObject_FieldIndex.OpenByDefault;
                 }
                 case RecordTypeInts.XMRK:
                 {
@@ -9828,7 +9828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MapMarker = Mutagen.Bethesda.Skyrim.MapMarker.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                    return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:
                 {
@@ -9836,13 +9836,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttachRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
+                    return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XLOD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DistantLodData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
+                    return (int)PlacedObject_FieldIndex.DistantLodData;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -9850,7 +9850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                    return (int)PlacedObject_FieldIndex.Rotation;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -10201,7 +10201,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -10215,27 +10215,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.VirtualMachineAdapter);
+                    return (int)PlacedObject_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.NAME:
                 {
                     _BaseLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Base);
+                    return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
                 {
                     _BoundHalfExtentsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.BoundHalfExtents);
+                    return (int)PlacedObject_FieldIndex.BoundHalfExtents;
                 }
                 case RecordTypeInts.XPRM:
                 {
                     _PrimitiveLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Primitive);
+                    return (int)PlacedObject_FieldIndex.Primitive;
                 }
                 case RecordTypeInts.XORD:
                 {
                     _XORDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XORD);
+                    return (int)PlacedObject_FieldIndex.XORD;
                 }
                 case RecordTypeInts.XOCP:
                 {
@@ -10244,7 +10244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OcclusionPlane);
+                    return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XPOD:
                 {
@@ -10256,7 +10256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 8,
                         getter: (s, p) => PortalBinaryOverlay.PortalFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Portals);
+                    return (int)PlacedObject_FieldIndex.Portals;
                 }
                 case RecordTypeInts.XPTL:
                 {
@@ -10265,34 +10265,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RoomPortal);
+                    return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XRMR:
                 {
                     BoundDataCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.XMBP:
                 {
                     _MultiBoundPrimitiveLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiBoundPrimitive);
+                    return (int)PlacedObject_FieldIndex.MultiBoundPrimitive;
                 }
                 case RecordTypeInts.XRGD:
                 {
                     _RagdollDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollData);
+                    return (int)PlacedObject_FieldIndex.RagdollData;
                 }
                 case RecordTypeInts.XRGB:
                 {
                     _RagdollBipedDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.RagdollBipedData);
+                    return (int)PlacedObject_FieldIndex.RagdollBipedData;
                 }
                 case RecordTypeInts.XRDS:
                 {
                     _RadiusLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Radius);
+                    return (int)PlacedObject_FieldIndex.Radius;
                 }
                 case RecordTypeInts.XPWR:
                 {
@@ -10306,7 +10306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Reflections);
+                    return (int)PlacedObject_FieldIndex.Reflections;
                 }
                 case RecordTypeInts.XLTW:
                 {
@@ -10320,82 +10320,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LitWater);
+                    return (int)PlacedObject_FieldIndex.LitWater;
                 }
                 case RecordTypeInts.XEMI:
                 {
                     _EmittanceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Emittance);
+                    return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
                 {
                     _LightDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LightData);
+                    return (int)PlacedObject_FieldIndex.LightData;
                 }
                 case RecordTypeInts.XALP:
                 {
                     _AlphaLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Alpha);
+                    return (int)PlacedObject_FieldIndex.Alpha;
                 }
                 case RecordTypeInts.XTEL:
                 {
                     _TeleportDestinationLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportDestination);
+                    return (int)PlacedObject_FieldIndex.TeleportDestination;
                 }
                 case RecordTypeInts.XTNM:
                 {
                     _TeleportMessageBoxLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.TeleportMessageBox);
+                    return (int)PlacedObject_FieldIndex.TeleportMessageBox;
                 }
                 case RecordTypeInts.XMBR:
                 {
                     _MultiboundReferenceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MultiboundReference);
+                    return (int)PlacedObject_FieldIndex.MultiboundReference;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     _XWCNLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCN);
+                    return (int)PlacedObject_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     _XWCSLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XWCS);
+                    return (int)PlacedObject_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.WaterVelocity);
+                    return (int)PlacedObject_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCVL:
                 {
                     _XCVLLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCVL);
+                    return (int)PlacedObject_FieldIndex.XCVL;
                 }
                 case RecordTypeInts.XCZR:
                 {
                     _XCZRLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZR);
+                    return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
                 {
                     _XCZALocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZA);
+                    return (int)PlacedObject_FieldIndex.XCZA;
                 }
                 case RecordTypeInts.XCZC:
                 {
                     _XCZCLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.XCZC);
+                    return (int)PlacedObject_FieldIndex.XCZC;
                 }
                 case RecordTypeInts.XSCL:
                 {
                     _ScaleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Scale);
+                    return (int)PlacedObject_FieldIndex.Scale;
                 }
                 case RecordTypeInts.XSPC:
                 {
                     _SpawnContainerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.SpawnContainer);
+                    return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
                 {
@@ -10403,42 +10403,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ActivateParents);
+                    return (int)PlacedObject_FieldIndex.ActivateParents;
                 }
                 case RecordTypeInts.XLIB:
                 {
                     _LeveledItemBaseObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LeveledItemBaseObject);
+                    return (int)PlacedObject_FieldIndex.LeveledItemBaseObject;
                 }
                 case RecordTypeInts.XLCM:
                 {
                     _LevelModifierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LevelModifier);
+                    return (int)PlacedObject_FieldIndex.LevelModifier;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     _PersistentLocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.PersistentLocation);
+                    return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
                 {
                     _CollisionLayerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.CollisionLayer);
+                    return (int)PlacedObject_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.XLOC:
                 {
                     _LockLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Lock);
+                    return (int)PlacedObject_FieldIndex.Lock;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     _EncounterZoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EncounterZone);
+                    return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
                 {
                     _NavigationDoorLinkLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.NavigationDoorLink);
+                    return (int)PlacedObject_FieldIndex.NavigationDoorLink;
                 }
                 case RecordTypeInts.XLRT:
                 {
@@ -10450,12 +10450,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationRefTypes);
+                    return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:
                 {
                     _IgnoredBySandboxLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.IgnoredBySandbox);
+                    return (int)PlacedObject_FieldIndex.IgnoredBySandbox;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -10464,27 +10464,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Ownership);
+                    return (int)PlacedObject_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XCNT:
                 {
                     _ItemCountLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.ItemCount);
+                    return (int)PlacedObject_FieldIndex.ItemCount;
                 }
                 case RecordTypeInts.XCHG:
                 {
                     _ChargeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Charge);
+                    return (int)PlacedObject_FieldIndex.Charge;
                 }
                 case RecordTypeInts.XLRL:
                 {
                     _LocationReferenceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LocationReference);
+                    return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XESP:
                 {
                     _EnableParentLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.EnableParent);
+                    return (int)PlacedObject_FieldIndex.EnableParent;
                 }
                 case RecordTypeInts.XLKR:
                 {
@@ -10498,7 +10498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.LinkedReferences);
+                    return (int)PlacedObject_FieldIndex.LinkedReferences;
                 }
                 case RecordTypeInts.XPRD:
                 {
@@ -10506,27 +10506,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Patrol);
+                    return (int)PlacedObject_FieldIndex.Patrol;
                 }
                 case RecordTypeInts.XACT:
                 {
                     _ActionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Action);
+                    return (int)PlacedObject_FieldIndex.Action;
                 }
                 case RecordTypeInts.XHTW:
                 {
                     _HeadTrackingWeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.HeadTrackingWeight);
+                    return (int)PlacedObject_FieldIndex.HeadTrackingWeight;
                 }
                 case RecordTypeInts.XFVC:
                 {
                     _FavorCostLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.FavorCost);
+                    return (int)PlacedObject_FieldIndex.FavorCost;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _OpenByDefaultLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.OpenByDefault);
+                    return (int)PlacedObject_FieldIndex.OpenByDefault;
                 }
                 case RecordTypeInts.XMRK:
                 {
@@ -10535,22 +10535,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.MapMarker);
+                    return (int)PlacedObject_FieldIndex.MapMarker;
                 }
                 case RecordTypeInts.XATR:
                 {
                     _AttachRefLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.AttachRef);
+                    return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XLOD:
                 {
                     _DistantLodDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.DistantLodData);
+                    return (int)PlacedObject_FieldIndex.DistantLodData;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)PlacedObject_FieldIndex.Rotation);
+                    return (int)PlacedObject_FieldIndex.Rotation;
                 }
                 default:
                     return base.FillRecordType(

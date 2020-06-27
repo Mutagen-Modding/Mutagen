@@ -1901,7 +1901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Modification = EnumBinaryTranslation<PerkModifyValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPerkModifyValue item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PerkModifyValue_FieldIndex.Value);
+                    return (int)PerkModifyValue_FieldIndex.Value;
                 }
                 default:
                     return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2039,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2053,7 +2053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EPFD:
                 {
                     _ValueLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PerkModifyValue_FieldIndex.Value);
+                    return (int)PerkModifyValue_FieldIndex.Value;
                 }
                 default:
                     return base.FillRecordType(

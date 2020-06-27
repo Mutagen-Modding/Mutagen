@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FillTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
@@ -2182,12 +2182,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ParticleShaderTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.EffectShaderData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.Data);
+                    return (int)EffectShader_FieldIndex.Data;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2324,7 +2324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2338,17 +2338,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ICON:
                 {
                     _FillTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     _ParticleShaderTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.Data);
+                    return (int)EffectShader_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

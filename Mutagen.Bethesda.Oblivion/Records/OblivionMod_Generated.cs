@@ -11824,7 +11824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IOblivionMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -11841,7 +11841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         frame: frame,
                         recordTypeConverter: null);
                     frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
+                    return (int)OblivionMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
@@ -11855,7 +11855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
+                    return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
@@ -11869,7 +11869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                    return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
@@ -11883,7 +11883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
+                    return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
@@ -11897,7 +11897,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
+                    return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
@@ -11911,7 +11911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
+                    return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
@@ -11925,7 +11925,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
+                    return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
@@ -11939,7 +11939,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
+                    return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
@@ -11953,7 +11953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                    return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
@@ -11967,7 +11967,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
+                    return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
@@ -11981,7 +11981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
+                    return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
@@ -11995,7 +11995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
+                    return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
@@ -12009,7 +12009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
+                    return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
@@ -12023,7 +12023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
+                    return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
@@ -12037,7 +12037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
+                    return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
@@ -12051,7 +12051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
+                    return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
@@ -12065,7 +12065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
+                    return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
@@ -12079,7 +12079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                    return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
@@ -12093,7 +12093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
+                    return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
@@ -12107,7 +12107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
+                    return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
@@ -12121,7 +12121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
+                    return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
@@ -12135,7 +12135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
+                    return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
@@ -12149,7 +12149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
+                    return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
@@ -12163,7 +12163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
+                    return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
@@ -12177,7 +12177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
+                    return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
@@ -12191,7 +12191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
+                    return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
@@ -12205,7 +12205,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
+                    return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
@@ -12219,7 +12219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
+                    return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
@@ -12233,7 +12233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
+                    return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
@@ -12247,7 +12247,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
+                    return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
@@ -12261,7 +12261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furniture);
+                    return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
@@ -12275,7 +12275,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
+                    return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
@@ -12289,7 +12289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
+                    return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -12303,7 +12303,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Npcs);
+                    return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
@@ -12317,7 +12317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
+                    return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
@@ -12331,7 +12331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
+                    return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
@@ -12345,7 +12345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
+                    return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
@@ -12359,7 +12359,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
+                    return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
@@ -12373,7 +12373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
+                    return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
@@ -12387,7 +12387,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
+                    return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
@@ -12401,7 +12401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
+                    return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
@@ -12415,7 +12415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
+                    return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
@@ -12429,7 +12429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
+                    return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
@@ -12443,7 +12443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
+                    return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
@@ -12457,7 +12457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
+                    return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
                 {
@@ -12471,7 +12471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
+                    return (int)OblivionMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
@@ -12485,7 +12485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
+                    return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
@@ -12499,7 +12499,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
+                    return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
@@ -12513,7 +12513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
+                    return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
@@ -12527,7 +12527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
+                    return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
@@ -12541,7 +12541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
+                    return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
@@ -12555,7 +12555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
+                    return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
@@ -12569,7 +12569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
+                    return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
@@ -12583,7 +12583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
+                    return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
@@ -12597,7 +12597,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
+                    return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
@@ -12611,7 +12611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
+                    return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
@@ -12625,11 +12625,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
+                    return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:
                     frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -13137,7 +13137,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
@@ -13158,290 +13158,290 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 Master = master.Master,
                                 FileSize = master.FileSize,
                             }));
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.ModHeader);
+                    return (int)OblivionMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
                     _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.GameSettings);
+                    return (int)OblivionMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.GLOB:
                 {
                     _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Globals);
+                    return (int)OblivionMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
                     _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Classes);
+                    return (int)OblivionMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
                     _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Factions);
+                    return (int)OblivionMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HAIR:
                 {
                     _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Hairs);
+                    return (int)OblivionMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
                     _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Eyes);
+                    return (int)OblivionMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
                     _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Races);
+                    return (int)OblivionMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
                     _SoundsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Sounds);
+                    return (int)OblivionMod_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.SKIL:
                 {
                     _SkillsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Skills);
+                    return (int)OblivionMod_FieldIndex.Skills;
                 }
                 case RecordTypeInts.MGEF:
                 {
                     _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.MagicEffects);
+                    return (int)OblivionMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.SCPT:
                 {
                     _ScriptsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Scripts);
+                    return (int)OblivionMod_FieldIndex.Scripts;
                 }
                 case RecordTypeInts.LTEX:
                 {
                     _LandTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LandTextures);
+                    return (int)OblivionMod_FieldIndex.LandTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
                     _EnchantmentsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Enchantments);
+                    return (int)OblivionMod_FieldIndex.Enchantments;
                 }
                 case RecordTypeInts.SPEL:
                 {
                     _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Spells);
+                    return (int)OblivionMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.BSGN:
                 {
                     _BirthsignsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Birthsigns);
+                    return (int)OblivionMod_FieldIndex.Birthsigns;
                 }
                 case RecordTypeInts.ACTI:
                 {
                     _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Activators);
+                    return (int)OblivionMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.APPA:
                 {
                     _AlchemicalApparatusLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AlchemicalApparatus);
+                    return (int)OblivionMod_FieldIndex.AlchemicalApparatus;
                 }
                 case RecordTypeInts.ARMO:
                 {
                     _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Armors);
+                    return (int)OblivionMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
                     _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Books);
+                    return (int)OblivionMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CLOT:
                 {
                     _ClothesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Clothes);
+                    return (int)OblivionMod_FieldIndex.Clothes;
                 }
                 case RecordTypeInts.CONT:
                 {
                     _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Containers);
+                    return (int)OblivionMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
                     _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Doors);
+                    return (int)OblivionMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
                     _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ingredients);
+                    return (int)OblivionMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
                     _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Lights);
+                    return (int)OblivionMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
                     _MiscellaneousLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Miscellaneous);
+                    return (int)OblivionMod_FieldIndex.Miscellaneous;
                 }
                 case RecordTypeInts.STAT:
                 {
                     _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Statics);
+                    return (int)OblivionMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.GRAS:
                 {
                     _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Grasses);
+                    return (int)OblivionMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
                     _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Trees);
+                    return (int)OblivionMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
                     _FloraLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Flora);
+                    return (int)OblivionMod_FieldIndex.Flora;
                 }
                 case RecordTypeInts.FURN:
                 {
                     _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Furniture);
+                    return (int)OblivionMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
                     _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weapons);
+                    return (int)OblivionMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
                     _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Ammunitions);
+                    return (int)OblivionMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
                     _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Npcs);
+                    return (int)OblivionMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.CREA:
                 {
                     _CreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Creatures);
+                    return (int)OblivionMod_FieldIndex.Creatures;
                 }
                 case RecordTypeInts.LVLC:
                 {
                     _LeveledCreaturesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledCreatures);
+                    return (int)OblivionMod_FieldIndex.LeveledCreatures;
                 }
                 case RecordTypeInts.SLGM:
                 {
                     _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SoulGems);
+                    return (int)OblivionMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.KEYM:
                 {
                     _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Keys);
+                    return (int)OblivionMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
                     _PotionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Potions);
+                    return (int)OblivionMod_FieldIndex.Potions;
                 }
                 case RecordTypeInts.SBSP:
                 {
                     _SubspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Subspaces);
+                    return (int)OblivionMod_FieldIndex.Subspaces;
                 }
                 case RecordTypeInts.SGST:
                 {
                     _SigilStonesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.SigilStones);
+                    return (int)OblivionMod_FieldIndex.SigilStones;
                 }
                 case RecordTypeInts.LVLI:
                 {
                     _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledItems);
+                    return (int)OblivionMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
                     _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Weathers);
+                    return (int)OblivionMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
                     _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Climates);
+                    return (int)OblivionMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.REGN:
                 {
                     _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Regions);
+                    return (int)OblivionMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.CELL:
                 {
                     _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Cells);
+                    return (int)OblivionMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
                     _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Worldspaces);
+                    return (int)OblivionMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
                     _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.DialogTopics);
+                    return (int)OblivionMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
                     _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Quests);
+                    return (int)OblivionMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
                     _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.IdleAnimations);
+                    return (int)OblivionMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
                     _AIPackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AIPackages);
+                    return (int)OblivionMod_FieldIndex.AIPackages;
                 }
                 case RecordTypeInts.CSTY:
                 {
                     _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.CombatStyles);
+                    return (int)OblivionMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
                     _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LoadScreens);
+                    return (int)OblivionMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
                     _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.LeveledSpells);
+                    return (int)OblivionMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
                     _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.AnimatedObjects);
+                    return (int)OblivionMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
                     _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.Waters);
+                    return (int)OblivionMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
                     _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)OblivionMod_FieldIndex.EffectShaders);
+                    return (int)OblivionMod_FieldIndex.EffectShaders;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

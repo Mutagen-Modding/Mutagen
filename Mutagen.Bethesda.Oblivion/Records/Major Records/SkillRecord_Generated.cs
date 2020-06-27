@@ -2648,7 +2648,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISkillRecordInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2662,7 +2662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                    return (int)SkillRecord_FieldIndex.Skill;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                    return (int)SkillRecord_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2678,12 +2678,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                    return (int)SkillRecord_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SkillData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
+                    return (int)SkillRecord_FieldIndex.Data;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ApprenticeText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                    return (int)SkillRecord_FieldIndex.ApprenticeText;
                 }
                 case RecordTypeInts.JNAM:
                 {
@@ -2699,7 +2699,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.JourneymanText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                    return (int)SkillRecord_FieldIndex.JourneymanText;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -2707,7 +2707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ExpertText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                    return (int)SkillRecord_FieldIndex.ExpertText;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MasterText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                    return (int)SkillRecord_FieldIndex.MasterText;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2872,7 +2872,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2886,42 +2886,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.INDX:
                 {
                     _SkillLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Skill);
+                    return (int)SkillRecord_FieldIndex.Skill;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Description);
+                    return (int)SkillRecord_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Icon);
+                    return (int)SkillRecord_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.Data);
+                    return (int)SkillRecord_FieldIndex.Data;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _ApprenticeTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ApprenticeText);
+                    return (int)SkillRecord_FieldIndex.ApprenticeText;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     _JourneymanTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.JourneymanText);
+                    return (int)SkillRecord_FieldIndex.JourneymanText;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _ExpertTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.ExpertText);
+                    return (int)SkillRecord_FieldIndex.ExpertText;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MasterTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SkillRecord_FieldIndex.MasterText);
+                    return (int)SkillRecord_FieldIndex.MasterText;
                 }
                 default:
                     return base.FillRecordType(

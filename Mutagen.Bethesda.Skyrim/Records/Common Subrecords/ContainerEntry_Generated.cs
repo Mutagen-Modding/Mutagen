@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IContainerEntry item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1910,17 +1910,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
                     item.Item = Mutagen.Bethesda.Skyrim.ContainerItem.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
+                    return (int)ContainerEntry_FieldIndex.Item;
                 }
                 case RecordTypeInts.COED:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
+                    return (int)ContainerEntry_FieldIndex.Data;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2066,7 +2066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2079,17 +2079,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CNTO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ContainerEntry_FieldIndex.Item) return ParseResult.Stop;
                     _ItemLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Item);
+                    return (int)ContainerEntry_FieldIndex.Item;
                 }
                 case RecordTypeInts.COED:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ContainerEntry_FieldIndex.Data);
+                    return (int)ContainerEntry_FieldIndex.Data;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

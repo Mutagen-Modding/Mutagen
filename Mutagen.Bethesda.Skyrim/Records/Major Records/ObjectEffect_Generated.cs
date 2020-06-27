@@ -3212,7 +3212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IObjectEffectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3225,7 +3225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
+                    return (int)ObjectEffect_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3234,7 +3234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
+                    return (int)ObjectEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.ENIT:
                 {
@@ -3253,12 +3253,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
-                        return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.BaseEnchantment);
+                        return (int)ObjectEffect_FieldIndex.BaseEnchantment;
                     }
                     item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
+                    return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -3270,7 +3270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
+                    return (int)ObjectEffect_FieldIndex.Effects;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3457,7 +3457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3471,12 +3471,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.ObjectBounds);
+                    return (int)ObjectEffect_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Name);
+                    return (int)ObjectEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.ENIT:
                 {
@@ -3486,7 +3486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.WornRestrictions);
+                    return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -3497,7 +3497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)ObjectEffect_FieldIndex.Effects);
+                    return (int)ObjectEffect_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionObjects item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionObject.TryCreateFromBinary)
                         .ToExtendedList<RegionObject>();
-                    return TryGet<int?>.Succeed((int)RegionObjects_FieldIndex.Objects);
+                    return (int)RegionObjects_FieldIndex.Objects;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 52,
                         getter: (s, p) => RegionObjectBinaryOverlay.RegionObjectFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionObjects_FieldIndex.Objects);
+                    return (int)RegionObjects_FieldIndex.Objects;
                 }
                 default:
                     return base.FillRecordType(

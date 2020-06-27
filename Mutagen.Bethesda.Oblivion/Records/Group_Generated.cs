@@ -1935,7 +1935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LastModified = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGroup<T> item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1953,10 +1953,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
-                        return TryGet<int?>.Failure;
+                        return ParseResult.Stop;
                     }
                     frame.Position += contentLength + frame.MetaData.Constants.MajorConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2118,7 +2118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2130,7 +2130,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (type.TypeInt)
             {
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

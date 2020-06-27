@@ -2825,7 +2825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBookInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2841,14 +2841,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2856,7 +2856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icon);
+                    return (int)Book_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2864,7 +2864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Script);
+                    return (int)Book_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -2872,13 +2872,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Enchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Enchantment);
+                    return (int)Book_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentPoints = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.EnchantmentPoints);
+                    return (int)Book_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2886,12 +2886,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.BookData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
+                    return (int)Book_FieldIndex.Data;
                 }
                 default:
                     return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3053,7 +3053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3067,7 +3067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Name);
+                    return (int)Book_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3075,37 +3075,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Model);
+                    return (int)Book_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Icon);
+                    return (int)Book_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Script);
+                    return (int)Book_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _EnchantmentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Enchantment);
+                    return (int)Book_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _EnchantmentPointsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.EnchantmentPoints);
+                    return (int)Book_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Description);
+                    return (int)Book_FieldIndex.Description;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Book_FieldIndex.Data);
+                    return (int)Book_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

@@ -2758,7 +2758,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogTopicInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2775,7 +2775,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
+                    return (int)DialogTopic_FieldIndex.Quests;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -2783,13 +2783,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
+                    return (int)DialogTopic_FieldIndex.DialogType;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2954,7 +2954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2977,17 +2977,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quests);
+                    return (int)DialogTopic_FieldIndex.Quests;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DialogTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.DialogType);
+                    return (int)DialogTopic_FieldIndex.DialogType;
                 }
                 default:
                     return base.FillRecordType(

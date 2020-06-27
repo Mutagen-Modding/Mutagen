@@ -2743,7 +2743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICameraPathInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2758,7 +2758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     CameraPathBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Conditions);
+                    return (int)CameraPath_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2767,14 +2767,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CameraPath>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.RelatedPaths);
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:
                 {
                     CameraPathBinaryCreateTranslation.FillBinaryZoomCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Zoom);
+                    return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2783,7 +2783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Shots);
+                    return (int)CameraPath_FieldIndex.Shots;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2938,7 +2938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2957,7 +2957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Conditions);
+                    return (int)CameraPath_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2969,7 +2969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ICameraPathGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.RelatedPaths);
+                    return (int)CameraPath_FieldIndex.RelatedPaths;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2977,7 +2977,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Zoom);
+                    return (int)CameraPath_FieldIndex.Zoom;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2991,7 +2991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)CameraPath_FieldIndex.Shots);
+                    return (int)CameraPath_FieldIndex.Shots;
                 }
                 default:
                     return base.FillRecordType(

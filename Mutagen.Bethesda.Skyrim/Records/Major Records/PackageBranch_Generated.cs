@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageBranch item,
             MutagenFrame frame,
             int? lastParsed,
@@ -3065,12 +3065,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BranchType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
+                    return (int)PackageBranch_FieldIndex.BranchType;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3078,13 +3078,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     PackageBranchBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
+                    return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.Root = Mutagen.Bethesda.Skyrim.PackageRoot.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
+                    return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -3092,13 +3092,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ProcedureType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
+                    return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
+                    return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:
                 {
@@ -3107,14 +3107,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
                             transl: ByteBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
+                    return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
                 {
                     PackageBranchBinaryCreateTranslation.FillBinaryFlagsOverrideCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
+                    return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
                 {
@@ -3123,10 +3123,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
+                    return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -3300,7 +3300,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3313,9 +3313,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ANAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     _BranchTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.BranchType);
+                    return (int)PackageBranch_FieldIndex.BranchType;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -3326,7 +3326,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Conditions);
+                    return (int)PackageBranch_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.PRCB:
                 {
@@ -3335,17 +3335,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Root);
+                    return (int)PackageBranch_FieldIndex.Root;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _ProcedureTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.ProcedureType);
+                    return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Flags);
+                    return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:
                 {
@@ -3359,7 +3359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.DataInputIndices);
+                    return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
                 {
@@ -3367,7 +3367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream,
                         finalPos,
                         offset);
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.FlagsOverride);
+                    return (int)PackageBranch_FieldIndex.FlagsOverride;
                 }
                 case RecordTypeInts.PFOR:
                 {
@@ -3381,10 +3381,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)PackageBranch_FieldIndex.Unknown);
+                    return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

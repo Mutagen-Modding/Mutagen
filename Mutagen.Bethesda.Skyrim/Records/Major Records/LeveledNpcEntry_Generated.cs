@@ -1936,7 +1936,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILeveledNpcEntry item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1949,18 +1949,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.LeveledNpcEntryData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.Data);
+                    return (int)LeveledNpcEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return ParseResult.Stop;
                     item.ExtraData = Mutagen.Bethesda.Skyrim.ExtraData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.ExtraData);
+                    return (int)LeveledNpcEntry_FieldIndex.ExtraData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2119,18 +2119,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.LVLO:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.Data) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.Data);
+                    return (int)LeveledNpcEntry_FieldIndex.Data;
                 }
                 case RecordTypeInts.COED:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LeveledNpcEntry_FieldIndex.ExtraData) return ParseResult.Stop;
                     _ExtraDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LeveledNpcEntry_FieldIndex.ExtraData);
+                    return (int)LeveledNpcEntry_FieldIndex.ExtraData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

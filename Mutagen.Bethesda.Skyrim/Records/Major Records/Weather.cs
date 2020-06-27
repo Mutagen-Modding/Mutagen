@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
                 };
             }
 
-            public static TryGet<int?> CustomRecordFallback(
+            public static ParseResult CustomRecordFallback(
                 IWeatherInternal item,
                 MutagenFrame frame,
                 RecordType nextRecordType,
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
                         recordTypeConverter: recordTypeConverter);
                 }
                 WeatherBinaryCreateTranslation.FillCloudTexture(frame, nextRecordType, item.CloudTextures);
-                return TryGet<int?>.Succeed(null);
+                return default(int?);
             }
         }
 
@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
                     new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_directionalLoc.Value), _package.MetaData)));
             }
 
-            private TryGet<int?> CustomRecordFallback(
+            private ParseResult CustomRecordFallback(
                 OverlayStream stream,
                 int finalPos,
                 int offset,
@@ -454,7 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
                     new MutagenFrame(new MutagenInterfaceReadStream(stream, _package.MetaData)),
                     type,
                     _cloudTextures);
-                return TryGet<int?>.Succeed(null);
+                return default(int?);
             }
         }
     }

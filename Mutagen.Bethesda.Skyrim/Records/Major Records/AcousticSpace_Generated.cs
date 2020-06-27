@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAcousticSpaceInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2266,7 +2266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.ObjectBounds);
+                    return (int)AcousticSpace_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2274,7 +2274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AmbientSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.AmbientSound);
+                    return (int)AcousticSpace_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
@@ -2282,7 +2282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UseSoundFromRegion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.UseSoundFromRegion);
+                    return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2290,7 +2290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EnvironmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.EnvironmentType);
+                    return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2440,7 +2440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2454,22 +2454,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.ObjectBounds);
+                    return (int)AcousticSpace_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _AmbientSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.AmbientSound);
+                    return (int)AcousticSpace_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     _UseSoundFromRegionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.UseSoundFromRegion);
+                    return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _EnvironmentTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AcousticSpace_FieldIndex.EnvironmentType);
+                    return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 default:
                     return base.FillRecordType(

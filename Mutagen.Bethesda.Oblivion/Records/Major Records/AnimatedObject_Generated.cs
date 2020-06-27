@@ -2070,7 +2070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2085,7 +2085,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.IdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
+                    return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2246,12 +2246,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _IdleAnimationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.IdleAnimation);
+                    return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:
                     return base.FillRecordType(

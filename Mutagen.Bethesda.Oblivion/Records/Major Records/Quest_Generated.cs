@@ -3004,7 +3004,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3020,7 +3020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Script);
+                    return (int)Quest_FieldIndex.Script;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3028,7 +3028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
+                    return (int)Quest_FieldIndex.Name;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3036,12 +3036,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Icon);
+                    return (int)Quest_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.QuestData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Data);
+                    return (int)Quest_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -3052,7 +3052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
+                    return (int)Quest_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3062,7 +3062,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestStage.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
+                    return (int)Quest_FieldIndex.Stages;
                 }
                 case RecordTypeInts.QSTA:
                 {
@@ -3072,7 +3072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestTarget.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
+                    return (int)Quest_FieldIndex.Targets;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3223,7 +3223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3237,22 +3237,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Script);
+                    return (int)Quest_FieldIndex.Script;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Name);
+                    return (int)Quest_FieldIndex.Name;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Icon);
+                    return (int)Quest_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Data);
+                    return (int)Quest_FieldIndex.Data;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -3267,7 +3267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Conditions);
+                    return (int)Quest_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.INDX:
                 {
@@ -3276,7 +3276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.INDX,
                         factory:  QuestStageBinaryOverlay.QuestStageFactory);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Stages);
+                    return (int)Quest_FieldIndex.Stages;
                 }
                 case RecordTypeInts.QSTA:
                 {
@@ -3285,7 +3285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.QSTA,
                         factory:  QuestTargetBinaryOverlay.QuestTargetFactory);
-                    return TryGet<int?>.Succeed((int)Quest_FieldIndex.Targets);
+                    return (int)Quest_FieldIndex.Targets;
                 }
                 default:
                     return base.FillRecordType(

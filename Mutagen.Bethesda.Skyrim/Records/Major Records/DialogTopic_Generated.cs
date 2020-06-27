@@ -3274,7 +3274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogTopicInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3291,13 +3291,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Priority = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
+                    return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -3305,7 +3305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Branch = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
+                    return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
@@ -3313,7 +3313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
+                    return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3322,20 +3322,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
+                    return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SubtypeName = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
                 {
                     DialogTopicBinaryCreateTranslation.FillBinaryResponseCountCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3539,7 +3539,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3553,39 +3553,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Name);
+                    return (int)DialogTopic_FieldIndex.Name;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PriorityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Priority);
+                    return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _BranchLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Branch);
+                    return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Quest);
+                    return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.Subtype);
+                    return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SubtypeNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogTopic_FieldIndex.SubtypeName);
+                    return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
                 {
                     ResponseCountCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(

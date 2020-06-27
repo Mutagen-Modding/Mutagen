@@ -1819,7 +1819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWorldspaceObjectBounds item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1832,22 +1832,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return ParseResult.Stop;
                     WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMinCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Min);
+                    return (int)WorldspaceObjectBounds_FieldIndex.Min;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return ParseResult.Stop;
                     WorldspaceObjectBoundsBinaryCreateTranslation.FillBinaryMaxCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Max);
+                    return (int)WorldspaceObjectBounds_FieldIndex.Max;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2012,24 +2012,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.NAM0:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Min) return ParseResult.Stop;
                     MinCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Min);
+                    return (int)WorldspaceObjectBounds_FieldIndex.Min;
                 }
                 case RecordTypeInts.NAM9:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceObjectBounds_FieldIndex.Max) return ParseResult.Stop;
                     MaxCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)WorldspaceObjectBounds_FieldIndex.Max);
+                    return (int)WorldspaceObjectBounds_FieldIndex.Max;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

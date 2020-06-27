@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISoundItem item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1838,22 +1838,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
+                    return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Chance = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
+                    return (int)SoundItem_FieldIndex.Chance;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2011,18 +2011,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.CSDI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
                     _SoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Sound);
+                    return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Chance) return ParseResult.Stop;
                     _ChanceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)SoundItem_FieldIndex.Chance);
+                    return (int)SoundItem_FieldIndex.Chance;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -19474,7 +19474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISkyrimMod item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -19491,7 +19491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         recordTypeConverter: null);
                     frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                    return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
@@ -19505,7 +19505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                    return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
@@ -19519,7 +19519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                    return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
@@ -19533,7 +19533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                    return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
@@ -19547,7 +19547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                    return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
@@ -19561,7 +19561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                    return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
@@ -19575,7 +19575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                    return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
@@ -19589,7 +19589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                    return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
@@ -19603,7 +19603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                    return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
@@ -19617,7 +19617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                    return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
@@ -19631,7 +19631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                    return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
@@ -19645,7 +19645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                    return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
@@ -19659,7 +19659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                    return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
@@ -19673,7 +19673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                    return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
@@ -19687,7 +19687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
+                    return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
@@ -19701,7 +19701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
+                    return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
@@ -19715,7 +19715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
+                    return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
@@ -19729,7 +19729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                    return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
@@ -19743,7 +19743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                    return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
@@ -19757,7 +19757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                    return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
@@ -19771,7 +19771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                    return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
@@ -19785,7 +19785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                    return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
@@ -19799,7 +19799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                    return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
@@ -19813,7 +19813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                    return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
@@ -19827,7 +19827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
+                    return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
@@ -19841,7 +19841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                    return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
@@ -19855,7 +19855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                    return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
@@ -19869,7 +19869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                    return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
@@ -19883,7 +19883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                    return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
@@ -19897,7 +19897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                    return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
@@ -19911,7 +19911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                    return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
@@ -19925,7 +19925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                    return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
@@ -19939,7 +19939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                    return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
@@ -19953,7 +19953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                    return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
@@ -19967,7 +19967,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                    return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
@@ -19981,7 +19981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                    return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
@@ -19995,7 +19995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                    return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
@@ -20009,7 +20009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                    return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
@@ -20023,7 +20023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                    return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
@@ -20037,7 +20037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                    return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
@@ -20051,7 +20051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                    return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
@@ -20065,7 +20065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                    return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
@@ -20079,7 +20079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                    return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
@@ -20093,7 +20093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                    return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
@@ -20107,7 +20107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                    return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
@@ -20121,7 +20121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                    return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
@@ -20135,7 +20135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                    return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
@@ -20149,7 +20149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                    return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
@@ -20163,7 +20163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                    return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
@@ -20177,7 +20177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                    return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
@@ -20191,7 +20191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                    return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
@@ -20205,7 +20205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                    return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
@@ -20219,7 +20219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                    return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
@@ -20233,7 +20233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                    return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
                 {
@@ -20247,7 +20247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
+                    return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
@@ -20261,7 +20261,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
+                    return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
@@ -20275,7 +20275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
+                    return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
@@ -20289,7 +20289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
+                    return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
@@ -20303,7 +20303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                    return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
@@ -20317,7 +20317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                    return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
@@ -20331,7 +20331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                    return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
@@ -20345,7 +20345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                    return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
@@ -20359,7 +20359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                    return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
@@ -20373,7 +20373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                    return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
@@ -20387,7 +20387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                    return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
@@ -20401,7 +20401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                    return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
@@ -20415,7 +20415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                    return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
@@ -20429,7 +20429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
+                    return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
@@ -20443,7 +20443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaces);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
@@ -20457,7 +20457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaceAdapters);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
@@ -20471,7 +20471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
+                    return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
@@ -20485,7 +20485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                    return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
@@ -20499,7 +20499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                    return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
@@ -20513,7 +20513,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                    return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
@@ -20527,7 +20527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                    return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
@@ -20541,7 +20541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                    return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
@@ -20555,7 +20555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                    return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
@@ -20569,7 +20569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                    return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
@@ -20583,7 +20583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                    return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
@@ -20597,7 +20597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                    return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
@@ -20611,7 +20611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                    return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
@@ -20625,7 +20625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                    return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
@@ -20639,7 +20639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                    return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
@@ -20653,7 +20653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                    return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
@@ -20667,7 +20667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                    return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
@@ -20681,7 +20681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                    return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
@@ -20695,7 +20695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                    return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
@@ -20709,7 +20709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                    return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
@@ -20723,7 +20723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                    return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
@@ -20737,7 +20737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                    return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
@@ -20751,7 +20751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
@@ -20765,7 +20765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
@@ -20779,7 +20779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
@@ -20793,7 +20793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                    return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
@@ -20807,7 +20807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                    return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
@@ -20821,7 +20821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                    return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
@@ -20835,7 +20835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                    return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
@@ -20849,7 +20849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                    return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
@@ -20863,7 +20863,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                    return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
@@ -20877,11 +20877,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         frame.Position += contentLength;
                     }
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
+                    return (int)SkyrimMod_FieldIndex.Relationships;
                 }
                 default:
                     frame.Position += contentLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -21619,7 +21619,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             IBinaryReadStream stream,
             long finalPos,
             int offset,
@@ -21640,505 +21640,505 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 Master = master.Master,
                                 FileSize = master.FileSize,
                             }));
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ModHeader);
+                    return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:
                 {
                     _GameSettingsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.GameSettings);
+                    return (int)SkyrimMod_FieldIndex.GameSettings;
                 }
                 case RecordTypeInts.KYWD:
                 {
                     _KeywordsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keywords);
+                    return (int)SkyrimMod_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.LCRT:
                 {
                     _LocationReferenceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LocationReferenceTypes);
+                    return (int)SkyrimMod_FieldIndex.LocationReferenceTypes;
                 }
                 case RecordTypeInts.AACT:
                 {
                     _ActionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Actions);
+                    return (int)SkyrimMod_FieldIndex.Actions;
                 }
                 case RecordTypeInts.TXST:
                 {
                     _TextureSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TextureSets);
+                    return (int)SkyrimMod_FieldIndex.TextureSets;
                 }
                 case RecordTypeInts.GLOB:
                 {
                     _GlobalsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Globals);
+                    return (int)SkyrimMod_FieldIndex.Globals;
                 }
                 case RecordTypeInts.CLAS:
                 {
                     _ClassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Classes);
+                    return (int)SkyrimMod_FieldIndex.Classes;
                 }
                 case RecordTypeInts.FACT:
                 {
                     _FactionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Factions);
+                    return (int)SkyrimMod_FieldIndex.Factions;
                 }
                 case RecordTypeInts.HDPT:
                 {
                     _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.HeadParts);
+                    return (int)SkyrimMod_FieldIndex.HeadParts;
                 }
                 case RecordTypeInts.HAIR:
                 {
                     _HairsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hairs);
+                    return (int)SkyrimMod_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.EYES:
                 {
                     _EyesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Eyes);
+                    return (int)SkyrimMod_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.RACE:
                 {
                     _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Races);
+                    return (int)SkyrimMod_FieldIndex.Races;
                 }
                 case RecordTypeInts.SOUN:
                 {
                     _SoundMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoundMarkers);
+                    return (int)SkyrimMod_FieldIndex.SoundMarkers;
                 }
                 case RecordTypeInts.ASPC:
                 {
                     _AcousticSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AcousticSpaces);
+                    return (int)SkyrimMod_FieldIndex.AcousticSpaces;
                 }
                 case RecordTypeInts.MGEF:
                 {
                     _MagicEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MagicEffects);
+                    return (int)SkyrimMod_FieldIndex.MagicEffects;
                 }
                 case RecordTypeInts.LTEX:
                 {
                     _LandscapeTexturesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LandscapeTextures);
+                    return (int)SkyrimMod_FieldIndex.LandscapeTextures;
                 }
                 case RecordTypeInts.ENCH:
                 {
                     _ObjectEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ObjectEffects);
+                    return (int)SkyrimMod_FieldIndex.ObjectEffects;
                 }
                 case RecordTypeInts.SPEL:
                 {
                     _SpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Spells);
+                    return (int)SkyrimMod_FieldIndex.Spells;
                 }
                 case RecordTypeInts.SCRL:
                 {
                     _ScrollsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Scrolls);
+                    return (int)SkyrimMod_FieldIndex.Scrolls;
                 }
                 case RecordTypeInts.ACTI:
                 {
                     _ActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Activators);
+                    return (int)SkyrimMod_FieldIndex.Activators;
                 }
                 case RecordTypeInts.TACT:
                 {
                     _TalkingActivatorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.TalkingActivators);
+                    return (int)SkyrimMod_FieldIndex.TalkingActivators;
                 }
                 case RecordTypeInts.ARMO:
                 {
                     _ArmorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Armors);
+                    return (int)SkyrimMod_FieldIndex.Armors;
                 }
                 case RecordTypeInts.BOOK:
                 {
                     _BooksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Books);
+                    return (int)SkyrimMod_FieldIndex.Books;
                 }
                 case RecordTypeInts.CONT:
                 {
                     _ContainersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Containers);
+                    return (int)SkyrimMod_FieldIndex.Containers;
                 }
                 case RecordTypeInts.DOOR:
                 {
                     _DoorsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Doors);
+                    return (int)SkyrimMod_FieldIndex.Doors;
                 }
                 case RecordTypeInts.INGR:
                 {
                     _IngredientsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingredients);
+                    return (int)SkyrimMod_FieldIndex.Ingredients;
                 }
                 case RecordTypeInts.LIGH:
                 {
                     _LightsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Lights);
+                    return (int)SkyrimMod_FieldIndex.Lights;
                 }
                 case RecordTypeInts.MISC:
                 {
                     _MiscItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MiscItems);
+                    return (int)SkyrimMod_FieldIndex.MiscItems;
                 }
                 case RecordTypeInts.APPA:
                 {
                     _AlchemicalApparatusesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AlchemicalApparatuses);
+                    return (int)SkyrimMod_FieldIndex.AlchemicalApparatuses;
                 }
                 case RecordTypeInts.STAT:
                 {
                     _StaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Statics);
+                    return (int)SkyrimMod_FieldIndex.Statics;
                 }
                 case RecordTypeInts.MSTT:
                 {
                     _MoveableStaticsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MoveableStatics);
+                    return (int)SkyrimMod_FieldIndex.MoveableStatics;
                 }
                 case RecordTypeInts.GRAS:
                 {
                     _GrassesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Grasses);
+                    return (int)SkyrimMod_FieldIndex.Grasses;
                 }
                 case RecordTypeInts.TREE:
                 {
                     _TreesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Trees);
+                    return (int)SkyrimMod_FieldIndex.Trees;
                 }
                 case RecordTypeInts.FLOR:
                 {
                     _FloraeLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Florae);
+                    return (int)SkyrimMod_FieldIndex.Florae;
                 }
                 case RecordTypeInts.FURN:
                 {
                     _FurnitureLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Furniture);
+                    return (int)SkyrimMod_FieldIndex.Furniture;
                 }
                 case RecordTypeInts.WEAP:
                 {
                     _WeaponsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weapons);
+                    return (int)SkyrimMod_FieldIndex.Weapons;
                 }
                 case RecordTypeInts.AMMO:
                 {
                     _AmmunitionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ammunitions);
+                    return (int)SkyrimMod_FieldIndex.Ammunitions;
                 }
                 case RecordTypeInts.NPC_:
                 {
                     _NpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Npcs);
+                    return (int)SkyrimMod_FieldIndex.Npcs;
                 }
                 case RecordTypeInts.LVLN:
                 {
                     _LeveledNpcsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledNpcs);
+                    return (int)SkyrimMod_FieldIndex.LeveledNpcs;
                 }
                 case RecordTypeInts.KEYM:
                 {
                     _KeysLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Keys);
+                    return (int)SkyrimMod_FieldIndex.Keys;
                 }
                 case RecordTypeInts.ALCH:
                 {
                     _IngestiblesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Ingestibles);
+                    return (int)SkyrimMod_FieldIndex.Ingestibles;
                 }
                 case RecordTypeInts.IDLM:
                 {
                     _IdleMarkersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleMarkers);
+                    return (int)SkyrimMod_FieldIndex.IdleMarkers;
                 }
                 case RecordTypeInts.COBJ:
                 {
                     _ConstructibleObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ConstructibleObjects);
+                    return (int)SkyrimMod_FieldIndex.ConstructibleObjects;
                 }
                 case RecordTypeInts.PROJ:
                 {
                     _ProjectilesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Projectiles);
+                    return (int)SkyrimMod_FieldIndex.Projectiles;
                 }
                 case RecordTypeInts.HAZD:
                 {
                     _HazardsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Hazards);
+                    return (int)SkyrimMod_FieldIndex.Hazards;
                 }
                 case RecordTypeInts.SLGM:
                 {
                     _SoulGemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.SoulGems);
+                    return (int)SkyrimMod_FieldIndex.SoulGems;
                 }
                 case RecordTypeInts.LVLI:
                 {
                     _LeveledItemsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledItems);
+                    return (int)SkyrimMod_FieldIndex.LeveledItems;
                 }
                 case RecordTypeInts.WTHR:
                 {
                     _WeathersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Weathers);
+                    return (int)SkyrimMod_FieldIndex.Weathers;
                 }
                 case RecordTypeInts.CLMT:
                 {
                     _ClimatesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Climates);
+                    return (int)SkyrimMod_FieldIndex.Climates;
                 }
                 case RecordTypeInts.SPGD:
                 {
                     _ShaderParticleGeometriesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ShaderParticleGeometries);
+                    return (int)SkyrimMod_FieldIndex.ShaderParticleGeometries;
                 }
                 case RecordTypeInts.RFCT:
                 {
                     _VisualEffectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VisualEffects);
+                    return (int)SkyrimMod_FieldIndex.VisualEffects;
                 }
                 case RecordTypeInts.REGN:
                 {
                     _RegionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Regions);
+                    return (int)SkyrimMod_FieldIndex.Regions;
                 }
                 case RecordTypeInts.NAVI:
                 {
                     _NavigationMeshInfoMapsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps);
+                    return (int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps;
                 }
                 case RecordTypeInts.CELL:
                 {
                     _CellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Cells);
+                    return (int)SkyrimMod_FieldIndex.Cells;
                 }
                 case RecordTypeInts.WRLD:
                 {
                     _WorldspacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Worldspaces);
+                    return (int)SkyrimMod_FieldIndex.Worldspaces;
                 }
                 case RecordTypeInts.DIAL:
                 {
                     _DialogTopicsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogTopics);
+                    return (int)SkyrimMod_FieldIndex.DialogTopics;
                 }
                 case RecordTypeInts.QUST:
                 {
                     _QuestsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Quests);
+                    return (int)SkyrimMod_FieldIndex.Quests;
                 }
                 case RecordTypeInts.IDLE:
                 {
                     _IdleAnimationsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.IdleAnimations);
+                    return (int)SkyrimMod_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.PACK:
                 {
                     _PackagesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Packages);
+                    return (int)SkyrimMod_FieldIndex.Packages;
                 }
                 case RecordTypeInts.CSTY:
                 {
                     _CombatStylesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CombatStyles);
+                    return (int)SkyrimMod_FieldIndex.CombatStyles;
                 }
                 case RecordTypeInts.LSCR:
                 {
                     _LoadScreensLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LoadScreens);
+                    return (int)SkyrimMod_FieldIndex.LoadScreens;
                 }
                 case RecordTypeInts.LVSP:
                 {
                     _LeveledSpellsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LeveledSpells);
+                    return (int)SkyrimMod_FieldIndex.LeveledSpells;
                 }
                 case RecordTypeInts.ANIO:
                 {
                     _AnimatedObjectsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AnimatedObjects);
+                    return (int)SkyrimMod_FieldIndex.AnimatedObjects;
                 }
                 case RecordTypeInts.WATR:
                 {
                     _WatersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Waters);
+                    return (int)SkyrimMod_FieldIndex.Waters;
                 }
                 case RecordTypeInts.EFSH:
                 {
                     _EffectShadersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EffectShaders);
+                    return (int)SkyrimMod_FieldIndex.EffectShaders;
                 }
                 case RecordTypeInts.EXPL:
                 {
                     _ExplosionsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Explosions);
+                    return (int)SkyrimMod_FieldIndex.Explosions;
                 }
                 case RecordTypeInts.DEBR:
                 {
                     _DebrisLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Debris);
+                    return (int)SkyrimMod_FieldIndex.Debris;
                 }
                 case RecordTypeInts.IMGS:
                 {
                     _ImageSpacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaces);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaces;
                 }
                 case RecordTypeInts.IMAD:
                 {
                     _ImageSpaceAdaptersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImageSpaceAdapters);
+                    return (int)SkyrimMod_FieldIndex.ImageSpaceAdapters;
                 }
                 case RecordTypeInts.FLST:
                 {
                     _FormListsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FormLists);
+                    return (int)SkyrimMod_FieldIndex.FormLists;
                 }
                 case RecordTypeInts.PERK:
                 {
                     _PerksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Perks);
+                    return (int)SkyrimMod_FieldIndex.Perks;
                 }
                 case RecordTypeInts.BPTD:
                 {
                     _BodyPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.BodyParts);
+                    return (int)SkyrimMod_FieldIndex.BodyParts;
                 }
                 case RecordTypeInts.ADDN:
                 {
                     _AddonNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.AddonNodes);
+                    return (int)SkyrimMod_FieldIndex.AddonNodes;
                 }
                 case RecordTypeInts.AVIF:
                 {
                     _ActorValueInformationLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ActorValueInformation);
+                    return (int)SkyrimMod_FieldIndex.ActorValueInformation;
                 }
                 case RecordTypeInts.CAMS:
                 {
                     _CameraShotsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraShots);
+                    return (int)SkyrimMod_FieldIndex.CameraShots;
                 }
                 case RecordTypeInts.CPTH:
                 {
                     _CameraPathsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.CameraPaths);
+                    return (int)SkyrimMod_FieldIndex.CameraPaths;
                 }
                 case RecordTypeInts.VTYP:
                 {
                     _VoiceTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.VoiceTypes);
+                    return (int)SkyrimMod_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.MATT:
                 {
                     _MaterialTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MaterialTypes);
+                    return (int)SkyrimMod_FieldIndex.MaterialTypes;
                 }
                 case RecordTypeInts.IPCT:
                 {
                     _ImpactsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Impacts);
+                    return (int)SkyrimMod_FieldIndex.Impacts;
                 }
                 case RecordTypeInts.IPDS:
                 {
                     _ImpactDataSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ImpactDataSets);
+                    return (int)SkyrimMod_FieldIndex.ImpactDataSets;
                 }
                 case RecordTypeInts.ARMA:
                 {
                     _ArmorAddonsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.ArmorAddons);
+                    return (int)SkyrimMod_FieldIndex.ArmorAddons;
                 }
                 case RecordTypeInts.ECZN:
                 {
                     _EncounterZonesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EncounterZones);
+                    return (int)SkyrimMod_FieldIndex.EncounterZones;
                 }
                 case RecordTypeInts.LCTN:
                 {
                     _LocationsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Locations);
+                    return (int)SkyrimMod_FieldIndex.Locations;
                 }
                 case RecordTypeInts.MESG:
                 {
                     _MessagesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Messages);
+                    return (int)SkyrimMod_FieldIndex.Messages;
                 }
                 case RecordTypeInts.DOBJ:
                 {
                     _DefaultObjectManagersLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DefaultObjectManagers);
+                    return (int)SkyrimMod_FieldIndex.DefaultObjectManagers;
                 }
                 case RecordTypeInts.LGTM:
                 {
                     _LightingTemplatesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.LightingTemplates);
+                    return (int)SkyrimMod_FieldIndex.LightingTemplates;
                 }
                 case RecordTypeInts.MUSC:
                 {
                     _MusicTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTypes);
+                    return (int)SkyrimMod_FieldIndex.MusicTypes;
                 }
                 case RecordTypeInts.FSTP:
                 {
                     _FootstepsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Footsteps);
+                    return (int)SkyrimMod_FieldIndex.Footsteps;
                 }
                 case RecordTypeInts.FSTS:
                 {
                     _FootstepSetsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.FootstepSets);
+                    return (int)SkyrimMod_FieldIndex.FootstepSets;
                 }
                 case RecordTypeInts.SMBN:
                 {
                     _StoryManagerBranchNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerBranchNodes;
                 }
                 case RecordTypeInts.SMQN:
                 {
                     _StoryManagerQuestNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerQuestNodes;
                 }
                 case RecordTypeInts.SMEN:
                 {
                     _StoryManagerEventNodesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.StoryManagerEventNodes);
+                    return (int)SkyrimMod_FieldIndex.StoryManagerEventNodes;
                 }
                 case RecordTypeInts.DLBR:
                 {
                     _DialogBranchesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogBranches);
+                    return (int)SkyrimMod_FieldIndex.DialogBranches;
                 }
                 case RecordTypeInts.MUST:
                 {
                     _MusicTracksLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.MusicTracks);
+                    return (int)SkyrimMod_FieldIndex.MusicTracks;
                 }
                 case RecordTypeInts.DLVW:
                 {
                     _DialogViewsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.DialogViews);
+                    return (int)SkyrimMod_FieldIndex.DialogViews;
                 }
                 case RecordTypeInts.WOOP:
                 {
                     _WordsOfPowerLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.WordsOfPower);
+                    return (int)SkyrimMod_FieldIndex.WordsOfPower;
                 }
                 case RecordTypeInts.SHOU:
                 {
                     _ShoutsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Shouts);
+                    return (int)SkyrimMod_FieldIndex.Shouts;
                 }
                 case RecordTypeInts.EQUP:
                 {
                     _EquipTypesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.EquipTypes);
+                    return (int)SkyrimMod_FieldIndex.EquipTypes;
                 }
                 case RecordTypeInts.RELA:
                 {
                     _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SkyrimMod_FieldIndex.Relationships);
+                    return (int)SkyrimMod_FieldIndex.Relationships;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

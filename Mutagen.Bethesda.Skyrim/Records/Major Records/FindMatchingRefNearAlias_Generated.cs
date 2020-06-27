@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFindMatchingRefNearAlias item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1837,21 +1837,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
                     FindMatchingRefNearAliasBinaryCreateTranslation.FillBinaryAliasIndexCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex);
+                    return (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.Type);
+                    return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1996,7 +1996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2009,21 +2009,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALNA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) return ParseResult.Stop;
                     AliasIndexCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex);
+                    return (int)FindMatchingRefNearAlias_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.ALNT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)FindMatchingRefNearAlias_FieldIndex.Type);
+                    return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

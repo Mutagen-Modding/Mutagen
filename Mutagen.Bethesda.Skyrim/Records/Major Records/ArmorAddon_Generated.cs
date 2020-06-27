@@ -3811,7 +3811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IArmorAddonInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3824,7 +3824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 {
                     item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                    return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -3832,7 +3832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Race = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                    return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3848,7 +3848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DetectionSoundValue = dataFrame.ReadUInt8();
                     item.Unknown2 = dataFrame.ReadUInt8();
                     item.WeaponAdjust = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                    return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -3858,7 +3858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter,
                         transl: Model.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
@@ -3868,7 +3868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter,
                         transl: Model.TryCreateFromBinary);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                    return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3880,7 +3880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
                         fallback: FormLinkNullable<TextureSet>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
@@ -3892,7 +3892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: FormLinkBinaryTranslation.Instance.Parse,
                         skipMarker: false,
                         fallback: FormLinkNullable<FormList>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                    return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3901,7 +3901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -3909,7 +3909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FootstepSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                    return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3917,7 +3917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ArtObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                    return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4129,7 +4129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4143,17 +4143,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 {
                     _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.BodyTemplate);
+                    return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _RaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.Race);
+                    return (int)ArmorAddon_FieldIndex.Race;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WeaponAdjust);
+                    return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:
                 case RecordTypeInts.MOD3:
@@ -4164,7 +4164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.WorldModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.WorldModelMaleConverter);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.WorldModel);
+                    return (int)ArmorAddon_FieldIndex.WorldModel;
                 }
                 case RecordTypeInts.MOD4:
                 case RecordTypeInts.MOD5:
@@ -4175,7 +4175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         creator: (s, p, r) => ModelBinaryOverlay.ModelFactory(s, p, r),
                         femaleRecordConverter: ArmorAddon_Registration.FirstPersonModelFemaleConverter,
                         maleRecordConverter: ArmorAddon_Registration.FirstPersonModelMaleConverter);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FirstPersonModel);
+                    return (int)ArmorAddon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -4187,7 +4187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (m, p) => new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<TextureSet>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.SkinTexture);
+                    return (int)ArmorAddon_FieldIndex.SkinTexture;
                 }
                 case RecordTypeInts.NAM2:
                 case RecordTypeInts.NAM3:
@@ -4199,7 +4199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         creator: (m, p) => new FormLinkNullable<IFormListGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)))),
                         fallback: FormLinkNullable<FormList>.Null);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.TextureSwapList);
+                    return (int)ArmorAddon_FieldIndex.TextureSwapList;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4213,17 +4213,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.AdditionalRaces);
+                    return (int)ArmorAddon_FieldIndex.AdditionalRaces;
                 }
                 case RecordTypeInts.SNDD:
                 {
                     _FootstepSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.FootstepSound);
+                    return (int)ArmorAddon_FieldIndex.FootstepSound;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ArtObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ArmorAddon_FieldIndex.ArtObject);
+                    return (int)ArmorAddon_FieldIndex.ArtObject;
                 }
                 default:
                     return base.FillRecordType(

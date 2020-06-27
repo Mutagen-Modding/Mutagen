@@ -2618,7 +2618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILandscapeTextureInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2634,7 +2634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
+                    return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2642,7 +2642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MaterialType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
+                    return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -2650,13 +2650,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.HavokFriction = dataFrame.ReadUInt8();
                     item.HavokRestitution = dataFrame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                    return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSpecularExponent = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2665,7 +2665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
+                    return (int)LandscapeTexture_FieldIndex.Grasses;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2822,7 +2822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2836,22 +2836,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSet);
+                    return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MaterialTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.MaterialType);
+                    return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.HavokRestitution);
+                    return (int)LandscapeTexture_FieldIndex.HavokRestitution;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _TextureSpecularExponentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandscapeTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2865,7 +2865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)LandscapeTexture_FieldIndex.Grasses);
+                    return (int)LandscapeTexture_FieldIndex.Grasses;
                 }
                 default:
                     return base.FillRecordType(

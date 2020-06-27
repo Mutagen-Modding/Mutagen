@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static GlobalBinaryCreateTranslation Instance = new GlobalBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGlobalInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     GlobalBinaryCreateTranslation.FillBinaryTypeCharCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1877,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1893,7 +1893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     TypeCharCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 default:
                     return base.FillRecordType(

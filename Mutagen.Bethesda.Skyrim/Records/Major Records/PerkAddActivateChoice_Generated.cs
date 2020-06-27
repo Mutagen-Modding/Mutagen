@@ -2054,7 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 defaultVal: FormKey.Null);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPerkAddActivateChoice item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2072,12 +2072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)PerkAddActivateChoice_FieldIndex.ButtonLabel);
+                    return (int)PerkAddActivateChoice_FieldIndex.ButtonLabel;
                 }
                 case RecordTypeInts.EPF3:
                 {
                     item.Flags = Mutagen.Bethesda.Skyrim.PerkScriptFlag.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)PerkAddActivateChoice_FieldIndex.Flags);
+                    return (int)PerkAddActivateChoice_FieldIndex.Flags;
                 }
                 default:
                     return APerkEntryPointEffectBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2225,12 +2225,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EPF2:
                 {
                     _ButtonLabelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)PerkAddActivateChoice_FieldIndex.ButtonLabel);
+                    return (int)PerkAddActivateChoice_FieldIndex.ButtonLabel;
                 }
                 case RecordTypeInts.EPF3:
                 {
                     _FlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)PerkAddActivateChoice_FieldIndex.Flags);
+                    return (int)PerkAddActivateChoice_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

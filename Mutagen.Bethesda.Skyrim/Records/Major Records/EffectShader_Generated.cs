@@ -11516,7 +11516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEffectShaderInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -11532,7 +11532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FillTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
@@ -11540,7 +11540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleShaderTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
@@ -11548,7 +11548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HolesTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
@@ -11556,7 +11556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MembranePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
+                    return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
@@ -11564,7 +11564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticlePaletteTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
+                    return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -11652,7 +11652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.AddonModelsScaleOutTime);
+                        return (int)EffectShader_FieldIndex.AddonModelsScaleOutTime;
                     }
                     item.AmbientSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -11660,7 +11660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.AmbientSound);
+                        return (int)EffectShader_FieldIndex.AmbientSound;
                     }
                     item.FillColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FillColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
@@ -11673,7 +11673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break2;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillColorKey3Time);
+                        return (int)EffectShader_FieldIndex.FillColorKey3Time;
                     }
                     item.ColorScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BirthPositionOffset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -11691,10 +11691,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break3;
-                        return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTextureScaleV);
+                        return (int)EffectShader_FieldIndex.FillTextureScaleV;
                     }
                     item.SceneGraphEmitDepthLimit = dataFrame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit);
+                    return (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -12346,7 +12346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -12360,27 +12360,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ICON:
                 {
                     _FillTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.FillTexture);
+                    return (int)EffectShader_FieldIndex.FillTexture;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     _ParticleShaderTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticleShaderTexture);
+                    return (int)EffectShader_FieldIndex.ParticleShaderTexture;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _HolesTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.HolesTexture);
+                    return (int)EffectShader_FieldIndex.HolesTexture;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _MembranePaletteTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.MembranePaletteTexture);
+                    return (int)EffectShader_FieldIndex.MembranePaletteTexture;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _ParticlePaletteTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.ParticlePaletteTexture);
+                    return (int)EffectShader_FieldIndex.ParticlePaletteTexture;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -12402,7 +12402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= EffectShader.DATADataType.Break3;
                     }
-                    return TryGet<int?>.Succeed((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit);
+                    return (int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit;
                 }
                 default:
                     return base.FillRecordType(

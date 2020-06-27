@@ -2506,7 +2506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IShoutInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2523,7 +2523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Name);
+                    return (int)Shout_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
@@ -2531,7 +2531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.MenuDisplayObject);
+                    return (int)Shout_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2540,7 +2540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Description);
+                    return (int)Shout_FieldIndex.Description;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2550,7 +2550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ShoutWord.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.WordsOfPower);
+                    return (int)Shout_FieldIndex.WordsOfPower;
                 }
                 default:
                     return ASpellBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2695,7 +2695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2709,17 +2709,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Name);
+                    return (int)Shout_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     _MenuDisplayObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.MenuDisplayObject);
+                    return (int)Shout_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.Description);
+                    return (int)Shout_FieldIndex.Description;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2733,7 +2733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Shout_FieldIndex.WordsOfPower);
+                    return (int)Shout_FieldIndex.WordsOfPower;
                 }
                 default:
                     return base.FillRecordType(

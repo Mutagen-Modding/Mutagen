@@ -2255,7 +2255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IStoryManagerEventNodeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2269,19 +2269,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<AStoryManagerNode.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.Flags);
+                    return (int)StoryManagerEventNode_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.XNAM);
+                    return (int)StoryManagerEventNode_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.Type);
+                    return (int)StoryManagerEventNode_FieldIndex.Type;
                 }
                 default:
                     return AStoryManagerNodeBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2417,7 +2417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2431,17 +2431,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.Flags);
+                    return (int)StoryManagerEventNode_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _XNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.XNAM);
+                    return (int)StoryManagerEventNode_FieldIndex.XNAM;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerEventNode_FieldIndex.Type);
+                    return (int)StoryManagerEventNode_FieldIndex.Type;
                 }
                 default:
                     return base.FillRecordType(

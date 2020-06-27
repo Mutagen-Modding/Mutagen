@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMasterReference item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1808,19 +1808,19 @@ namespace Mutagen.Bethesda.Internals
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Master = Mutagen.Bethesda.Binary.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                    return (int)MasterReference_FieldIndex.Master;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileSize = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                    return (int)MasterReference_FieldIndex.FileSize;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1958,7 +1958,7 @@ namespace Mutagen.Bethesda.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1971,17 +1971,17 @@ namespace Mutagen.Bethesda.Internals
             {
                 case RecordTypeInts.MAST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     _MasterLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.Master);
+                    return (int)MasterReference_FieldIndex.Master;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FileSizeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MasterReference_FieldIndex.FileSize);
+                    return (int)MasterReference_FieldIndex.FileSize;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IVisualEffectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2219,7 +2219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
                     item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)VisualEffect_FieldIndex.Flags);
+                    return (int)VisualEffect_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2366,7 +2366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2380,7 +2380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)VisualEffect_FieldIndex.Flags);
+                    return (int)VisualEffect_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

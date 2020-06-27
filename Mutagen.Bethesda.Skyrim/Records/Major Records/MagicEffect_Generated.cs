@@ -6746,7 +6746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -6759,7 +6759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
+                    return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -6768,7 +6768,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
@@ -6776,7 +6776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MenuDisplayObject = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -6789,7 +6789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Keywords);
+                    return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -6867,7 +6867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ScriptEffectAIScore = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ScriptEffectAIDelayTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
+                    return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -6876,7 +6876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -6886,7 +6886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: MagicEffectSound.TryCreateFromBinary)
                         .ToExtendedList<MagicEffectSound>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
+                    return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -6895,14 +6895,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     MagicEffectBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Conditions);
+                    return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -7264,7 +7264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -7278,17 +7278,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.VirtualMachineAdapter);
+                    return (int)MagicEffect_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.MDOB:
                 {
                     _MenuDisplayObjectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.MenuDisplayObject);
+                    return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -7301,12 +7301,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Keywords);
+                    return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime);
+                    return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -7320,7 +7320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 case RecordTypeInts.SNDD:
                 {
@@ -7332,12 +7332,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 8,
                         getter: (s, p) => MagicEffectSoundBinaryOverlay.MagicEffectSoundFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Sounds);
+                    return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -7347,7 +7347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Conditions);
+                    return (int)MagicEffect_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(

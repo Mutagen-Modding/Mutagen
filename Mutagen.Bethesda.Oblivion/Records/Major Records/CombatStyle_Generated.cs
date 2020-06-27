@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICombatStyleInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2121,12 +2121,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CSTD:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.CombatStyleData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
+                    return (int)CombatStyle_FieldIndex.Data;
                 }
                 case RecordTypeInts.CSAD:
                 {
                     item.Advanced = Mutagen.Bethesda.Oblivion.CombatStyleAdvanced.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
+                    return (int)CombatStyle_FieldIndex.Advanced;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2260,7 +2260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2274,12 +2274,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CSTD:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Data);
+                    return (int)CombatStyle_FieldIndex.Data;
                 }
                 case RecordTypeInts.CSAD:
                 {
                     _AdvancedLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)CombatStyle_FieldIndex.Advanced);
+                    return (int)CombatStyle_FieldIndex.Advanced;
                 }
                 default:
                     return base.FillRecordType(

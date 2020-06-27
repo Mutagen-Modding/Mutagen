@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionData item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1738,10 +1738,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDAT:
                 {
                     item.Header = Mutagen.Bethesda.Oblivion.RegionDataHeader.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
+                    return (int)RegionData_FieldIndex.Header;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1868,10 +1868,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDAT:
                 {
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
+                    return (int)RegionData_FieldIndex.Header;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

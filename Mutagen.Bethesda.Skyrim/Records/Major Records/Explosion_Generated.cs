@@ -3890,7 +3890,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IExplosionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3903,12 +3903,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
+                    return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3917,14 +3917,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
+                    return (int)Explosion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
+                    return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
                 {
@@ -3932,7 +3932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -3940,7 +3940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3971,22 +3971,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ISRadius);
+                        return (int)Explosion_FieldIndex.ISRadius;
                     }
                     item.VerticalOffsetMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VerticalOffsetMult);
+                        return (int)Explosion_FieldIndex.VerticalOffsetMult;
                     }
                     item.Flags = EnumBinaryTranslation<Explosion.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break2;
-                        return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Flags);
+                        return (int)Explosion_FieldIndex.Flags;
                     }
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.SoundLevel);
+                    return (int)Explosion_FieldIndex.SoundLevel;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4208,7 +4208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4222,17 +4222,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.VirtualMachineAdapter);
+                    return (int)Explosion_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectBounds);
+                    return (int)Explosion_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Name);
+                    return (int)Explosion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -4240,17 +4240,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.Model);
+                    return (int)Explosion_FieldIndex.Model;
                 }
                 case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ObjectEffect);
+                    return (int)Explosion_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _ImageSpaceModifierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.ImageSpaceModifier);
+                    return (int)Explosion_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4268,7 +4268,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= Explosion.DATADataType.Break2;
                     }
-                    return TryGet<int?>.Succeed((int)Explosion_FieldIndex.SoundLevel);
+                    return (int)Explosion_FieldIndex.SoundLevel;
                 }
                 default:
                     return base.FillRecordType(

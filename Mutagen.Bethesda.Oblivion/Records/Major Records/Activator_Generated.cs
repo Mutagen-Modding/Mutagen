@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IActivatorInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2287,14 +2287,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
+                    return (int)Activator_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Model);
+                    return (int)Activator_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2302,7 +2302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Script);
+                    return (int)Activator_FieldIndex.Script;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Sound);
+                    return (int)Activator_FieldIndex.Sound;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2469,7 +2469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Name);
+                    return (int)Activator_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2477,17 +2477,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Model);
+                    return (int)Activator_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Script);
+                    return (int)Activator_FieldIndex.Script;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Activator_FieldIndex.Sound);
+                    return (int)Activator_FieldIndex.Sound;
                 }
                 default:
                     return base.FillRecordType(

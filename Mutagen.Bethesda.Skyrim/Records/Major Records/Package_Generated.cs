@@ -5358,7 +5358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -5371,7 +5371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.PackageAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.VirtualMachineAdapter);
+                    return (int)Package_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.PKDT:
                 {
@@ -5384,7 +5384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadUInt8();
                     item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
                     item.Unknown2 = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Unknown2);
+                    return (int)Package_FieldIndex.Unknown2;
                 }
                 case RecordTypeInts.PSDT:
                 {
@@ -5397,27 +5397,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ScheduleMinute = dataFrame.ReadInt8();
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     item.ScheduleDurationInMinutes = dataFrame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.ScheduleDurationInMinutes);
+                    return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     PackageBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Conditions);
+                    return (int)Package_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.IDLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4 = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Unknown4);
+                    return (int)Package_FieldIndex.Unknown4;
                 }
                 case RecordTypeInts.IDLF:
                 {
                     item.IdleAnimations = Mutagen.Bethesda.Skyrim.PackageIdles.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.IdleAnimations);
+                    return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -5425,7 +5425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.CombatStyle);
+                    return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.QNAM:
                 {
@@ -5433,21 +5433,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OwnerQuest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OwnerQuest);
+                    return (int)Package_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PKCU:
                 {
                     PackageBinaryCreateTranslation.FillBinaryPackageTemplateCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.PackageTemplate);
+                    return (int)Package_FieldIndex.PackageTemplate;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     PackageBinaryCreateTranslation.FillBinaryXnamMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.XnamMarker);
+                    return (int)Package_FieldIndex.XnamMarker;
                 }
                 case RecordTypeInts.POBA:
                 {
@@ -5455,7 +5455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OnBegin = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnBegin);
+                    return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
                 {
@@ -5463,7 +5463,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OnEnd = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnEnd);
+                    return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
                 {
@@ -5471,7 +5471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OnChange = Mutagen.Bethesda.Skyrim.PackageEvent.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnChange);
+                    return (int)Package_FieldIndex.OnChange;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5732,7 +5732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -5746,17 +5746,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.VirtualMachineAdapter);
+                    return (int)Package_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.PKDT:
                 {
                     _PKDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Unknown2);
+                    return (int)Package_FieldIndex.Unknown2;
                 }
                 case RecordTypeInts.PSDT:
                 {
                     _PSDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.ScheduleDurationInMinutes);
+                    return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -5766,12 +5766,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Conditions);
+                    return (int)Package_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.IDLB:
                 {
                     _Unknown4Location = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.Unknown4);
+                    return (int)Package_FieldIndex.Unknown4;
                 }
                 case RecordTypeInts.IDLF:
                 {
@@ -5779,17 +5779,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.IdleAnimations);
+                    return (int)Package_FieldIndex.IdleAnimations;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CombatStyleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.CombatStyle);
+                    return (int)Package_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     _OwnerQuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OwnerQuest);
+                    return (int)Package_FieldIndex.OwnerQuest;
                 }
                 case RecordTypeInts.PKCU:
                 {
@@ -5797,7 +5797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.PackageTemplate);
+                    return (int)Package_FieldIndex.PackageTemplate;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -5805,7 +5805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.XnamMarker);
+                    return (int)Package_FieldIndex.XnamMarker;
                 }
                 case RecordTypeInts.POBA:
                 {
@@ -5814,7 +5814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnBegin);
+                    return (int)Package_FieldIndex.OnBegin;
                 }
                 case RecordTypeInts.POEA:
                 {
@@ -5823,7 +5823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnEnd);
+                    return (int)Package_FieldIndex.OnEnd;
                 }
                 case RecordTypeInts.POCA:
                 {
@@ -5832,7 +5832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Package_FieldIndex.OnChange);
+                    return (int)Package_FieldIndex.OnChange;
                 }
                 default:
                     return base.FillRecordType(

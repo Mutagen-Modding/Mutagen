@@ -5564,7 +5564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWeaponInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -5577,12 +5577,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.VirtualMachineAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -5591,21 +5591,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
+                    return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
+                    return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
+                    return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
                 {
@@ -5613,13 +5613,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ObjectEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
+                    return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentAmount = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -5628,7 +5628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
+                    return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
                 {
@@ -5636,7 +5636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipmentType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
+                    return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
@@ -5644,7 +5644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BlockBashImpact = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
+                    return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
@@ -5652,7 +5652,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AlternateBlockMaterial = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
@@ -5660,7 +5660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PickUpSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
+                    return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
@@ -5668,7 +5668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PutDownSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
+                    return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -5681,7 +5681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
+                    return (int)Weapon_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -5690,20 +5690,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
+                    return (int)Weapon_FieldIndex.Description;
                 }
                 case RecordTypeInts.MOD3:
                 {
                     item.ScopeModel = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
+                    return (int)Weapon_FieldIndex.ScopeModel;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
+                    return (int)Weapon_FieldIndex.Unused;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -5711,7 +5711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
+                    return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
@@ -5719,7 +5719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.FirstPersonModel = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -5727,7 +5727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
+                    return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -5735,7 +5735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackSound2D = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
+                    return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
@@ -5743,7 +5743,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackLoopSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
+                    return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -5751,7 +5751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AttackFailSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
+                    return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
@@ -5759,7 +5759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.IdleSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
+                    return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
@@ -5767,7 +5767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EquipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
+                    return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
@@ -5775,28 +5775,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnequipSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
+                    return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.BasicStats = Mutagen.Bethesda.Skyrim.WeaponBasicStats.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
+                    return (int)Weapon_FieldIndex.BasicStats;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.WeaponData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
+                    return (int)Weapon_FieldIndex.Data;
                 }
                 case RecordTypeInts.CRDT:
                 {
                     item.Critical = Mutagen.Bethesda.Skyrim.CriticalData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
+                    return (int)Weapon_FieldIndex.Critical;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DetectionSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
+                    return (int)Weapon_FieldIndex.DetectionSoundLevel;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -5804,7 +5804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Template = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
+                    return (int)Weapon_FieldIndex.Template;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -6065,7 +6065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -6079,17 +6079,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.VirtualMachineAdapter);
+                    return (int)Weapon_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectBounds);
+                    return (int)Weapon_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Name);
+                    return (int)Weapon_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -6097,7 +6097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Model);
+                    return (int)Weapon_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -6105,17 +6105,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Icons);
+                    return (int)Weapon_FieldIndex.Icons;
                 }
                 case RecordTypeInts.EITM:
                 {
                     _ObjectEffectLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ObjectEffect);
+                    return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
                 {
                     _EnchantmentAmountLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EnchantmentAmount);
+                    return (int)Weapon_FieldIndex.EnchantmentAmount;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -6125,32 +6125,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Destructible);
+                    return (int)Weapon_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.ETYP:
                 {
                     _EquipmentTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipmentType);
+                    return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     _BlockBashImpactLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BlockBashImpact);
+                    return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     _AlternateBlockMaterialLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AlternateBlockMaterial);
+                    return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PickUpSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PickUpSound);
+                    return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     _PutDownSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.PutDownSound);
+                    return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -6163,12 +6163,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Keywords);
+                    return (int)Weapon_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Description);
+                    return (int)Weapon_FieldIndex.Description;
                 }
                 case RecordTypeInts.MOD3:
                 {
@@ -6176,82 +6176,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: Weapon_Registration.ScopeModelConverter);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ScopeModel);
+                    return (int)Weapon_FieldIndex.ScopeModel;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _UnusedLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Unused);
+                    return (int)Weapon_FieldIndex.Unused;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _ImpactDataSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.ImpactDataSet);
+                    return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _FirstPersonModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.FirstPersonModel);
+                    return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _AttackSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound);
+                    return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _AttackSound2DLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackSound2D);
+                    return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     _AttackLoopSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackLoopSound);
+                    return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _AttackFailSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.AttackFailSound);
+                    return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     _IdleSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.IdleSound);
+                    return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     _EquipSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.EquipSound);
+                    return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     _UnequipSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.UnequipSound);
+                    return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _BasicStatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.BasicStats);
+                    return (int)Weapon_FieldIndex.BasicStats;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Data);
+                    return (int)Weapon_FieldIndex.Data;
                 }
                 case RecordTypeInts.CRDT:
                 {
                     _CriticalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Critical);
+                    return (int)Weapon_FieldIndex.Critical;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _DetectionSoundLevelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.DetectionSoundLevel);
+                    return (int)Weapon_FieldIndex.DetectionSoundLevel;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _TemplateLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weapon_FieldIndex.Template);
+                    return (int)Weapon_FieldIndex.Template;
                 }
                 default:
                     return base.FillRecordType(

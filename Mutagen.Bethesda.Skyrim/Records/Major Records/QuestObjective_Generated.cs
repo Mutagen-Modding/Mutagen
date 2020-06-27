@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestObjective item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2166,16 +2166,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.QOBJ:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Index);
+                    return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<QuestObjective.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Flags);
+                    return (int)QuestObjective_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -2184,7 +2184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.DisplayText);
+                    return (int)QuestObjective_FieldIndex.DisplayText;
                 }
                 case RecordTypeInts.QSTA:
                 {
@@ -2194,10 +2194,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestObjectiveTarget.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Targets);
+                    return (int)QuestObjective_FieldIndex.Targets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2346,7 +2346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2359,19 +2359,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.QOBJ:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestObjective_FieldIndex.Index) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Index);
+                    return (int)QuestObjective_FieldIndex.Index;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Flags);
+                    return (int)QuestObjective_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _DisplayTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.DisplayText);
+                    return (int)QuestObjective_FieldIndex.DisplayText;
                 }
                 case RecordTypeInts.QSTA:
                 {
@@ -2380,10 +2380,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.QSTA,
                         factory:  QuestObjectiveTargetBinaryOverlay.QuestObjectiveTargetFactory);
-                    return TryGet<int?>.Succeed((int)QuestObjective_FieldIndex.Targets);
+                    return (int)QuestObjective_FieldIndex.Targets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

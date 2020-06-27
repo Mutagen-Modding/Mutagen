@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IActorValuePerkNode item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2642,42 +2642,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.Perk);
+                    return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.FNAM);
+                    return (int)ActorValuePerkNode_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PerkGridX = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.PerkGridX);
+                    return (int)ActorValuePerkNode_FieldIndex.PerkGridX;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PerkGridY = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.PerkGridY);
+                    return (int)ActorValuePerkNode_FieldIndex.PerkGridY;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HorizontalPosition = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.HorizontalPosition);
+                    return (int)ActorValuePerkNode_FieldIndex.HorizontalPosition;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VerticalPosition = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.VerticalPosition);
+                    return (int)ActorValuePerkNode_FieldIndex.VerticalPosition;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2685,7 +2685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AssociatedSkill = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.AssociatedSkill);
+                    return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -2694,16 +2694,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                             transl: UInt32BinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices);
+                    return (int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.Index);
+                    return (int)ActorValuePerkNode_FieldIndex.Index;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2874,7 +2874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2887,39 +2887,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
                     _PerkLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.Perk);
+                    return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.FNAM);
+                    return (int)ActorValuePerkNode_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _PerkGridXLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.PerkGridX);
+                    return (int)ActorValuePerkNode_FieldIndex.PerkGridX;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     _PerkGridYLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.PerkGridY);
+                    return (int)ActorValuePerkNode_FieldIndex.PerkGridY;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HorizontalPositionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.HorizontalPosition);
+                    return (int)ActorValuePerkNode_FieldIndex.HorizontalPosition;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _VerticalPositionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.VerticalPosition);
+                    return (int)ActorValuePerkNode_FieldIndex.VerticalPosition;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _AssociatedSkillLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.AssociatedSkill);
+                    return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -2933,15 +2933,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices);
+                    return (int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _IndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValuePerkNode_FieldIndex.Index);
+                    return (int)ActorValuePerkNode_FieldIndex.Index;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

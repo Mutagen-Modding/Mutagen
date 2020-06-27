@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBodyPartDataInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Model);
+                    return (int)BodyPartData_FieldIndex.Model;
                 }
                 case RecordTypeInts.BPTN:
                 {
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.BPTN,
                             recordTypeConverter: recordTypeConverter,
                             transl: BodyPart.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Parts);
+                    return (int)BodyPartData_FieldIndex.Parts;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2386,7 +2386,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2403,7 +2403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Model);
+                    return (int)BodyPartData_FieldIndex.Model;
                 }
                 case RecordTypeInts.BPTN:
                 {
@@ -2412,7 +2412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.BPTN,
                         factory:  BodyPartBinaryOverlay.BodyPartFactory);
-                    return TryGet<int?>.Succeed((int)BodyPartData_FieldIndex.Parts);
+                    return (int)BodyPartData_FieldIndex.Parts;
                 }
                 default:
                     return base.FillRecordType(

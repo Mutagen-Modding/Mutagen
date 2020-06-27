@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Internals
             item.Version = frame.ReadUInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMajorRecordInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2171,11 +2171,11 @@ namespace Mutagen.Bethesda.Internals
                     item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                    return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2310,10 +2310,10 @@ namespace Mutagen.Bethesda.Internals
                 case RecordTypeInts.EDID:
                 {
                     _EditorIDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MajorRecord_FieldIndex.EditorID);
+                    return (int)MajorRecord_FieldIndex.EditorID;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

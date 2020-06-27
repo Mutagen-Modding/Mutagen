@@ -2624,7 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWaterInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2640,19 +2640,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Texture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
+                    return (int)Water_FieldIndex.Texture;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Opacity = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2660,7 +2660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MaterialID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
+                    return (int)Water_FieldIndex.MaterialID;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2668,19 +2668,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
+                    return (int)Water_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DATA:
                 {
                     WaterBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
+                    return (int)Water_FieldIndex.Data;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     item.RelatedWaters = Mutagen.Bethesda.Oblivion.RelatedWaters.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
+                    return (int)Water_FieldIndex.RelatedWaters;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2847,7 +2847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2861,27 +2861,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TNAM:
                 {
                     _TextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Texture);
+                    return (int)Water_FieldIndex.Texture;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _OpacityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MaterialIDLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MaterialID);
+                    return (int)Water_FieldIndex.MaterialID;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Sound);
+                    return (int)Water_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2889,12 +2889,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream,
                         finalPos,
                         offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Data);
+                    return (int)Water_FieldIndex.Data;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _RelatedWatersLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.RelatedWaters);
+                    return (int)Water_FieldIndex.RelatedWaters;
                 }
                 default:
                     return base.FillRecordType(

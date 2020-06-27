@@ -2762,7 +2762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILandscapeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2776,25 +2776,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
+                    return (int)Landscape_FieldIndex.DATA;
                 }
                 case RecordTypeInts.VNML:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                    return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                    return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                    return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
@@ -2824,7 +2824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                         throw new NotImplementedException();
                                 }
                             }));
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                    return (int)Landscape_FieldIndex.Layers;
                 }
                 case RecordTypeInts.VTEX:
                 {
@@ -2834,7 +2834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<LandscapeTexture>>();
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                    return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2982,7 +2982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2996,22 +2996,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.DATA);
+                    return (int)Landscape_FieldIndex.DATA;
                 }
                 case RecordTypeInts.VNML:
                 {
                     _VertexNormalsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexNormals);
+                    return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
                     _VertexHeightMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexHeightMap);
+                    return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     _VertexColorsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.VertexColors);
+                    return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
@@ -3032,7 +3032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                     throw new NotImplementedException();
                             }
                         });
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Layers);
+                    return (int)Landscape_FieldIndex.Layers;
                 }
                 case RecordTypeInts.VTEX:
                 {
@@ -3044,7 +3044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ILandscapeTextureGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Landscape_FieldIndex.Textures);
+                    return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
                     return base.FillRecordType(

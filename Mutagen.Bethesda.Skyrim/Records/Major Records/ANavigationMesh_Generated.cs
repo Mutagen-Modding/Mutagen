@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new readonly static ANavigationMeshBinaryCreateTranslation Instance = new ANavigationMeshBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IANavigationMeshInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2168,32 +2168,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ANavigationMeshBinaryCreateTranslation.FillBinaryLengthLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.NVNM:
                 {
                     ANavigationMeshBinaryCreateTranslation.FillBinaryDataLogicCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.ONAM);
+                    return (int)ANavigationMesh_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.PNAM);
+                    return (int)ANavigationMesh_FieldIndex.PNAM;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.NNAM);
+                    return (int)ANavigationMesh_FieldIndex.NNAM;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2319,7 +2319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2335,29 +2335,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     LengthLogicCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.NVNM:
                 {
                     DataLogicCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(null);
+                    return null;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     _ONAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.ONAM);
+                    return (int)ANavigationMesh_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.PNAM);
+                    return (int)ANavigationMesh_FieldIndex.PNAM;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _NNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ANavigationMesh_FieldIndex.NNAM);
+                    return (int)ANavigationMesh_FieldIndex.NNAM;
                 }
                 default:
                     return base.FillRecordType(

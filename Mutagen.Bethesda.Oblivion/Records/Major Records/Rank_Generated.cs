@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRank item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1957,34 +1957,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RankNumber = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                    return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
                     item.Name = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         transl: StringBinaryTranslation.Instance.Parse,
                         skipMarker: false);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
+                    return (int)Rank_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Insignia = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2126,7 +2126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2139,30 +2139,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.RNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.RankNumber) return ParseResult.Stop;
                     _RankNumberLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.RankNumber);
+                    return (int)Rank_FieldIndex.RankNumber;
                 }
                 case RecordTypeInts.MNAM:
                 case RecordTypeInts.FNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Name) return ParseResult.Stop;
                     _NameOverlay = GenderedItemBinaryOverlay.Factory<String>(
                         package: _package,
                         male: RecordTypes.MNAM,
                         female: RecordTypes.FNAM,
                         stream: stream,
                         creator: (m, p) => BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(m, p.MetaData.Constants)));
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Name);
+                    return (int)Rank_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
                     _InsigniaLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Rank_FieldIndex.Insignia);
+                    return (int)Rank_FieldIndex.Insignia;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

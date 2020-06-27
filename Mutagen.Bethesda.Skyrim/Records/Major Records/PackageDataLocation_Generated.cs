@@ -1721,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PackageDataLocationBinaryCreateTranslation Instance = new PackageDataLocationBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPackageDataLocation item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1854,7 +1854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,

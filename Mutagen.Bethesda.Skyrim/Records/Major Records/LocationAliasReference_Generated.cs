@@ -1927,7 +1927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILocationAliasReference item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1940,31 +1940,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasIndex = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.AliasIndex);
+                    return (int)LocationAliasReference_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Keyword = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.Keyword);
+                    return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RefType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.RefType);
+                    return (int)LocationAliasReference_FieldIndex.RefType;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2114,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2127,24 +2127,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     _AliasIndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.AliasIndex);
+                    return (int)LocationAliasReference_FieldIndex.AliasIndex;
                 }
                 case RecordTypeInts.KNAM:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     _KeywordLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.Keyword);
+                    return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     _RefTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocationAliasReference_FieldIndex.RefType);
+                    return (int)LocationAliasReference_FieldIndex.RefType;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

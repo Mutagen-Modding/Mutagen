@@ -2196,7 +2196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAvailableMorphs item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2209,14 +2209,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
                     AvailableMorphsBinaryCreateTranslation.FillBinaryParseCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2368,14 +2368,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.MPAI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)AvailableMorphs_FieldIndex.Nose) return ParseResult.Stop;
                     ParseCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

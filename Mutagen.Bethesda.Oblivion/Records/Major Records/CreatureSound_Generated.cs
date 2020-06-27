@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICreatureSound item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1988,25 +1988,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
+                    return (int)CreatureSound_FieldIndex.SoundType;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: SoundItem.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
+                    return (int)CreatureSound_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2160,23 +2160,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
                     _SoundTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.SoundType);
+                    return (int)CreatureSound_FieldIndex.SoundType;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<SoundItemBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: SoundItem_Registration.TriggeringRecordTypes,
                         factory:  SoundItemBinaryOverlay.SoundItemFactory);
-                    return TryGet<int?>.Succeed((int)CreatureSound_FieldIndex.Sounds);
+                    return (int)CreatureSound_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionSounds item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1966,7 +1966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
+                    return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDSD:
                 {
@@ -1976,7 +1976,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionSound.TryCreateFromBinary)
                         .ToExtendedList<RegionSound>();
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
+                    return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2119,7 +2119,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDMD:
                 {
                     _MusicTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.MusicType);
+                    return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDSD:
                 {
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 12,
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
+                    return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:
                     return base.FillRecordType(

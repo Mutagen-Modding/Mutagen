@@ -2243,7 +2243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public new readonly static AStoryManagerNodeBinaryCreateTranslation Instance = new AStoryManagerNodeBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAStoryManagerNodeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2259,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.Parent);
+                    return (int)AStoryManagerNode_FieldIndex.Parent;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PreviousSibling = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.PreviousSibling);
+                    return (int)AStoryManagerNode_FieldIndex.PreviousSibling;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     AStoryManagerNodeBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.Conditions);
+                    return (int)AStoryManagerNode_FieldIndex.Conditions;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2406,12 +2406,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     _ParentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.Parent);
+                    return (int)AStoryManagerNode_FieldIndex.Parent;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _PreviousSiblingLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.PreviousSibling);
+                    return (int)AStoryManagerNode_FieldIndex.PreviousSibling;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
@@ -2422,7 +2422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)AStoryManagerNode_FieldIndex.Conditions);
+                    return (int)AStoryManagerNode_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(

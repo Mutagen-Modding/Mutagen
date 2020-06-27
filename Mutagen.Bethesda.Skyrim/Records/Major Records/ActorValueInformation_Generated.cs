@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IActorValueInformationInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Name);
+                    return (int)ActorValueInformation_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2655,7 +2655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Description);
+                    return (int)ActorValueInformation_FieldIndex.Description;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -2663,18 +2663,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Abbreviation = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Abbreviation);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.CNAM);
+                    return (int)ActorValueInformation_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.AVSK:
                 {
                     item.Skill = Mutagen.Bethesda.Skyrim.ActorValueSkill.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Skill);
+                    return (int)ActorValueInformation_FieldIndex.Skill;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -2684,7 +2684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ActorValuePerkNode.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.PerkTree);
+                    return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2836,7 +2836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2850,27 +2850,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Name);
+                    return (int)ActorValueInformation_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Description);
+                    return (int)ActorValueInformation_FieldIndex.Description;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _AbbreviationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Abbreviation);
+                    return (int)ActorValueInformation_FieldIndex.Abbreviation;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _CNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.CNAM);
+                    return (int)ActorValueInformation_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.AVSK:
                 {
                     _SkillLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.Skill);
+                    return (int)ActorValueInformation_FieldIndex.Skill;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -2879,7 +2879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.PNAM,
                         factory:  ActorValuePerkNodeBinaryOverlay.ActorValuePerkNodeFactory);
-                    return TryGet<int?>.Succeed((int)ActorValueInformation_FieldIndex.PerkTree);
+                    return (int)ActorValueInformation_FieldIndex.PerkTree;
                 }
                 default:
                     return base.FillRecordType(

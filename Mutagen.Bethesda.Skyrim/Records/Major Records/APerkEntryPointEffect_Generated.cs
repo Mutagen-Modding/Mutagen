@@ -1777,7 +1777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PerkConditionTabCount = frame.ReadUInt8();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAPerkEntryPointEffect item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1793,7 +1793,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     APerkEntryPointEffectBinaryCreateTranslation.FillBinaryFunctionParametersCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
                     return APerkEffectBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1900,7 +1900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     FunctionParametersCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 default:
                     return base.FillRecordType(

@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionGrasses item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Grass>>();
-                    return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
+                    return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1980,7 +1980,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IGrassGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionGrasses_FieldIndex.Grasses);
+                    return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:
                     return base.FillRecordType(

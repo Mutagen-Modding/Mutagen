@@ -2477,7 +2477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRelationshipInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2503,7 +2503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AssociationType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Relationship_FieldIndex.AssociationType);
+                    return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2680,7 +2680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Relationship_FieldIndex.AssociationType);
+                    return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:
                     return base.FillRecordType(

@@ -1852,7 +1852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ModelBinaryCreateTranslation Instance = new ModelBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IModel item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             transl: AlternateTexture.TryCreateFromBinary)
                         .ToExtendedList<AlternateTexture>();
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                    return (int)Model_FieldIndex.AlternateTextures;
                 }
                 default:
                     return SimpleModelBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         count: count,
                         getter: (s, p) => AlternateTextureBinaryOverlay.AlternateTextureFactory(s, p));
-                    return TryGet<int?>.Succeed((int)Model_FieldIndex.AlternateTextures);
+                    return (int)Model_FieldIndex.AlternateTextures;
                 }
                 default:
                     return base.FillRecordType(

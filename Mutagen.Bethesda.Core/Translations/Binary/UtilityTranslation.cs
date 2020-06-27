@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda
             R record,
             MutagenFrame frame);
 
-        public delegate TryGet<int?> RecordTypeFill<R>(
+        public delegate ParseResult RecordTypeFill<R>(
             R record,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate TryGet<int?> SubrecordFill<R>(
+        public delegate ParseResult SubrecordFill<R>(
             R record,
             MutagenFrame frame,
             int? lastParsed,
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate TryGet<int?> ModRecordTypeFill<R, G>(
+        public delegate ParseResult ModRecordTypeFill<R, G>(
             R record,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (targetFrame.Position < finalPos)
                 {
                     targetFrame.Position = finalPos;
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -182,12 +182,12 @@ namespace Mutagen.Bethesda
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
                 }
-                lastParsed = parsed.Value;
+                lastParsed = parsed.ParsedIndex;
             }
             return record;
         }
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda
                     nextRecordType: nextRecordType,
                     contentLength: contentLength,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda
                     nextRecordType: groupHeader.ContainedRecordType,
                     contentLength: len,
                     recordTypeConverter: recordTypeConverter);
-                if (parsed.Failed) break;
+                if (!parsed.KeepParsing) break;
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;

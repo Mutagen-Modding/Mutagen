@@ -1970,7 +1970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionSounds item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Music);
+                    return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
                 {
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionSound.TryCreateFromBinary)
                         .ToExtendedList<RegionSound>();
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
+                    return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:
                     return RegionDataBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2127,7 +2127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2141,7 +2141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDMO:
                 {
                     _MusicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Music);
+                    return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:
                 {
@@ -2153,7 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => RegionSoundBinaryOverlay.RegionSoundFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)RegionSounds_FieldIndex.Sounds);
+                    return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:
                     return base.FillRecordType(

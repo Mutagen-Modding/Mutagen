@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ch (var item in GroupCommon<T>.Instance.EnumerateMajorRecords<TMajor>(ob";
+            string testString = "ParseResult.Failure";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

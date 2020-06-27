@@ -2081,7 +2081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAnimatedObjectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.BNAM:
                 {
@@ -2104,7 +2104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnloadEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.UnloadEvent);
+                    return (int)AnimatedObject_FieldIndex.UnloadEvent;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2239,7 +2239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2256,12 +2256,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.Model);
+                    return (int)AnimatedObject_FieldIndex.Model;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     _UnloadEventLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AnimatedObject_FieldIndex.UnloadEvent);
+                    return (int)AnimatedObject_FieldIndex.UnloadEvent;
                 }
                 default:
                     return base.FillRecordType(

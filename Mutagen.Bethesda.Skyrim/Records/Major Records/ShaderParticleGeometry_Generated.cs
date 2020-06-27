@@ -3102,7 +3102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IShaderParticleGeometryInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3129,11 +3129,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.Type);
+                        return (int)ShaderParticleGeometry_FieldIndex.Type;
                     }
                     item.BoxSize = dataFrame.ReadUInt32();
                     item.ParticleDensity = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3141,7 +3141,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3331,7 +3331,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3350,12 +3350,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleDensity);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _ParticleTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ShaderParticleGeometry_FieldIndex.ParticleTexture);
+                    return (int)ShaderParticleGeometry_FieldIndex.ParticleTexture;
                 }
                 default:
                     return base.FillRecordType(

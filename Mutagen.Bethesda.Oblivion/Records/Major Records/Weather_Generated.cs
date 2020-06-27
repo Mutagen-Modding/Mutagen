@@ -3109,7 +3109,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWeatherInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.TextureLowerLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
+                    return (int)Weather_FieldIndex.TextureLowerLayer;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3133,14 +3133,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.TextureUpperLayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
+                    return (int)Weather_FieldIndex.TextureUpperLayer;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
+                    return (int)Weather_FieldIndex.Model;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -3150,22 +3150,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherColors.TryCreateFromBinary)
                         .ToExtendedList<WeatherColors>();
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
+                    return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     item.FogDistance = Mutagen.Bethesda.Oblivion.FogDistance.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
+                    return (int)Weather_FieldIndex.FogDistance;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     item.HDRData = Mutagen.Bethesda.Oblivion.HDRData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
+                    return (int)Weather_FieldIndex.HDRData;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.WeatherData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
+                    return (int)Weather_FieldIndex.Data;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3175,7 +3175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WeatherSound.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                    return (int)Weather_FieldIndex.Sounds;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3331,7 +3331,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3345,12 +3345,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CNAM:
                 {
                     _TextureLowerLayerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureLowerLayer);
+                    return (int)Weather_FieldIndex.TextureLowerLayer;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _TextureUpperLayerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.TextureUpperLayer);
+                    return (int)Weather_FieldIndex.TextureUpperLayer;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3358,7 +3358,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Model);
+                    return (int)Weather_FieldIndex.Model;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -3370,22 +3370,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 16,
                         getter: (s, p) => WeatherColorsBinaryOverlay.WeatherColorsFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Colors);
+                    return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FogDistanceLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.FogDistance);
+                    return (int)Weather_FieldIndex.FogDistance;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HDRDataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.HDRData);
+                    return (int)Weather_FieldIndex.HDRData;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Data);
+                    return (int)Weather_FieldIndex.Data;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -3399,7 +3399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)Weather_FieldIndex.Sounds);
+                    return (int)Weather_FieldIndex.Sounds;
                 }
                 default:
                     return base.FillRecordType(

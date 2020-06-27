@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGlobalIntInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2052,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     GlobalIntBinaryCreateTranslation.FillBinaryDataCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)GlobalInt_FieldIndex.Data);
+                    return (int)GlobalInt_FieldIndex.Data;
                 }
                 default:
                     return GlobalBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)GlobalInt_FieldIndex.Data);
+                    return (int)GlobalInt_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

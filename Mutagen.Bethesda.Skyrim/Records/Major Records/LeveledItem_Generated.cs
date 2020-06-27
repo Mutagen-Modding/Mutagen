@@ -2500,7 +2500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILeveledItemInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2513,19 +2513,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ObjectBounds);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.LVLD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ChanceNone = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                    return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLG:
                 {
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
+                    return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.COED:
@@ -2548,7 +2548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledItemEntry.TryCreateFromBinary)
                         .ToExtendedList<LeveledItemEntry>();
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                    return (int)LeveledItem_FieldIndex.Entries;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2697,7 +2697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2711,22 +2711,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ObjectBounds);
+                    return (int)LeveledItem_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.LVLD:
                 {
                     _ChanceNoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.ChanceNone);
+                    return (int)LeveledItem_FieldIndex.ChanceNone;
                 }
                 case RecordTypeInts.LVLF:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Flags);
+                    return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLG:
                 {
                     _GlobalLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Global);
+                    return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
                 case RecordTypeInts.COED:
@@ -2741,7 +2741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)LeveledItem_FieldIndex.Entries);
+                    return (int)LeveledItem_FieldIndex.Entries;
                 }
                 default:
                     return base.FillRecordType(

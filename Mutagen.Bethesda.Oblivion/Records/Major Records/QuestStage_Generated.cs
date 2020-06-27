@@ -1956,7 +1956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IQuestStage item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1969,10 +1969,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Stage = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                    return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -1987,10 +1987,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LogEntry.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2144,9 +2144,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.INDX:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)QuestStage_FieldIndex.Stage) return ParseResult.Stop;
                     _StageLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.Stage);
+                    return (int)QuestStage_FieldIndex.Stage;
                 }
                 case RecordTypeInts.QSDT:
                 case RecordTypeInts.CTDA:
@@ -2160,10 +2160,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: LogEntry_Registration.TriggeringRecordTypes,
                         factory:  LogEntryBinaryOverlay.LogEntryFactory);
-                    return TryGet<int?>.Succeed((int)QuestStage_FieldIndex.LogEntries);
+                    return (int)QuestStage_FieldIndex.LogEntries;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

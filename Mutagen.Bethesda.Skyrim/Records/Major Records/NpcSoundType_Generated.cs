@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INpcSoundType item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1988,25 +1988,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
+                    return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSound>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: NpcSound_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: NpcSound.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
+                    return (int)NpcSoundType_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2160,23 +2160,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CSDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Type);
+                    return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:
                 case RecordTypeInts.CSDC:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Sounds) return ParseResult.Stop;
                     this.Sounds = this.ParseRepeatedTypelessSubrecord<NpcSoundBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: NpcSound_Registration.TriggeringRecordTypes,
                         factory:  NpcSoundBinaryOverlay.NpcSoundFactory);
-                    return TryGet<int?>.Succeed((int)NpcSoundType_FieldIndex.Sounds);
+                    return (int)NpcSoundType_FieldIndex.Sounds;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

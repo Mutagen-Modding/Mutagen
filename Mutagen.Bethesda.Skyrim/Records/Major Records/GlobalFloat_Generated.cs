@@ -2032,7 +2032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGlobalFloatInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2046,7 +2046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
+                    return (int)GlobalFloat_FieldIndex.Data;
                 }
                 default:
                     return GlobalBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2174,7 +2174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2188,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FLTV:
                 {
                     _DataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)GlobalFloat_FieldIndex.Data);
+                    return (int)GlobalFloat_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

@@ -2316,7 +2316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEnchantmentInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2332,12 +2332,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
+                    return (int)Enchantment_FieldIndex.Name;
                 }
                 case RecordTypeInts.ENIT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.EnchantmentData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
+                    return (int)Enchantment_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2348,7 +2348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
+                    return (int)Enchantment_FieldIndex.Effects;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2488,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2502,12 +2502,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Name);
+                    return (int)Enchantment_FieldIndex.Name;
                 }
                 case RecordTypeInts.ENIT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Data);
+                    return (int)Enchantment_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2517,7 +2517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)Enchantment_FieldIndex.Effects);
+                    return (int)Enchantment_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

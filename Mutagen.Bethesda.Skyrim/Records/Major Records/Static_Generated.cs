@@ -2556,7 +2556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IStaticInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2569,14 +2569,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                    return (int)Static_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                    return (int)Static_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2586,12 +2586,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
+                    return (int)Static_FieldIndex.Material;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     item.Lod = Mutagen.Bethesda.Skyrim.Lod.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                    return (int)Static_FieldIndex.Lod;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2745,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2759,7 +2759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.ObjectBounds);
+                    return (int)Static_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2767,17 +2767,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Model);
+                    return (int)Static_FieldIndex.Model;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Material);
+                    return (int)Static_FieldIndex.Material;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _LodLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Static_FieldIndex.Lod);
+                    return (int)Static_FieldIndex.Lod;
                 }
                 default:
                     return base.FillRecordType(

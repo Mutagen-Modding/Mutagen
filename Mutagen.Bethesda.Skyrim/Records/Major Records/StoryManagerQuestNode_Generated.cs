@@ -2499,7 +2499,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IStoryManagerQuestNodeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2513,19 +2513,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.Flags);
+                    return (int)StoryManagerQuestNode_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxConcurrentQuests = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests);
+                    return (int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxNumQuestsToRun = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun);
+                    return (int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.FNAM:
@@ -2540,7 +2540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: StoryManagerQuest_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: StoryManagerQuest.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.Quests);
+                    return (int)StoryManagerQuestNode_FieldIndex.Quests;
                 }
                 default:
                     return AStoryManagerNodeBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2683,7 +2683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2697,17 +2697,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.Flags);
+                    return (int)StoryManagerQuestNode_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _MaxConcurrentQuestsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests);
+                    return (int)StoryManagerQuestNode_FieldIndex.MaxConcurrentQuests;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MaxNumQuestsToRunLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun);
+                    return (int)StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun;
                 }
                 case RecordTypeInts.NNAM:
                 case RecordTypeInts.FNAM:
@@ -2723,7 +2723,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         getter: (s, p, recConv) => StoryManagerQuestBinaryOverlay.StoryManagerQuestFactory(new OverlayStream(s, p), p, recConv),
                         skipHeader: false);
-                    return TryGet<int?>.Succeed((int)StoryManagerQuestNode_FieldIndex.Quests);
+                    return (int)StoryManagerQuestNode_FieldIndex.Quests;
                 }
                 default:
                     return base.FillRecordType(

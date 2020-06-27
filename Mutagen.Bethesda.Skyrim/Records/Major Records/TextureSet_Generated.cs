@@ -2974,7 +2974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITextureSetInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2987,7 +2987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
+                    return (int)TextureSet_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.TX00:
                 {
@@ -2995,7 +2995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Diffuse = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
+                    return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
@@ -3003,7 +3003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NormalOrGloss = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
+                    return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
@@ -3011,7 +3011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EnvironmentMaskOrSubsurfaceTint = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
+                    return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
@@ -3019,7 +3019,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.GlowOrDetailMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
+                    return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
@@ -3027,7 +3027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Height = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
+                    return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
@@ -3035,7 +3035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Environment = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
+                    return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
@@ -3043,7 +3043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Multilayer = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
+                    return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
@@ -3051,18 +3051,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BacklightMaskOrSpecular = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
+                    return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:
                 {
                     item.Decal = Mutagen.Bethesda.Skyrim.Decal.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
+                    return (int)TextureSet_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<TextureSet.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3232,7 +3232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3246,57 +3246,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.ObjectBounds);
+                    return (int)TextureSet_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.TX00:
                 {
                     _DiffuseLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Diffuse);
+                    return (int)TextureSet_FieldIndex.Diffuse;
                 }
                 case RecordTypeInts.TX01:
                 {
                     _NormalOrGlossLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.NormalOrGloss);
+                    return (int)TextureSet_FieldIndex.NormalOrGloss;
                 }
                 case RecordTypeInts.TX02:
                 {
                     _EnvironmentMaskOrSubsurfaceTintLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint);
+                    return (int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint;
                 }
                 case RecordTypeInts.TX03:
                 {
                     _GlowOrDetailMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.GlowOrDetailMap);
+                    return (int)TextureSet_FieldIndex.GlowOrDetailMap;
                 }
                 case RecordTypeInts.TX04:
                 {
                     _HeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Height);
+                    return (int)TextureSet_FieldIndex.Height;
                 }
                 case RecordTypeInts.TX05:
                 {
                     _EnvironmentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Environment);
+                    return (int)TextureSet_FieldIndex.Environment;
                 }
                 case RecordTypeInts.TX06:
                 {
                     _MultilayerLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Multilayer);
+                    return (int)TextureSet_FieldIndex.Multilayer;
                 }
                 case RecordTypeInts.TX07:
                 {
                     _BacklightMaskOrSpecularLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.BacklightMaskOrSpecular);
+                    return (int)TextureSet_FieldIndex.BacklightMaskOrSpecular;
                 }
                 case RecordTypeInts.DODT:
                 {
                     _DecalLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Decal);
+                    return (int)TextureSet_FieldIndex.Decal;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TextureSet_FieldIndex.Flags);
+                    return (int)TextureSet_FieldIndex.Flags;
                 }
                 default:
                     return base.FillRecordType(

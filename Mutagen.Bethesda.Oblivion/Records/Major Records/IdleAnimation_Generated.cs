@@ -2558,7 +2558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IIdleAnimationInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2573,7 +2573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Model);
+                    return (int)IdleAnimation_FieldIndex.Model;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -2584,13 +2584,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AnimationGroupSection = EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                    return (int)IdleAnimation_FieldIndex.AnimationGroupSection;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IdleAnimation>>();
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2737,7 +2737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2754,7 +2754,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Model);
+                    return (int)IdleAnimation_FieldIndex.Model;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -2769,12 +2769,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _AnimationGroupSectionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationGroupSection);
+                    return (int)IdleAnimation_FieldIndex.AnimationGroupSection;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -2786,7 +2786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdleAnimations);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:
                     return base.FillRecordType(

@@ -1923,7 +1923,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEffect item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1936,17 +1936,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     EffectBinaryCreateTranslation.FillBinaryEffectInitialCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.EffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                    return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.SCIT:
                 case RecordTypeInts.FULL:
@@ -1954,10 +1954,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ScriptEffect = Mutagen.Bethesda.Oblivion.ScriptEffect.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
+                    return (int)Effect_FieldIndex.ScriptEffect;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2121,17 +2121,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.EFID:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     EffectInitialCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.EFIT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Data) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.Data);
+                    return (int)Effect_FieldIndex.Data;
                 }
                 case RecordTypeInts.SCIT:
                 case RecordTypeInts.FULL:
@@ -2140,10 +2140,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Effect_FieldIndex.ScriptEffect);
+                    return (int)Effect_FieldIndex.ScriptEffect;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

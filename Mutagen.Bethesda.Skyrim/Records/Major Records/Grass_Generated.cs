@@ -3350,7 +3350,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3363,14 +3363,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                    return (int)Grass_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3389,7 +3389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WavePeriod = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
+                    return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3592,7 +3592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3606,7 +3606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.ObjectBounds);
+                    return (int)Grass_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3614,12 +3614,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Unknown3);
+                    return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:
                     return base.FillRecordType(

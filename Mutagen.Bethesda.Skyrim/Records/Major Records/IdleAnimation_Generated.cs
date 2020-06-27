@@ -3046,7 +3046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IIdleAnimationInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3061,7 +3061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -3069,7 +3069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Filename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                    return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -3077,7 +3077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AnimationEvent = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -3086,7 +3086,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3097,7 +3097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.AnimationGroupSection = dataFrame.ReadUInt8();
                     item.ReplayDelay = dataFrame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                    return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3275,7 +3275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3294,17 +3294,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Conditions);
+                    return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FilenameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.Filename);
+                    return (int)IdleAnimation_FieldIndex.Filename;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _AnimationEventLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.AnimationEvent);
+                    return (int)IdleAnimation_FieldIndex.AnimationEvent;
                 }
                 case RecordTypeInts.ANAM:
                 {
@@ -3316,12 +3316,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IIdleRelationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.RelatedIdles);
+                    return (int)IdleAnimation_FieldIndex.RelatedIdles;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)IdleAnimation_FieldIndex.ReplayDelay);
+                    return (int)IdleAnimation_FieldIndex.ReplayDelay;
                 }
                 default:
                     return base.FillRecordType(

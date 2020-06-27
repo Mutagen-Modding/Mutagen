@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMessageButton item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1994,24 +1994,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Text = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MessageButton_FieldIndex.Text);
+                    return (int)MessageButton_FieldIndex.Text;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
                     MessageButtonBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)MessageButton_FieldIndex.Conditions);
+                    return (int)MessageButton_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2163,7 +2163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2176,23 +2176,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ITXT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Text) return ParseResult.Stop;
                     _TextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MessageButton_FieldIndex.Text);
+                    return (int)MessageButton_FieldIndex.Text;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)MessageButton_FieldIndex.Conditions) return ParseResult.Stop;
                     ConditionsCustomParse(
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)MessageButton_FieldIndex.Conditions);
+                    return (int)MessageButton_FieldIndex.Conditions;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

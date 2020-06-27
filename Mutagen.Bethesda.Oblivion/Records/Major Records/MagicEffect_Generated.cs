@@ -2661,7 +2661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMagicEffectInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2685,7 +2685,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2693,19 +2693,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
+                    return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
+                    return (int)MagicEffect_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.MagicEffectData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    return (int)MagicEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IEDIDLink<MagicEffect>>();
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2864,7 +2864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2878,17 +2878,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Name);
+                    return (int)MagicEffect_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Description);
+                    return (int)MagicEffect_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Icon);
+                    return (int)MagicEffect_FieldIndex.Icon;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2896,12 +2896,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Model);
+                    return (int)MagicEffect_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.Data);
+                    return (int)MagicEffect_FieldIndex.Data;
                 }
                 case RecordTypeInts.ESCE:
                 {
@@ -2913,7 +2913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         itemLength: 4,
                         getter: (s, p) => new EDIDLink<IMagicEffectGetter>(new RecordType(BinaryPrimitives.ReadInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MagicEffect_FieldIndex.CounterEffects);
+                    return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:
                     return base.FillRecordType(

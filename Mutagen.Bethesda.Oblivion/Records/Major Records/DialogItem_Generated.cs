@@ -3488,7 +3488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogItemInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3501,7 +3501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.DialogItemData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
+                    return (int)DialogItem_FieldIndex.Data;
                 }
                 case RecordTypeInts.QSTI:
                 {
@@ -3509,7 +3509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                    return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -3517,7 +3517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.PreviousTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                    return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -3526,7 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NAME),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                    return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
                 case RecordTypeInts.NAM1:
@@ -3538,7 +3538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DialogResponse.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                    return (int)DialogItem_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                    return (int)DialogItem_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.TCLT:
                 {
@@ -3558,7 +3558,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                    return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
                 {
@@ -3567,7 +3567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                    return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
@@ -3575,7 +3575,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                    return (int)DialogItem_FieldIndex.Script;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3729,7 +3729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3743,17 +3743,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Data);
+                    return (int)DialogItem_FieldIndex.Data;
                 }
                 case RecordTypeInts.QSTI:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Quest);
+                    return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _PreviousTopicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.PreviousTopic);
+                    return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:
                 {
@@ -3767,7 +3767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Topics);
+                    return (int)DialogItem_FieldIndex.Topics;
                 }
                 case RecordTypeInts.TRDT:
                 case RecordTypeInts.NAM1:
@@ -3778,7 +3778,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: DialogResponse_Registration.TriggeringRecordTypes,
                         factory:  DialogResponseBinaryOverlay.DialogResponseFactory);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Responses);
+                    return (int)DialogItem_FieldIndex.Responses;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -3793,7 +3793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Conditions);
+                    return (int)DialogItem_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.TCLT:
                 {
@@ -3807,7 +3807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Choices);
+                    return (int)DialogItem_FieldIndex.Choices;
                 }
                 case RecordTypeInts.TCLF:
                 {
@@ -3821,7 +3821,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.LinkFrom);
+                    return (int)DialogItem_FieldIndex.LinkFrom;
                 }
                 case RecordTypeInts.SCHD:
                 case RecordTypeInts.SCHR:
@@ -3830,7 +3830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)DialogItem_FieldIndex.Script);
+                    return (int)DialogItem_FieldIndex.Script;
                 }
                 default:
                     return base.FillRecordType(

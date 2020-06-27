@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDestructible item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2036,24 +2036,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.DEST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Skyrim.DestructableData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
+                    return (int)Destructible_FieldIndex.Data;
                 }
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DestructionStage>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DestructionStage.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
+                    return (int)Destructible_FieldIndex.Stages;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2195,7 +2195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2208,23 +2208,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.DEST:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Data) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Data);
+                    return (int)Destructible_FieldIndex.Data;
                 }
                 case RecordTypeInts.DSTD:
                 case RecordTypeInts.DMDL:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
                     this.Stages = this.ParseRepeatedTypelessSubrecord<DestructionStageBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: DestructionStage_Registration.TriggeringRecordTypes,
                         factory:  DestructionStageBinaryOverlay.DestructionStageFactory);
-                    return TryGet<int?>.Succeed((int)Destructible_FieldIndex.Stages);
+                    return (int)Destructible_FieldIndex.Stages;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

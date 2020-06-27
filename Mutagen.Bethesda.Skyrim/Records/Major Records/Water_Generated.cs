@@ -7982,7 +7982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IWaterInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -7999,7 +7999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                    return (int)Water_FieldIndex.Name;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -8008,25 +8008,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                             transl: StringBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                    return (int)Water_FieldIndex.UnusedNoisemaps;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Opacity = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Water.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                    return (int)Water_FieldIndex.MNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -8034,7 +8034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                    return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -8042,7 +8042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.OpenSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                    return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -8050,7 +8050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                    return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -8058,13 +8058,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                    return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamagePerSecond = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                    return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -8119,25 +8119,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DepthNormals = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.DepthSpecularLighting = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.SpecularSunSparklePower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                    return (int)Water_FieldIndex.SpecularSunSparklePower;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.GNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                    return (int)Water_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LinearVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                    return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AngularVelocity = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                    return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -8145,7 +8145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerOneTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                    return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -8153,7 +8153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerTwoTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                    return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
@@ -8161,7 +8161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NoiseLayerThreeTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                    return (int)Water_FieldIndex.NoiseLayerThreeTexture;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -8603,7 +8603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -8617,7 +8617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Name);
+                    return (int)Water_FieldIndex.Name;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -8631,82 +8631,82 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: false,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.UnusedNoisemaps);
+                    return (int)Water_FieldIndex.UnusedNoisemaps;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _OpacityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Opacity);
+                    return (int)Water_FieldIndex.Opacity;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Flags);
+                    return (int)Water_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.MNAM);
+                    return (int)Water_FieldIndex.MNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _MaterialLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Material);
+                    return (int)Water_FieldIndex.Material;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _OpenSoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.OpenSound);
+                    return (int)Water_FieldIndex.OpenSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _SpellLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.Spell);
+                    return (int)Water_FieldIndex.Spell;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _ImageSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.ImageSpace);
+                    return (int)Water_FieldIndex.ImageSpace;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DamagePerSecondLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.DamagePerSecond);
+                    return (int)Water_FieldIndex.DamagePerSecond;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.SpecularSunSparklePower);
+                    return (int)Water_FieldIndex.SpecularSunSparklePower;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     _GNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.GNAM);
+                    return (int)Water_FieldIndex.GNAM;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     _LinearVelocityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.LinearVelocity);
+                    return (int)Water_FieldIndex.LinearVelocity;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _AngularVelocityLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.AngularVelocity);
+                    return (int)Water_FieldIndex.AngularVelocity;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _NoiseLayerOneTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerOneTexture);
+                    return (int)Water_FieldIndex.NoiseLayerOneTexture;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     _NoiseLayerTwoTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerTwoTexture);
+                    return (int)Water_FieldIndex.NoiseLayerTwoTexture;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     _NoiseLayerThreeTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Water_FieldIndex.NoiseLayerThreeTexture);
+                    return (int)Water_FieldIndex.NoiseLayerThreeTexture;
                 }
                 default:
                     return base.FillRecordType(

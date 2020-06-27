@@ -3065,7 +3065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IHeadPartInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3082,26 +3082,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
+                    return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
+                    return (int)HeadPart_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<HeadPart.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
+                    return (int)HeadPart_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Type = EnumBinaryTranslation<HeadPart.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
+                    return (int)HeadPart_FieldIndex.Type;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3110,7 +3110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
+                    return (int)HeadPart_FieldIndex.ExtraParts;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3121,7 +3121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Part.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
+                    return (int)HeadPart_FieldIndex.Parts;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -3129,7 +3129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
+                    return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -3137,7 +3137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Color = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
+                    return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
@@ -3145,7 +3145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ValidRaces = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);
+                    return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3306,7 +3306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3320,7 +3320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Name);
+                    return (int)HeadPart_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3328,17 +3328,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Model);
+                    return (int)HeadPart_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Flags);
+                    return (int)HeadPart_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _TypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Type);
+                    return (int)HeadPart_FieldIndex.Type;
                 }
                 case RecordTypeInts.HNAM:
                 {
@@ -3352,7 +3352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ExtraParts);
+                    return (int)HeadPart_FieldIndex.ExtraParts;
                 }
                 case RecordTypeInts.NAM0:
                 case RecordTypeInts.NAM1:
@@ -3362,22 +3362,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Part_Registration.TriggeringRecordTypes,
                         factory:  PartBinaryOverlay.PartFactory);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Parts);
+                    return (int)HeadPart_FieldIndex.Parts;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TextureSetLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.TextureSet);
+                    return (int)HeadPart_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.Color);
+                    return (int)HeadPart_FieldIndex.Color;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _ValidRacesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)HeadPart_FieldIndex.ValidRaces);
+                    return (int)HeadPart_FieldIndex.ValidRaces;
                 }
                 default:
                     return base.FillRecordType(

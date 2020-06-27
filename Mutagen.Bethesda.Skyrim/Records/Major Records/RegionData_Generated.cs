@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static RegionDataBinaryCreateTranslation Instance = new RegionDataBinaryCreateTranslation();
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IRegionData item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1896,20 +1896,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return ParseResult.Stop;
                     item.Header = Mutagen.Bethesda.Skyrim.RegionDataHeader.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
+                    return (int)RegionData_FieldIndex.Header;
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return ParseResult.Stop;
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Icons);
+                    return (int)RegionData_FieldIndex.Icons;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2023,7 +2023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2036,21 +2036,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RDAT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Header) return ParseResult.Stop;
                     _HeaderLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Header);
+                    return (int)RegionData_FieldIndex.Header;
                 }
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)RegionData_FieldIndex.Icons) return ParseResult.Stop;
                     this.Icons = IconsBinaryOverlay.IconsFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)RegionData_FieldIndex.Icons);
+                    return (int)RegionData_FieldIndex.Icons;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

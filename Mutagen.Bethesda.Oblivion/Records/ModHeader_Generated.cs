@@ -2772,7 +2772,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Version = frame.ReadInt32();
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IModHeader item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2785,19 +2785,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Oblivion.ModStats.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -2805,7 +2805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2813,7 +2813,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -2823,17 +2823,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.MAST,
                             recordTypeConverter: recordTypeConverter,
                             transl: MasterReference.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VestigialData = frame.ReadUInt64();
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                    return (int)ModHeader_FieldIndex.VestigialData;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
 
@@ -2998,7 +2998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3012,27 +3012,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Stats);
+                    return (int)ModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.TypeOffsets);
+                    return (int)ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Deleted);
+                    return (int)ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Author);
+                    return (int)ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.Description);
+                    return (int)ModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -3041,15 +3041,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.MasterReferences);
+                    return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _VestigialDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ModHeader_FieldIndex.VestigialData);
+                    return (int)ModHeader_FieldIndex.VestigialData;
                 }
                 default:
-                    return TryGet<int?>.Succeed(null);
+                    return default(int?);
             }
         }
         #region To String

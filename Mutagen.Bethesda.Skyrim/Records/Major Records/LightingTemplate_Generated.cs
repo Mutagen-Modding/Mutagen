@@ -4189,7 +4189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILightingTemplateInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -4222,27 +4222,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= LightingTemplate.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus);
+                        return (int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus;
                     }
                     item.AmbientSpecular = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.AmbientScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.AmbientScale);
+                        return (int)LightingTemplate_FieldIndex.AmbientScale;
                     }
                     item.FogFarColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FogMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.LightFadeStartDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.LightFadeEndDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Unknown = dataFrame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.Unknown);
+                    return (int)LightingTemplate_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DALC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
                     item.DirectionalAmbientColors = Mutagen.Bethesda.Skyrim.AmbientColors.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                    return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -4484,7 +4484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -4507,7 +4507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.Unknown);
+                    return (int)LightingTemplate_FieldIndex.Unknown;
                 }
                 case RecordTypeInts.DALC:
                 {
@@ -4517,7 +4517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         finalPos: finalPos,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)LightingTemplate_FieldIndex.DirectionalAmbientColors);
+                    return (int)LightingTemplate_FieldIndex.DirectionalAmbientColors;
                 }
                 default:
                     return base.FillRecordType(

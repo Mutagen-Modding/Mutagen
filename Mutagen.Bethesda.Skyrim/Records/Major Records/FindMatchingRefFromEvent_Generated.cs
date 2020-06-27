@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFindMatchingRefFromEvent item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1837,20 +1837,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FromEvent = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.FromEvent);
+                    return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EventData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.EventData);
+                    return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2001,18 +2001,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALFE:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
                     _FromEventLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.FromEvent);
+                    return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
                     _EventDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)FindMatchingRefFromEvent_FieldIndex.EventData);
+                    return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

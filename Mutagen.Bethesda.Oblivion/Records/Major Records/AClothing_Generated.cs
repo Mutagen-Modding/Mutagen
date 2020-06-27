@@ -3263,7 +3263,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public new readonly static AClothingBinaryCreateTranslation Instance = new AClothingBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAClothingInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3279,7 +3279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
+                    return (int)AClothing_FieldIndex.Name;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -3287,7 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
+                    return (int)AClothing_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
@@ -3295,32 +3295,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Enchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
+                    return (int)AClothing_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EnchantmentPoints = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.EnchantmentPoints);
+                    return (int)AClothing_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.BMDT:
                 {
                     item.ClothingFlags = Mutagen.Bethesda.Oblivion.ClothingFlags.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
+                    return (int)AClothing_FieldIndex.ClothingFlags;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
+                    return (int)AClothing_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleWorldModel);
+                    return (int)AClothing_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3328,21 +3328,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.MaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
+                    return (int)AClothing_FieldIndex.MaleIcon;
                 }
                 case RecordTypeInts.MOD3:
                 {
                     item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleBipedModel);
+                    return (int)AClothing_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
                 {
                     item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleWorldModel);
+                    return (int)AClothing_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:
                 {
@@ -3350,7 +3350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.FemaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleIcon);
+                    return (int)AClothing_FieldIndex.FemaleIcon;
                 }
                 default:
                     return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3480,7 +3480,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3494,27 +3494,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Name);
+                    return (int)AClothing_FieldIndex.Name;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Script);
+                    return (int)AClothing_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     _EnchantmentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.Enchantment);
+                    return (int)AClothing_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     _EnchantmentPointsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.EnchantmentPoints);
+                    return (int)AClothing_FieldIndex.EnchantmentPoints;
                 }
                 case RecordTypeInts.BMDT:
                 {
                     _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.ClothingFlags);
+                    return (int)AClothing_FieldIndex.ClothingFlags;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3522,7 +3522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleBipedModel);
+                    return (int)AClothing_FieldIndex.MaleBipedModel;
                 }
                 case RecordTypeInts.MOD2:
                 {
@@ -3530,12 +3530,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: AClothing_Registration.MaleWorldModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleWorldModel);
+                    return (int)AClothing_FieldIndex.MaleWorldModel;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _MaleIconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.MaleIcon);
+                    return (int)AClothing_FieldIndex.MaleIcon;
                 }
                 case RecordTypeInts.MOD3:
                 {
@@ -3543,7 +3543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: AClothing_Registration.FemaleBipedModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleBipedModel);
+                    return (int)AClothing_FieldIndex.FemaleBipedModel;
                 }
                 case RecordTypeInts.MOD4:
                 {
@@ -3551,12 +3551,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: AClothing_Registration.FemaleWorldModelConverter);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleWorldModel);
+                    return (int)AClothing_FieldIndex.FemaleWorldModel;
                 }
                 case RecordTypeInts.ICO2:
                 {
                     _FemaleIconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AClothing_FieldIndex.FemaleIcon);
+                    return (int)AClothing_FieldIndex.FemaleIcon;
                 }
                 default:
                     return base.FillRecordType(

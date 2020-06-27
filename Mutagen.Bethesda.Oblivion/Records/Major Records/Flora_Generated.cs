@@ -2418,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFloraInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2434,14 +2434,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
+                    return (int)Flora_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
+                    return (int)Flora_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2449,7 +2449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
+                    return (int)Flora_FieldIndex.Script;
                 }
                 case RecordTypeInts.PFIG:
                 {
@@ -2457,12 +2457,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Ingredient = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
+                    return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     item.SeasonalIngredientProduction = Mutagen.Bethesda.Oblivion.SeasonalIngredientProduction.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.SeasonalIngredientProduction);
+                    return (int)Flora_FieldIndex.SeasonalIngredientProduction;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2612,7 +2612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2626,7 +2626,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Name);
+                    return (int)Flora_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2634,22 +2634,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Model);
+                    return (int)Flora_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Script);
+                    return (int)Flora_FieldIndex.Script;
                 }
                 case RecordTypeInts.PFIG:
                 {
                     _IngredientLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.Ingredient);
+                    return (int)Flora_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.PFPC:
                 {
                     _SeasonalIngredientProductionLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Flora_FieldIndex.SeasonalIngredientProduction);
+                    return (int)Flora_FieldIndex.SeasonalIngredientProduction;
                 }
                 default:
                     return base.FillRecordType(

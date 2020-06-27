@@ -2267,7 +2267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IFurnitureInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2283,14 +2283,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
+                    return (int)Furniture_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
+                    return (int)Furniture_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2298,13 +2298,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Script);
+                    return (int)Furniture_FieldIndex.Script;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MarkerFlags = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.MarkerFlags);
+                    return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2462,7 +2462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Name);
+                    return (int)Furniture_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2470,17 +2470,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Model);
+                    return (int)Furniture_FieldIndex.Model;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.Script);
+                    return (int)Furniture_FieldIndex.Script;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _MarkerFlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Furniture_FieldIndex.MarkerFlags);
+                    return (int)Furniture_FieldIndex.MarkerFlags;
                 }
                 default:
                     return base.FillRecordType(

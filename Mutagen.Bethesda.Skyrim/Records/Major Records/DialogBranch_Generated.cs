@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogBranchInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2230,19 +2230,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Quest);
+                    return (int)DialogBranch_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TNAM = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.TNAM);
+                    return (int)DialogBranch_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<DialogBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Flags);
+                    return (int)DialogBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.StartingTopic = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.StartingTopic);
+                    return (int)DialogBranch_FieldIndex.StartingTopic;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2398,7 +2398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2412,22 +2412,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Quest);
+                    return (int)DialogBranch_FieldIndex.Quest;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _TNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.TNAM);
+                    return (int)DialogBranch_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.Flags);
+                    return (int)DialogBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _StartingTopicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogBranch_FieldIndex.StartingTopic);
+                    return (int)DialogBranch_FieldIndex.StartingTopic;
                 }
                 default:
                     return base.FillRecordType(

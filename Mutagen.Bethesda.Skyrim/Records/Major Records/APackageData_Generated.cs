@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAPackageData item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (nextRecordType.TypeInt)
             {
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public virtual TryGet<int?> FillRecordType(
+        public virtual ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.TypeInt)
             {
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

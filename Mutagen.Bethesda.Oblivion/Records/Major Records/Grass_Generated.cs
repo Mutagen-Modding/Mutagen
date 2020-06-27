@@ -2108,7 +2108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IGrassInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2123,12 +2123,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.GrassData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Data);
+                    return (int)Grass_FieldIndex.Data;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2258,7 +2258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2275,12 +2275,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Model);
+                    return (int)Grass_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Grass_FieldIndex.Data);
+                    return (int)Grass_FieldIndex.Data;
                 }
                 default:
                     return base.FillRecordType(

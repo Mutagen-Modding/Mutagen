@@ -2289,7 +2289,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPatrol item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2302,17 +2302,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
+                    return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryPatrolScriptMarkerCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.INAM:
                 {
@@ -2320,29 +2320,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
+                    return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
+                    return (int)Patrol_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
+                    return (int)Patrol_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.PDTO:
                 {
                     PatrolBinaryCreateTranslation.FillBinaryTopicsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
+                    return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2516,7 +2516,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2529,31 +2529,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.XPRD:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     _IdleTimeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.IdleTime);
+                    return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
                 {
                     PatrolScriptMarkerCustomParse(
                         stream,
                         offset);
-                    return TryGet<int?>.Succeed(lastParsed);
+                    return lastParsed;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _IdleLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Idle);
+                    return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     _SCHRLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCHR);
+                    return (int)Patrol_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     _SCTXLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.SCTX);
+                    return (int)Patrol_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.PDTO:
                 {
@@ -2563,10 +2563,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Patrol_FieldIndex.Topics);
+                    return (int)Patrol_FieldIndex.Topics;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

@@ -2265,7 +2265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILoadScreenInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2281,7 +2281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
+                    return (int)LoadScreen_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -2289,7 +2289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.LNAM:
                 {
@@ -2299,7 +2299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: RecordTypes.LNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: LoadScreenLocation.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
+                    return (int)LoadScreen_FieldIndex.Locations;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2438,7 +2438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2452,12 +2452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Icon);
+                    return (int)LoadScreen_FieldIndex.Icon;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Description);
+                    return (int)LoadScreen_FieldIndex.Description;
                 }
                 case RecordTypeInts.LNAM:
                 {
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)LoadScreen_FieldIndex.Locations);
+                    return (int)LoadScreen_FieldIndex.Locations;
                 }
                 default:
                     return base.FillRecordType(

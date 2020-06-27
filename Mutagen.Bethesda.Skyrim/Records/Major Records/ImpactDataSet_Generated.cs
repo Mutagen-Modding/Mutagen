@@ -2072,7 +2072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IImpactDataSetInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2090,7 +2090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ImpactData.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)ImpactDataSet_FieldIndex.Impacts);
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2244,7 +2244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)ImpactDataSet_FieldIndex.Impacts);
+                    return (int)ImpactDataSet_FieldIndex.Impacts;
                 }
                 default:
                     return base.FillRecordType(

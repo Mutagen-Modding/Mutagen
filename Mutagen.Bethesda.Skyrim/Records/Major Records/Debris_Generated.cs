@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDebrisInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.DATA,
                             recordTypeConverter: recordTypeConverter,
                             transl: DebrisModel.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
+                    return (int)Debris_FieldIndex.Models;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2204,7 +2204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2222,7 +2222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.DATA,
                         factory:  DebrisModelBinaryOverlay.DebrisModelFactory);
-                    return TryGet<int?>.Succeed((int)Debris_FieldIndex.Models);
+                    return (int)Debris_FieldIndex.Models;
                 }
                 default:
                     return base.FillRecordType(

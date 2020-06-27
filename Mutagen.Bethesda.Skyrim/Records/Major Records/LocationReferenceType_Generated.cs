@@ -1919,7 +1919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILocationReferenceTypeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)LocationReferenceType_FieldIndex.Color);
+                    return (int)LocationReferenceType_FieldIndex.Color;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2061,7 +2061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2075,7 +2075,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LocationReferenceType_FieldIndex.Color);
+                    return (int)LocationReferenceType_FieldIndex.Color;
                 }
                 default:
                     return base.FillRecordType(

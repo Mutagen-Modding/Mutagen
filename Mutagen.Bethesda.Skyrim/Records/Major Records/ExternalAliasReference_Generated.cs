@@ -1825,7 +1825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IExternalAliasReference item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1838,22 +1838,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.Quest);
+                    return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AliasIndex = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.AliasIndex);
+                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2011,18 +2011,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.ALEQ:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.Quest) return ParseResult.Stop;
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.Quest);
+                    return (int)ExternalAliasReference_FieldIndex.Quest;
                 }
                 case RecordTypeInts.ALEA:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)ExternalAliasReference_FieldIndex.AliasIndex) return ParseResult.Stop;
                     _AliasIndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)ExternalAliasReference_FieldIndex.AliasIndex);
+                    return (int)ExternalAliasReference_FieldIndex.AliasIndex;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

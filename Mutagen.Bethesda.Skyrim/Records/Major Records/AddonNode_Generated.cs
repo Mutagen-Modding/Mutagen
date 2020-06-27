@@ -2584,7 +2584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAddonNodeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2597,20 +2597,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.ObjectBounds);
+                    return (int)AddonNode_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.Model);
+                    return (int)AddonNode_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NodeIndex = frame.ReadInt32();
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.NodeIndex);
+                    return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2618,7 +2618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.Sound);
+                    return (int)AddonNode_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DNAM:
                 {
@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     AddonNodeBinaryCreateTranslation.FillBinaryAlwaysLoadedCustom(
                         frame: dataFrame,
                         item: item);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.AlwaysLoaded);
+                    return (int)AddonNode_FieldIndex.AlwaysLoaded;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2788,7 +2788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2802,7 +2802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.ObjectBounds);
+                    return (int)AddonNode_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -2810,22 +2810,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.Model);
+                    return (int)AddonNode_FieldIndex.Model;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _NodeIndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.NodeIndex);
+                    return (int)AddonNode_FieldIndex.NodeIndex;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SoundLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.Sound);
+                    return (int)AddonNode_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)AddonNode_FieldIndex.AlwaysLoaded);
+                    return (int)AddonNode_FieldIndex.AlwaysLoaded;
                 }
                 default:
                     return base.FillRecordType(

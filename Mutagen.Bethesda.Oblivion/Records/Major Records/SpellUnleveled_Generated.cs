@@ -2448,7 +2448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ISpellUnleveledInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPIT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.SpellData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Data);
+                    return (int)SpellUnleveled_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2472,7 +2472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
+                    return (int)SpellUnleveled_FieldIndex.Effects;
                 }
                 default:
                     return SpellBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2608,7 +2608,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2622,7 +2622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPIT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Data);
+                    return (int)SpellUnleveled_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2632,7 +2632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)SpellUnleveled_FieldIndex.Effects);
+                    return (int)SpellUnleveled_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

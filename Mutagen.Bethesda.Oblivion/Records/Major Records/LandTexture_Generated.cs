@@ -2399,7 +2399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILandTextureInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2415,18 +2415,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
+                    return (int)LandTexture_FieldIndex.Icon;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     item.Havok = Mutagen.Bethesda.Oblivion.HavokData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
+                    return (int)LandTexture_FieldIndex.Havok;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSpecularExponent = frame.ReadUInt8();
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2435,7 +2435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
+                    return (int)LandTexture_FieldIndex.PotentialGrass;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2579,7 +2579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2593,17 +2593,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Icon);
+                    return (int)LandTexture_FieldIndex.Icon;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     _HavokLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.Havok);
+                    return (int)LandTexture_FieldIndex.Havok;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _TextureSpecularExponentLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.TextureSpecularExponent);
+                    return (int)LandTexture_FieldIndex.TextureSpecularExponent;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter));
-                    return TryGet<int?>.Succeed((int)LandTexture_FieldIndex.PotentialGrass);
+                    return (int)LandTexture_FieldIndex.PotentialGrass;
                 }
                 default:
                     return base.FillRecordType(

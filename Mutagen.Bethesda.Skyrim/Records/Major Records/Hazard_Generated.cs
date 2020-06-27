@@ -3298,7 +3298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IHazardInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3311,7 +3311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ObjectBounds);
+                    return (int)Hazard_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3320,14 +3320,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Name);
+                    return (int)Hazard_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Model);
+                    return (int)Hazard_FieldIndex.Model;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -3335,7 +3335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ImageSpaceModifier);
+                    return (int)Hazard_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3359,7 +3359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Sound);
+                    return (int)Hazard_FieldIndex.Sound;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3556,7 +3556,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3570,12 +3570,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ObjectBounds);
+                    return (int)Hazard_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Name);
+                    return (int)Hazard_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3583,17 +3583,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Model);
+                    return (int)Hazard_FieldIndex.Model;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _ImageSpaceModifierLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.ImageSpaceModifier);
+                    return (int)Hazard_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Hazard_FieldIndex.Sound);
+                    return (int)Hazard_FieldIndex.Sound;
                 }
                 default:
                     return base.FillRecordType(

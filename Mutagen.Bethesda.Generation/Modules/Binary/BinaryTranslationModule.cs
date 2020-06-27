@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static {Loqui.Generation.Utility.TaskWrap("TryGet<int?>", HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
+                    $"public static {Loqui.Generation.Utility.TaskWrap(nameof(ParseResult), HasAsyncRecords(obj, self: true))} Fill{ModuleNickname}RecordTypes"))
                 {
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                     args.Add("MutagenFrame frame");
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Generation
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"frame.ReadSubrecordFrame();");
-                                fg.AppendLine($"return TryGet<int?>.Failure;");
+                                fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                             }
                         }
                         fg.AppendLine($"default:");
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Generation
                                     using (new BraceWrapper(fg))
                                     {
                                         await GenerateFillSnippet(obj, fg, field.Field, generator, "frame");
-                                        fg.AppendLine($"return TryGet<int?>.Failure;");
+                                        fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                     }
                                 }
                             }
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda.Generation
                                 var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                                 if (mutaObjType == ObjectType.Subrecord)
                                 {
-                                    fg.AppendLine($"return TryGet<int?>.Failure;");
+                                    fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                 }
                                 else if (failOnUnknown)
                                 {
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Generation
                                             throw new NotImplementedException();
                                     }
                                     fg.AppendLine($"frame.Position += contentLength{addString};");
-                                    fg.AppendLine($"return TryGet<int?>.Succeed(null);");
+                                    fg.AppendLine($"return default(int?);");
                                 }
                             }
                         }
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (dataSet != null)
                 {
-                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return TryGet<int?>.Failure;");
+                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){dataSet.SubFields.Last().IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
                 else if (field.Field is CustomLogic)
                 {
@@ -838,30 +838,30 @@ namespace Mutagen.Bethesda.Generation
                     var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
                     if (nextField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){nextField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){nextField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                     else if (prevField.Field != null)
                     {
-                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                        fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                 }
                 else
                 {
-                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return TryGet<int?>.Failure;");
+                    fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
             }
             await toDo();
             if (dataSet != null)
             {
-                fg.AppendLine($"return TryGet<int?>.Succeed((int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName});");
+                fg.AppendLine($"return (int){dataSet.SubFields.Last(f => f.IntegrateField && f.Enabled).IndexEnumName};");
             }
             else if (field.Field is CustomLogic)
             {
-                fg.AppendLine($"return TryGet<int?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
+                fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
             }
             else
             {
-                fg.AppendLine($"return TryGet<int?>.Succeed((int){field.Field.IndexEnumName});");
+                fg.AppendLine($"return (int){field.Field.IndexEnumName};");
             }
         }
 
@@ -979,7 +979,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 enumName = $"(int){enumName}";
                             }
-                            fg.AppendLine($"return TryGet<int?>.Succeed({enumName ?? "null"});");
+                            fg.AppendLine($"return {enumName ?? "default(int?)"};");
                         }
                     }
                     if (subField.Range != null && !isInRange)
@@ -2583,7 +2583,7 @@ namespace Mutagen.Bethesda.Generation
                 if (HasRecordTypeFields(obj))
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}TryGet<int?> FillRecordType"))
+                        $"public{await obj.FunctionOverride(async b => HasRecordTypeFields(b))}{nameof(ParseResult)} FillRecordType"))
                     {
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? nameof(IBinaryReadStream) : nameof(OverlayStream))} stream");
                         args.Add($"{(obj.GetObjectType() == ObjectType.Mod ? "long" : "int")} finalPos");
@@ -2675,7 +2675,7 @@ namespace Mutagen.Bethesda.Generation
                                 using (new BraceWrapper(fg))
                                 {
                                     fg.AppendLine($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.ReadSubrecordFrame(stream);");
-                                    fg.AppendLine($"return TryGet<int?>.Failure;");
+                                    fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                 }
                             }
                             fg.AppendLine("default:");
@@ -2718,7 +2718,7 @@ namespace Mutagen.Bethesda.Generation
                                     var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                                     if (obj.GetObjectType() == ObjectType.Subrecord)
                                     {
-                                        fg.AppendLine($"return TryGet<int?>.Failure;");
+                                        fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                     }
                                     else if (failOnUnknown)
                                     {
@@ -2726,7 +2726,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     else
                                     {
-                                        fg.AppendLine($"return TryGet<int?>.Succeed(null);");
+                                        fg.AppendLine($"return default(int?);");
                                     }
                                 }
                             }

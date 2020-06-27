@@ -6972,7 +6972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ILocationInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -6990,7 +6990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
                 }
                 case RecordTypeInts.LCPR:
                 {
@@ -7000,7 +7000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
                 }
                 case RecordTypeInts.RCPR:
                 {
@@ -7010,7 +7010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IPlacedSimple>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
                 {
@@ -7020,7 +7020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                    return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
                 {
@@ -7030,7 +7030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .ToExtendedList<LocationReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                    return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
                 {
@@ -7040,7 +7040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Npc>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                    return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
                 {
@@ -7050,7 +7050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
                         .ToExtendedList<LocationCellStaticReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                    return (int)Location_FieldIndex.ActorCellStaticReferences;
                 }
                 case RecordTypeInts.LCSR:
                 {
@@ -7060,7 +7060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
                         .ToExtendedList<LocationCellStaticReference>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                    return (int)Location_FieldIndex.LocationCellStaticReferences;
                 }
                 case RecordTypeInts.RCSR:
                 {
@@ -7070,7 +7070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IPlacedSimple>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
                 {
@@ -7081,7 +7081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                    return (int)Location_FieldIndex.ActorCellEncounterCell;
                 }
                 case RecordTypeInts.LCEC:
                 {
@@ -7092,7 +7092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                    return (int)Location_FieldIndex.LocationCellEncounterCell;
                 }
                 case RecordTypeInts.RCEC:
                 {
@@ -7103,7 +7103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocationCoordinate.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
                 }
                 case RecordTypeInts.ACID:
                 {
@@ -7113,7 +7113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IPlaced>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                    return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
@@ -7123,7 +7123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<IPlaced>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                    return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
                 {
@@ -7133,7 +7133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
                         .ToExtendedList<LocationCellEnablePoint>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                    return (int)Location_FieldIndex.ActorCellEnablePoint;
                 }
                 case RecordTypeInts.LCEP:
                 {
@@ -7143,7 +7143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
                         .ToExtendedList<LocationCellEnablePoint>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                    return (int)Location_FieldIndex.LocationCellEnablePoint;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -7152,7 +7152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                    return (int)Location_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -7165,7 +7165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Keyword>>();
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                    return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
                 {
@@ -7173,7 +7173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                    return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -7181,7 +7181,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                    return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
@@ -7189,7 +7189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnreportedCrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                    return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -7197,13 +7197,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WorldLocationMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                    return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WorldLocationRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                    return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
@@ -7211,13 +7211,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.HorseMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                    return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                    return (int)Location_FieldIndex.Color;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -7401,7 +7401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -7422,7 +7422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellPersistentReferences);
+                    return (int)Location_FieldIndex.ActorCellPersistentReferences;
                 }
                 case RecordTypeInts.LCPR:
                 {
@@ -7434,7 +7434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellPersistentReferences);
+                    return (int)Location_FieldIndex.LocationCellPersistentReferences;
                 }
                 case RecordTypeInts.RCPR:
                 {
@@ -7446,7 +7446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellPersistentReferences);
+                    return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
                 {
@@ -7458,7 +7458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellUniques);
+                    return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
                 {
@@ -7470,7 +7470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationReferenceBinaryOverlay.LocationReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellUniques);
+                    return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
                 {
@@ -7482,7 +7482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellUnique);
+                    return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
                 {
@@ -7494,7 +7494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 16,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellStaticReferences);
+                    return (int)Location_FieldIndex.ActorCellStaticReferences;
                 }
                 case RecordTypeInts.LCSR:
                 {
@@ -7506,7 +7506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 16,
                         getter: (s, p) => LocationCellStaticReferenceBinaryOverlay.LocationCellStaticReferenceFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellStaticReferences);
+                    return (int)Location_FieldIndex.LocationCellStaticReferences;
                 }
                 case RecordTypeInts.RCSR:
                 {
@@ -7518,7 +7518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedSimpleGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellStaticReferences);
+                    return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
                 {
@@ -7528,7 +7528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.ACEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEncounterCell);
+                    return (int)Location_FieldIndex.ActorCellEncounterCell;
                 }
                 case RecordTypeInts.LCEC:
                 {
@@ -7538,7 +7538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.LCEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEncounterCell);
+                    return (int)Location_FieldIndex.LocationCellEncounterCell;
                 }
                 case RecordTypeInts.RCEC:
                 {
@@ -7548,7 +7548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         trigger: RecordTypes.RCEC,
                         factory:  LocationCoordinateBinaryOverlay.LocationCoordinateFactory,
                         skipHeader: true);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ReferenceCellEncounterCell);
+                    return (int)Location_FieldIndex.ReferenceCellEncounterCell;
                 }
                 case RecordTypeInts.ACID:
                 {
@@ -7560,7 +7560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellMarkerReference);
+                    return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
@@ -7572,7 +7572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IPlacedGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellMarkerReference);
+                    return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
                 {
@@ -7584,7 +7584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ActorCellEnablePoint);
+                    return (int)Location_FieldIndex.ActorCellEnablePoint;
                 }
                 case RecordTypeInts.LCEP:
                 {
@@ -7596,12 +7596,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 12,
                         getter: (s, p) => LocationCellEnablePointBinaryOverlay.LocationCellEnablePointFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.LocationCellEnablePoint);
+                    return (int)Location_FieldIndex.LocationCellEnablePoint;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Name);
+                    return (int)Location_FieldIndex.Name;
                 }
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
@@ -7614,42 +7614,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         countType: RecordTypes.KSIZ,
                         subrecordType: RecordTypes.KWDA,
                         getter: (s, p) => new FormLink<IKeywordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Keywords);
+                    return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _ParentLocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.ParentLocation);
+                    return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _MusicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Music);
+                    return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     _UnreportedCrimeFactionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.UnreportedCrimeFaction);
+                    return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     _WorldLocationMarkerRefLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationMarkerRef);
+                    return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     _WorldLocationRadiusLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.WorldLocationRadius);
+                    return (int)Location_FieldIndex.WorldLocationRadius;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     _HorseMarkerRefLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.HorseMarkerRef);
+                    return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _ColorLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Location_FieldIndex.Color);
+                    return (int)Location_FieldIndex.Color;
                 }
                 default:
                     return base.FillRecordType(

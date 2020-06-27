@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ITintAssets item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2288,51 +2288,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Index = frame.ReadUInt16();
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
+                    return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
+                    return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
+                    return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PresetDefault = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
+                    return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<TintPreset>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintPreset.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
+                    return (int)TintAssets_FieldIndex.Presets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2486,7 +2486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2499,42 +2499,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TINI:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Index) return ParseResult.Stop;
                     _IndexLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Index);
+                    return (int)TintAssets_FieldIndex.Index;
                 }
                 case RecordTypeInts.TINT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     _FileNameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.FileName);
+                    return (int)TintAssets_FieldIndex.FileName;
                 }
                 case RecordTypeInts.TINP:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     _MaskTypeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.MaskType);
+                    return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     _PresetDefaultLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.PresetDefault);
+                    return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
                 case RecordTypeInts.TINV:
                 case RecordTypeInts.TIRS:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     this.Presets = this.ParseRepeatedTypelessSubrecord<TintPresetBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: TintPreset_Registration.TriggeringRecordTypes,
                         factory:  TintPresetBinaryOverlay.TintPresetFactory);
-                    return TryGet<int?>.Succeed((int)TintAssets_FieldIndex.Presets);
+                    return (int)TintAssets_FieldIndex.Presets;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

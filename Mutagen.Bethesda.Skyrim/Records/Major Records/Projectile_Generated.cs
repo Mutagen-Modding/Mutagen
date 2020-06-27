@@ -4914,7 +4914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IProjectileInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -4927,7 +4927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -4936,14 +4936,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
+                    return (int)Projectile_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Skyrim.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
+                    return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -4952,7 +4952,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Destructible = Mutagen.Bethesda.Skyrim.Destructible.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
+                    return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -4997,7 +4997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)Projectile_FieldIndex.RelaunchInterval);
+                        return (int)Projectile_FieldIndex.RelaunchInterval;
                     }
                     item.DecalData = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
@@ -5005,12 +5005,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break1;
-                        return TryGet<int?>.Succeed((int)Projectile_FieldIndex.DecalData);
+                        return (int)Projectile_FieldIndex.DecalData;
                     }
                     item.CollisionLayer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
+                    return (int)Projectile_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -5018,19 +5018,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MuzzleFlashModel = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureFilesHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.SoundLevel = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);
+                    return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5305,7 +5305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -5319,12 +5319,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OBND:
                 {
                     _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.ObjectBounds);
+                    return (int)Projectile_FieldIndex.ObjectBounds;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Name);
+                    return (int)Projectile_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -5332,7 +5332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Model);
+                    return (int)Projectile_FieldIndex.Model;
                 }
                 case RecordTypeInts.DEST:
                 case RecordTypeInts.DSTD:
@@ -5342,7 +5342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.Destructible);
+                    return (int)Projectile_FieldIndex.Destructible;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -5356,22 +5356,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= Projectile.DATADataType.Break1;
                     }
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.CollisionLayer);
+                    return (int)Projectile_FieldIndex.CollisionLayer;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _MuzzleFlashModelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.MuzzleFlashModel);
+                    return (int)Projectile_FieldIndex.MuzzleFlashModel;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _TextureFilesHashesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.TextureFilesHashes);
+                    return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.VNAM:
                 {
                     _SoundLevelLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Projectile_FieldIndex.SoundLevel);
+                    return (int)Projectile_FieldIndex.SoundLevel;
                 }
                 default:
                     return base.FillRecordType(

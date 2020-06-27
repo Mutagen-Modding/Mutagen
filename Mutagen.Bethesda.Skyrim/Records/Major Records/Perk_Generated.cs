@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPerkInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -3485,7 +3485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     item.VirtualMachineAdapter = Mutagen.Bethesda.Skyrim.PerkAdapter.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.VirtualMachineAdapter);
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -3494,7 +3494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Name);
+                    return (int)Perk_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
@@ -3503,21 +3503,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Description);
+                    return (int)Perk_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
                     item.Icons = Mutagen.Bethesda.Skyrim.Icons.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Icons);
+                    return (int)Perk_FieldIndex.Icons;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     PerkBinaryCreateTranslation.FillBinaryConditionsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Conditions);
+                    return (int)Perk_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -3528,7 +3528,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NumRanks = dataFrame.ReadUInt8();
                     item.Playable = dataFrame.ReadBoolean();
                     item.Hidden = dataFrame.ReadBoolean();
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Hidden);
+                    return (int)Perk_FieldIndex.Hidden;
                 }
                 case RecordTypeInts.NNAM:
                 {
@@ -3536,14 +3536,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.NextPerk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.NextPerk);
+                    return (int)Perk_FieldIndex.NextPerk;
                 }
                 case RecordTypeInts.PRKE:
                 {
                     PerkBinaryCreateTranslation.FillBinaryEffectsCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Effects);
+                    return (int)Perk_FieldIndex.Effects;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3744,7 +3744,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3758,17 +3758,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VMAD:
                 {
                     _VirtualMachineAdapterLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.VirtualMachineAdapter);
+                    return (int)Perk_FieldIndex.VirtualMachineAdapter;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Name);
+                    return (int)Perk_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Description);
+                    return (int)Perk_FieldIndex.Description;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -3776,7 +3776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Icons);
+                    return (int)Perk_FieldIndex.Icons;
                 }
                 case RecordTypeInts.CTDA:
                 {
@@ -3786,17 +3786,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Conditions);
+                    return (int)Perk_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Hidden);
+                    return (int)Perk_FieldIndex.Hidden;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     _NextPerkLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.NextPerk);
+                    return (int)Perk_FieldIndex.NextPerk;
                 }
                 case RecordTypeInts.PRKE:
                 {
@@ -3806,7 +3806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         offset: offset,
                         type: type,
                         lastParsed: lastParsed);
-                    return TryGet<int?>.Succeed((int)Perk_FieldIndex.Effects);
+                    return (int)Perk_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

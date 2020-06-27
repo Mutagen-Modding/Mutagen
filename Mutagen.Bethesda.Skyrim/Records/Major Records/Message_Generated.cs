@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMessageInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2670,7 +2670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Description);
+                    return (int)Message_FieldIndex.Description;
                 }
                 case RecordTypeInts.FULL:
                 {
@@ -2679,13 +2679,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Name);
+                    return (int)Message_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.INAM);
+                    return (int)Message_FieldIndex.INAM;
                 }
                 case RecordTypeInts.QNAM:
                 {
@@ -2693,19 +2693,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Quest);
+                    return (int)Message_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Message.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Flags);
+                    return (int)Message_FieldIndex.Flags;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DisplayTime = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.DisplayTime);
+                    return (int)Message_FieldIndex.DisplayTime;
                 }
                 case RecordTypeInts.ITXT:
                 case RecordTypeInts.CTDA:
@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: MessageButton_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: MessageButton.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.MenuButtons);
+                    return (int)Message_FieldIndex.MenuButtons;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2872,7 +2872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2886,32 +2886,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DESC:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Description);
+                    return (int)Message_FieldIndex.Description;
                 }
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Name);
+                    return (int)Message_FieldIndex.Name;
                 }
                 case RecordTypeInts.INAM:
                 {
                     _INAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.INAM);
+                    return (int)Message_FieldIndex.INAM;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     _QuestLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Quest);
+                    return (int)Message_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.Flags);
+                    return (int)Message_FieldIndex.Flags;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     _DisplayTimeLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.DisplayTime);
+                    return (int)Message_FieldIndex.DisplayTime;
                 }
                 case RecordTypeInts.ITXT:
                 case RecordTypeInts.CTDA:
@@ -2921,7 +2921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: MessageButton_Registration.TriggeringRecordTypes,
                         factory:  MessageButtonBinaryOverlay.MessageButtonFactory);
-                    return TryGet<int?>.Succeed((int)Message_FieldIndex.MenuButtons);
+                    return (int)Message_FieldIndex.MenuButtons;
                 }
                 default:
                     return base.FillRecordType(

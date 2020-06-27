@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IBodyData item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2022,26 +2022,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                    return (int)BodyData_FieldIndex.Model;
                 }
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
                     item.BodyParts.SetTo(
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: BodyPart.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                    return (int)BodyData_FieldIndex.BodyParts;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2186,26 +2186,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.MODL:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Model) return ParseResult.Stop;
                     this.Model = ModelBinaryOverlay.ModelFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.Model);
+                    return (int)BodyData_FieldIndex.Model;
                 }
                 case RecordTypeInts.INDX:
                 case RecordTypeInts.ICON:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
                     this.BodyParts = this.ParseRepeatedTypelessSubrecord<BodyPartBinaryOverlay>(
                         stream: stream,
                         recordTypeConverter: recordTypeConverter,
                         trigger: BodyPart_Registration.TriggeringRecordTypes,
                         factory:  BodyPartBinaryOverlay.BodyPartFactory);
-                    return TryGet<int?>.Succeed((int)BodyData_FieldIndex.BodyParts);
+                    return (int)BodyData_FieldIndex.BodyParts;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

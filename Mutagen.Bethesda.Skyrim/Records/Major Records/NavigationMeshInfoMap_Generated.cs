@@ -2435,7 +2435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             INavigationMeshInfoMapInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2449,7 +2449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NavMeshVersion = frame.ReadUInt32();
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:
                 {
@@ -2459,18 +2459,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.NVMI,
                             recordTypeConverter: recordTypeConverter,
                             transl: NavigationMapInfo.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
                 }
                 case RecordTypeInts.NVPP:
                 {
                     item.PreferredPathing = Mutagen.Bethesda.Skyrim.PreferredPathing.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
                 }
                 case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.NVSI = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2614,7 +2614,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2628,7 +2628,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVER:
                 {
                     _NavMeshVersionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion;
                 }
                 case RecordTypeInts.NVMI:
                 {
@@ -2642,17 +2642,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.MapInfos);
+                    return (int)NavigationMeshInfoMap_FieldIndex.MapInfos;
                 }
                 case RecordTypeInts.NVPP:
                 {
                     _PreferredPathingLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing);
+                    return (int)NavigationMeshInfoMap_FieldIndex.PreferredPathing;
                 }
                 case RecordTypeInts.NVSI:
                 {
                     _NVSILocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)NavigationMeshInfoMap_FieldIndex.NVSI);
+                    return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:
                     return base.FillRecordType(

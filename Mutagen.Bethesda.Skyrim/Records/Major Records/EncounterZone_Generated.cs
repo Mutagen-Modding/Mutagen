@@ -2509,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IEncounterZoneInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2532,13 +2532,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EncounterZone.DATADataType.Break0;
-                        return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.Location);
+                        return (int)EncounterZone_FieldIndex.Location;
                     }
                     item.Rank = dataFrame.ReadInt8();
                     item.MinLevel = dataFrame.ReadInt8();
                     item.Flags = EnumBinaryTranslation<EncounterZone.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.MaxLevel = dataFrame.ReadInt8();
-                    return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.MaxLevel);
+                    return (int)EncounterZone_FieldIndex.MaxLevel;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2700,7 +2700,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2719,7 +2719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         this.DATADataTypeState |= EncounterZone.DATADataType.Break0;
                     }
-                    return TryGet<int?>.Succeed((int)EncounterZone_FieldIndex.MaxLevel);
+                    return (int)EncounterZone_FieldIndex.MaxLevel;
                 }
                 default:
                     return base.FillRecordType(

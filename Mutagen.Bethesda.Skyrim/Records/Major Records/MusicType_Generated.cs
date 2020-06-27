@@ -2410,7 +2410,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IMusicTypeInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2424,18 +2424,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<MusicType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Flags);
+                    return (int)MusicType_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     item.Data = Mutagen.Bethesda.Skyrim.MusicTypeData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Data);
+                    return (int)MusicType_FieldIndex.Data;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FadeDuration = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.FadeDuration);
+                    return (int)MusicType_FieldIndex.FadeDuration;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2445,7 +2445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<MusicTrack>>();
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Tracks);
+                    return (int)MusicType_FieldIndex.Tracks;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2589,7 +2589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2603,17 +2603,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Flags);
+                    return (int)MusicType_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Data);
+                    return (int)MusicType_FieldIndex.Data;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     _FadeDurationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.FadeDuration);
+                    return (int)MusicType_FieldIndex.FadeDuration;
                 }
                 case RecordTypeInts.TNAM:
                 {
@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IMusicTrackGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)MusicType_FieldIndex.Tracks);
+                    return (int)MusicType_FieldIndex.Tracks;
                 }
                 default:
                     return base.FillRecordType(

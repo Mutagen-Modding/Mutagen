@@ -6272,7 +6272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             ICellInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -6289,35 +6289,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
+                    return (int)Cell_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Flags = EnumBinaryTranslation<Cell.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
+                    return (int)Cell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XCLC:
                 {
                     item.Grid = Mutagen.Bethesda.Skyrim.CellGrid.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
+                    return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
                 {
                     item.Lighting = Mutagen.Bethesda.Skyrim.CellLighting.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
+                    return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.TVDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OcclusionData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.OcclusionData);
+                    return (int)Cell_FieldIndex.OcclusionData;
                 }
                 case RecordTypeInts.MHDT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaxHeightData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MaxHeightData);
+                    return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:
                 {
@@ -6325,19 +6325,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LightingTemplate = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LightingTemplate);
+                    return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
+                    return (int)Cell_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.WaterHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
+                    return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
                 {
@@ -6345,7 +6345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WaterNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterNoiseTexture);
+                    return (int)Cell_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.XCLR:
                 {
@@ -6355,7 +6355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .ToExtendedList<IFormLink<Region>>();
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
+                    return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
                 {
@@ -6363,24 +6363,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Location);
+                    return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCN = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
+                    return (int)Cell_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.XWCS = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
+                    return (int)Cell_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     item.WaterVelocity = Mutagen.Bethesda.Skyrim.CellWaterVelocity.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterVelocity);
+                    return (int)Cell_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCWT:
                 {
@@ -6388,7 +6388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
+                    return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -6396,7 +6396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Ownership = Mutagen.Bethesda.Skyrim.Ownership.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Ownership);
+                    return (int)Cell_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XILL:
                 {
@@ -6404,7 +6404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.LockList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LockList);
+                    return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
                 {
@@ -6412,7 +6412,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.WaterEnvironmentMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterEnvironmentMap);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.XCCM:
                 {
@@ -6420,7 +6420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SkyAndWeatherFromRegion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
@@ -6428,7 +6428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AcousticSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.AcousticSpace);
+                    return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
@@ -6436,7 +6436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EncounterZone = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.EncounterZone);
+                    return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
@@ -6444,7 +6444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
+                    return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
@@ -6452,7 +6452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.ImageSpace);
+                    return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -6714,7 +6714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -6728,7 +6728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Name);
+                    return (int)Cell_FieldIndex.Name;
                 }
                 case RecordTypeInts.DATA:
                 {
@@ -6736,47 +6736,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         finalPos: finalPos,
                         offset: offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Flags);
+                    return (int)Cell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XCLC:
                 {
                     _GridLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Grid);
+                    return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
                 {
                     _LightingLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Lighting);
+                    return (int)Cell_FieldIndex.Lighting;
                 }
                 case RecordTypeInts.TVDT:
                 {
                     _OcclusionDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.OcclusionData);
+                    return (int)Cell_FieldIndex.OcclusionData;
                 }
                 case RecordTypeInts.MHDT:
                 {
                     _MaxHeightDataLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.MaxHeightData);
+                    return (int)Cell_FieldIndex.MaxHeightData;
                 }
                 case RecordTypeInts.LTMP:
                 {
                     _LightingTemplateLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LightingTemplate);
+                    return (int)Cell_FieldIndex.LightingTemplate;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _LNAMLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LNAM);
+                    return (int)Cell_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.XCLW:
                 {
                     _WaterHeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterHeight);
+                    return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     _WaterNoiseTextureLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterNoiseTexture);
+                    return (int)Cell_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.XCLR:
                 {
@@ -6788,32 +6788,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<IRegionGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Regions);
+                    return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     _LocationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Location);
+                    return (int)Cell_FieldIndex.Location;
                 }
                 case RecordTypeInts.XWCN:
                 {
                     _XWCNLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCN);
+                    return (int)Cell_FieldIndex.XWCN;
                 }
                 case RecordTypeInts.XWCS:
                 {
                     _XWCSLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.XWCS);
+                    return (int)Cell_FieldIndex.XWCS;
                 }
                 case RecordTypeInts.XWCU:
                 {
                     _WaterVelocityLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterVelocity);
+                    return (int)Cell_FieldIndex.WaterVelocity;
                 }
                 case RecordTypeInts.XCWT:
                 {
                     _WaterLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Water);
+                    return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 case RecordTypeInts.XRNK:
@@ -6822,42 +6822,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Ownership);
+                    return (int)Cell_FieldIndex.Ownership;
                 }
                 case RecordTypeInts.XILL:
                 {
                     _LockListLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.LockList);
+                    return (int)Cell_FieldIndex.LockList;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     _WaterEnvironmentMapLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.WaterEnvironmentMap);
+                    return (int)Cell_FieldIndex.WaterEnvironmentMap;
                 }
                 case RecordTypeInts.XCCM:
                 {
                     _SkyAndWeatherFromRegionLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.SkyAndWeatherFromRegion);
+                    return (int)Cell_FieldIndex.SkyAndWeatherFromRegion;
                 }
                 case RecordTypeInts.XCAS:
                 {
                     _AcousticSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.AcousticSpace);
+                    return (int)Cell_FieldIndex.AcousticSpace;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     _EncounterZoneLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.EncounterZone);
+                    return (int)Cell_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XCMO:
                 {
                     _MusicLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.Music);
+                    return (int)Cell_FieldIndex.Music;
                 }
                 case RecordTypeInts.XCIM:
                 {
                     _ImageSpaceLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Cell_FieldIndex.ImageSpace);
+                    return (int)Cell_FieldIndex.ImageSpace;
                 }
                 default:
                     return base.FillRecordType(

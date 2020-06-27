@@ -2089,7 +2089,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDefaultObjectManagerInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: DefaultObject.TryCreateFromBinary)
                         .ToExtendedList<DefaultObject>();
-                    return TryGet<int?>.Succeed((int)DefaultObjectManager_FieldIndex.Objects);
+                    return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2238,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2259,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 8,
                         getter: (s, p) => DefaultObjectBinaryOverlay.DefaultObjectFactory(s, p));
                     stream.Position += subLen;
-                    return TryGet<int?>.Succeed((int)DefaultObjectManager_FieldIndex.Objects);
+                    return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:
                     return base.FillRecordType(

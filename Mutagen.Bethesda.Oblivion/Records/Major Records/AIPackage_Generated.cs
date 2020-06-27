@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IAIPackageInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2672,22 +2672,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PKDT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.AIPackageData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
+                    return (int)AIPackage_FieldIndex.Data;
                 }
                 case RecordTypeInts.PLDT:
                 {
                     item.Location = Mutagen.Bethesda.Oblivion.AIPackageLocation.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
+                    return (int)AIPackage_FieldIndex.Location;
                 }
                 case RecordTypeInts.PSDT:
                 {
                     item.Schedule = Mutagen.Bethesda.Oblivion.AIPackageSchedule.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
+                    return (int)AIPackage_FieldIndex.Schedule;
                 }
                 case RecordTypeInts.PTDT:
                 {
                     item.Target = Mutagen.Bethesda.Oblivion.AIPackageTarget.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
+                    return (int)AIPackage_FieldIndex.Target;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -2698,7 +2698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
+                    return (int)AIPackage_FieldIndex.Conditions;
                 }
                 default:
                     return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2849,7 +2849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2863,22 +2863,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PKDT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Data);
+                    return (int)AIPackage_FieldIndex.Data;
                 }
                 case RecordTypeInts.PLDT:
                 {
                     _LocationLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Location);
+                    return (int)AIPackage_FieldIndex.Location;
                 }
                 case RecordTypeInts.PSDT:
                 {
                     _ScheduleLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Schedule);
+                    return (int)AIPackage_FieldIndex.Schedule;
                 }
                 case RecordTypeInts.PTDT:
                 {
                     _TargetLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Target);
+                    return (int)AIPackage_FieldIndex.Target;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
@@ -2893,7 +2893,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             trigger: type,
                             constants: _package.MetaData.Constants.SubConstants,
                             skipHeader: false));
-                    return TryGet<int?>.Succeed((int)AIPackage_FieldIndex.Conditions);
+                    return (int)AIPackage_FieldIndex.Conditions;
                 }
                 default:
                     return base.FillRecordType(

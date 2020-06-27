@@ -1963,7 +1963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogResponse item,
             MutagenFrame frame,
             int? lastParsed,
@@ -1976,30 +1976,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return ParseResult.Stop;
                     item.Data = Mutagen.Bethesda.Oblivion.DialogResponseData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
+                    return (int)DialogResponse_FieldIndex.Data;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ResponseText = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                    return (int)DialogResponse_FieldIndex.ResponseText;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                    return (int)DialogResponse_FieldIndex.ActorNotes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -2155,24 +2155,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Data) return ParseResult.Stop;
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Data);
+                    return (int)DialogResponse_FieldIndex.Data;
                 }
                 case RecordTypeInts.NAM1:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ResponseText) return ParseResult.Stop;
                     _ResponseTextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ResponseText);
+                    return (int)DialogResponse_FieldIndex.ResponseText;
                 }
                 case RecordTypeInts.NAM2:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.ActorNotes) return ParseResult.Stop;
                     _ActorNotesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ActorNotes);
+                    return (int)DialogResponse_FieldIndex.ActorNotes;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String

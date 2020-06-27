@@ -2873,7 +2873,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame);
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IPotionInternal item,
             MutagenFrame frame,
             RecordType nextRecordType,
@@ -2889,14 +2889,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Name);
+                    return (int)Potion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
                     item.Model = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Model);
+                    return (int)Potion_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
@@ -2904,7 +2904,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Icon);
+                    return (int)Potion_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SCRI:
                 {
@@ -2912,18 +2912,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Script);
+                    return (int)Potion_FieldIndex.Script;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Weight);
+                    return (int)Potion_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.PotionData.CreateFromBinary(frame: frame);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Data);
+                    return (int)Potion_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -2934,7 +2934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
+                    return (int)Potion_FieldIndex.Effects;
                 }
                 default:
                     return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -3088,7 +3088,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public override TryGet<int?> FillRecordType(
+        public override ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3102,7 +3102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     _NameLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Name);
+                    return (int)Potion_FieldIndex.Name;
                 }
                 case RecordTypeInts.MODL:
                 {
@@ -3110,27 +3110,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Model);
+                    return (int)Potion_FieldIndex.Model;
                 }
                 case RecordTypeInts.ICON:
                 {
                     _IconLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Icon);
+                    return (int)Potion_FieldIndex.Icon;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     _ScriptLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Script);
+                    return (int)Potion_FieldIndex.Script;
                 }
                 case RecordTypeInts.DATA:
                 {
                     _WeightLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Weight);
+                    return (int)Potion_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Data);
+                    return (int)Potion_FieldIndex.Data;
                 }
                 case RecordTypeInts.EFID:
                 case RecordTypeInts.EFIT:
@@ -3140,7 +3140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: Effect_Registration.TriggeringRecordTypes,
                         factory:  EffectBinaryOverlay.EffectFactory);
-                    return TryGet<int?>.Succeed((int)Potion_FieldIndex.Effects);
+                    return (int)Potion_FieldIndex.Effects;
                 }
                 default:
                     return base.FillRecordType(

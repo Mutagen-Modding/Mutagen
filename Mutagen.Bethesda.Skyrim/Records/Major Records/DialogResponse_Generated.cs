@@ -2912,7 +2912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
         }
 
-        public static TryGet<int?> FillBinaryRecordTypes(
+        public static ParseResult FillBinaryRecordTypes(
             IDialogResponse item,
             MutagenFrame frame,
             int? lastParsed,
@@ -2925,7 +2925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
@@ -2938,7 +2938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         defaultVal: FormKey.Null);
                     item.Flags = EnumBinaryTranslation<DialogResponse.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Unknown3);
+                    return (int)DialogResponse_FieldIndex.Unknown3;
                 }
                 case RecordTypeInts.NAM1:
                 {
@@ -2947,7 +2947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         source: StringsSource.IL,
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Text);
+                    return (int)DialogResponse_FieldIndex.Text;
                 }
                 case RecordTypeInts.NAM2:
                 {
@@ -2955,7 +2955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ScriptNotes = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ScriptNotes);
+                    return (int)DialogResponse_FieldIndex.ScriptNotes;
                 }
                 case RecordTypeInts.NAM3:
                 {
@@ -2963,7 +2963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Edits = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Edits);
+                    return (int)DialogResponse_FieldIndex.Edits;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2971,7 +2971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.SpeakerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.SpeakerIdleAnimation);
+                    return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
@@ -2979,10 +2979,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ListenerIdleAnimation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ListenerIdleAnimation);
+                    return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
 
@@ -3182,7 +3182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public TryGet<int?> FillRecordType(
+        public ParseResult FillRecordType(
             OverlayStream stream,
             int finalPos,
             int offset,
@@ -3195,37 +3195,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.TRDT:
                 {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return TryGet<int?>.Failure;
+                    if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
                     _TRDTLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Unknown3);
+                    return (int)DialogResponse_FieldIndex.Unknown3;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     _TextLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Text);
+                    return (int)DialogResponse_FieldIndex.Text;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     _ScriptNotesLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ScriptNotes);
+                    return (int)DialogResponse_FieldIndex.ScriptNotes;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     _EditsLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.Edits);
+                    return (int)DialogResponse_FieldIndex.Edits;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _SpeakerIdleAnimationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.SpeakerIdleAnimation);
+                    return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     _ListenerIdleAnimationLocation = (stream.Position - offset);
-                    return TryGet<int?>.Succeed((int)DialogResponse_FieldIndex.ListenerIdleAnimation);
+                    return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:
-                    return TryGet<int?>.Failure;
+                    return ParseResult.Stop;
             }
         }
         #region To String
