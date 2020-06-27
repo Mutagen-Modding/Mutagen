@@ -14,12 +14,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         public static TempFile GetFile()
         {
-            string name;
-            using (var tmp = new TempFile())
-            {
-                name = tmp.File.Path;
-            }
-            return new TempFile($"{name}.esp");
+            return new TempFile(extraDirectoryPaths: Utility.TempFolderPath, suffix: ".esp");
         }
 
         [Fact]

@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.UnitTests
 
         public override IDisposable ConvertMod(SkyrimMod mod, out ISkyrimModGetter getter)
         {
-            var tempFile = new TempFile();
+            var tempFile = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             mod.WriteToBinaryParallel(
                 tempFile.File.Path,
                 new BinaryWriteParameters()

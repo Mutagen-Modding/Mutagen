@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void StaticExport()
         {
             uint nextID = 123;
-            using var file = new TempFile();
+            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             TextFileFormKeyAllocator.WriteToFile(
                 file.File.Path,
                 nextID,
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void TypicalImport()
         {
-            using var file = new TempFile();
+            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             uint nextID = 123;
             File.WriteAllLines(
                 file.File.Path,
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
                 new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
             };
-            using var file = new TempFile();
+            using var file = new TempFile(extraDirectoryPaths: Utility.TempFolderPath);
             TextFileFormKeyAllocator.WriteToFile(
                 file.File.Path,
                 nextID,
