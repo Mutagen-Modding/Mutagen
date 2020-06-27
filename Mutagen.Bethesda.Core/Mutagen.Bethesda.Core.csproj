@@ -5,6 +5,7 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
@@ -12,10 +13,11 @@
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.1.16" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
+    <PackageReference Include="Wabbajack.Compression.BSA" Version="2.1.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
-    <Version>0.10.0.0</Version>
+    <Version>0.11</Version>
     <Authors>Noggog</Authors>
     <Company>Mutagen</Company>
     <Product>Mutagen</Product>
@@ -61,6 +63,7 @@
     <Compile Include="String Lookup\StringsUtility.cs" />
     <Compile Include="String Lookup\StringsWriter.cs" />
     <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="TestingPermissions.cs" />
     <Compile Include="Translations\Binary\Binary Overlay\OverlayStream.cs" />
     <Compile Include="Translations\Binary\ExtraLengthHeaderExport.cs" />
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />

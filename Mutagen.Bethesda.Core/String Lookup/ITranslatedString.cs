@@ -22,23 +22,7 @@ namespace Mutagen.Bethesda
         /// <param name="language">Language to query</param>
         /// <param name="str">String if located</param>
         /// <returns>True if string was located for given language</returns>
-        bool Lookup(Language language, [MaybeNullWhen(false)] out string str);
-
-        /// <summary>
-        /// Attempts to retrieve a string for a specific language.
-        /// Default language will always at least return string.Empty, never null.
-        /// </summary>
-        /// <param name="language">Language to query</param>
-        /// <returns>String if located, otherwise null</returns>
-        public virtual string? Lookup(Language language)
-        {
-            if (Lookup(language, out var str))
-            {
-                return str;
-            }
-            if (language == TranslatedString.DefaultLanguage) return string.Empty;
-            return null;
-        }
+        bool TryLookup(Language language, [MaybeNullWhen(false)] out string str);
     }
 
     /// <summary>
@@ -70,5 +54,25 @@ namespace Mutagen.Bethesda
         /// Clears all language registrations, and sets the default string to empty.
         /// </summary>
         void Clear();
+    }
+
+    public static class TranslatedStringExt
+    {
+        /// <summary>
+        /// Attempts to retrieve a string for a specific language.
+        /// Default language will always at least return string.Empty, never null.
+        /// </summary>
+        /// <param name="getter">Translated string to look up on</param>
+        /// <param name="language">Language to query</param>
+        /// <returns>String if located, otherwise null</returns>
+        public static string? Lookup(this ITranslatedStringGetter getter, Language language)
+        {
+            if (getter.TryLookup(language, out var str))
+            {
+                return str;
+            }
+            if (language == TranslatedString.DefaultLanguage) return string.Empty;
+            return null;
+        }
     }
 }

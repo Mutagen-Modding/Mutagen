@@ -9,13 +9,13 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
 {
-    public class StringLookupOverlay_Test
+    public class Strings_Test
     {
         static List<string> _strs;
         static byte[] _stringsFormat;
         static byte[] _ILstringsFormat;
 
-        static StringLookupOverlay_Test()
+        static Strings_Test()
         {
             _strs = new List<string>()
             {
@@ -101,6 +101,22 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var overlay = new StringsLookupOverlay(_ILstringsFormat, StringsFileFormat.LengthPrepended);
             Assert.False(overlay.TryLookup(56, out _));
+        }
+
+        [Fact]
+        public void TryRetrieveInfoFromString()
+        {
+            Assert.True(StringsUtility.TryRetrieveInfoFromString("Skyrim_French.ILSTRINGS", out var source, out var language, out var modName));
+            Assert.Equal(StringsSource.IL, source);
+            Assert.Equal(Language.French, language);
+            Assert.Equal("Skyrim", modName.ToString());
+        }
+
+        [Fact]
+        public void TryRetrieveInfoFromString_Fail()
+        {
+            Assert.False(StringsUtility.TryRetrieveInfoFromString("Skyrim_FrenchILSTRINGS", out var _, out var _, out var _));
+            Assert.False(StringsUtility.TryRetrieveInfoFromString("SkyrimFrench.ILSTRINGS", out var _, out var _, out var _));
         }
     }
 }

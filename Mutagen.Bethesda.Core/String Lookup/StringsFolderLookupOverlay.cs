@@ -1,4 +1,5 @@
-﻿using Noggog;
+using Wabbajack.Compression.BSA;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Wabbajack.Common;
 
 namespace Mutagen.Bethesda
 {
@@ -27,25 +29,40 @@ namespace Mutagen.Bethesda
         public static StringsFolderLookupOverlay? TypicalFactory(string referenceModPath, StringsReadParameters? instructions, ModKey modKey)
         {
             var ret = new StringsFolderLookupOverlay();
-            var targetDir = instructions?.StringsFolderOverride;
-            if (targetDir == null)
+            var stringsFolderPath = instructions?.StringsFolderOverride;
+            var dir = Path.GetDirectoryName(referenceModPath);
+            if (stringsFolderPath == null)
             {
-                targetDir = Path.Combine(Path.GetDirectoryName(referenceModPath), "Strings");
+                stringsFolderPath = Path.Combine(dir, "Strings");
             }
-            if (targetDir.Value.Exists)
+            if (stringsFolderPath.Value.Exists)
             {
-                foreach (var file in targetDir.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}"))
+                foreach (var file in stringsFolderPath.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}"))
                 {
                     if (!StringsUtility.TryRetrieveInfoFromString(file.Name, out var type, out var lang, out _)) continue;
                     var dict = ret.Get(type);
                     dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                 }
-                return ret;
             }
-            else
+            foreach (var bsaFile in Directory.EnumerateFiles(dir, "*.bsa"))
             {
-                return null;
+                var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
+                foreach (var item in bsaReader.Files)
+                {
+                    if (!StringsUtility.TryRetrieveInfoFromString(Path.GetFileName(item.Path.ToString()), out var type, out var lang, out var modName)) continue;
+                    if (!MemoryExtensions.Equals(modKey.Name, modName, StringComparison.OrdinalIgnoreCase)) continue;
+                    var dict = ret.Get(type);
+                    if (dict.ContainsKey(lang)) continue;
+                    dict[lang] = new Lazy<IStringsLookup>(() =>
+                    {
+                        byte[] bytes = new byte[item.Size];
+                        using var stream = new MemoryStream(bytes);
+                        item.CopyDataTo(stream).AsTask().Wait();
+                        return new StringsLookupOverlay(bytes, type);
+                    }, LazyThreadSafetyMode.ExecutionAndPublication);
+                }
             }
+            return ret;
         }
 
         /// <inheritdoc />
@@ -73,27 +90,12 @@ namespace Mutagen.Bethesda
 
         public TranslatedString CreateString(StringsSource source, uint key)
         {
-            var ret = new TranslatedString();
-            var dict = Get(source);
-            // Avoid register dictionaries if just one strings language
-            if (dict.Count == 1
-                && dict.Keys.First() == TranslatedString.DefaultLanguage)
+            return new TranslatedString()
             {
-                var first = dict.Values.First();
-                if (first.Value.TryLookup(key, out var str))
-                {
-                    ret.String = str;
-                    return ret;
-                }
-            }
-            foreach (var kv in dict)
-            {
-                if (kv.Value.Value.TryLookup(key, out var str))
-                {
-                    ret.Set(kv.Key, str);
-                }
-            }
-            return ret;
+                StringsLookup = this,
+                Key = key,
+                StringsSource = source,
+            };
         }
     }
 }
