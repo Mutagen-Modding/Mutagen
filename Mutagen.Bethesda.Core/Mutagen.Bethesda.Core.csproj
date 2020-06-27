@@ -10,11 +10,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Compression.BSA" Version="3.0.0" />
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.1.16" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.23" />
-    <PackageReference Include="Wabbajack.Common" Version="3.0.0" />
+    <PackageReference Include="Wabbajack.Compression.BSA" Version="2.1.0" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>

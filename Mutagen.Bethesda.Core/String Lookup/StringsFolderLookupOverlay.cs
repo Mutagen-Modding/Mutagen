@@ -1,4 +1,4 @@
-using Compression.BSA;
+using Wabbajack.Compression.BSA;
 using Noggog;
 using System;
 using System.Collections.Generic;
