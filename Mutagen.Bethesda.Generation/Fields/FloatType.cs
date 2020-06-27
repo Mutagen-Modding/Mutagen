@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            var data = this.TryCreateFieldData();
+            var data = this.GetFieldData();
             this.Multiplier = node.GetAttribute("multiplier", 1d);
             if (node.TryGetAttribute("divisor", out double div))
             {

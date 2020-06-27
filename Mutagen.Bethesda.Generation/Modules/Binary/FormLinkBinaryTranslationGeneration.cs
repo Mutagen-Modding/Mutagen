@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Generation
             }
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
             FormLinkType linkType = typeGen as FormLinkType;
-            if (typeGen.TryGetFieldData(out var data)
-                && data.RecordType.HasValue)
+            var data = typeGen.GetFieldData();
+            if (data.RecordType.HasValue)
             {
                 if (asyncMode == AsyncMode.Direct) throw new NotImplementedException();
                 fg.AppendLine("r.Position += Mutagen.Bethesda.Constants.SUBRECORD_LENGTH;");
@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor translationAccessor)
         {
             FormLinkType linkType = typeGen as FormLinkType;
-            if (typeGen.TryGetFieldData(out var data)
-                && data.RecordType.HasValue)
+            var data = typeGen.GetFieldData();
+            if (data.RecordType.HasValue)
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }

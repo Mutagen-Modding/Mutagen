@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {
-                if (!field.TryGetFieldData(out var mutaData)) continue;
+                var mutaData = field.GetFieldData();
                 if (!mutaData.HasTrigger) continue;
                 if (mutaData.Binary == BinaryGenerationType.NoGeneration) continue;
                 foreach (var trigger in mutaData.TriggeringRecordAccessors)

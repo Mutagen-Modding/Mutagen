@@ -15,7 +15,6 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
-            var data = this.TryCreateFieldData();
             this.IntegerType = node.GetAttribute("integerType", FloatIntegerType.UInt);
         }
     }

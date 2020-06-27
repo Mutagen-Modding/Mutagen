@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (field is ContainerType contType)
                 {
-                    if (!contType.SubTypeGeneration.TryGetFieldData(out var subData)) continue;
+                    var subData = contType.SubTypeGeneration.GetFieldData();
                     if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterRecType)
                         && !string.IsNullOrWhiteSpace((string)counterRecType))
                     {
@@ -167,20 +167,20 @@ namespace Mutagen.Bethesda.Generation
                     {
                         case DictMode.KeyedValue:
                             {
-                                if (!dict.ValueTypeGen.TryGetFieldData(out var subData)) continue;
+                                var subData = dict.ValueTypeGen.GetFieldData();
                                 if (!subData.HasTrigger) continue;
                                 recordTypes.Add(subData.TriggeringRecordTypes);
                                 break;
                             }
                         case DictMode.KeyValue:
                             {
-                                if (dict.KeyTypeGen.TryGetFieldData(out var subData)
-                                    && subData.HasTrigger)
+                                var subData = dict.KeyTypeGen.GetFieldData();
+                                if (subData.HasTrigger)
                                 {
                                     recordTypes.Add(subData.TriggeringRecordTypes);
                                 }
-                                if (dict.ValueTypeGen.TryGetFieldData(out subData)
-                                    && subData.HasTrigger)
+                                subData = dict.ValueTypeGen.GetFieldData();
+                                if (subData.HasTrigger)
                                 {
                                     recordTypes.Add(subData.TriggeringRecordTypes);
                                 }
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Generation
                 if (!field.IntegrateField
                     && !(field is DataType)
                     && !(field is CustomLogic)) continue;
-                if (!field.TryGetFieldData(out var fieldData)) break;
+                var fieldData = field.GetFieldData();
                 if (!fieldData.HasTrigger) break;
                 recTypes.Add(fieldData.TriggeringRecordTypes);
                 fieldData.IsTriggerForObject = true;

@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                if (typeGen.TryGetFieldData(out var data)
-                    && data.RecordType.HasValue)
+                var data = typeGen.GetFieldData();
+                if (data.RecordType.HasValue)
                 {
                     if (inline)
                     {

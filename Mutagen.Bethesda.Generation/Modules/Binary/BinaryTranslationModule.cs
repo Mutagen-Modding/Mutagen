@@ -343,8 +343,7 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
-                if (!field.TryGetFieldData(out var mutaData)) continue;
-                if (mutaData.Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
+                if (field.GetFieldData().Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
                 CustomLogicTranslationGeneration.GenerateWritePartialMethods(
                     fg: fg,
                     obj: obj,
@@ -357,8 +356,7 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
-                if (!field.TryGetFieldData(out var mutaData)) continue;
-                if (mutaData.Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
+                if (field.GetFieldData().Binary != BinaryGenerationType.Custom && !(field is CustomLogic)) continue;
                 CustomLogicTranslationGeneration.GenerateCreatePartialMethods(
                     fg: fg,
                     obj: obj,
@@ -376,8 +374,7 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
-                if (field.TryGetFieldData(out var data)
-                    && data.HasTrigger)
+                if (field.GetFieldData().HasTrigger)
                 {
                     yield return field;
                 }
@@ -388,9 +385,7 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
-                if (field is SetMarkerType) continue;
-                if (!field.TryGetFieldData(out var data)
-                    || !data.HasTrigger)
+                if (!field.GetFieldData().HasTrigger)
                 {
                     yield return field;
                 }
@@ -491,8 +486,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         if (field is SetMarkerType) continue;
                         if (field is CustomLogic logic && logic.IsRecordType) continue;
-                        if (field.TryGetFieldData(out var fieldData)
-                            && fieldData.HasTrigger) continue;
+                        var fieldData = field.GetFieldData();
+                        if (fieldData.HasTrigger) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                         if (!field.Enabled) continue;
@@ -552,8 +547,8 @@ namespace Mutagen.Bethesda.Generation
                             expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                             nonIntegrated: true))
                         {
-                            if (!field.Field.TryGetFieldData(out var fieldData)
-                                || fieldData.GenerationTypes.Count() == 0) continue;
+                            var fieldData = field.Field.GetFieldData();
+                            if (fieldData.GenerationTypes.Count() == 0) continue;
                             if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                             if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -616,8 +611,8 @@ namespace Mutagen.Bethesda.Generation
                             // Generic options
                             foreach (var field in obj.IterateFieldIndices())
                             {
-                                if (!field.Field.TryGetFieldData(out var fieldData)
-                                    || !fieldData.HasTrigger
+                                var fieldData = field.Field.GetFieldData();
+                                if (!fieldData.HasTrigger
                                     || fieldData.TriggeringRecordTypes.Count > 0
                                     || fieldData.GenerationTypes.Count() > 0) continue;
                                 if (field.Field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
@@ -1503,8 +1498,8 @@ namespace Mutagen.Bethesda.Generation
                     }
                     foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.False))
                     {
-                        if (field.TryGetFieldData(out var fieldData)
-                            && fieldData.HasTrigger) continue;
+                        var fieldData = field.GetFieldData();
+                        if (fieldData.HasTrigger) continue;
                         if (field is CustomLogic logic && logic.IsRecordType) continue;
                         if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
                         if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
@@ -1604,8 +1599,8 @@ namespace Mutagen.Bethesda.Generation
                     }
                     foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                     {
-                        if (!field.TryGetFieldData(out var fieldData)
-                            || !fieldData.HasTrigger)
+                        var fieldData = field.GetFieldData();
+                        if (!fieldData.HasTrigger)
                         {
                             if (!(field is CustomLogic custom))
                             {
@@ -2607,8 +2602,8 @@ namespace Mutagen.Bethesda.Generation
                                 expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                                 nonIntegrated: true))
                             {
-                                if (!field.Field.TryGetFieldData(out var fieldData)
-                                    || !fieldData.HasTrigger
+                                var fieldData = field.Field.GetFieldData();
+                                if (!fieldData.HasTrigger
                                     || fieldData.GenerationTypes.Count() == 0) continue;
                                 if (fieldData.BinaryOverlayFallback == BinaryGenerationType.NoGeneration) continue;
                                 if (field.Field.Derivative && fieldData.BinaryOverlayFallback != BinaryGenerationType.Custom) continue;

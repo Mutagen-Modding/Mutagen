@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Generation
         {
             if (inline) throw new NotImplementedException();
             if (asyncMode != AsyncMode.Off) throw new NotImplementedException();
-            if (typeGen.TryGetFieldData(out var data)
-                && data.RecordType.HasValue)
+            var data = typeGen.GetFieldData();
+            if (data.RecordType.HasValue)
             {
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }

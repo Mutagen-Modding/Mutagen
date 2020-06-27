@@ -22,13 +22,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 NumEnumKeys = num;
             }
-            if (this.Mode == Loqui.Generation.DictMode.KeyValue
-                && this.KeyTypeGen is EnumType
-                && NumEnumKeys == null
-                && this.GetFieldData()?.Binary == BinaryGenerationType.Normal)
-            {
-                throw new ArgumentException("Must specify numEnumKeys if an Enum dict.");
-            }
         }
     }
 }

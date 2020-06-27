@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Generation
             {
                 loqui.CustomData[LoquiBinaryTranslationGeneration.AsyncOverrideKey] = asyncItem;
             }
-            var data = listType.TryCreateFieldData();
-            var subData = listType.SubTypeGeneration.TryCreateFieldData();
+            var data = listType.GetFieldData();
+            var subData = listType.SubTypeGeneration.GetFieldData();
             ListBinaryType listBinaryType = GetListType(listType, data, subData);
             switch (listBinaryType)
             {
@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Generation
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
 
-            if (typeGen.TryGetFieldData(out var data)
-                && data.MarkerType.HasValue)
+            var data = typeGen.GetFieldData();
+            if (data.MarkerType.HasValue)
             {
                 fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}(writer, {objGen.RecordTypeHeaderName(data.MarkerType.Value)})) {{ }}");
             }

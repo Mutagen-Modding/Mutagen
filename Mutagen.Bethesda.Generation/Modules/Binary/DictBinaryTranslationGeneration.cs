@@ -93,8 +93,8 @@ namespace Mutagen.Bethesda.Generation
             var dict = typeGen as DictType;
             var subData = dict.ValueTypeGen.GetFieldData();
 
-            if (typeGen.TryGetFieldData(out var data)
-                && data.MarkerType.HasValue)
+            var data = typeGen.GetFieldData();
+            if (data.MarkerType.HasValue)
             {
                 fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
