@@ -184,6 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static ParseResult CustomRecordFallback(
                 IWeatherInternal item,
                 MutagenFrame frame,
+                Dictionary<RecordType, int>? recordParseCount,
                 RecordType nextRecordType,
                 int contentLength,
                 RecordTypeConverter? recordTypeConverter = null)
@@ -193,6 +194,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
+                        recordParseCount: recordParseCount,
                         nextRecordType: nextRecordType,
                         contentLength: contentLength,
                         recordTypeConverter: recordTypeConverter);
@@ -447,6 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
                         finalPos: finalPos,
                         offset: offset,
                         type: type,
+                        recordParseCount: null,
                         lastParsed: lastParsed,
                         recordTypeConverter: recordTypeConverter);
                 }

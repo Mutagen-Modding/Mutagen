@@ -8,27 +8,41 @@ namespace Mutagen.Bethesda.Binary
     {
         public bool KeepParsing;
         public int? ParsedIndex;
+        public RecordType? DuplicateParseMarker;
 
         public ParseResult(
             int? parsedIndex,
-            bool keepParsing)
+            bool keepParsing,
+            RecordType? dupParse)
         {
             KeepParsing = keepParsing;
             ParsedIndex = parsedIndex;
+            DuplicateParseMarker = dupParse;
+        }
+
+        public ParseResult(
+            int? parsedIndex,
+            RecordType? dupParse)
+        {
+            KeepParsing = true;
+            ParsedIndex = parsedIndex;
+            DuplicateParseMarker = dupParse;
         }
 
         public static implicit operator ParseResult(int? lastParsed)
         {
             return new ParseResult(
                 parsedIndex: lastParsed,
-                keepParsing: true);
+                keepParsing: true,
+                dupParse: null);
         }
 
         public static implicit operator ParseResult(int lastParsed)
         {
             return new ParseResult(
                 parsedIndex: lastParsed,
-                keepParsing: true);
+                keepParsing: true,
+                dupParse: null);
         }
 
         public static ParseResult Stop => new ParseResult();

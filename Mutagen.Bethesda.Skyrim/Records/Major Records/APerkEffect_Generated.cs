@@ -2097,6 +2097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPerkEffect item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -2111,7 +2112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     return (int)APerkEffect_FieldIndex.Priority;
                 }
-                case 0x464B5250: // PRKF: End Marker
+                case RecordTypeInts.PRKF: // End Marker
                 {
                     frame.ReadSubrecordFrame();
                     return ParseResult.Stop;
@@ -2233,6 +2234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2244,7 +2246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _PRKELocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
                     return (int)APerkEffect_FieldIndex.Priority;
                 }
-                case 0x464B5250: // PRKF: End Marker
+                case RecordTypeInts.PRKF: // End Marker
                 {
                     _package.MetaData.Constants.ReadSubrecordFrame(stream);
                     return ParseResult.Stop;

@@ -1953,6 +1953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDestructionStage item,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter = null)
@@ -1974,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: DestructionStage_Registration.ModelConverter);
                     return (int)DestructionStage_FieldIndex.Model;
                 }
-                case 0x46545344: // DSTF: End Marker
+                case RecordTypeInts.DSTF: // End Marker
                 {
                     frame.ReadSubrecordFrame();
                     return ParseResult.Stop;
@@ -2128,6 +2129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset,
             RecordType type,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordTypeConverter? recordTypeConverter = null)
         {
             type = recordTypeConverter.ConvertToStandard(type);
@@ -2148,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: DestructionStage_Registration.ModelConverter);
                     return (int)DestructionStage_FieldIndex.Model;
                 }
-                case 0x46545344: // DSTF: End Marker
+                case RecordTypeInts.DSTF: // End Marker
                 {
                     _package.MetaData.Constants.ReadSubrecordFrame(stream);
                     return ParseResult.Stop;

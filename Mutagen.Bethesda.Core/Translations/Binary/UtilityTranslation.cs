@@ -49,6 +49,7 @@ namespace Mutagen.Bethesda
         public delegate ParseResult RecordTypeFill<R>(
             R record,
             MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
@@ -57,6 +58,7 @@ namespace Mutagen.Bethesda
             R record,
             MutagenFrame frame,
             int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
@@ -87,6 +89,7 @@ namespace Mutagen.Bethesda
             {
                 targetFrame = frame.Decompress();
             }
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!targetFrame.Complete)
             {
                 var subMeta = targetFrame.GetSubrecord();
@@ -94,10 +97,19 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: targetFrame,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
                 if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
                 if (targetFrame.Position < finalPos)
                 {
                     targetFrame.Position = finalPos;
@@ -129,6 +141,7 @@ namespace Mutagen.Bethesda
             fillStructs?.Invoke(
                 record: record,
                 frame: frame);
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
                 var subMeta = frame.GetSubrecord();
@@ -136,10 +149,19 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
                 if (!parsed.KeepParsing) break;
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
+                }
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
@@ -171,6 +193,7 @@ namespace Mutagen.Bethesda
                 record: record,
                 frame: frame);
             int? lastParsed = null;
+            Dictionary<RecordType, int>? recordParseCount = null;
             while (!frame.Complete)
             {
                 var subMeta = frame.GetSubrecord();
@@ -179,6 +202,7 @@ namespace Mutagen.Bethesda
                     record: record,
                     frame: frame,
                     lastParsed: lastParsed,
+                    recordParseCount: recordParseCount,
                     nextRecordType: subMeta.RecordType,
                     contentLength: subMeta.ContentLength,
                     recordTypeConverter: recordTypeConverter);
@@ -186,6 +210,14 @@ namespace Mutagen.Bethesda
                 if (frame.Position < finalPos)
                 {
                     frame.Position = finalPos;
+                }
+                if (parsed.DuplicateParseMarker != null)
+                {
+                    if (recordParseCount == null)
+                    {
+                        recordParseCount = new Dictionary<RecordType, int>();
+                    }
+                    recordParseCount[parsed.DuplicateParseMarker!.Value] = recordParseCount.TryCreateValue(parsed.DuplicateParseMarker!.Value) + 1;
                 }
                 lastParsed = parsed.ParsedIndex;
             }
@@ -219,6 +251,7 @@ namespace Mutagen.Bethesda
                 var parsed = fillTyped(
                     record: record,
                     frame: frame,
+                    recordParseCount: null,
                     nextRecordType: nextRecordType,
                     contentLength: contentLength,
                     recordTypeConverter: recordTypeConverter);

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Constructor with parent Mod to be associated with
         /// </summary>
-        /// <returns>String in format: "Group<T>(_record_count_)"</returns>
+        /// <returns>String in format: "Group(_record_count_)"</returns>
         public override string ToString()
         {
             return $"Group<{typeof(T).Name}>({this.InternalCache.Count})";

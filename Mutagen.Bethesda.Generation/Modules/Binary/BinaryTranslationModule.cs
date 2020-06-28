@@ -92,7 +92,6 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(FormLinkType)] = new FormLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ArrayType)] = new ArrayBinaryTranslationGeneration();
-            this._typeGenerations[typeof(LoquiListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayBinaryTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
@@ -528,6 +527,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"int? lastParsed");
                     }
+                    if (obj.GetObjectType() != ObjectType.Mod)
+                    {
+                        args.Add("Dictionary<RecordType, int>? recordParseCount");
+                    }
                     args.Add("RecordType nextRecordType");
                     args.Add("int contentLength");
                     if (data.ObjectType == ObjectType.Mod)
@@ -543,6 +546,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("switch (nextRecordType.TypeInt)");
                     using (new BraceWrapper(fg))
                     {
+                        var fields = new List<(int, int, TypeGeneration Field)>();
                         foreach (var field in obj.IterateFieldIndices(
                             expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                             nonIntegrated: true))
@@ -557,47 +561,145 @@ namespace Mutagen.Bethesda.Generation
                             }
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
+                            fields.Add(field);
+                        }
+
+                        var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration)>>();
+                        foreach (var field in fields)
+                        {
+                            var fieldData = field.Field.GetFieldData();
+                            if (fieldData.GenerationTypes.Count() > 1) continue;
+                            foreach (var gen in fieldData.GenerationTypes)
+                            {
+                                if (gen.Key.Count() > 1) continue;
+                                LoquiType loqui = gen.Value as LoquiType;
+                                if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                                doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                            }
+                        }
+                        foreach (var item in doubleUsages.ToList())
+                        {
+                            if (item.Value.Count <= 1)
+                            {
+                                doubleUsages.Remove(item.Key);
+                            }
+                        }
+
+                        foreach (var field in fields)
+                        {
+                            var fieldData = field.Field.GetFieldData();
+                            if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                            {
+                                throw new ArgumentException("Unsupported type generator: " + field.Field);
+                            }
                             foreach (var gen in fieldData.GenerationTypes)
                             {
                                 LoquiType loqui = gen.Value as LoquiType;
                                 if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+
+                                List<(int, int, TypeGeneration Field)> doubles = null;
+                                if (gen.Key.Count() == 1)
+                                {
+                                    if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
+                                    {
+                                        // Means we handled earlier, break out
+                                        if (doubles.Count == 0) continue;
+                                    }
+                                }
+
                                 foreach (var trigger in gen.Key)
                                 {
                                     fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                 }
                                 using (new BraceWrapper(fg))
                                 {
-                                    await GenerateLastParsedShortCircuit(
-                                        obj: obj,
-                                        fg: fg,
-                                        field: field,
-                                        fieldData: fieldData,
-                                        toDo: async () =>
-                                        {
-                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
-                                            if (groupMask)
+                                    if (doubles == null)
+                                    {
+                                        await GenerateLastParsedShortCircuit(
+                                            obj: obj,
+                                            fg: fg,
+                                            field: field,
+                                            doublesPotential: false,
+                                            nextRecAccessor: "nextRecordType",
+                                            toDo: async () =>
                                             {
-                                                fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
-                                            }
-                                            using (new BraceWrapper(fg, doIt: groupMask))
-                                            {
-                                                await GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
-                                            }
-                                            if (groupMask)
-                                            {
-                                                fg.AppendLine("else");
-                                                using (new BraceWrapper(fg))
+                                                var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                if (groupMask)
                                                 {
-                                                    fg.AppendLine("frame.Position += contentLength;");
+                                                    fg.AppendLine($"if (importMask?.{field.Field.Name} ?? true)");
+                                                }
+                                                using (new BraceWrapper(fg, doIt: groupMask))
+                                                {
+                                                    await GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
+                                                }
+                                                if (groupMask)
+                                                {
+                                                    fg.AppendLine("else");
+                                                    using (new BraceWrapper(fg))
+                                                    {
+                                                        fg.AppendLine("frame.Position += contentLength;");
+                                                    }
+                                                }
+                                            });
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"switch (recordParseCount?.TryCreateValue(nextRecordType) ?? 0)");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            int count = 0;
+                                            foreach (var doublesField in doubles)
+                                            {
+                                                if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                                {
+                                                    throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                }
+                                                fg.AppendLine($"case {count++}:");
+                                                using (new DepthWrapper(fg))
+                                                {
+                                                    await GenerateLastParsedShortCircuit(
+                                                        obj: obj,
+                                                        fg: fg,
+                                                        field: doublesField,
+                                                        doublesPotential: true,
+                                                        nextRecAccessor: "nextRecordType",
+                                                        toDo: async () =>
+                                                        {
+                                                            var groupMask = data.ObjectType == ObjectType.Mod && (loqui?.TargetObjectGeneration?.GetObjectType() == ObjectType.Group);
+                                                            if (groupMask)
+                                                            {
+                                                                fg.AppendLine($"if (importMask?.{doublesField.Field.Name} ?? true)");
+                                                            }
+                                                            using (new BraceWrapper(fg, doIt: groupMask))
+                                                            {
+                                                                await GenerateFillSnippet(obj, fg, doublesField.Field, doubleGen, "frame");
+                                                            }
+                                                            if (groupMask)
+                                                            {
+                                                                fg.AppendLine("else");
+                                                                using (new BraceWrapper(fg))
+                                                                {
+                                                                    fg.AppendLine("frame.Position += contentLength;");
+                                                                }
+                                                            }
+                                                        });
                                                 }
                                             }
-                                        });
+                                            fg.AppendLine($"default:");
+                                            using (new DepthWrapper(fg))
+                                            {
+                                                fg.AppendLine($"throw new NotImplementedException();");
+                                            }
+                                        }
+                                        doubles.Clear();
+                                    }
                                 }
                             }
                         }
+
                         if (data.EndMarkerType.HasValue)
                         {
-                            fg.AppendLine($"case 0x{data.EndMarkerType.Value.TypeInt:X}: // {data.EndMarkerType}: End Marker");
+                            fg.AppendLine($"case RecordTypeInts.{data.EndMarkerType}: // End Marker");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine($"frame.ReadSubrecordFrame();");
@@ -651,6 +753,7 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         args.AddPassArg($"lastParsed");
                                     }
+                                    args.AddPassArg("recordParseCount");
                                     args.AddPassArg("nextRecordType");
                                     args.AddPassArg("contentLength");
                                     args.AddPassArg($"recordTypeConverter");
@@ -666,6 +769,10 @@ namespace Mutagen.Bethesda.Generation
                                     if (obj.BaseClass.GetObjectType() == ObjectType.Subrecord)
                                     {
                                         args.AddPassArg($"lastParsed");
+                                    }
+                                    if (obj.GetObjectType() != ObjectType.Mod)
+                                    {
+                                        args.AddPassArg("recordParseCount");
                                     }
                                     args.AddPassArg("nextRecordType");
                                     args.AddPassArg("contentLength");
@@ -820,12 +927,13 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration obj,
             FileGeneration fg,
             (int PublicIndex, int InternalIndex, TypeGeneration Field) field,
-            MutagenFieldData fieldData,
+            bool doublesPotential,
+            Accessor nextRecAccessor,
             Func<Task> toDo)
         {
             var dataSet = field.Field as DataType;
             var typelessStruct = obj.IsTypelessStruct();
-            if (typelessStruct && fieldData.IsTriggerForObject)
+            if (typelessStruct && field.Field.GetFieldData().IsTriggerForObject)
             {
                 if (dataSet != null)
                 {
@@ -861,7 +969,14 @@ namespace Mutagen.Bethesda.Generation
             }
             else
             {
-                fg.AppendLine($"return (int){field.Field.IndexEnumName};");
+                if (doublesPotential)
+                {
+                    fg.AppendLine($"return new {nameof(ParseResult)}((int){field.Field.IndexEnumName}, {nextRecAccessor});");
+                }
+                else
+                {
+                    fg.AppendLine($"return (int){field.Field.IndexEnumName};");
+                }
             }
         }
 
@@ -1034,7 +1149,8 @@ namespace Mutagen.Bethesda.Generation
                         obj: obj,
                         fg: fg,
                         field: field.GetIndexData(),
-                        fieldData: data,
+                        doublesPotential: false,
+                        nextRecAccessor: "nextRecordType",
                         toDo: async () =>
                         {
                             using (var args = new ArgsWrapper(fg,
@@ -2590,6 +2706,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"int offset");
                         args.Add("RecordType type");
                         args.Add("int? lastParsed");
+                        if (obj.GetObjectType() != ObjectType.Mod)
+                        {
+                            args.Add("Dictionary<RecordType, int>? recordParseCount");
+                        }
                         args.Add("RecordTypeConverter? recordTypeConverter = null");
                     }
                     using (new BraceWrapper(fg))
@@ -2598,6 +2718,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine("switch (type.TypeInt)");
                         using (new BraceWrapper(fg))
                         {
+                            var fields = new List<(int, int, TypeGeneration Field)>();
                             foreach (var field in obj.IterateFieldIndices(
                                 expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                                 nonIntegrated: true))
@@ -2613,65 +2734,180 @@ namespace Mutagen.Bethesda.Generation
                                 }
 
                                 if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
+                                fields.Add(field);
+                            }
+
+                            var doubleUsages = new Dictionary<RecordType, List<(int, int, TypeGeneration)>>();
+                            foreach (var field in fields)
+                            {
+                                var fieldData = field.Field.GetFieldData();
+                                if (fieldData.GenerationTypes.Count() > 1) continue;
+                                foreach (var gen in fieldData.GenerationTypes)
+                                {
+                                    if (gen.Key.Count() > 1) continue;
+                                    LoquiType loqui = gen.Value as LoquiType;
+                                    if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+                                    doubleUsages.TryCreateValue(gen.Key.First()).Add(field);
+                                }
+                            }
+                            foreach (var item in doubleUsages.ToList())
+                            {
+                                if (item.Value.Count <= 1)
+                                {
+                                    doubleUsages.Remove(item.Key);
+                                }
+                            }
+
+                            foreach (var field in fields)
+                            {
+                                var fieldData = field.Field.GetFieldData();
+                                if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                                {
+                                    throw new ArgumentException("Unsupported type generator: " + field.Field);
+                                }
                                 foreach (var gen in fieldData.GenerationTypes)
                                 {
                                     LoquiType loqui = gen.Value as LoquiType;
                                     if (loqui?.TargetObjectGeneration?.Abstract ?? false) continue;
+
+                                    List<(int, int, TypeGeneration Field)> doubles = null;
+                                    if (gen.Key.Count() == 1)
+                                    {
+                                        if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
+                                        {
+                                            // Means we handled earlier, break out
+                                            if (doubles.Count == 0) continue;
+                                        }
+                                    }
+
                                     foreach (var trigger in gen.Key)
                                     {
                                         fg.AppendLine($"case RecordTypeInts.{trigger.CheckedType}:");
                                     }
                                     using (new BraceWrapper(fg))
                                     {
-                                        await GenerateLastParsedShortCircuit(
-                                            obj: obj,
-                                            fg: fg,
-                                            field: field,
-                                            fieldData: fieldData,
-                                            toDo: async () =>
-                                            {
-                                                string recConverter = "recordTypeConverter";
-                                                if (fieldData?.RecordTypeConverter != null
-                                                    && fieldData.RecordTypeConverter.FromConversions.Count > 0)
+                                        if (doubles == null)
+                                        {
+                                            await GenerateLastParsedShortCircuit(
+                                                obj: obj,
+                                                fg: fg,
+                                                field: field,
+                                                doublesPotential: false,
+                                                nextRecAccessor: "type",
+                                                toDo: async () =>
                                                 {
-                                                    recConverter = $"{obj.RegistrationName}.{field.Field.Name}Converter";
-                                                }
-                                                await generator.GenerateWrapperRecordTypeParse(
-                                                    fg: fg,
-                                                    objGen: obj,
-                                                    typeGen: gen.Value,
-                                                    locationAccessor: "(stream.Position - offset)",
-                                                    packageAccessor: "_package",
-                                                    converterAccessor: recConverter);
-                                                if (obj.GetObjectType() == ObjectType.Mod
-                                                    && field.Field.Name == "ModHeader")
-                                                {
-                                                    using (var args = new ArgsWrapper(fg,
-                                                        $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
+                                                    string recConverter = "recordTypeConverter";
+                                                    if (fieldData?.RecordTypeConverter != null
+                                                        && fieldData.RecordTypeConverter.FromConversions.Count > 0)
                                                     {
-                                                        args.Add(subFg =>
+                                                        recConverter = $"{obj.RegistrationName}.{field.Field.Name}Converter";
+                                                    }
+                                                    await generator.GenerateWrapperRecordTypeParse(
+                                                        fg: fg,
+                                                        objGen: obj,
+                                                        typeGen: gen.Value,
+                                                        locationAccessor: "(stream.Position - offset)",
+                                                        packageAccessor: "_package",
+                                                        converterAccessor: recConverter);
+                                                    if (obj.GetObjectType() == ObjectType.Mod
+                                                        && field.Field.Name == "ModHeader")
+                                                    {
+                                                        using (var args = new ArgsWrapper(fg,
+                                                            $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
                                                         {
-                                                            subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
-                                                            using (new DepthWrapper(subFg))
+                                                            args.Add(subFg =>
                                                             {
-                                                                subFg.AppendLine($"master => new {nameof(MasterReference)}()");
-                                                                using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                                subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
+                                                                using (new DepthWrapper(subFg))
                                                                 {
-                                                                    subFg.AppendLine("Master = master.Master,");
-                                                                    subFg.AppendLine("FileSize = master.FileSize,");
+                                                                    subFg.AppendLine($"master => new {nameof(MasterReference)}()");
+                                                                    using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                                    {
+                                                                        subFg.AppendLine("Master = master.Master,");
+                                                                        subFg.AppendLine("FileSize = master.FileSize,");
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                        }
+                                        else
+                                        {
+                                            fg.AppendLine($"switch (recordParseCount?.TryCreateValue(type) ?? 0)");
+                                            using (new BraceWrapper(fg))
+                                            {
+                                                int count = 0;
+                                                foreach (var doublesField in doubles)
+                                                {
+                                                    if (!this.TryGetTypeGeneration(doublesField.Field.GetType(), out var doubleGen))
+                                                    {
+                                                        throw new ArgumentException("Unsupported type generator: " + doublesField.Field);
+                                                    }
+                                                    var doublesFieldData = doublesField.Field.GetFieldData();
+                                                    fg.AppendLine($"case {count++}:");
+                                                    using (new DepthWrapper(fg))
+                                                    {
+                                                        await GenerateLastParsedShortCircuit(
+                                                            obj: obj,
+                                                            fg: fg,
+                                                            field: doublesField,
+                                                            doublesPotential: true,
+                                                            nextRecAccessor: "type",
+                                                            toDo: async () =>
+                                                            {
+                                                                string recConverter = "recordTypeConverter";
+                                                                if (doublesFieldData.RecordTypeConverter != null
+                                                                    && doublesFieldData.RecordTypeConverter.FromConversions.Count > 0)
+                                                                {
+                                                                    recConverter = $"{obj.RegistrationName}.{doublesField.Field.Name}Converter";
+                                                                }
+                                                                await doubleGen.GenerateWrapperRecordTypeParse(
+                                                                    fg: fg,
+                                                                    objGen: obj,
+                                                                    typeGen: gen.Value,
+                                                                    locationAccessor: "(stream.Position - offset)",
+                                                                    packageAccessor: "_package",
+                                                                    converterAccessor: recConverter);
+                                                                if (obj.GetObjectType() == ObjectType.Mod
+                                                                    && doublesField.Field.Name == "ModHeader")
+                                                                {
+                                                                    using (var args = new ArgsWrapper(fg,
+                                                                        $"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo"))
+                                                                    {
+                                                                        args.Add(subFg =>
+                                                                        {
+                                                                            subFg.AppendLine("this.ModHeader.MasterReferences.Select(");
+                                                                            using (new DepthWrapper(subFg))
+                                                                            {
+                                                                                subFg.AppendLine($"master => new {nameof(MasterReference)}()");
+                                                                                using (new BraceWrapper(subFg) { AppendParenthesis = true })
+                                                                                {
+                                                                                    subFg.AppendLine("Master = master.Master,");
+                                                                                    subFg.AppendLine("FileSize = master.FileSize,");
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                }
+                                                            });
                                                     }
                                                 }
-                                            });
+                                                fg.AppendLine($"default:");
+                                                using (new DepthWrapper(fg))
+                                                {
+                                                    fg.AppendLine($"throw new NotImplementedException();");
+                                                }
+                                            }
+                                            doubles.Clear();
+                                        }
                                     }
                                 }
                             }
                             var endMarkerType = obj.GetObjectData().EndMarkerType;
                             if (endMarkerType.HasValue)
                             {
-                                fg.AppendLine($"case 0x{endMarkerType.Value.TypeInt:X}: // {endMarkerType}: End Marker");
+                                fg.AppendLine($"case RecordTypeInts.{endMarkerType}: // End Marker");
                                 using (new BraceWrapper(fg))
                                 {
                                     fg.AppendLine($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.ReadSubrecordFrame(stream);");
@@ -2707,6 +2943,7 @@ namespace Mutagen.Bethesda.Generation
                                         args.AddPassArg("offset");
                                         args.AddPassArg("type");
                                         args.AddPassArg("lastParsed");
+                                        args.AddPassArg("recordParseCount");
                                         if (obj.GetObjectData().BaseRecordTypeConverter?.FromConversions.Count > 0)
                                         {
                                             args.Add($"recordTypeConverter: {obj.RegistrationName}.BaseConverter");
