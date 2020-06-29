@@ -97,5 +97,10 @@ namespace Mutagen.Bethesda
                 StringsSource = source,
             };
         }
+
+        public IEnumerable<Language> AvailableLanguages(StringsSource source)
+        {
+            return Get(source).Keys;
+        }
     }
 }

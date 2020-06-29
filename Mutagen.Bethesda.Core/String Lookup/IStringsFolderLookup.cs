@@ -10,6 +10,12 @@ namespace Mutagen.Bethesda
     /// </summary>
     public interface IStringsFolderLookup
     {
+        /// <summary>
+        /// Retrieves the availables languages present in a source
+        /// </summary>
+        /// <param name="source">Source to query</param>
+        /// <returns>Enumerable of languages present for given source</returns>
+        IEnumerable<Language> AvailableLanguages(StringsSource source);
 
         /// <summary>
         /// Attempts to retrieve a string given its index key

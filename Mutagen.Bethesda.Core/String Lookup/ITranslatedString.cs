@@ -11,6 +11,11 @@ namespace Mutagen.Bethesda
     public interface ITranslatedStringGetter : IEnumerable<KeyValuePair<Language, string>>
     {
         /// <summary>
+        /// Language the string is targeting, which will be set/return when accessed normally
+        /// </summary>
+        Language TargetLanguage { get; }
+
+        /// <summary>
         /// Retrieves or sets the string for the language stored in TranslatedString.DefaultLanguage
         /// </summary>
         string String { get; set; }
@@ -42,8 +47,7 @@ namespace Mutagen.Bethesda
         /// If the default language is provided, no change will be applied.
         /// </summary>
         /// <param name="language">Language to remove</param>
-        /// <returns>True if an item was removed</returns>
-        bool RemoveNonDefault(Language language);
+        void RemoveNonDefault(Language language);
 
         /// <summary>
         /// Clears all non-default language string registrations
@@ -71,7 +75,7 @@ namespace Mutagen.Bethesda
             {
                 return str;
             }
-            if (language == TranslatedString.DefaultLanguage) return string.Empty;
+            if (language == getter.TargetLanguage) return string.Empty;
             return null;
         }
     }
