@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionObject>? _Objects;
-        public ExtendedList<RegionObject>? Objects
+        private IExtendedList<RegionObject>? _Objects;
+        public IExtendedList<RegionObject>? Objects
         {
             get => this._Objects;
             set => this._Objects = value;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         ILoquiObjectSetter<IRegionObjects>
     {
-        new ExtendedList<RegionObject>? Objects { get; set; }
+        new IExtendedList<RegionObject>? Objects { get; set; }
     }
 
     public partial interface IRegionObjectsGetter :
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case RegionObjects_FieldIndex.Objects:
-                    return typeof(ExtendedList<RegionObject>);
+                    return typeof(IExtendedList<RegionObject>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

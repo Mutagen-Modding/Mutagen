@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherType>? _Weathers;
-        public ExtendedList<WeatherType>? Weathers
+        private IExtendedList<WeatherType>? _Weathers;
+        public IExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         ILoquiObjectSetter<IRegionWeather>
     {
-        new ExtendedList<WeatherType>? Weathers { get; set; }
+        new IExtendedList<WeatherType>? Weathers { get; set; }
     }
 
     public partial interface IRegionWeatherGetter :
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case RegionWeather_FieldIndex.Weathers:
-                    return typeof(ExtendedList<WeatherType>);
+                    return typeof(IExtendedList<WeatherType>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

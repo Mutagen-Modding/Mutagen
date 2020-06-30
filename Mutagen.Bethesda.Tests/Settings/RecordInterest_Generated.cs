@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda.Tests
 
         #region InterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _InterestingTypes = new ExtendedList<String>();
-        public ExtendedList<String> InterestingTypes
+        private IExtendedList<String> _InterestingTypes = new ExtendedList<String>();
+        public IExtendedList<String> InterestingTypes
         {
             get => this._InterestingTypes;
             protected set => this._InterestingTypes = value;
@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region UninterestingTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _UninterestingTypes = new ExtendedList<String>();
-        public ExtendedList<String> UninterestingTypes
+        private IExtendedList<String> _UninterestingTypes = new ExtendedList<String>();
+        public IExtendedList<String> UninterestingTypes
         {
             get => this._UninterestingTypes;
             protected set => this._UninterestingTypes = value;
@@ -697,8 +697,8 @@ namespace Mutagen.Bethesda.Tests
         IRecordInterestGetter,
         ILoquiObjectSetter<IRecordInterest>
     {
-        new ExtendedList<String> InterestingTypes { get; }
-        new ExtendedList<String> UninterestingTypes { get; }
+        new IExtendedList<String> InterestingTypes { get; }
+        new IExtendedList<String> UninterestingTypes { get; }
     }
 
     public partial interface IRecordInterestGetter :
@@ -1152,9 +1152,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInterest_FieldIndex.InterestingTypes:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case RecordInterest_FieldIndex.UninterestingTypes:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

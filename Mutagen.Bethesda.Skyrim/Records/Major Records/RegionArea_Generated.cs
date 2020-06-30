@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RegionPointListData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P2Float>? _RegionPointListData;
-        public ExtendedList<P2Float>? RegionPointListData
+        private IExtendedList<P2Float>? _RegionPointListData;
+        public IExtendedList<P2Float>? RegionPointListData
         {
             get => this._RegionPointListData;
             set => this._RegionPointListData = value;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionArea>
     {
         new UInt32? EdgeFallOff { get; set; }
-        new ExtendedList<P2Float>? RegionPointListData { get; set; }
+        new IExtendedList<P2Float>? RegionPointListData { get; set; }
     }
 
     public partial interface IRegionAreaGetter :
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RegionArea_FieldIndex.EdgeFallOff:
                     return typeof(UInt32);
                 case RegionArea_FieldIndex.RegionPointListData:
-                    return typeof(ExtendedList<P2Float>);
+                    return typeof(IExtendedList<P2Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

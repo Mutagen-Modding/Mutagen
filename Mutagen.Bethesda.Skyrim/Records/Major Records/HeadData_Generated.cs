@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region HeadParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
-        public ExtendedList<HeadPartReference> HeadParts
+        private IExtendedList<HeadPartReference> _HeadParts = new ExtendedList<HeadPartReference>();
+        public IExtendedList<HeadPartReference> HeadParts
         {
             get => this._HeadParts;
             protected set => this._HeadParts = value;
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Npc>> _RacePresets = new ExtendedList<IFormLink<Npc>>();
-        public ExtendedList<IFormLink<Npc>> RacePresets
+        private IExtendedList<IFormLink<Npc>> _RacePresets = new ExtendedList<IFormLink<Npc>>();
+        public IExtendedList<IFormLink<Npc>> RacePresets
         {
             get => this._RacePresets;
             protected set => this._RacePresets = value;
@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AvailableHairColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ColorRecord>> _AvailableHairColors = new ExtendedList<IFormLink<ColorRecord>>();
-        public ExtendedList<IFormLink<ColorRecord>> AvailableHairColors
+        private IExtendedList<IFormLink<ColorRecord>> _AvailableHairColors = new ExtendedList<IFormLink<ColorRecord>>();
+        public IExtendedList<IFormLink<ColorRecord>> AvailableHairColors
         {
             get => this._AvailableHairColors;
             protected set => this._AvailableHairColors = value;
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region FaceDetails
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<TextureSet>> _FaceDetails = new ExtendedList<IFormLink<TextureSet>>();
-        public ExtendedList<IFormLink<TextureSet>> FaceDetails
+        private IExtendedList<IFormLink<TextureSet>> _FaceDetails = new ExtendedList<IFormLink<TextureSet>>();
+        public IExtendedList<IFormLink<TextureSet>> FaceDetails
         {
             get => this._FaceDetails;
             protected set => this._FaceDetails = value;
@@ -121,8 +121,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region TintMasks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
-        public ExtendedList<TintAssets> TintMasks
+        private IExtendedList<TintAssets> _TintMasks = new ExtendedList<TintAssets>();
+        public IExtendedList<TintAssets> TintMasks
         {
             get => this._TintMasks;
             protected set => this._TintMasks = value;
@@ -1301,13 +1301,13 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ILoquiObjectSetter<IHeadData>
     {
-        new ExtendedList<HeadPartReference> HeadParts { get; }
+        new IExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new ExtendedList<IFormLink<Npc>> RacePresets { get; }
-        new ExtendedList<IFormLink<ColorRecord>> AvailableHairColors { get; }
-        new ExtendedList<IFormLink<TextureSet>> FaceDetails { get; }
+        new IExtendedList<IFormLink<Npc>> RacePresets { get; }
+        new IExtendedList<IFormLink<ColorRecord>> AvailableHairColors { get; }
+        new IExtendedList<IFormLink<TextureSet>> FaceDetails { get; }
         new FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; }
-        new ExtendedList<TintAssets> TintMasks { get; }
+        new IExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
         new FormLinkNullable<Race> MorphRace { get; set; }
         new FormLinkNullable<Race> ArmorRace { get; set; }
@@ -1882,19 +1882,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case HeadData_FieldIndex.HeadParts:
-                    return typeof(ExtendedList<HeadPartReference>);
+                    return typeof(IExtendedList<HeadPartReference>);
                 case HeadData_FieldIndex.AvailableMorphs:
                     return typeof(AvailableMorphs);
                 case HeadData_FieldIndex.RacePresets:
-                    return typeof(ExtendedList<IFormLink<Npc>>);
+                    return typeof(IExtendedList<IFormLink<Npc>>);
                 case HeadData_FieldIndex.AvailableHairColors:
-                    return typeof(ExtendedList<IFormLink<ColorRecord>>);
+                    return typeof(IExtendedList<IFormLink<ColorRecord>>);
                 case HeadData_FieldIndex.FaceDetails:
-                    return typeof(ExtendedList<IFormLink<TextureSet>>);
+                    return typeof(IExtendedList<IFormLink<TextureSet>>);
                 case HeadData_FieldIndex.DefaultFaceTexture:
                     return typeof(FormLinkNullable<TextureSet>);
                 case HeadData_FieldIndex.TintMasks:
-                    return typeof(ExtendedList<TintAssets>);
+                    return typeof(IExtendedList<TintAssets>);
                 case HeadData_FieldIndex.Model:
                     return typeof(Model);
                 case HeadData_FieldIndex.MorphRace:

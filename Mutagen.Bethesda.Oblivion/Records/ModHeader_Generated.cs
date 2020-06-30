@@ -96,8 +96,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public ExtendedList<MasterReference> MasterReferences
+        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public IExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<MasterReference> MasterReferences { get; }
+        new IExtendedList<MasterReference> MasterReferences { get; }
         new UInt64? VestigialData { get; set; }
     }
 
@@ -1546,7 +1546,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(ExtendedList<MasterReference>);
+                    return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.VestigialData:
                     return typeof(UInt64);
                 default:

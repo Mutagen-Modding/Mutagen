@@ -70,8 +70,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
-        public ExtendedList<IFormLink<Grass>> Grasses
+        private IExtendedList<IFormLink<Grass>> _Grasses = new ExtendedList<IFormLink<Grass>>();
+        public IExtendedList<IFormLink<Grass>> Grasses
         {
             get => this._Grasses;
             protected set => this._Grasses = value;
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte HavokFriction { get; set; }
         new Byte HavokRestitution { get; set; }
         new Byte TextureSpecularExponent { get; set; }
-        new ExtendedList<IFormLink<Grass>> Grasses { get; }
+        new IExtendedList<IFormLink<Grass>> Grasses { get; }
         new LandscapeTexture.HNAMDataType HNAMDataTypeState { get; set; }
     }
 
@@ -1395,7 +1395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LandscapeTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandscapeTexture_FieldIndex.Grasses:
-                    return typeof(ExtendedList<IFormLink<Grass>>);
+                    return typeof(IExtendedList<IFormLink<Grass>>);
                 case LandscapeTexture_FieldIndex.HNAMDataTypeState:
                     return typeof(LandscapeTexture.HNAMDataType);
                 default:

@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<SkyrimMajorRecord>> _Items = new ExtendedList<IFormLink<SkyrimMajorRecord>>();
-        public ExtendedList<IFormLink<SkyrimMajorRecord>> Items
+        private IExtendedList<IFormLink<SkyrimMajorRecord>> _Items = new ExtendedList<IFormLink<SkyrimMajorRecord>>();
+        public IExtendedList<IFormLink<SkyrimMajorRecord>> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         ILoquiObjectSetter<IFormListInternal>
     {
-        new ExtendedList<IFormLink<SkyrimMajorRecord>> Items { get; }
+        new IExtendedList<IFormLink<SkyrimMajorRecord>> Items { get; }
     }
 
     public partial interface IFormListInternal :
@@ -1122,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case FormList_FieldIndex.Items:
-                    return typeof(ExtendedList<IFormLink<SkyrimMajorRecord>>);
+                    return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

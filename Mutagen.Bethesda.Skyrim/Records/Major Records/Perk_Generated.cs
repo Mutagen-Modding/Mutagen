@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
-        public ExtendedList<APerkEffect> Effects
+        private IExtendedList<APerkEffect> _Effects = new ExtendedList<APerkEffect>();
+        public IExtendedList<APerkEffect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1175,14 +1175,14 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
         new Icons? Icons { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new Boolean Trait { get; set; }
         new Byte Level { get; set; }
         new Byte NumRanks { get; set; }
         new Boolean Playable { get; set; }
         new Boolean Hidden { get; set; }
         new FormLinkNullable<Perk> NextPerk { get; set; }
-        new ExtendedList<APerkEffect> Effects { get; }
+        new IExtendedList<APerkEffect> Effects { get; }
         new Perk.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Perk.MajorFlag MajorFlags { get; set; }
@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Perk_FieldIndex.Icons:
                     return typeof(Icons);
                 case Perk_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case Perk_FieldIndex.Trait:
                     return typeof(Boolean);
                 case Perk_FieldIndex.Level:
@@ -1803,7 +1803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Perk_FieldIndex.NextPerk:
                     return typeof(FormLinkNullable<Perk>);
                 case Perk_FieldIndex.Effects:
-                    return typeof(ExtendedList<APerkEffect>);
+                    return typeof(IExtendedList<APerkEffect>);
                 case Perk_FieldIndex.DATADataTypeState:
                     return typeof(Perk.DATADataType);
                 default:

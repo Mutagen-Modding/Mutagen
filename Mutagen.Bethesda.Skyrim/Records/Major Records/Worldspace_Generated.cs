@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region LargeReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
-        public ExtendedList<WorldspaceGridReference> LargeReferences
+        private IExtendedList<WorldspaceGridReference> _LargeReferences = new ExtendedList<WorldspaceGridReference>();
+        public IExtendedList<WorldspaceGridReference> LargeReferences
         {
             get => this._LargeReferences;
             protected set => this._LargeReferences = value;
@@ -252,8 +252,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SubCells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
-        public ExtendedList<WorldspaceBlock> SubCells
+        private IExtendedList<WorldspaceBlock> _SubCells = new ExtendedList<WorldspaceBlock>();
+        public IExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
             protected set => this._SubCells = value;
@@ -1866,7 +1866,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IWorldspaceInternal>
     {
-        new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
+        new IExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
@@ -1896,7 +1896,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Cell? TopCell { get; set; }
         new Int32 SubCellsTimestamp { get; set; }
         new Int32 SubCellsUnknown { get; set; }
-        new ExtendedList<WorldspaceBlock> SubCells { get; }
+        new IExtendedList<WorldspaceBlock> SubCells { get; }
         #region Mutagen
         new Worldspace.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -2756,7 +2756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Worldspace_FieldIndex.LargeReferences:
-                    return typeof(ExtendedList<WorldspaceGridReference>);
+                    return typeof(IExtendedList<WorldspaceGridReference>);
                 case Worldspace_FieldIndex.MaxHeight:
                     return typeof(WorldspaceMaxHeight);
                 case Worldspace_FieldIndex.Name:
@@ -2816,7 +2816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Worldspace_FieldIndex.SubCellsUnknown:
                     return typeof(Int32);
                 case Worldspace_FieldIndex.SubCells:
-                    return typeof(ExtendedList<WorldspaceBlock>);
+                    return typeof(IExtendedList<WorldspaceBlock>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

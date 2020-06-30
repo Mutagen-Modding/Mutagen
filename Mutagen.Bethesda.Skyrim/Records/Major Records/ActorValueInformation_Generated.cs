@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PerkTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
-        public ExtendedList<ActorValuePerkNode> PerkTree
+        private IExtendedList<ActorValuePerkNode> _PerkTree = new ExtendedList<ActorValuePerkNode>();
+        public IExtendedList<ActorValuePerkNode> PerkTree
         {
             get => this._PerkTree;
             protected set => this._PerkTree = value;
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Abbreviation { get; set; }
         new MemorySlice<Byte>? CNAM { get; set; }
         new ActorValueSkill? Skill { get; set; }
-        new ExtendedList<ActorValuePerkNode> PerkTree { get; }
+        new IExtendedList<ActorValuePerkNode> PerkTree { get; }
     }
 
     public partial interface IActorValueInformationInternal :
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ActorValueInformation_FieldIndex.Skill:
                     return typeof(ActorValueSkill);
                 case ActorValueInformation_FieldIndex.PerkTree:
-                    return typeof(ExtendedList<ActorValuePerkNode>);
+                    return typeof(IExtendedList<ActorValuePerkNode>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

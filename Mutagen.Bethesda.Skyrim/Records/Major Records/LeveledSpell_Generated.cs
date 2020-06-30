@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledSpellEntry>? _Entries;
-        public ExtendedList<LeveledSpellEntry>? Entries
+        private IExtendedList<LeveledSpellEntry>? _Entries;
+        public IExtendedList<LeveledSpellEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte? ChanceNone { get; set; }
         new LeveledSpell.Flag Flags { get; set; }
-        new ExtendedList<LeveledSpellEntry>? Entries { get; set; }
+        new IExtendedList<LeveledSpellEntry>? Entries { get; set; }
     }
 
     public partial interface ILeveledSpellInternal :
@@ -1272,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return typeof(LeveledSpell.Flag);
                 case LeveledSpell_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledSpellEntry>);
+                    return typeof(IExtendedList<LeveledSpellEntry>);
                 default:
                     return ASpell_Registration.GetNthType(index);
             }

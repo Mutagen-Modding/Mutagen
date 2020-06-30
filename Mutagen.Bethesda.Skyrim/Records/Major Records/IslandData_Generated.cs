@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Triangles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
-        public ExtendedList<P3Int16> Triangles
+        private IExtendedList<P3Int16> _Triangles = new ExtendedList<P3Int16>();
+        public IExtendedList<P3Int16> Triangles
         {
             get => this._Triangles;
             protected set => this._Triangles = value;
@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Vertices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
-        public ExtendedList<P3Float> Vertices
+        private IExtendedList<P3Float> _Vertices = new ExtendedList<P3Float>();
+        public IExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
             protected set => this._Vertices = value;
@@ -810,8 +810,8 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new P3Float Min { get; set; }
         new P3Float Max { get; set; }
-        new ExtendedList<P3Int16> Triangles { get; }
-        new ExtendedList<P3Float> Vertices { get; }
+        new IExtendedList<P3Int16> Triangles { get; }
+        new IExtendedList<P3Float> Vertices { get; }
     }
 
     public partial interface IIslandDataGetter :
@@ -1318,9 +1318,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case IslandData_FieldIndex.Max:
                     return typeof(P3Float);
                 case IslandData_FieldIndex.Triangles:
-                    return typeof(ExtendedList<P3Int16>);
+                    return typeof(IExtendedList<P3Int16>);
                 case IslandData_FieldIndex.Vertices:
-                    return typeof(ExtendedList<P3Float>);
+                    return typeof(IExtendedList<P3Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

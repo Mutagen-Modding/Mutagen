@@ -63,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ANavigationMesh>> _MergedTo = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public ExtendedList<IFormLink<ANavigationMesh>> MergedTo
+        private IExtendedList<IFormLink<ANavigationMesh>> _MergedTo = new ExtendedList<IFormLink<ANavigationMesh>>();
+        public IExtendedList<IFormLink<ANavigationMesh>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ANavigationMesh>> _PreferredMerges = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public ExtendedList<IFormLink<ANavigationMesh>> PreferredMerges
+        private IExtendedList<IFormLink<ANavigationMesh>> _PreferredMerges = new ExtendedList<IFormLink<ANavigationMesh>>();
+        public IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
@@ -91,8 +91,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedDoors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
-        public ExtendedList<LinkedDoor> LinkedDoors
+        private IExtendedList<LinkedDoor> _LinkedDoors = new ExtendedList<LinkedDoor>();
+        public IExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
             protected set => this._LinkedDoors = value;
@@ -1180,9 +1180,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new ExtendedList<IFormLink<ANavigationMesh>> MergedTo { get; }
-        new ExtendedList<IFormLink<ANavigationMesh>> PreferredMerges { get; }
-        new ExtendedList<LinkedDoor> LinkedDoors { get; }
+        new IExtendedList<IFormLink<ANavigationMesh>> MergedTo { get; }
+        new IExtendedList<IFormLink<ANavigationMesh>> PreferredMerges { get; }
+        new IExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
         new FormLink<Worldspace> ParentWorldspace { get; set; }
@@ -1788,11 +1788,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMapInfo_FieldIndex.PreferredMergesFlag:
                     return typeof(UInt32);
                 case NavigationMapInfo_FieldIndex.MergedTo:
-                    return typeof(ExtendedList<IFormLink<ANavigationMesh>>);
+                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
                 case NavigationMapInfo_FieldIndex.PreferredMerges:
-                    return typeof(ExtendedList<IFormLink<ANavigationMesh>>);
+                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
                 case NavigationMapInfo_FieldIndex.LinkedDoors:
-                    return typeof(ExtendedList<LinkedDoor>);
+                    return typeof(IExtendedList<LinkedDoor>);
                 case NavigationMapInfo_FieldIndex.Island:
                     return typeof(IslandData);
                 case NavigationMapInfo_FieldIndex.Unknown2:

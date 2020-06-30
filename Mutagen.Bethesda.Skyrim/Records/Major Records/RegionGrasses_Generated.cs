@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionGrass>? _Grasses;
-        public ExtendedList<RegionGrass>? Grasses
+        private IExtendedList<RegionGrass>? _Grasses;
+        public IExtendedList<RegionGrass>? Grasses
         {
             get => this._Grasses;
             set => this._Grasses = value;
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>
     {
-        new ExtendedList<RegionGrass>? Grasses { get; set; }
+        new IExtendedList<RegionGrass>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :
@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case RegionGrasses_FieldIndex.Grasses:
-                    return typeof(ExtendedList<RegionGrass>);
+                    return typeof(IExtendedList<RegionGrass>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

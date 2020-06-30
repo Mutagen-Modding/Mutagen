@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public ExtendedList<Relation> Relations
+        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public IExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public ExtendedList<Rank> Ranks
+        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public IExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -160,8 +160,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private IExtendedList<Condition>? _Conditions;
+        public IExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -1375,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFactionInternal>
     {
         new TranslatedString? Name { get; set; }
-        new ExtendedList<Relation> Relations { get; }
+        new IExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
         new FormLinkNullable<PlacedObject> ExteriorJailMarker { get; set; }
         new FormLinkNullable<PlacedObject> FollowerWaitMarker { get; set; }
@@ -1384,12 +1384,12 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<FormList> SharedCrimeFactionList { get; set; }
         new FormLinkNullable<Outfit> JailOutfit { get; set; }
         new CrimeValues? CrimeValues { get; set; }
-        new ExtendedList<Rank> Ranks { get; }
+        new IExtendedList<Rank> Ranks { get; }
         new FormLinkNullable<FormList> VendorBuySellList { get; set; }
         new FormLinkNullable<PlacedObject> MerchantContainer { get; set; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
+        new IExtendedList<Condition>? Conditions { get; set; }
     }
 
     public partial interface IFactionInternal :
@@ -2016,7 +2016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Faction_FieldIndex.Relations:
-                    return typeof(ExtendedList<Relation>);
+                    return typeof(IExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.ExteriorJailMarker:
@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.CrimeValues:
                     return typeof(CrimeValues);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(ExtendedList<Rank>);
+                    return typeof(IExtendedList<Rank>);
                 case Faction_FieldIndex.VendorBuySellList:
                     return typeof(FormLinkNullable<FormList>);
                 case Faction_FieldIndex.MerchantContainer:
@@ -2044,7 +2044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Faction_FieldIndex.VendorLocation:
                     return typeof(LocationTargetRadius);
                 case Faction_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

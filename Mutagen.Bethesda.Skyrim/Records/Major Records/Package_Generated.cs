@@ -112,8 +112,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -180,8 +180,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ProcedureTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
-        public ExtendedList<PackageBranch> ProcedureTree
+        private IExtendedList<PackageBranch> _ProcedureTree = new ExtendedList<PackageBranch>();
+        public IExtendedList<PackageBranch> ProcedureTree
         {
             get => this._ProcedureTree;
             protected set => this._ProcedureTree = value;
@@ -1894,7 +1894,7 @@ namespace Mutagen.Bethesda.Skyrim
         new SByte ScheduleMinute { get; set; }
         new MemorySlice<Byte> Unknown3 { get; set; }
         new Int32 ScheduleDurationInMinutes { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new Int32? Unknown4 { get; set; }
         new PackageIdles? IdleAnimations { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32 DataInputVersion { get; set; }
         new IDictionary<SByte, APackageData> Data { get; }
         new MemorySlice<Byte> XnamMarker { get; set; }
-        new ExtendedList<PackageBranch> ProcedureTree { get; }
+        new IExtendedList<PackageBranch> ProcedureTree { get; }
         new PackageEvent? OnBegin { get; set; }
         new PackageEvent? OnEnd { get; set; }
         new PackageEvent? OnChange { get; set; }
@@ -2714,7 +2714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Package_FieldIndex.ScheduleDurationInMinutes:
                     return typeof(Int32);
                 case Package_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case Package_FieldIndex.Unknown4:
                     return typeof(Int32);
                 case Package_FieldIndex.IdleAnimations:
@@ -2732,7 +2732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Package_FieldIndex.XnamMarker:
                     return typeof(MemorySlice<Byte>);
                 case Package_FieldIndex.ProcedureTree:
-                    return typeof(ExtendedList<PackageBranch>);
+                    return typeof(IExtendedList<PackageBranch>);
                 case Package_FieldIndex.OnBegin:
                     return typeof(PackageEvent);
                 case Package_FieldIndex.OnEnd:

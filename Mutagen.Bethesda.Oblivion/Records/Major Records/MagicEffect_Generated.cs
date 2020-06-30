@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
-        public ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
+        private IExtendedList<IEDIDLink<MagicEffect>>? _CounterEffects;
+        public IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects
         {
             get => this._CounterEffects;
             set => this._CounterEffects = value;
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
-        new ExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
+        new IExtendedList<IEDIDLink<MagicEffect>>? CounterEffects { get; set; }
     }
 
     public partial interface IMagicEffectInternal :
@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Data:
                     return typeof(MagicEffectData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(ExtendedList<IEDIDLink<MagicEffect>>);
+                    return typeof(IExtendedList<IEDIDLink<MagicEffect>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

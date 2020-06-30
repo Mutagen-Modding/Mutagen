@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Properties
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ScriptProperty> _Properties = new ExtendedList<ScriptProperty>();
-        public ExtendedList<ScriptProperty> Properties
+        private IExtendedList<ScriptProperty> _Properties = new ExtendedList<ScriptProperty>();
+        public IExtendedList<ScriptProperty> Properties
         {
             get => this._Properties;
             protected set => this._Properties = value;
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
-        new ExtendedList<ScriptProperty> Properties { get; }
+        new IExtendedList<ScriptProperty> Properties { get; }
     }
 
     public partial interface IScriptEntryGetter :
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ScriptEntry_FieldIndex.Flags:
                     return typeof(ScriptEntry.Flag);
                 case ScriptEntry_FieldIndex.Properties:
-                    return typeof(ExtendedList<ScriptProperty>);
+                    return typeof(IExtendedList<ScriptProperty>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

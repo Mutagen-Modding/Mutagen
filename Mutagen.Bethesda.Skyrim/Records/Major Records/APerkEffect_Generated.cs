@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
-        public ExtendedList<PerkCondition> Conditions
+        private IExtendedList<PerkCondition> _Conditions = new ExtendedList<PerkCondition>();
+        public IExtendedList<PerkCondition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -715,7 +715,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Byte Rank { get; set; }
         new Byte Priority { get; set; }
-        new ExtendedList<PerkCondition> Conditions { get; }
+        new IExtendedList<PerkCondition> Conditions { get; }
         new APerkEffect.PRKEDataType PRKEDataTypeState { get; set; }
     }
 
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case APerkEffect_FieldIndex.Priority:
                     return typeof(Byte);
                 case APerkEffect_FieldIndex.Conditions:
-                    return typeof(ExtendedList<PerkCondition>);
+                    return typeof(IExtendedList<PerkCondition>);
                 case APerkEffect_FieldIndex.PRKEDataTypeState:
                     return typeof(APerkEffect.PRKEDataType);
                 default:

@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IdleAnimation>>? _Animations;
-        public ExtendedList<IFormLink<IdleAnimation>>? Animations
+        private IExtendedList<IFormLink<IdleAnimation>>? _Animations;
+        public IExtendedList<IFormLink<IdleAnimation>>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
         new Single? IdleTimer { get; set; }
-        new ExtendedList<IFormLink<IdleAnimation>>? Animations { get; set; }
+        new IExtendedList<IFormLink<IdleAnimation>>? Animations { get; set; }
         new Model? Model { get; set; }
         #region Mutagen
         new IdleMarker.MajorFlag MajorFlags { get; set; }
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case IdleMarker_FieldIndex.IdleTimer:
                     return typeof(Single);
                 case IdleMarker_FieldIndex.Animations:
-                    return typeof(ExtendedList<IFormLink<IdleAnimation>>);
+                    return typeof(IExtendedList<IFormLink<IdleAnimation>>);
                 case IdleMarker_FieldIndex.Model:
                     return typeof(Model);
                 default:

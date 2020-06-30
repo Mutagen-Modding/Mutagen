@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public ExtendedList<ATopicReference> Topics
+        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public IExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
         IAPackageData,
         ILoquiObjectSetter<IPackageDataTopic>
     {
-        new ExtendedList<ATopicReference> Topics { get; }
+        new IExtendedList<ATopicReference> Topics { get; }
         new MemorySlice<Byte>? TPIC { get; set; }
     }
 
@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PackageDataTopic_FieldIndex.Topics:
-                    return typeof(ExtendedList<ATopicReference>);
+                    return typeof(IExtendedList<ATopicReference>);
                 case PackageDataTopic_FieldIndex.TPIC:
                     return typeof(MemorySlice<Byte>);
                 default:

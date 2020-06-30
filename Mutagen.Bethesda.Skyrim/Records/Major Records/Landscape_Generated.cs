@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
-        public ExtendedList<BaseLayer> Layers
+        private IExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
+        public IExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
             protected set => this._Layers = value;
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LandscapeTexture>>? _Textures;
-        public ExtendedList<IFormLink<LandscapeTexture>>? Textures
+        private IExtendedList<IFormLink<LandscapeTexture>>? _Textures;
+        public IExtendedList<IFormLink<LandscapeTexture>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -940,8 +940,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
-        new ExtendedList<BaseLayer> Layers { get; }
-        new ExtendedList<IFormLink<LandscapeTexture>>? Textures { get; set; }
+        new IExtendedList<BaseLayer> Layers { get; }
+        new IExtendedList<IFormLink<LandscapeTexture>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -1460,9 +1460,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.Layers:
-                    return typeof(ExtendedList<BaseLayer>);
+                    return typeof(IExtendedList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(ExtendedList<IFormLink<LandscapeTexture>>);
+                    return typeof(IExtendedList<IFormLink<LandscapeTexture>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BodyPart> _BodyParts = new ExtendedList<BodyPart>();
-        public ExtendedList<BodyPart> BodyParts
+        private IExtendedList<BodyPart> _BodyParts = new ExtendedList<BodyPart>();
+        public IExtendedList<BodyPart> BodyParts
         {
             get => this._BodyParts;
             protected set => this._BodyParts = value;
@@ -683,7 +683,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IBodyData>
     {
         new Model? Model { get; set; }
-        new ExtendedList<BodyPart> BodyParts { get; }
+        new IExtendedList<BodyPart> BodyParts { get; }
     }
 
     public partial interface IBodyDataGetter :
@@ -1166,7 +1166,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case BodyData_FieldIndex.Model:
                     return typeof(Model);
                 case BodyData_FieldIndex.BodyParts:
-                    return typeof(ExtendedList<BodyPart>);
+                    return typeof(IExtendedList<BodyPart>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

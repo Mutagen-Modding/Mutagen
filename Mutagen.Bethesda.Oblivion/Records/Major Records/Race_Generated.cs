@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public ExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
+        public IExtendedList<IFormLink<Spell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
-        public ExtendedList<RaceRelation> Relations
+        private IExtendedList<RaceRelation> _Relations = new ExtendedList<RaceRelation>();
+        public IExtendedList<RaceRelation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -127,8 +127,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
-        public ExtendedList<FacePart> FaceData
+        private IExtendedList<FacePart> _FaceData = new ExtendedList<FacePart>();
+        public IExtendedList<FacePart> FaceData
         {
             get => this._FaceData;
             protected set => this._FaceData = value;
@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Hair>>? _Hairs;
-        public ExtendedList<IFormLink<Hair>>? Hairs
+        private IExtendedList<IFormLink<Hair>>? _Hairs;
+        public IExtendedList<IFormLink<Hair>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -159,8 +159,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Eye>>? _Eyes;
-        public ExtendedList<IFormLink<Eye>>? Eyes
+        private IExtendedList<IFormLink<Eye>>? _Eyes;
+        public IExtendedList<IFormLink<Eye>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -1591,8 +1591,8 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<IFormLink<Spell>> Spells { get; }
-        new ExtendedList<RaceRelation> Relations { get; }
+        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<RaceRelation> Relations { get; }
         new RaceData? Data { get; set; }
         new GenderedItem<IFormLink<Race>>? Voices { get; set; }
         new GenderedItem<IFormLink<Hair>>? DefaultHair { get; set; }
@@ -1600,10 +1600,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Int32? FaceGenMainClamp { get; set; }
         new Int32? FaceGenFaceClamp { get; set; }
         new GenderedItem<RaceStats>? RaceStats { get; set; }
-        new ExtendedList<FacePart> FaceData { get; }
+        new IExtendedList<FacePart> FaceData { get; }
         new GenderedItem<BodyData?>? BodyData { get; set; }
-        new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
+        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
+        new IExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new FaceGenData? FaceGenData { get; set; }
         new Int16? SNAM { get; set; }
     }
@@ -2245,9 +2245,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<Spell>>);
+                    return typeof(IExtendedList<IFormLink<Spell>>);
                 case Race_FieldIndex.Relations:
-                    return typeof(ExtendedList<RaceRelation>);
+                    return typeof(IExtendedList<RaceRelation>);
                 case Race_FieldIndex.Data:
                     return typeof(RaceData);
                 case Race_FieldIndex.Voices:
@@ -2263,13 +2263,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.RaceStats:
                     return typeof(GenderedItem<RaceStats>);
                 case Race_FieldIndex.FaceData:
-                    return typeof(ExtendedList<FacePart>);
+                    return typeof(IExtendedList<FacePart>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedItem<BodyData?>);
                 case Race_FieldIndex.Hairs:
-                    return typeof(ExtendedList<IFormLink<Hair>>);
+                    return typeof(IExtendedList<IFormLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(ExtendedList<IFormLink<Eye>>);
+                    return typeof(IExtendedList<IFormLink<Eye>>);
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
                 case Race_FieldIndex.SNAM:

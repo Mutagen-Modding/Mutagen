@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -162,8 +162,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Armature
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ArmorAddon>> _Armature = new ExtendedList<IFormLink<ArmorAddon>>();
-        public ExtendedList<IFormLink<ArmorAddon>> Armature
+        private IExtendedList<IFormLink<ArmorAddon>> _Armature = new ExtendedList<IFormLink<ArmorAddon>>();
+        public IExtendedList<IFormLink<ArmorAddon>> Armature
         {
             get => this._Armature;
             protected set => this._Armature = value;
@@ -1551,9 +1551,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<ImpactDataSet> BashImpactDataSet { get; set; }
         new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<Race> Race { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<IFormLink<ArmorAddon>> Armature { get; }
+        new IExtendedList<IFormLink<ArmorAddon>> Armature { get; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new Single ArmorRating { get; set; }
@@ -2300,11 +2300,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Armor_FieldIndex.Race:
                     return typeof(FormLinkNullable<Race>);
                 case Armor_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Armor_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Armor_FieldIndex.Armature:
-                    return typeof(ExtendedList<IFormLink<ArmorAddon>>);
+                    return typeof(IExtendedList<IFormLink<ArmorAddon>>);
                 case Armor_FieldIndex.Value:
                     return typeof(UInt32);
                 case Armor_FieldIndex.Weight:

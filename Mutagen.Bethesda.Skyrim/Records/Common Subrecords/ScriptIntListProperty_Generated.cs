@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Int32> _Data = new ExtendedList<Int32>();
-        public ExtendedList<Int32> Data
+        private IExtendedList<Int32> _Data = new ExtendedList<Int32>();
+        public IExtendedList<Int32> Data
         {
             get => this._Data;
             protected set => this._Data = value;
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptIntListProperty>
     {
-        new ExtendedList<Int32> Data { get; }
+        new IExtendedList<Int32> Data { get; }
     }
 
     public partial interface IScriptIntListPropertyGetter :
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ScriptIntListProperty_FieldIndex.Data:
-                    return typeof(ExtendedList<Int32>);
+                    return typeof(IExtendedList<Int32>);
                 default:
                     return ScriptProperty_Registration.GetNthType(index);
             }

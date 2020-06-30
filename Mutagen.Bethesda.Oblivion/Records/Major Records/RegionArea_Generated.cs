@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RegionPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P2Float>? _RegionPoints;
-        public ExtendedList<P2Float>? RegionPoints
+        private IExtendedList<P2Float>? _RegionPoints;
+        public IExtendedList<P2Float>? RegionPoints
         {
             get => this._RegionPoints;
             set => this._RegionPoints = value;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionArea>
     {
         new UInt32? EdgeFallOff { get; set; }
-        new ExtendedList<P2Float>? RegionPoints { get; set; }
+        new IExtendedList<P2Float>? RegionPoints { get; set; }
     }
 
     public partial interface IRegionAreaGetter :
@@ -1148,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionArea_FieldIndex.EdgeFallOff:
                     return typeof(UInt32);
                 case RegionArea_FieldIndex.RegionPoints:
-                    return typeof(ExtendedList<P2Float>);
+                    return typeof(IExtendedList<P2Float>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MenuButtons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
-        public ExtendedList<MessageButton> MenuButtons
+        private IExtendedList<MessageButton> _MenuButtons = new ExtendedList<MessageButton>();
+        public IExtendedList<MessageButton> MenuButtons
         {
             get => this._MenuButtons;
             protected set => this._MenuButtons = value;
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<Quest> Quest { get; set; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
-        new ExtendedList<MessageButton> MenuButtons { get; }
+        new IExtendedList<MessageButton> MenuButtons { get; }
     }
 
     public partial interface IMessageInternal :
@@ -1407,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Message_FieldIndex.DisplayTime:
                     return typeof(UInt32);
                 case Message_FieldIndex.MenuButtons:
-                    return typeof(ExtendedList<MessageButton>);
+                    return typeof(IExtendedList<MessageButton>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

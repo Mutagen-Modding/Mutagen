@@ -115,8 +115,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new MiscItem.DATADataType DATADataTypeState { get; set; }
@@ -1720,7 +1720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MiscItem_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case MiscItem_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case MiscItem_FieldIndex.Value:
                     return typeof(UInt32);
                 case MiscItem_FieldIndex.Weight:

@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<AItem>> _Entries = new ExtendedList<LeveledEntry<AItem>>();
-        public ExtendedList<LeveledEntry<AItem>> Entries
+        private IExtendedList<LeveledEntry<AItem>> _Entries = new ExtendedList<LeveledEntry<AItem>>();
+        public IExtendedList<LeveledEntry<AItem>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<AItem>> Entries { get; }
+        new IExtendedList<LeveledEntry<AItem>> Entries { get; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledItem_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledItem_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<AItem>>);
+                    return typeof(IExtendedList<LeveledEntry<AItem>>);
                 default:
                     return AItem_Registration.GetNthType(index);
             }

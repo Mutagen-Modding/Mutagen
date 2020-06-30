@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new FormLink<Static> LoadingScreenNif { get; set; }
         new Single? InitialScale { get; set; }
         new P3Int16? InitialRotation { get; set; }
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case LoadScreen_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case LoadScreen_FieldIndex.LoadingScreenNif:
                     return typeof(FormLink<Static>);
                 case LoadScreen_FieldIndex.InitialScale:

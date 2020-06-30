@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
-        public ExtendedList<ItemEntry> Items
+        private IExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
+        public IExtendedList<ItemEntry> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
-        public ExtendedList<IFormLink<ASpell>> Spells
+        private IExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
+        public IExtendedList<IFormLink<ASpell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _Models;
-        public ExtendedList<String>? Models
+        private IExtendedList<String>? _Models;
+        public IExtendedList<String>? Models
         {
             get => this._Models;
             set => this._Models = value;
@@ -131,8 +131,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
-        public ExtendedList<RankPlacement> Factions
+        private IExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public IExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -166,8 +166,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
-        public ExtendedList<IFormLink<AIPackage>> AIPackages
+        private IExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
+        public IExtendedList<IFormLink<AIPackage>> AIPackages
         {
             get => this._AIPackages;
             protected set => this._AIPackages = value;
@@ -180,8 +180,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _Animations;
-        public ExtendedList<String>? Animations
+        private IExtendedList<String>? _Animations;
+        public IExtendedList<String>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
@@ -245,8 +245,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<CreatureSound> _Sounds = new ExtendedList<CreatureSound>();
-        public ExtendedList<CreatureSound> Sounds
+        private IExtendedList<CreatureSound> _Sounds = new ExtendedList<CreatureSound>();
+        public IExtendedList<CreatureSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -1952,17 +1952,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
-        new ExtendedList<ItemEntry> Items { get; }
-        new ExtendedList<IFormLink<ASpell>> Spells { get; }
-        new ExtendedList<String>? Models { get; set; }
+        new IExtendedList<ItemEntry> Items { get; }
+        new IExtendedList<IFormLink<ASpell>> Spells { get; }
+        new IExtendedList<String>? Models { get; set; }
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
-        new ExtendedList<RankPlacement> Factions { get; }
+        new IExtendedList<RankPlacement> Factions { get; }
         new FormLinkNullable<AItem> DeathItem { get; set; }
         new FormLinkNullable<Script> Script { get; set; }
         new CreatureAIData? AIData { get; set; }
-        new ExtendedList<IFormLink<AIPackage>> AIPackages { get; }
-        new ExtendedList<String>? Animations { get; set; }
+        new IExtendedList<IFormLink<AIPackage>> AIPackages { get; }
+        new IExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? BloodSpray { get; set; }
         new String? BloodDecal { get; set; }
         new FormLinkNullable<Creature> InheritsSoundFrom { get; set; }
-        new ExtendedList<CreatureSound> Sounds { get; }
+        new IExtendedList<CreatureSound> Sounds { get; }
     }
 
     public partial interface ICreatureInternal :
@@ -2674,17 +2674,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Model:
                     return typeof(Model);
                 case Creature_FieldIndex.Items:
-                    return typeof(ExtendedList<ItemEntry>);
+                    return typeof(IExtendedList<ItemEntry>);
                 case Creature_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<ASpell>>);
+                    return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Creature_FieldIndex.Models:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Creature_FieldIndex.NIFT:
                     return typeof(MemorySlice<Byte>);
                 case Creature_FieldIndex.Configuration:
                     return typeof(CreatureConfiguration);
                 case Creature_FieldIndex.Factions:
-                    return typeof(ExtendedList<RankPlacement>);
+                    return typeof(IExtendedList<RankPlacement>);
                 case Creature_FieldIndex.DeathItem:
                     return typeof(FormLinkNullable<AItem>);
                 case Creature_FieldIndex.Script:
@@ -2692,9 +2692,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.AIData:
                     return typeof(CreatureAIData);
                 case Creature_FieldIndex.AIPackages:
-                    return typeof(ExtendedList<IFormLink<AIPackage>>);
+                    return typeof(IExtendedList<IFormLink<AIPackage>>);
                 case Creature_FieldIndex.Animations:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Creature_FieldIndex.Data:
                     return typeof(CreatureData);
                 case Creature_FieldIndex.AttackReach:
@@ -2714,7 +2714,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return typeof(FormLinkNullable<Creature>);
                 case Creature_FieldIndex.Sounds:
-                    return typeof(ExtendedList<CreatureSound>);
+                    return typeof(IExtendedList<CreatureSound>);
                 default:
                     return ANpc_Registration.GetNthType(index);
             }

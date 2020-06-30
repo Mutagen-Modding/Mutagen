@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NpcSoundType> _Types = new ExtendedList<NpcSoundType>();
-        public ExtendedList<NpcSoundType> Types
+        private IExtendedList<NpcSoundType> _Types = new ExtendedList<NpcSoundType>();
+        public IExtendedList<NpcSoundType> Types
         {
             get => this._Types;
             protected set => this._Types = value;
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Skyrim
         IANpcSoundDefinition,
         ILoquiObjectSetter<INpcSoundTypes>
     {
-        new ExtendedList<NpcSoundType> Types { get; }
+        new IExtendedList<NpcSoundType> Types { get; }
     }
 
     public partial interface INpcSoundTypesGetter :
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case NpcSoundTypes_FieldIndex.Types:
-                    return typeof(ExtendedList<NpcSoundType>);
+                    return typeof(IExtendedList<NpcSoundType>);
                 default:
                     return ANpcSoundDefinition_Registration.GetNthType(index);
             }

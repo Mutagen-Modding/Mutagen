@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region WordsOfPower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ShoutWord> _WordsOfPower = new ExtendedList<ShoutWord>();
-        public ExtendedList<ShoutWord> WordsOfPower
+        private IExtendedList<ShoutWord> _WordsOfPower = new ExtendedList<ShoutWord>();
+        public IExtendedList<ShoutWord> WordsOfPower
         {
             get => this._WordsOfPower;
             protected set => this._WordsOfPower = value;
@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<ShoutWord> WordsOfPower { get; }
+        new IExtendedList<ShoutWord> WordsOfPower { get; }
         #region Mutagen
         new Shout.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1279,7 +1279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Shout_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Shout_FieldIndex.WordsOfPower:
-                    return typeof(ExtendedList<ShoutWord>);
+                    return typeof(IExtendedList<ShoutWord>);
                 default:
                     return ASpell_Registration.GetNthType(index);
             }

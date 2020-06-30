@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Color? MarkerColor { get; set; }
         new FormLinkNullable<SoundDescriptor> LoopingSound { get; set; }
         new FormLinkNullable<SoundDescriptor> ActivationSound { get; set; }
@@ -1740,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Activator_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Activator_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Activator_FieldIndex.MarkerColor:
                     return typeof(Color);
                 case Activator_FieldIndex.LoopingSound:

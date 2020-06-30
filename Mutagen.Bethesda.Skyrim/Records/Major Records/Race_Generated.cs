@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>>? _ActorEffect;
-        public ExtendedList<IFormLink<ASpell>>? ActorEffect
+        private IExtendedList<IFormLink<ASpell>>? _ActorEffect;
+        public IExtendedList<IFormLink<ASpell>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -231,8 +231,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypeNames
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
-        public ExtendedList<String> MovementTypeNames
+        private IExtendedList<String> _MovementTypeNames = new ExtendedList<String>();
+        public IExtendedList<String> MovementTypeNames
         {
             get => this._MovementTypeNames;
             protected set => this._MovementTypeNames = value;
@@ -273,8 +273,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Attacks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
-        public ExtendedList<Attack> Attacks
+        private IExtendedList<Attack> _Attacks = new ExtendedList<Attack>();
+        public IExtendedList<Attack> Attacks
         {
             get => this._Attacks;
             protected set => this._Attacks = value;
@@ -291,8 +291,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Hairs
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Hair>>? _Hairs;
-        public ExtendedList<IFormLink<Hair>>? Hairs
+        private IExtendedList<IFormLink<Hair>>? _Hairs;
+        public IExtendedList<IFormLink<Hair>>? Hairs
         {
             get => this._Hairs;
             set => this._Hairs = value;
@@ -305,8 +305,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Eyes>>? _Eyes;
-        public ExtendedList<IFormLink<Eyes>>? Eyes
+        private IExtendedList<IFormLink<Eyes>>? _Eyes;
+        public IExtendedList<IFormLink<Eyes>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -362,8 +362,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MovementTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
-        public ExtendedList<RaceMovementType> MovementTypes
+        private IExtendedList<RaceMovementType> _MovementTypes = new ExtendedList<RaceMovementType>();
+        public IExtendedList<RaceMovementType> MovementTypes
         {
             get => this._MovementTypes;
             protected set => this._MovementTypes = value;
@@ -381,8 +381,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region EquipmentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
-        public ExtendedList<IFormLink<EquipType>> EquipmentSlots
+        private IExtendedList<IFormLink<EquipType>> _EquipmentSlots = new ExtendedList<IFormLink<EquipType>>();
+        public IExtendedList<IFormLink<EquipType>> EquipmentSlots
         {
             get => this._EquipmentSlots;
             protected set => this._EquipmentSlots = value;
@@ -3950,10 +3950,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new TranslatedString? Name { get; set; }
         new String Description { get; set; }
-        new ExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
+        new IExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new FormLinkNullable<Armor> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
         new SkillBoost SkillBoost1 { get; set; }
         new SkillBoost SkillBoost2 { get; set; }
@@ -3985,7 +3985,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AngularTolerance { get; set; }
         new MountData MountData { get; set; }
         new GenderedItem<SimpleModel?>? SkeletalModel { get; set; }
-        new ExtendedList<String> MovementTypeNames { get; }
+        new IExtendedList<String> MovementTypeNames { get; }
         new GenderedItem<IFormLink<VoiceType>> Voices { get; set; }
         new GenderedItem<IFormLink<Armor>>? DecapitateArmors { get; set; }
         new GenderedItem<IFormLink<ColorRecord>>? DefaultHairColors { get; set; }
@@ -3993,10 +3993,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Single FacegenMainClamp { get; set; }
         new Single FacegenFaceClamp { get; set; }
         new FormLinkNullable<Race> AttackRace { get; set; }
-        new ExtendedList<Attack> Attacks { get; }
+        new IExtendedList<Attack> Attacks { get; }
         new GenderedItem<BodyData?> BodyData { get; set; }
-        new ExtendedList<IFormLink<Hair>>? Hairs { get; set; }
-        new ExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
+        new IExtendedList<IFormLink<Hair>>? Hairs { get; set; }
+        new IExtendedList<IFormLink<Eyes>>? Eyes { get; set; }
         new FormLinkNullable<BodyPartData> BodyPartData { get; set; }
         new GenderedItem<Model?> BehaviorGraph { get; set; }
         new FormLinkNullable<MaterialType> MaterialType { get; set; }
@@ -4005,9 +4005,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> OpenLootSound { get; set; }
         new FormLinkNullable<SoundDescriptor> CloseLootSound { get; set; }
         new IDictionary<BipedObject, String> BipedObjectNames { get; }
-        new ExtendedList<RaceMovementType> MovementTypes { get; }
+        new IExtendedList<RaceMovementType> MovementTypes { get; }
         new EquipTypeFlag? EquipmentFlags { get; set; }
-        new ExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
+        new IExtendedList<IFormLink<EquipType>> EquipmentSlots { get; }
         new FormLinkNullable<EquipType> UnarmedEquipSlot { get; set; }
         new FaceFxPhonemes FaceFxPhonemes { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultWalk { get; set; }
@@ -5258,13 +5258,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.ActorEffect:
-                    return typeof(ExtendedList<IFormLink<ASpell>>);
+                    return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Race_FieldIndex.Skin:
                     return typeof(FormLinkNullable<Armor>);
                 case Race_FieldIndex.BodyTemplate:
                     return typeof(BodyTemplate);
                 case Race_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Race_FieldIndex.SkillBoost0:
                     return typeof(SkillBoost);
                 case Race_FieldIndex.SkillBoost1:
@@ -5328,7 +5328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.SkeletalModel:
                     return typeof(GenderedItem<SimpleModel?>);
                 case Race_FieldIndex.MovementTypeNames:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Race_FieldIndex.Voices:
                     return typeof(GenderedItem<IFormLink<VoiceType>>);
                 case Race_FieldIndex.DecapitateArmors:
@@ -5344,13 +5344,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.AttackRace:
                     return typeof(FormLinkNullable<Race>);
                 case Race_FieldIndex.Attacks:
-                    return typeof(ExtendedList<Attack>);
+                    return typeof(IExtendedList<Attack>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedItem<BodyData?>);
                 case Race_FieldIndex.Hairs:
-                    return typeof(ExtendedList<IFormLink<Hair>>);
+                    return typeof(IExtendedList<IFormLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(ExtendedList<IFormLink<Eyes>>);
+                    return typeof(IExtendedList<IFormLink<Eyes>>);
                 case Race_FieldIndex.BodyPartData:
                     return typeof(FormLinkNullable<BodyPartData>);
                 case Race_FieldIndex.BehaviorGraph:
@@ -5368,11 +5368,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BipedObjectNames:
                     return typeof(Dictionary<BipedObject, String>);
                 case Race_FieldIndex.MovementTypes:
-                    return typeof(ExtendedList<RaceMovementType>);
+                    return typeof(IExtendedList<RaceMovementType>);
                 case Race_FieldIndex.EquipmentFlags:
                     return typeof(EquipTypeFlag);
                 case Race_FieldIndex.EquipmentSlots:
-                    return typeof(ExtendedList<IFormLink<EquipType>>);
+                    return typeof(IExtendedList<IFormLink<EquipType>>);
                 case Race_FieldIndex.UnarmedEquipSlot:
                     return typeof(FormLinkNullable<EquipType>);
                 case Race_FieldIndex.FaceFxPhonemes:

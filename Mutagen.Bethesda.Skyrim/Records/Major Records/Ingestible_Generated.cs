@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -150,8 +150,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1364,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<SkyrimMajorRecord> Addiction { get; set; }
         new Single AddictionChance { get; set; }
         new FormLink<SoundDescriptor> ConsumeSound { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
         new Ingestible.ENITDataType ENITDataTypeState { get; set; }
         #region Mutagen
         new Ingestible.MajorFlag MajorFlags { get; set; }
@@ -2039,7 +2039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingestible_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Ingestible_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Ingestible_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Ingestible_FieldIndex.Model:
@@ -2067,7 +2067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingestible_FieldIndex.ConsumeSound:
                     return typeof(FormLink<SoundDescriptor>);
                 case Ingestible_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 case Ingestible_FieldIndex.ENITDataTypeState:
                     return typeof(Ingestible.ENITDataType);
                 default:

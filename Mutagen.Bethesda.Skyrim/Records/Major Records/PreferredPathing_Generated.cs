@@ -49,8 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region NavmeshSets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
-        public ExtendedList<NavmeshSet> NavmeshSets
+        private IExtendedList<NavmeshSet> _NavmeshSets = new ExtendedList<NavmeshSet>();
+        public IExtendedList<NavmeshSet> NavmeshSets
         {
             get => this._NavmeshSets;
             protected set => this._NavmeshSets = value;
@@ -63,8 +63,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavmeshTree
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
-        public ExtendedList<NavmeshNode> NavmeshTree
+        private IExtendedList<NavmeshNode> _NavmeshTree = new ExtendedList<NavmeshNode>();
+        public IExtendedList<NavmeshNode> NavmeshTree
         {
             get => this._NavmeshTree;
             protected set => this._NavmeshTree = value;
@@ -763,8 +763,8 @@ namespace Mutagen.Bethesda.Skyrim
         IPreferredPathingGetter,
         ILoquiObjectSetter<IPreferredPathing>
     {
-        new ExtendedList<NavmeshSet> NavmeshSets { get; }
-        new ExtendedList<NavmeshNode> NavmeshTree { get; }
+        new IExtendedList<NavmeshSet> NavmeshSets { get; }
+        new IExtendedList<NavmeshNode> NavmeshTree { get; }
     }
 
     public partial interface IPreferredPathingGetter :
@@ -1245,9 +1245,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PreferredPathing_FieldIndex.NavmeshSets:
-                    return typeof(ExtendedList<NavmeshSet>);
+                    return typeof(IExtendedList<NavmeshSet>);
                 case PreferredPathing_FieldIndex.NavmeshTree:
-                    return typeof(ExtendedList<NavmeshNode>);
+                    return typeof(IExtendedList<NavmeshNode>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

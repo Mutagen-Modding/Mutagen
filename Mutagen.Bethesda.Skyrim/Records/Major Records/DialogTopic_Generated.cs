@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
-        public ExtendedList<DialogResponses> Responses
+        private IExtendedList<DialogResponses> _Responses = new ExtendedList<DialogResponses>();
+        public IExtendedList<DialogResponses> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
         new RecordType SubtypeName { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<DialogResponses> Responses { get; }
+        new IExtendedList<DialogResponses> Responses { get; }
         new DialogTopic.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogTopic_FieldIndex.Unknown:
                     return typeof(Int32);
                 case DialogTopic_FieldIndex.Responses:
-                    return typeof(ExtendedList<DialogResponses>);
+                    return typeof(IExtendedList<DialogResponses>);
                 case DialogTopic_FieldIndex.DATADataTypeState:
                     return typeof(DialogTopic.DATADataType);
                 default:

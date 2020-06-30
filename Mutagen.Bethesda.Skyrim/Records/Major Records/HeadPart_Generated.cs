@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ExtraParts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
-        public ExtendedList<IFormLink<HeadPart>> ExtraParts
+        private IExtendedList<IFormLink<HeadPart>> _ExtraParts = new ExtendedList<IFormLink<HeadPart>>();
+        public IExtendedList<IFormLink<HeadPart>> ExtraParts
         {
             get => this._ExtraParts;
             protected set => this._ExtraParts = value;
@@ -89,8 +89,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Part> _Parts = new ExtendedList<Part>();
-        public ExtendedList<Part> Parts
+        private IExtendedList<Part> _Parts = new ExtendedList<Part>();
+        public IExtendedList<Part> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -1034,8 +1034,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
-        new ExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
-        new ExtendedList<Part> Parts { get; }
+        new IExtendedList<IFormLink<HeadPart>> ExtraParts { get; }
+        new IExtendedList<Part> Parts { get; }
         new FormLinkNullable<TextureSet> TextureSet { get; set; }
         new FormLinkNullable<ColorRecord> Color { get; set; }
         new FormLinkNullable<FormList> ValidRaces { get; set; }
@@ -1600,9 +1600,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadPart_FieldIndex.Type:
                     return typeof(HeadPart.TypeEnum);
                 case HeadPart_FieldIndex.ExtraParts:
-                    return typeof(ExtendedList<IFormLink<HeadPart>>);
+                    return typeof(IExtendedList<IFormLink<HeadPart>>);
                 case HeadPart_FieldIndex.Parts:
-                    return typeof(ExtendedList<Part>);
+                    return typeof(IExtendedList<Part>);
                 case HeadPart_FieldIndex.TextureSet:
                     return typeof(FormLinkNullable<TextureSet>);
                 case HeadPart_FieldIndex.Color:

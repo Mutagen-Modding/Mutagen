@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
-        public ExtendedList<WorldspaceReference> References
+        private IExtendedList<WorldspaceReference> _References = new ExtendedList<WorldspaceReference>();
+        public IExtendedList<WorldspaceReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceGridReference>
     {
         new P2Int16 GridPosition { get; set; }
-        new ExtendedList<WorldspaceReference> References { get; }
+        new IExtendedList<WorldspaceReference> References { get; }
     }
 
     public partial interface IWorldspaceGridReferenceGetter :
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WorldspaceGridReference_FieldIndex.GridPosition:
                     return typeof(P2Int16);
                 case WorldspaceGridReference_FieldIndex.References:
-                    return typeof(ExtendedList<WorldspaceReference>);
+                    return typeof(IExtendedList<WorldspaceReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

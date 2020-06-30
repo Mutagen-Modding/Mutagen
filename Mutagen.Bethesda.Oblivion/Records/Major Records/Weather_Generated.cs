@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Colors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherColors>? _Colors;
-        public ExtendedList<WeatherColors>? Colors
+        private IExtendedList<WeatherColors>? _Colors;
+        public IExtendedList<WeatherColors>? Colors
         {
             get => this._Colors;
             set => this._Colors = value;
@@ -119,8 +119,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public ExtendedList<WeatherSound> Sounds
+        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public IExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -1038,11 +1038,11 @@ namespace Mutagen.Bethesda.Oblivion
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
         new Model? Model { get; set; }
-        new ExtendedList<WeatherColors>? Colors { get; set; }
+        new IExtendedList<WeatherColors>? Colors { get; set; }
         new FogDistance? FogDistance { get; set; }
         new HDRData? HDRData { get; set; }
         new WeatherData? Data { get; set; }
-        new ExtendedList<WeatherSound> Sounds { get; }
+        new IExtendedList<WeatherSound> Sounds { get; }
     }
 
     public partial interface IWeatherInternal :
@@ -1580,7 +1580,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Model:
                     return typeof(Model);
                 case Weather_FieldIndex.Colors:
-                    return typeof(ExtendedList<WeatherColors>);
+                    return typeof(IExtendedList<WeatherColors>);
                 case Weather_FieldIndex.FogDistance:
                     return typeof(FogDistance);
                 case Weather_FieldIndex.HDRData:
@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Weather_FieldIndex.Data:
                     return typeof(WeatherData);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(ExtendedList<WeatherSound>);
+                    return typeof(IExtendedList<WeatherSound>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

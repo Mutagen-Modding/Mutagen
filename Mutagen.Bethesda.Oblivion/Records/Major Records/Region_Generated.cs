@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
-        public ExtendedList<RegionArea> Areas
+        private IExtendedList<RegionArea> _Areas = new ExtendedList<RegionArea>();
+        public IExtendedList<RegionArea> Areas
         {
             get => this._Areas;
             protected set => this._Areas = value;
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
         new FormLinkNullable<Worldspace> Worldspace { get; set; }
-        new ExtendedList<RegionArea> Areas { get; }
+        new IExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
         new RegionMap? MapName { get; set; }
@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Region_FieldIndex.Worldspace:
                     return typeof(FormLinkNullable<Worldspace>);
                 case Region_FieldIndex.Areas:
-                    return typeof(ExtendedList<RegionArea>);
+                    return typeof(IExtendedList<RegionArea>);
                 case Region_FieldIndex.Objects:
                     return typeof(RegionObjects);
                 case Region_FieldIndex.Weather:

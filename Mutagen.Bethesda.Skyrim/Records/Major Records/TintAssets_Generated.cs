@@ -69,8 +69,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
-        public ExtendedList<TintPreset> Presets
+        private IExtendedList<TintPreset> _Presets = new ExtendedList<TintPreset>();
+        public IExtendedList<TintPreset> Presets
         {
             get => this._Presets;
             protected set => this._Presets = value;
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
         new FormLinkNullable<ColorRecord> PresetDefault { get; set; }
-        new ExtendedList<TintPreset> Presets { get; }
+        new IExtendedList<TintPreset> Presets { get; }
     }
 
     public partial interface ITintAssetsGetter :
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case TintAssets_FieldIndex.PresetDefault:
                     return typeof(FormLinkNullable<ColorRecord>);
                 case TintAssets_FieldIndex.Presets:
-                    return typeof(ExtendedList<TintPreset>);
+                    return typeof(IExtendedList<TintPreset>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

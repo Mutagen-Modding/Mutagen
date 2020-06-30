@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledItemEntry>? _Entries;
-        public ExtendedList<LeveledItemEntry>? Entries
+        private IExtendedList<LeveledItemEntry>? _Entries;
+        public IExtendedList<LeveledItemEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -808,7 +808,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
         new FormLinkNullable<Global> Global { get; set; }
-        new ExtendedList<LeveledItemEntry>? Entries { get; set; }
+        new IExtendedList<LeveledItemEntry>? Entries { get; set; }
     }
 
     public partial interface ILeveledItemInternal :
@@ -1319,7 +1319,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LeveledItem_FieldIndex.Global:
                     return typeof(FormLinkNullable<Global>);
                 case LeveledItem_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledItemEntry>);
+                    return typeof(IExtendedList<LeveledItemEntry>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

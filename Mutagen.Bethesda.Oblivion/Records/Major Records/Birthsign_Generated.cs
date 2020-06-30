@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public ExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
+        public IExtendedList<IFormLink<Spell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -763,7 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<IFormLink<Spell>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Birthsign_FieldIndex.Description:
                     return typeof(String);
                 case Birthsign_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<Spell>>);
+                    return typeof(IExtendedList<IFormLink<Spell>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

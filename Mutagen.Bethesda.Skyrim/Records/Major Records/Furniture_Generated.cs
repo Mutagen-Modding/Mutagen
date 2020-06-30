@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -145,8 +145,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Markers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<FurnitureMarker>? _Markers;
-        public ExtendedList<FurnitureMarker>? Markers
+        private IExtendedList<FurnitureMarker>? _Markers;
+        public IExtendedList<FurnitureMarker>? Markers
         {
             get => this._Markers;
             set => this._Markers = value;
@@ -1227,13 +1227,13 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
         new Furniture.Flag? Flags { get; set; }
         new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
         new WorkbenchData? WorkbenchData { get; set; }
         new FormLinkNullable<Spell> AssociatedSpell { get; set; }
-        new ExtendedList<FurnitureMarker>? Markers { get; set; }
+        new IExtendedList<FurnitureMarker>? Markers { get; set; }
         new String? ModelFilename { get; set; }
         #region Mutagen
         new Furniture.MajorFlag MajorFlags { get; set; }
@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Furniture_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Furniture_FieldIndex.PNAM:
                     return typeof(MemorySlice<Byte>);
                 case Furniture_FieldIndex.Flags:
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Furniture_FieldIndex.AssociatedSpell:
                     return typeof(FormLinkNullable<Spell>);
                 case Furniture_FieldIndex.Markers:
-                    return typeof(ExtendedList<FurnitureMarker>);
+                    return typeof(IExtendedList<FurnitureMarker>);
                 case Furniture_FieldIndex.ModelFilename:
                     return typeof(String);
                 default:

@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IDialog>> _LinkTo = new ExtendedList<IFormLink<IDialog>>();
-        public ExtendedList<IFormLink<IDialog>> LinkTo
+        private IExtendedList<IFormLink<IDialog>> _LinkTo = new ExtendedList<IFormLink<IDialog>>();
+        public IExtendedList<IFormLink<IDialog>> LinkTo
         {
             get => this._LinkTo;
             protected set => this._LinkTo = value;
@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public ExtendedList<DialogResponse> Responses
+        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public IExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -132,8 +132,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -146,8 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnknownData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
-        public ExtendedList<DialogResponsesUnknownData> UnknownData
+        private IExtendedList<DialogResponsesUnknownData> _UnknownData = new ExtendedList<DialogResponsesUnknownData>();
+        public IExtendedList<DialogResponsesUnknownData> UnknownData
         {
             get => this._UnknownData;
             protected set => this._UnknownData = value;
@@ -1425,11 +1425,11 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<DialogTopic> Topic { get; set; }
         new FormLinkNullable<DialogResponses> PreviousDialog { get; set; }
         new FavorLevel? FavorLevel { get; set; }
-        new ExtendedList<IFormLink<IDialog>> LinkTo { get; }
+        new IExtendedList<IFormLink<IDialog>> LinkTo { get; }
         new FormLinkNullable<DialogResponses> ResponseData { get; set; }
-        new ExtendedList<DialogResponse> Responses { get; }
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<DialogResponsesUnknownData> UnknownData { get; }
+        new IExtendedList<DialogResponse> Responses { get; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<DialogResponsesUnknownData> UnknownData { get; }
         new TranslatedString? Prompt { get; set; }
         new FormLinkNullable<Npc> Speaker { get; set; }
         new FormLinkNullable<DialogTopic> WalkAwayTopic { get; set; }
@@ -2064,15 +2064,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogResponses_FieldIndex.FavorLevel:
                     return typeof(FavorLevel);
                 case DialogResponses_FieldIndex.LinkTo:
-                    return typeof(ExtendedList<IFormLink<IDialog>>);
+                    return typeof(IExtendedList<IFormLink<IDialog>>);
                 case DialogResponses_FieldIndex.ResponseData:
                     return typeof(FormLinkNullable<DialogResponses>);
                 case DialogResponses_FieldIndex.Responses:
-                    return typeof(ExtendedList<DialogResponse>);
+                    return typeof(IExtendedList<DialogResponse>);
                 case DialogResponses_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case DialogResponses_FieldIndex.UnknownData:
-                    return typeof(ExtendedList<DialogResponsesUnknownData>);
+                    return typeof(IExtendedList<DialogResponsesUnknownData>);
                 case DialogResponses_FieldIndex.Prompt:
                     return typeof(TranslatedString);
                 case DialogResponses_FieldIndex.Speaker:

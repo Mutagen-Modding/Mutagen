@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Region>>? _Regions;
-        public ExtendedList<IFormLink<Region>>? Regions
+        private IExtendedList<IFormLink<Region>>? _Regions;
+        public IExtendedList<IFormLink<Region>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Persistent
+        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -171,8 +171,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Temporary
+        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -188,8 +188,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisibleWhenDistant
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> VisibleWhenDistant
+        private IExtendedList<IPlaced> _VisibleWhenDistant = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> VisibleWhenDistant
         {
             get => this._VisibleWhenDistant;
             protected set => this._VisibleWhenDistant = value;
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
         new CellLighting? Lighting { get; set; }
-        new ExtendedList<IFormLink<Region>>? Regions { get; set; }
+        new IExtendedList<IFormLink<Region>>? Regions { get; set; }
         new MusicType? MusicType { get; set; }
         new Single? WaterHeight { get; set; }
         new FormLinkNullable<Climate> Climate { get; set; }
@@ -1642,11 +1642,11 @@ namespace Mutagen.Bethesda.Oblivion
         new Landscape? Landscape { get; set; }
         new Int32 Timestamp { get; set; }
         new Int32 PersistentTimestamp { get; set; }
-        new ExtendedList<IPlaced> Persistent { get; }
+        new IExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
-        new ExtendedList<IPlaced> Temporary { get; }
+        new IExtendedList<IPlaced> Temporary { get; }
         new Int32 VisibleWhenDistantTimestamp { get; set; }
-        new ExtendedList<IPlaced> VisibleWhenDistant { get; }
+        new IExtendedList<IPlaced> VisibleWhenDistant { get; }
     }
 
     public partial interface ICellInternal :
@@ -2394,7 +2394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.Lighting:
                     return typeof(CellLighting);
                 case Cell_FieldIndex.Regions:
-                    return typeof(ExtendedList<IFormLink<Region>>);
+                    return typeof(IExtendedList<IFormLink<Region>>);
                 case Cell_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case Cell_FieldIndex.WaterHeight:
@@ -2418,15 +2418,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Cell_FieldIndex.PersistentTimestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 case Cell_FieldIndex.VisibleWhenDistantTimestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.VisibleWhenDistant:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 default:
                     return Place_Registration.GetNthType(index);
             }

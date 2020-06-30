@@ -130,8 +130,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public ExtendedList<LinkedReferences> LinkedReferences
+        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public IExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -179,8 +179,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
+        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -1816,13 +1816,13 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32? Count { get; set; }
         new Single? Radius { get; set; }
         new Single? Health { get; set; }
-        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new IExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new LinkedReferenceColor? LinkedReferenceColor { get; set; }
         new FormLinkNullable<Location> PersistentLocation { get; set; }
         new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
-        new ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new FormLinkNullable<PlacedNpc> Horse { get; set; }
         new Single? FavorCost { get; set; }
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.Health:
                     return typeof(Single);
                 case PlacedNpc_FieldIndex.LinkedReferences:
-                    return typeof(ExtendedList<LinkedReferences>);
+                    return typeof(IExtendedList<LinkedReferences>);
                 case PlacedNpc_FieldIndex.ActivateParents:
                     return typeof(ActivateParents);
                 case PlacedNpc_FieldIndex.LinkedReferenceColor:
@@ -2657,7 +2657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.IgnoredBySandbox:
                     return typeof(Boolean);
                 case PlacedNpc_FieldIndex.LocationRefTypes:
-                    return typeof(ExtendedList<IFormLink<LocationReferenceType>>);
+                    return typeof(IExtendedList<IFormLink<LocationReferenceType>>);
                 case PlacedNpc_FieldIndex.HeadTrackingWeight:
                     return typeof(Single);
                 case PlacedNpc_FieldIndex.Horse:

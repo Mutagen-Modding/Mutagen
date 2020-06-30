@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Relations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Relation> _Relations = new ExtendedList<Relation>();
-        public ExtendedList<Relation> Relations
+        private IExtendedList<Relation> _Relations = new ExtendedList<Relation>();
+        public IExtendedList<Relation> Relations
         {
             get => this._Relations;
             protected set => this._Relations = value;
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Ranks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
-        public ExtendedList<Rank> Ranks
+        private IExtendedList<Rank> _Ranks = new ExtendedList<Rank>();
+        public IExtendedList<Rank> Ranks
         {
             get => this._Ranks;
             protected set => this._Ranks = value;
@@ -883,10 +883,10 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IFactionInternal>
     {
         new String? Name { get; set; }
-        new ExtendedList<Relation> Relations { get; }
+        new IExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
         new Single? CrimeGoldMultiplier { get; set; }
-        new ExtendedList<Rank> Ranks { get; }
+        new IExtendedList<Rank> Ranks { get; }
     }
 
     public partial interface IFactionInternal :
@@ -1389,13 +1389,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Faction_FieldIndex.Name:
                     return typeof(String);
                 case Faction_FieldIndex.Relations:
-                    return typeof(ExtendedList<Relation>);
+                    return typeof(IExtendedList<Relation>);
                 case Faction_FieldIndex.Flags:
                     return typeof(Faction.FactionFlag);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return typeof(Single);
                 case Faction_FieldIndex.Ranks:
-                    return typeof(ExtendedList<Rank>);
+                    return typeof(IExtendedList<Rank>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

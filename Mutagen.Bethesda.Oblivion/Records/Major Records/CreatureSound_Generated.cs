@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<SoundItem> _Sounds = new ExtendedList<SoundItem>();
-        public ExtendedList<SoundItem> Sounds
+        private IExtendedList<SoundItem> _Sounds = new ExtendedList<SoundItem>();
+        public IExtendedList<SoundItem> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ICreatureSound>
     {
         new CreatureSound.CreatureSoundType? SoundType { get; set; }
-        new ExtendedList<SoundItem> Sounds { get; }
+        new IExtendedList<SoundItem> Sounds { get; }
     }
 
     public partial interface ICreatureSoundGetter :
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case CreatureSound_FieldIndex.SoundType:
                     return typeof(CreatureSound.CreatureSoundType);
                 case CreatureSound_FieldIndex.Sounds:
-                    return typeof(ExtendedList<SoundItem>);
+                    return typeof(IExtendedList<SoundItem>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

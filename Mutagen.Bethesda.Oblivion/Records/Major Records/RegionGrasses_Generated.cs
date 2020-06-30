@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Grasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Grass>>? _Grasses;
-        public ExtendedList<IFormLink<Grass>>? Grasses
+        private IExtendedList<IFormLink<Grass>>? _Grasses;
+        public IExtendedList<IFormLink<Grass>>? Grasses
         {
             get => this._Grasses;
             set => this._Grasses = value;
@@ -633,7 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         IRegionData,
         ILoquiObjectSetter<IRegionGrasses>
     {
-        new ExtendedList<IFormLink<Grass>>? Grasses { get; set; }
+        new IExtendedList<IFormLink<Grass>>? Grasses { get; set; }
     }
 
     public partial interface IRegionGrassesGetter :
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RegionGrasses_FieldIndex.Grasses:
-                    return typeof(ExtendedList<IFormLink<Grass>>);
+                    return typeof(IExtendedList<IFormLink<Grass>>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

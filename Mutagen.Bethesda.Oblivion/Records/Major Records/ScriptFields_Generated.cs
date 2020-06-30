@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LocalVariables
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
-        public ExtendedList<LocalVariable> LocalVariables
+        private IExtendedList<LocalVariable> _LocalVariables = new ExtendedList<LocalVariable>();
+        public IExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
             protected set => this._LocalVariables = value;
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region References
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
-        public ExtendedList<AScriptReference> References
+        private IExtendedList<AScriptReference> _References = new ExtendedList<AScriptReference>();
+        public IExtendedList<AScriptReference> References
         {
             get => this._References;
             protected set => this._References = value;
@@ -869,8 +869,8 @@ namespace Mutagen.Bethesda.Oblivion
         new ScriptMetaSummary MetadataSummary { get; }
         new MemorySlice<Byte>? CompiledScript { get; set; }
         new String? SourceCode { get; set; }
-        new ExtendedList<LocalVariable> LocalVariables { get; }
-        new ExtendedList<AScriptReference> References { get; }
+        new IExtendedList<LocalVariable> LocalVariables { get; }
+        new IExtendedList<AScriptReference> References { get; }
     }
 
     public partial interface IScriptFieldsGetter :
@@ -1394,9 +1394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptFields_FieldIndex.SourceCode:
                     return typeof(String);
                 case ScriptFields_FieldIndex.LocalVariables:
-                    return typeof(ExtendedList<LocalVariable>);
+                    return typeof(IExtendedList<LocalVariable>);
                 case ScriptFields_FieldIndex.References:
-                    return typeof(ExtendedList<AScriptReference>);
+                    return typeof(IExtendedList<AScriptReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

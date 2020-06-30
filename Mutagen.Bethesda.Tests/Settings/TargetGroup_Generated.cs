@@ -46,8 +46,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Target> _Targets = new ExtendedList<Target>();
-        public ExtendedList<Target> Targets
+        private IExtendedList<Target> _Targets = new ExtendedList<Target>();
+        public IExtendedList<Target> Targets
         {
             get => this._Targets;
             protected set => this._Targets = value;
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Tests
         ILoquiObjectSetter<ITargetGroup>
     {
         new Boolean Do { get; set; }
-        new ExtendedList<Target> Targets { get; }
+        new IExtendedList<Target> Targets { get; }
     }
 
     public partial interface ITargetGroupGetter :
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
                 case TargetGroup_FieldIndex.Targets:
-                    return typeof(ExtendedList<Target>);
+                    return typeof(IExtendedList<Target>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

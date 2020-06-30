@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestObjectiveTarget> _Targets = new ExtendedList<QuestObjectiveTarget>();
-        public ExtendedList<QuestObjectiveTarget> Targets
+        private IExtendedList<QuestObjectiveTarget> _Targets = new ExtendedList<QuestObjectiveTarget>();
+        public IExtendedList<QuestObjectiveTarget> Targets
         {
             get => this._Targets;
             protected set => this._Targets = value;
@@ -745,7 +745,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Index { get; set; }
         new QuestObjective.Flag? Flags { get; set; }
         new TranslatedString? DisplayText { get; set; }
-        new ExtendedList<QuestObjectiveTarget> Targets { get; }
+        new IExtendedList<QuestObjectiveTarget> Targets { get; }
     }
 
     public partial interface IQuestObjectiveGetter :
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestObjective_FieldIndex.DisplayText:
                     return typeof(TranslatedString);
                 case QuestObjective_FieldIndex.Targets:
-                    return typeof(ExtendedList<QuestObjectiveTarget>);
+                    return typeof(IExtendedList<QuestObjectiveTarget>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

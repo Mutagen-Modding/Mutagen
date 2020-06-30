@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NpcSound> _Sounds = new ExtendedList<NpcSound>();
-        public ExtendedList<NpcSound> Sounds
+        private IExtendedList<NpcSound> _Sounds = new ExtendedList<NpcSound>();
+        public IExtendedList<NpcSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INpcSoundType>
     {
         new NpcSoundType.SoundType? Type { get; set; }
-        new ExtendedList<NpcSound> Sounds { get; }
+        new IExtendedList<NpcSound> Sounds { get; }
     }
 
     public partial interface INpcSoundTypeGetter :
@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NpcSoundType_FieldIndex.Type:
                     return typeof(NpcSoundType.SoundType);
                 case NpcSoundType_FieldIndex.Sounds:
-                    return typeof(ExtendedList<NpcSound>);
+                    return typeof(IExtendedList<NpcSound>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

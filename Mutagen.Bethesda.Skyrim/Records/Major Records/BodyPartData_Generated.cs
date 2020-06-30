@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
-        public ExtendedList<BodyPart> Parts
+        private IExtendedList<BodyPart> _Parts = new ExtendedList<BodyPart>();
+        public IExtendedList<BodyPart> Parts
         {
             get => this._Parts;
             protected set => this._Parts = value;
@@ -714,7 +714,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IBodyPartDataInternal>
     {
         new Model? Model { get; set; }
-        new ExtendedList<BodyPart> Parts { get; }
+        new IExtendedList<BodyPart> Parts { get; }
     }
 
     public partial interface IBodyPartDataInternal :
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyPartData_FieldIndex.Model:
                     return typeof(Model);
                 case BodyPartData_FieldIndex.Parts:
-                    return typeof(ExtendedList<BodyPart>);
+                    return typeof(IExtendedList<BodyPart>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

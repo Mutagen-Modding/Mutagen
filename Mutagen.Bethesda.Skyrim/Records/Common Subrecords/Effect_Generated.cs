@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new FormLinkNullable<MagicEffect> BaseEffect { get; set; }
         new EffectData? Data { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IEffectGetter :
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Effect_FieldIndex.Data:
                     return typeof(EffectData);
                 case Effect_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

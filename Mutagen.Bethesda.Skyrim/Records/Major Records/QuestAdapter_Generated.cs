@@ -59,8 +59,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
-        public ExtendedList<QuestScriptFragment> Fragments
+        private IExtendedList<QuestScriptFragment> _Fragments = new ExtendedList<QuestScriptFragment>();
+        public IExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Aliases
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
-        public ExtendedList<QuestFragmentAlias> Aliases
+        private IExtendedList<QuestFragmentAlias> _Aliases = new ExtendedList<QuestFragmentAlias>();
+        public IExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
             protected set => this._Aliases = value;
@@ -860,8 +860,8 @@ namespace Mutagen.Bethesda.Skyrim
         new QuestAdapter.VersioningBreaks Versioning { get; set; }
         new Byte Unknown { get; set; }
         new String FileName { get; set; }
-        new ExtendedList<QuestScriptFragment> Fragments { get; }
-        new ExtendedList<QuestFragmentAlias> Aliases { get; }
+        new IExtendedList<QuestScriptFragment> Fragments { get; }
+        new IExtendedList<QuestFragmentAlias> Aliases { get; }
     }
 
     public partial interface IQuestAdapterGetter :
@@ -1357,9 +1357,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAdapter_FieldIndex.FileName:
                     return typeof(String);
                 case QuestAdapter_FieldIndex.Fragments:
-                    return typeof(ExtendedList<QuestScriptFragment>);
+                    return typeof(IExtendedList<QuestScriptFragment>);
                 case QuestAdapter_FieldIndex.Aliases:
-                    return typeof(ExtendedList<QuestFragmentAlias>);
+                    return typeof(IExtendedList<QuestFragmentAlias>);
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthType(index);
             }

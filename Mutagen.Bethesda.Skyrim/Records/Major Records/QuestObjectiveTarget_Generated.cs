@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int32 AliasIndex { get; set; }
         new Quest.TargetFlag Flags { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new QuestObjectiveTarget.QSTADataType QSTADataTypeState { get; set; }
     }
 
@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestObjectiveTarget_FieldIndex.Flags:
                     return typeof(Quest.TargetFlag);
                 case QuestObjectiveTarget_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case QuestObjectiveTarget_FieldIndex.QSTADataTypeState:
                     return typeof(QuestObjectiveTarget.QSTADataType);
                 default:

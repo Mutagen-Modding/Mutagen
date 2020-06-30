@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region AdditionalRaces
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
-        public ExtendedList<IFormLink<Race>> AdditionalRaces
+        private IExtendedList<IFormLink<Race>> _AdditionalRaces = new ExtendedList<IFormLink<Race>>();
+        public IExtendedList<IFormLink<Race>> AdditionalRaces
         {
             get => this._AdditionalRaces;
             protected set => this._AdditionalRaces = value;
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GenderedItem<Model?>? FirstPersonModel { get; set; }
         new GenderedItem<IFormLinkNullable<TextureSet>>? SkinTexture { get; set; }
         new GenderedItem<IFormLinkNullable<FormList>>? TextureSwapList { get; set; }
-        new ExtendedList<IFormLink<Race>> AdditionalRaces { get; }
+        new IExtendedList<IFormLink<Race>> AdditionalRaces { get; }
         new FormLinkNullable<FootstepSet> FootstepSound { get; set; }
         new FormLinkNullable<ArtObject> ArtObject { get; set; }
         new ArmorAddon.DNAMDataType DNAMDataTypeState { get; set; }
@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ArmorAddon_FieldIndex.TextureSwapList:
                     return typeof(GenderedItem<IFormLinkNullable<FormList>>);
                 case ArmorAddon_FieldIndex.AdditionalRaces:
-                    return typeof(ExtendedList<IFormLink<Race>>);
+                    return typeof(IExtendedList<IFormLink<Race>>);
                 case ArmorAddon_FieldIndex.FootstepSound:
                     return typeof(FormLinkNullable<FootstepSet>);
                 case ArmorAddon_FieldIndex.ArtObject:

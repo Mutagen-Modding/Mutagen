@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region WeatherTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherType>? _WeatherTypes;
-        public ExtendedList<WeatherType>? WeatherTypes
+        private IExtendedList<WeatherType>? _WeatherTypes;
+        public IExtendedList<WeatherType>? WeatherTypes
         {
             get => this._WeatherTypes;
             set => this._WeatherTypes = value;
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ILoquiObjectSetter<IClimateInternal>
     {
-        new ExtendedList<WeatherType>? WeatherTypes { get; set; }
+        new IExtendedList<WeatherType>? WeatherTypes { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
         new Model? Model { get; set; }
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.WeatherTypes:
-                    return typeof(ExtendedList<WeatherType>);
+                    return typeof(IExtendedList<WeatherType>);
                 case Climate_FieldIndex.SunTexture:
                     return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:

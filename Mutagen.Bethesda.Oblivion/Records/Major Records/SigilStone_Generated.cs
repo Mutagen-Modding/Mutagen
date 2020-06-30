@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new String? Icon { get; set; }
         new FormLinkNullable<Script> Script { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }
 
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SigilStone_FieldIndex.Script:
                     return typeof(FormLinkNullable<Script>);
                 case SigilStone_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 case SigilStone_FieldIndex.Data:
                     return typeof(SigilStoneData);
                 default:

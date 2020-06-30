@@ -316,8 +316,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
-        public ExtendedList<WeatherSound> Sounds
+        private IExtendedList<WeatherSound> _Sounds = new ExtendedList<WeatherSound>();
+        public IExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
             protected set => this._Sounds = value;
@@ -330,8 +330,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
-        public ExtendedList<IFormLink<Static>> SkyStatics
+        private IExtendedList<IFormLink<Static>> _SkyStatics = new ExtendedList<IFormLink<Static>>();
+        public IExtendedList<IFormLink<Static>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
@@ -3135,8 +3135,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Percent VisualEffectEnd { get; set; }
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
-        new ExtendedList<WeatherSound> Sounds { get; }
-        new ExtendedList<IFormLink<Static>> SkyStatics { get; }
+        new IExtendedList<WeatherSound> Sounds { get; }
+        new IExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
@@ -4362,9 +4362,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirectionRange:
                     return typeof(Single);
                 case Weather_FieldIndex.Sounds:
-                    return typeof(ExtendedList<WeatherSound>);
+                    return typeof(IExtendedList<WeatherSound>);
                 case Weather_FieldIndex.SkyStatics:
-                    return typeof(ExtendedList<IFormLink<Static>>);
+                    return typeof(IExtendedList<IFormLink<Static>>);
                 case Weather_FieldIndex.ImageSpaces:
                     return typeof(WeatherImageSpaces);
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:

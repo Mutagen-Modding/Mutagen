@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Models
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DebrisModel> _Models = new ExtendedList<DebrisModel>();
-        public ExtendedList<DebrisModel> Models
+        private IExtendedList<DebrisModel> _Models = new ExtendedList<DebrisModel>();
+        public IExtendedList<DebrisModel> Models
         {
             get => this._Models;
             protected set => this._Models = value;
@@ -659,7 +659,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDebrisInternal>
     {
-        new ExtendedList<DebrisModel> Models { get; }
+        new IExtendedList<DebrisModel> Models { get; }
     }
 
     public partial interface IDebrisInternal :
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Debris_FieldIndex.Models:
-                    return typeof(ExtendedList<DebrisModel>);
+                    return typeof(IExtendedList<DebrisModel>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

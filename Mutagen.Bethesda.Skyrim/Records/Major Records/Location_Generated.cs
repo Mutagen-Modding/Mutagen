@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ActorCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellPersistentReferences;
-        public ExtendedList<LocationReference>? ActorCellPersistentReferences
+        private IExtendedList<LocationReference>? _ActorCellPersistentReferences;
+        public IExtendedList<LocationReference>? ActorCellPersistentReferences
         {
             get => this._ActorCellPersistentReferences;
             set => this._ActorCellPersistentReferences = value;
@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellPersistentReferences;
-        public ExtendedList<LocationReference>? LocationCellPersistentReferences
+        private IExtendedList<LocationReference>? _LocationCellPersistentReferences;
+        public IExtendedList<LocationReference>? LocationCellPersistentReferences
         {
             get => this._LocationCellPersistentReferences;
             set => this._LocationCellPersistentReferences = value;
@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
-        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
+        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellPersistentReferences;
+        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences
         {
             get => this._ReferenceCellPersistentReferences;
             set => this._ReferenceCellPersistentReferences = value;
@@ -94,8 +94,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _ActorCellUniques;
-        public ExtendedList<LocationReference>? ActorCellUniques
+        private IExtendedList<LocationReference>? _ActorCellUniques;
+        public IExtendedList<LocationReference>? ActorCellUniques
         {
             get => this._ActorCellUniques;
             set => this._ActorCellUniques = value;
@@ -108,8 +108,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellUniques
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationReference>? _LocationCellUniques;
-        public ExtendedList<LocationReference>? LocationCellUniques
+        private IExtendedList<LocationReference>? _LocationCellUniques;
+        public IExtendedList<LocationReference>? LocationCellUniques
         {
             get => this._LocationCellUniques;
             set => this._LocationCellUniques = value;
@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellUnique
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
-        public ExtendedList<IFormLink<Npc>>? ReferenceCellUnique
+        private IExtendedList<IFormLink<Npc>>? _ReferenceCellUnique;
+        public IExtendedList<IFormLink<Npc>>? ReferenceCellUnique
         {
             get => this._ReferenceCellUnique;
             set => this._ReferenceCellUnique = value;
@@ -136,8 +136,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
+        private IExtendedList<LocationCellStaticReference>? _ActorCellStaticReferences;
+        public IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences
         {
             get => this._ActorCellStaticReferences;
             set => this._ActorCellStaticReferences = value;
@@ -150,8 +150,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
-        public ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
+        private IExtendedList<LocationCellStaticReference>? _LocationCellStaticReferences;
+        public IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences
         {
             get => this._LocationCellStaticReferences;
             set => this._LocationCellStaticReferences = value;
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
-        public ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
+        private IExtendedList<IFormLink<IPlacedSimple>>? _ReferenceCellStaticReferences;
+        public IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences
         {
             get => this._ReferenceCellStaticReferences;
             set => this._ReferenceCellStaticReferences = value;
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ActorCellEncounterCell
+        private IExtendedList<LocationCoordinate> _ActorCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> ActorCellEncounterCell
         {
             get => this._ActorCellEncounterCell;
             protected set => this._ActorCellEncounterCell = value;
@@ -192,8 +192,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> LocationCellEncounterCell
+        private IExtendedList<LocationCoordinate> _LocationCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> LocationCellEncounterCell
         {
             get => this._LocationCellEncounterCell;
             protected set => this._LocationCellEncounterCell = value;
@@ -206,8 +206,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellEncounterCell
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
-        public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
+        private IExtendedList<LocationCoordinate> _ReferenceCellEncounterCell = new ExtendedList<LocationCoordinate>();
+        public IExtendedList<LocationCoordinate> ReferenceCellEncounterCell
         {
             get => this._ReferenceCellEncounterCell;
             protected set => this._ReferenceCellEncounterCell = value;
@@ -220,8 +220,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
-        public ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
+        private IExtendedList<IFormLink<IPlaced>>? _ActorCellMarkerReference;
+        public IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference
         {
             get => this._ActorCellMarkerReference;
             set => this._ActorCellMarkerReference = value;
@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
-        public ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
+        private IExtendedList<IFormLink<IPlaced>>? _LocationCellMarkerReference;
+        public IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference
         {
             get => this._LocationCellMarkerReference;
             set => this._LocationCellMarkerReference = value;
@@ -248,8 +248,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
+        private IExtendedList<LocationCellEnablePoint>? _ActorCellEnablePoint;
+        public IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint
         {
             get => this._ActorCellEnablePoint;
             set => this._ActorCellEnablePoint = value;
@@ -262,8 +262,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationCellEnablePoint
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
-        public ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
+        private IExtendedList<LocationCellEnablePoint>? _LocationCellEnablePoint;
+        public IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint
         {
             get => this._LocationCellEnablePoint;
             set => this._LocationCellEnablePoint = value;
@@ -281,8 +281,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -2802,24 +2802,24 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ILoquiObjectSetter<ILocationInternal>
     {
-        new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
-        new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
-        new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
-        new ExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
-        new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
-        new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
-        new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
-        new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
-        new ExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
-        new ExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
-        new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        new IExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
+        new IExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
+        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellPersistentReferences { get; set; }
+        new IExtendedList<LocationReference>? ActorCellUniques { get; set; }
+        new IExtendedList<LocationReference>? LocationCellUniques { get; set; }
+        new IExtendedList<IFormLink<Npc>>? ReferenceCellUnique { get; set; }
+        new IExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
+        new IExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
+        new IExtendedList<IFormLink<IPlacedSimple>>? ReferenceCellStaticReferences { get; set; }
+        new IExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
+        new IExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
+        new IExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
+        new IExtendedList<IFormLink<IPlaced>>? ActorCellMarkerReference { get; set; }
+        new IExtendedList<IFormLink<IPlaced>>? LocationCellMarkerReference { get; set; }
+        new IExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
+        new IExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Location> ParentLocation { get; set; }
         new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<Faction> UnreportedCrimeFaction { get; set; }
@@ -3548,41 +3548,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Location_FieldIndex.ActorCellPersistentReferences:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.LocationCellPersistentReferences:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.ReferenceCellPersistentReferences:
-                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
                 case Location_FieldIndex.ActorCellUniques:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.LocationCellUniques:
-                    return typeof(ExtendedList<LocationReference>);
+                    return typeof(IExtendedList<LocationReference>);
                 case Location_FieldIndex.ReferenceCellUnique:
-                    return typeof(ExtendedList<IFormLink<Npc>>);
+                    return typeof(IExtendedList<IFormLink<Npc>>);
                 case Location_FieldIndex.ActorCellStaticReferences:
-                    return typeof(ExtendedList<LocationCellStaticReference>);
+                    return typeof(IExtendedList<LocationCellStaticReference>);
                 case Location_FieldIndex.LocationCellStaticReferences:
-                    return typeof(ExtendedList<LocationCellStaticReference>);
+                    return typeof(IExtendedList<LocationCellStaticReference>);
                 case Location_FieldIndex.ReferenceCellStaticReferences:
-                    return typeof(ExtendedList<IFormLink<IPlacedSimple>>);
+                    return typeof(IExtendedList<IFormLink<IPlacedSimple>>);
                 case Location_FieldIndex.ActorCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.LocationCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.ReferenceCellEncounterCell:
-                    return typeof(ExtendedList<LocationCoordinate>);
+                    return typeof(IExtendedList<LocationCoordinate>);
                 case Location_FieldIndex.ActorCellMarkerReference:
-                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                    return typeof(IExtendedList<IFormLink<IPlaced>>);
                 case Location_FieldIndex.LocationCellMarkerReference:
-                    return typeof(ExtendedList<IFormLink<IPlaced>>);
+                    return typeof(IExtendedList<IFormLink<IPlaced>>);
                 case Location_FieldIndex.ActorCellEnablePoint:
-                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                    return typeof(IExtendedList<LocationCellEnablePoint>);
                 case Location_FieldIndex.LocationCellEnablePoint:
-                    return typeof(ExtendedList<LocationCellEnablePoint>);
+                    return typeof(IExtendedList<LocationCellEnablePoint>);
                 case Location_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Location_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Location_FieldIndex.ParentLocation:
                     return typeof(FormLinkNullable<Location>);
                 case Location_FieldIndex.Music:

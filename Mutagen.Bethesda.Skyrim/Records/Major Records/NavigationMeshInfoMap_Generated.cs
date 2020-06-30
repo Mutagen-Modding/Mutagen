@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MapInfos
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
-        public ExtendedList<NavigationMapInfo> MapInfos
+        private IExtendedList<NavigationMapInfo> _MapInfos = new ExtendedList<NavigationMapInfo>();
+        public IExtendedList<NavigationMapInfo> MapInfos
         {
             get => this._MapInfos;
             protected set => this._MapInfos = value;
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMeshInfoMapInternal>
     {
         new UInt32? NavMeshVersion { get; set; }
-        new ExtendedList<NavigationMapInfo> MapInfos { get; }
+        new IExtendedList<NavigationMapInfo> MapInfos { get; }
         new PreferredPathing? PreferredPathing { get; set; }
         new MemorySlice<Byte>? NVSI { get; set; }
     }
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case NavigationMeshInfoMap_FieldIndex.NavMeshVersion:
                     return typeof(UInt32);
                 case NavigationMeshInfoMap_FieldIndex.MapInfos:
-                    return typeof(ExtendedList<NavigationMapInfo>);
+                    return typeof(IExtendedList<NavigationMapInfo>);
                 case NavigationMeshInfoMap_FieldIndex.PreferredPathing:
                     return typeof(PreferredPathing);
                 case NavigationMeshInfoMap_FieldIndex.NVSI:

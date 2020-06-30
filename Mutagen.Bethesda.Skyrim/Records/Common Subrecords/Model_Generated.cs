@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region AlternateTextures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<AlternateTexture>? _AlternateTextures;
-        public ExtendedList<AlternateTexture>? AlternateTextures
+        private IExtendedList<AlternateTexture>? _AlternateTextures;
+        public IExtendedList<AlternateTexture>? AlternateTextures
         {
             get => this._AlternateTextures;
             set => this._AlternateTextures = value;
@@ -639,7 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISimpleModel,
         ILoquiObjectSetter<IModel>
     {
-        new ExtendedList<AlternateTexture>? AlternateTextures { get; set; }
+        new IExtendedList<AlternateTexture>? AlternateTextures { get; set; }
     }
 
     public partial interface IModelGetter :
@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case Model_FieldIndex.AlternateTextures:
-                    return typeof(ExtendedList<AlternateTexture>);
+                    return typeof(IExtendedList<AlternateTexture>);
                 default:
                     return SimpleModel_Registration.GetNthType(index);
             }

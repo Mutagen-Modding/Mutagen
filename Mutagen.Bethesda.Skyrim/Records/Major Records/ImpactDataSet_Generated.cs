@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Impacts
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
-        public ExtendedList<ImpactData> Impacts
+        private IExtendedList<ImpactData> _Impacts = new ExtendedList<ImpactData>();
+        public IExtendedList<ImpactData> Impacts
         {
             get => this._Impacts;
             protected set => this._Impacts = value;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IImpactDataSetInternal>
     {
-        new ExtendedList<ImpactData> Impacts { get; }
+        new IExtendedList<ImpactData> Impacts { get; }
     }
 
     public partial interface IImpactDataSetInternal :
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ImpactDataSet_FieldIndex.Impacts:
-                    return typeof(ExtendedList<ImpactData>);
+                    return typeof(IExtendedList<ImpactData>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

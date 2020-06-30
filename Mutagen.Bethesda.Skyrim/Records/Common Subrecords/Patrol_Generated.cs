@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
-        public ExtendedList<ATopicReference> Topics
+        private IExtendedList<ATopicReference> _Topics = new ExtendedList<ATopicReference>();
+        public IExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -791,7 +791,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLink<IdleAnimation> Idle { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
-        new ExtendedList<ATopicReference> Topics { get; }
+        new IExtendedList<ATopicReference> Topics { get; }
     }
 
     public partial interface IPatrolGetter :
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Patrol_FieldIndex.SCTX:
                     return typeof(MemorySlice<Byte>);
                 case Patrol_FieldIndex.Topics:
-                    return typeof(ExtendedList<ATopicReference>);
+                    return typeof(IExtendedList<ATopicReference>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

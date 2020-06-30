@@ -105,8 +105,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Portals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Portal>? _Portals;
-        public ExtendedList<Portal>? Portals
+        private IExtendedList<Portal>? _Portals;
+        public IExtendedList<Portal>? Portals
         {
             get => this._Portals;
             set => this._Portals = value;
@@ -143,8 +143,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedRooms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<PlacedObject>> _LinkedRooms = new ExtendedList<IFormLink<PlacedObject>>();
-        public ExtendedList<IFormLink<PlacedObject>> LinkedRooms
+        private IExtendedList<IFormLink<PlacedObject>> _LinkedRooms = new ExtendedList<IFormLink<PlacedObject>>();
+        public IExtendedList<IFormLink<PlacedObject>> LinkedRooms
         {
             get => this._LinkedRooms;
             protected set => this._LinkedRooms = value;
@@ -187,8 +187,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Reflections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
-        public ExtendedList<WaterReflection> Reflections
+        private IExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
+        public IExtendedList<WaterReflection> Reflections
         {
             get => this._Reflections;
             protected set => this._Reflections = value;
@@ -201,8 +201,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LitWater
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<PlacedObject>> _LitWater = new ExtendedList<IFormLink<PlacedObject>>();
-        public ExtendedList<IFormLink<PlacedObject>> LitWater
+        private IExtendedList<IFormLink<PlacedObject>> _LitWater = new ExtendedList<IFormLink<PlacedObject>>();
+        public IExtendedList<IFormLink<PlacedObject>> LitWater
         {
             get => this._LitWater;
             protected set => this._LitWater = value;
@@ -396,8 +396,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
+        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public ExtendedList<LinkedReferences> LinkedReferences
+        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public IExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -3288,18 +3288,18 @@ namespace Mutagen.Bethesda.Skyrim
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
         new Placement? OcclusionPlane { get; set; }
-        new ExtendedList<Portal>? Portals { get; set; }
+        new IExtendedList<Portal>? Portals { get; set; }
         new Placement? RoomPortal { get; set; }
         new Int16 Unknown { get; set; }
         new FormLinkNullable<Light> LightingTemplate { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
-        new ExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
+        new IExtendedList<IFormLink<PlacedObject>> LinkedRooms { get; }
         new Boolean MultiBoundPrimitive { get; set; }
         new MemorySlice<Byte>? RagdollData { get; set; }
         new MemorySlice<Byte>? RagdollBipedData { get; set; }
         new Single? Radius { get; set; }
-        new ExtendedList<WaterReflection> Reflections { get; }
-        new ExtendedList<IFormLink<PlacedObject>> LitWater { get; }
+        new IExtendedList<WaterReflection> Reflections { get; }
+        new IExtendedList<IFormLink<PlacedObject>> LitWater { get; }
         new FormLinkNullable<IEmittance> Emittance { get; set; }
         new LightData? LightData { get; set; }
         new Alpha? Alpha { get; set; }
@@ -3323,14 +3323,14 @@ namespace Mutagen.Bethesda.Skyrim
         new LockData? Lock { get; set; }
         new FormLinkNullable<EncounterZone> EncounterZone { get; set; }
         new NavigationDoorLink? NavigationDoorLink { get; set; }
-        new ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
         new Boolean IgnoredBySandbox { get; set; }
         new Ownership? Ownership { get; set; }
         new Int32? ItemCount { get; set; }
         new Single? Charge { get; set; }
         new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
         new EnableParent? EnableParent { get; set; }
-        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new IExtendedList<LinkedReferences> LinkedReferences { get; }
         new Patrol? Patrol { get; set; }
         new PlacedObject.ActionFlag? Action { get; set; }
         new Single? HeadTrackingWeight { get; set; }
@@ -4464,7 +4464,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.OcclusionPlane:
                     return typeof(Placement);
                 case PlacedObject_FieldIndex.Portals:
-                    return typeof(ExtendedList<Portal>);
+                    return typeof(IExtendedList<Portal>);
                 case PlacedObject_FieldIndex.RoomPortal:
                     return typeof(Placement);
                 case PlacedObject_FieldIndex.Unknown:
@@ -4474,7 +4474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.ImageSpace:
                     return typeof(FormLinkNullable<ImageSpaceAdapter>);
                 case PlacedObject_FieldIndex.LinkedRooms:
-                    return typeof(ExtendedList<IFormLink<PlacedObject>>);
+                    return typeof(IExtendedList<IFormLink<PlacedObject>>);
                 case PlacedObject_FieldIndex.MultiBoundPrimitive:
                     return typeof(Boolean);
                 case PlacedObject_FieldIndex.RagdollData:
@@ -4484,9 +4484,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.Radius:
                     return typeof(Single);
                 case PlacedObject_FieldIndex.Reflections:
-                    return typeof(ExtendedList<WaterReflection>);
+                    return typeof(IExtendedList<WaterReflection>);
                 case PlacedObject_FieldIndex.LitWater:
-                    return typeof(ExtendedList<IFormLink<PlacedObject>>);
+                    return typeof(IExtendedList<IFormLink<PlacedObject>>);
                 case PlacedObject_FieldIndex.Emittance:
                     return typeof(FormLinkNullable<IEmittance>);
                 case PlacedObject_FieldIndex.LightData:
@@ -4534,7 +4534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.NavigationDoorLink:
                     return typeof(NavigationDoorLink);
                 case PlacedObject_FieldIndex.LocationRefTypes:
-                    return typeof(ExtendedList<IFormLink<LocationReferenceType>>);
+                    return typeof(IExtendedList<IFormLink<LocationReferenceType>>);
                 case PlacedObject_FieldIndex.IgnoredBySandbox:
                     return typeof(Boolean);
                 case PlacedObject_FieldIndex.Ownership:
@@ -4548,7 +4548,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.EnableParent:
                     return typeof(EnableParent);
                 case PlacedObject_FieldIndex.LinkedReferences:
-                    return typeof(ExtendedList<LinkedReferences>);
+                    return typeof(IExtendedList<LinkedReferences>);
                 case PlacedObject_FieldIndex.Patrol:
                     return typeof(Patrol);
                 case PlacedObject_FieldIndex.Action:

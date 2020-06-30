@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Int16> _Points = new ExtendedList<Int16>();
-        public ExtendedList<Int16> Points
+        private IExtendedList<Int16> _Points = new ExtendedList<Int16>();
+        public IExtendedList<Int16> Points
         {
             get => this._Points;
             protected set => this._Points = value;
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>
     {
         new FormLink<IPlaced> Reference { get; set; }
-        new ExtendedList<Int16> Points { get; }
+        new IExtendedList<Int16> Points { get; }
     }
 
     public partial interface IPointToReferenceMappingGetter :
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PointToReferenceMapping_FieldIndex.Reference:
                     return typeof(FormLink<IPlaced>);
                 case PointToReferenceMapping_FieldIndex.Points:
-                    return typeof(ExtendedList<Int16>);
+                    return typeof(IExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

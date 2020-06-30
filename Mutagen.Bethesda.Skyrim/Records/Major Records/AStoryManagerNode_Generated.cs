@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -703,7 +703,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new FormLinkNullable<AStoryManagerNode> Parent { get; set; }
         new FormLinkNullable<AStoryManagerNode> PreviousSibling { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
     }
 
     public partial interface IAStoryManagerNodeInternal :
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case AStoryManagerNode_FieldIndex.PreviousSibling:
                     return typeof(FormLinkNullable<AStoryManagerNode>);
                 case AStoryManagerNode_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -232,8 +232,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CounterEffects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
-        public ExtendedList<IFormLink<MagicEffect>> CounterEffects
+        private IExtendedList<IFormLink<MagicEffect>> _CounterEffects = new ExtendedList<IFormLink<MagicEffect>>();
+        public IExtendedList<IFormLink<MagicEffect>> CounterEffects
         {
             get => this._CounterEffects;
             protected set => this._CounterEffects = value;
@@ -246,8 +246,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MagicEffectSound>? _Sounds;
-        public ExtendedList<MagicEffectSound>? Sounds
+        private IExtendedList<MagicEffectSound>? _Sounds;
+        public IExtendedList<MagicEffectSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -265,8 +265,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -2388,7 +2388,7 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new TranslatedString? Name { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MagicEffect.Flag Flags { get; set; }
         new Single BaseCost { get; set; }
         new ActorValueExtended MagicSkill { get; set; }
@@ -2426,10 +2426,10 @@ namespace Mutagen.Bethesda.Skyrim
         new SoundLevel CastingSoundLevel { get; set; }
         new Single ScriptEffectAIScore { get; set; }
         new Single ScriptEffectAIDelayTime { get; set; }
-        new ExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
-        new ExtendedList<MagicEffectSound>? Sounds { get; set; }
+        new IExtendedList<IFormLink<MagicEffect>> CounterEffects { get; }
+        new IExtendedList<MagicEffectSound>? Sounds { get; set; }
         new TranslatedString? Description { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new MagicEffect.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -3388,7 +3388,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.MenuDisplayObject:
                     return typeof(FormLinkNullable<Static>);
                 case MagicEffect_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case MagicEffect_FieldIndex.Flags:
                     return typeof(MagicEffect.Flag);
                 case MagicEffect_FieldIndex.BaseCost:
@@ -3464,13 +3464,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MagicEffect_FieldIndex.ScriptEffectAIDelayTime:
                     return typeof(Single);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(ExtendedList<IFormLink<MagicEffect>>);
+                    return typeof(IExtendedList<IFormLink<MagicEffect>>);
                 case MagicEffect_FieldIndex.Sounds:
-                    return typeof(ExtendedList<MagicEffectSound>);
+                    return typeof(IExtendedList<MagicEffectSound>);
                 case MagicEffect_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case MagicEffect_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case MagicEffect_FieldIndex.DATADataTypeState:
                     return typeof(MagicEffect.DATADataType);
                 default:

@@ -140,8 +140,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -154,8 +154,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -168,8 +168,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerEntry>? _Items;
-        public ExtendedList<ContainerEntry>? Items
+        private IExtendedList<ContainerEntry>? _Items;
+        public IExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -207,8 +207,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
-        public ExtendedList<IFormLink<Spell>> Spells
+        private IExtendedList<IFormLink<Spell>> _Spells = new ExtendedList<IFormLink<Spell>>();
+        public IExtendedList<IFormLink<Spell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -221,8 +221,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Faction>> _Factions = new ExtendedList<IFormLink<Faction>>();
-        public ExtendedList<IFormLink<Faction>> Factions
+        private IExtendedList<IFormLink<Faction>> _Factions = new ExtendedList<IFormLink<Faction>>();
+        public IExtendedList<IFormLink<Faction>> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -235,8 +235,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region PackageData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Package>> _PackageData = new ExtendedList<IFormLink<Package>>();
-        public ExtendedList<IFormLink<Package>> PackageData
+        private IExtendedList<IFormLink<Package>> _PackageData = new ExtendedList<IFormLink<Package>>();
+        public IExtendedList<IFormLink<Package>> PackageData
         {
             get => this._PackageData;
             protected set => this._PackageData = value;
@@ -1928,17 +1928,17 @@ namespace Mutagen.Bethesda.Skyrim
         new CreateReferenceToObject? CreateReferenceToObject { get; set; }
         new FindMatchingRefNearAlias? FindMatchingRefNearAlias { get; set; }
         new FindMatchingRefFromEvent? FindMatchingRefFromEvent { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
-        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<ContainerEntry>? Items { get; set; }
         new FormLinkNullable<FormList> SpectatorOverridePackageList { get; set; }
         new FormLinkNullable<FormList> ObserveDeadBodyOverridePackageList { get; set; }
         new FormLinkNullable<FormList> GuardWarnOverridePackageList { get; set; }
         new FormLinkNullable<FormList> CombatOverridePackageList { get; set; }
         new FormLinkNullable<Message> DisplayName { get; set; }
-        new ExtendedList<IFormLink<Spell>> Spells { get; }
-        new ExtendedList<IFormLink<Faction>> Factions { get; }
-        new ExtendedList<IFormLink<Package>> PackageData { get; }
+        new IExtendedList<IFormLink<Spell>> Spells { get; }
+        new IExtendedList<IFormLink<Faction>> Factions { get; }
+        new IExtendedList<IFormLink<Package>> PackageData { get; }
         new FormLinkNullable<IAliasVoiceType> VoiceTypes { get; set; }
     }
 
@@ -2701,11 +2701,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAlias_FieldIndex.FindMatchingRefFromEvent:
                     return typeof(FindMatchingRefFromEvent);
                 case QuestAlias_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case QuestAlias_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case QuestAlias_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerEntry>);
+                    return typeof(IExtendedList<ContainerEntry>);
                 case QuestAlias_FieldIndex.SpectatorOverridePackageList:
                     return typeof(FormLinkNullable<FormList>);
                 case QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList:
@@ -2717,11 +2717,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestAlias_FieldIndex.DisplayName:
                     return typeof(FormLinkNullable<Message>);
                 case QuestAlias_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<Spell>>);
+                    return typeof(IExtendedList<IFormLink<Spell>>);
                 case QuestAlias_FieldIndex.Factions:
-                    return typeof(ExtendedList<IFormLink<Faction>>);
+                    return typeof(IExtendedList<IFormLink<Faction>>);
                 case QuestAlias_FieldIndex.PackageData:
-                    return typeof(ExtendedList<IFormLink<Package>>);
+                    return typeof(IExtendedList<IFormLink<Package>>);
                 case QuestAlias_FieldIndex.VoiceTypes:
                     return typeof(FormLinkNullable<IAliasVoiceType>);
                 default:

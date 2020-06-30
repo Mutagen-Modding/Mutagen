@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -81,8 +81,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RelatedIdleAnimations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IdleAnimation>>? _RelatedIdleAnimations;
-        public ExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations
+        private IExtendedList<IFormLink<IdleAnimation>>? _RelatedIdleAnimations;
+        public IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations
         {
             get => this._RelatedIdleAnimations;
             set => this._RelatedIdleAnimations = value;
@@ -859,9 +859,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
         new Model? Model { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
-        new ExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations { get; set; }
+        new IExtendedList<IFormLink<IdleAnimation>>? RelatedIdleAnimations { get; set; }
     }
 
     public partial interface IIdleAnimationInternal :
@@ -1351,11 +1351,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case IdleAnimation_FieldIndex.Model:
                     return typeof(Model);
                 case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case IdleAnimation_FieldIndex.AnimationGroupSection:
                     return typeof(IdleAnimation.AnimationGroupSectionEnum);
                 case IdleAnimation_FieldIndex.RelatedIdleAnimations:
-                    return typeof(ExtendedList<IFormLink<IdleAnimation>>);
+                    return typeof(IExtendedList<IFormLink<IdleAnimation>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

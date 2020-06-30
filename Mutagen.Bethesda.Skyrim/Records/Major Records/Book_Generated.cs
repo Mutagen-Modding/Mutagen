@@ -118,8 +118,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -1340,7 +1340,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Book.Flag Flags { get; set; }
         new Book.BookType Type { get; set; }
         new UInt16 Unused { get; set; }
@@ -2028,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Book_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Book_FieldIndex.Flags:
                     return typeof(Book.Flag);
                 case Book_FieldIndex.Type:

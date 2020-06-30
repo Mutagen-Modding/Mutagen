@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Boolean> _Data = new ExtendedList<Boolean>();
-        public ExtendedList<Boolean> Data
+        private IExtendedList<Boolean> _Data = new ExtendedList<Boolean>();
+        public IExtendedList<Boolean> Data
         {
             get => this._Data;
             protected set => this._Data = value;
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptProperty,
         ILoquiObjectSetter<IScriptBoolListProperty>
     {
-        new ExtendedList<Boolean> Data { get; }
+        new IExtendedList<Boolean> Data { get; }
     }
 
     public partial interface IScriptBoolListPropertyGetter :
@@ -1068,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ScriptBoolListProperty_FieldIndex.Data:
-                    return typeof(ExtendedList<Boolean>);
+                    return typeof(IExtendedList<Boolean>);
                 default:
                     return ScriptProperty_Registration.GetNthType(index);
             }

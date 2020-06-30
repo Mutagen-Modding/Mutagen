@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Topics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _Topics = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> Topics
+        private IExtendedList<IFormLink<DialogTopic>> _Topics = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> Topics
         {
             get => this._Topics;
             protected set => this._Topics = value;
@@ -86,8 +86,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
-        public ExtendedList<DialogResponse> Responses
+        private IExtendedList<DialogResponse> _Responses = new ExtendedList<DialogResponse>();
+        public IExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
             protected set => this._Responses = value;
@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -114,8 +114,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Choices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _Choices = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> Choices
+        private IExtendedList<IFormLink<DialogTopic>> _Choices = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> Choices
         {
             get => this._Choices;
             protected set => this._Choices = value;
@@ -128,8 +128,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LinkFrom
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogTopic>> _LinkFrom = new ExtendedList<IFormLink<DialogTopic>>();
-        public ExtendedList<IFormLink<DialogTopic>> LinkFrom
+        private IExtendedList<IFormLink<DialogTopic>> _LinkFrom = new ExtendedList<IFormLink<DialogTopic>>();
+        public IExtendedList<IFormLink<DialogTopic>> LinkFrom
         {
             get => this._LinkFrom;
             protected set => this._LinkFrom = value;
@@ -1285,11 +1285,11 @@ namespace Mutagen.Bethesda.Oblivion
         new DialogItemData? Data { get; set; }
         new FormLinkNullable<Quest> Quest { get; set; }
         new FormLinkNullable<DialogItem> PreviousTopic { get; set; }
-        new ExtendedList<IFormLink<DialogTopic>> Topics { get; }
-        new ExtendedList<DialogResponse> Responses { get; }
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<DialogTopic>> Choices { get; }
-        new ExtendedList<IFormLink<DialogTopic>> LinkFrom { get; }
+        new IExtendedList<IFormLink<DialogTopic>> Topics { get; }
+        new IExtendedList<DialogResponse> Responses { get; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<DialogTopic>> Choices { get; }
+        new IExtendedList<IFormLink<DialogTopic>> LinkFrom { get; }
         new ScriptFields Script { get; }
     }
 
@@ -1842,15 +1842,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogItem_FieldIndex.PreviousTopic:
                     return typeof(FormLinkNullable<DialogItem>);
                 case DialogItem_FieldIndex.Topics:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Responses:
-                    return typeof(ExtendedList<DialogResponse>);
+                    return typeof(IExtendedList<DialogResponse>);
                 case DialogItem_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case DialogItem_FieldIndex.Choices:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.LinkFrom:
-                    return typeof(ExtendedList<IFormLink<DialogTopic>>);
+                    return typeof(IExtendedList<IFormLink<DialogTopic>>);
                 case DialogItem_FieldIndex.Script:
                     return typeof(ScriptFields);
                 default:

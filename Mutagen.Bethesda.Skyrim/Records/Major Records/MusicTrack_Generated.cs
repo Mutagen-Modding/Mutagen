@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region CuePoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single>? _CuePoints;
-        public ExtendedList<Single>? CuePoints
+        private IExtendedList<Single>? _CuePoints;
+        public IExtendedList<Single>? CuePoints
         {
             get => this._CuePoints;
             set => this._CuePoints = value;
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition>? _Conditions;
-        public ExtendedList<Condition>? Conditions
+        private IExtendedList<Condition>? _Conditions;
+        public IExtendedList<Condition>? Conditions
         {
             get => this._Conditions;
             set => this._Conditions = value;
@@ -113,8 +113,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Tracks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<MusicTrack>>? _Tracks;
-        public ExtendedList<IFormLink<MusicTrack>>? Tracks
+        private IExtendedList<IFormLink<MusicTrack>>? _Tracks;
+        public IExtendedList<IFormLink<MusicTrack>>? Tracks
         {
             get => this._Tracks;
             set => this._Tracks = value;
@@ -1111,9 +1111,9 @@ namespace Mutagen.Bethesda.Skyrim
         new String? TrackFilename { get; set; }
         new String? FinaleFilename { get; set; }
         new MusicTrackLoopData? LoopData { get; set; }
-        new ExtendedList<Single>? CuePoints { get; set; }
-        new ExtendedList<Condition>? Conditions { get; set; }
-        new ExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
+        new IExtendedList<Single>? CuePoints { get; set; }
+        new IExtendedList<Condition>? Conditions { get; set; }
+        new IExtendedList<IFormLink<MusicTrack>>? Tracks { get; set; }
     }
 
     public partial interface IMusicTrackInternal :
@@ -1669,11 +1669,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case MusicTrack_FieldIndex.LoopData:
                     return typeof(MusicTrackLoopData);
                 case MusicTrack_FieldIndex.CuePoints:
-                    return typeof(ExtendedList<Single>);
+                    return typeof(IExtendedList<Single>);
                 case MusicTrack_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case MusicTrack_FieldIndex.Tracks:
-                    return typeof(ExtendedList<IFormLink<MusicTrack>>);
+                    return typeof(IExtendedList<IFormLink<MusicTrack>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

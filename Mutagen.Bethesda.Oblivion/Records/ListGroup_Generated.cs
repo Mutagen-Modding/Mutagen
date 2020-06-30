@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Records
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<T> _Records = new ExtendedList<T>();
-        public ExtendedList<T> Records
+        private IExtendedList<T> _Records = new ExtendedList<T>();
+        public IExtendedList<T> Records
         {
             get => this._Records;
             protected set => this._Records = value;
@@ -343,7 +343,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new GroupTypeEnum Type { get; set; }
         new Int32 LastModified { get; set; }
-        new ExtendedList<T> Records { get; }
+        new IExtendedList<T> Records { get; }
     }
 
     public partial interface IListGroupGetter<out T> :
@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ListGroup_FieldIndex.LastModified:
                     return typeof(Int32);
                 case ListGroup_FieldIndex.Records:
-                    return typeof(ExtendedList<T>);
+                    return typeof(IExtendedList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

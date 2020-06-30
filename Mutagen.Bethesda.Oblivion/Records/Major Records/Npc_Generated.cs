@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Factions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
-        public ExtendedList<RankPlacement> Factions
+        private IExtendedList<RankPlacement> _Factions = new ExtendedList<RankPlacement>();
+        public IExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
             protected set => this._Factions = value;
@@ -103,8 +103,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
-        public ExtendedList<IFormLink<ASpell>> Spells
+        private IExtendedList<IFormLink<ASpell>> _Spells = new ExtendedList<IFormLink<ASpell>>();
+        public IExtendedList<IFormLink<ASpell>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
@@ -122,8 +122,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
-        public ExtendedList<ItemEntry> Items
+        private IExtendedList<ItemEntry> _Items = new ExtendedList<ItemEntry>();
+        public IExtendedList<ItemEntry> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -147,8 +147,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
-        public ExtendedList<IFormLink<AIPackage>> AIPackages
+        private IExtendedList<IFormLink<AIPackage>> _AIPackages = new ExtendedList<IFormLink<AIPackage>>();
+        public IExtendedList<IFormLink<AIPackage>> AIPackages
         {
             get => this._AIPackages;
             protected set => this._AIPackages = value;
@@ -161,8 +161,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String>? _Animations;
-        public ExtendedList<String>? Animations
+        private IExtendedList<String>? _Animations;
+        public IExtendedList<String>? Animations
         {
             get => this._Animations;
             set => this._Animations = value;
@@ -201,8 +201,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Eyes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Eye>>? _Eyes;
-        public ExtendedList<IFormLink<Eye>>? Eyes
+        private IExtendedList<IFormLink<Eye>>? _Eyes;
+        public IExtendedList<IFormLink<Eye>>? Eyes
         {
             get => this._Eyes;
             set => this._Eyes = value;
@@ -1888,20 +1888,20 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new NpcConfiguration? Configuration { get; set; }
-        new ExtendedList<RankPlacement> Factions { get; }
+        new IExtendedList<RankPlacement> Factions { get; }
         new FormLinkNullable<AItem> DeathItem { get; set; }
         new FormLinkNullable<Race> Race { get; set; }
-        new ExtendedList<IFormLink<ASpell>> Spells { get; }
+        new IExtendedList<IFormLink<ASpell>> Spells { get; }
         new FormLinkNullable<Script> Script { get; set; }
-        new ExtendedList<ItemEntry> Items { get; }
+        new IExtendedList<ItemEntry> Items { get; }
         new AIData? AIData { get; set; }
-        new ExtendedList<IFormLink<AIPackage>> AIPackages { get; }
-        new ExtendedList<String>? Animations { get; set; }
+        new IExtendedList<IFormLink<AIPackage>> AIPackages { get; }
+        new IExtendedList<String>? Animations { get; set; }
         new FormLinkNullable<Class> Class { get; set; }
         new NpcData? Stats { get; set; }
         new FormLinkNullable<Hair> Hair { get; set; }
         new Single? HairLength { get; set; }
-        new ExtendedList<IFormLink<Eye>>? Eyes { get; set; }
+        new IExtendedList<IFormLink<Eye>>? Eyes { get; set; }
         new Color? HairColor { get; set; }
         new FormLinkNullable<CombatStyle> CombatStyle { get; set; }
         new MemorySlice<Byte>? FaceGenGeometrySymmetric { get; set; }
@@ -2612,23 +2612,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.Configuration:
                     return typeof(NpcConfiguration);
                 case Npc_FieldIndex.Factions:
-                    return typeof(ExtendedList<RankPlacement>);
+                    return typeof(IExtendedList<RankPlacement>);
                 case Npc_FieldIndex.DeathItem:
                     return typeof(FormLinkNullable<AItem>);
                 case Npc_FieldIndex.Race:
                     return typeof(FormLinkNullable<Race>);
                 case Npc_FieldIndex.Spells:
-                    return typeof(ExtendedList<IFormLink<ASpell>>);
+                    return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Npc_FieldIndex.Script:
                     return typeof(FormLinkNullable<Script>);
                 case Npc_FieldIndex.Items:
-                    return typeof(ExtendedList<ItemEntry>);
+                    return typeof(IExtendedList<ItemEntry>);
                 case Npc_FieldIndex.AIData:
                     return typeof(AIData);
                 case Npc_FieldIndex.AIPackages:
-                    return typeof(ExtendedList<IFormLink<AIPackage>>);
+                    return typeof(IExtendedList<IFormLink<AIPackage>>);
                 case Npc_FieldIndex.Animations:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Npc_FieldIndex.Class:
                     return typeof(FormLinkNullable<Class>);
                 case Npc_FieldIndex.Stats:
@@ -2638,7 +2638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Npc_FieldIndex.HairLength:
                     return typeof(Single);
                 case Npc_FieldIndex.Eyes:
-                    return typeof(ExtendedList<IFormLink<Eye>>);
+                    return typeof(IExtendedList<IFormLink<Eye>>);
                 case Npc_FieldIndex.HairColor:
                     return typeof(Color);
                 case Npc_FieldIndex.CombatStyle:

@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Weathers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WeatherType>? _Weathers;
-        public ExtendedList<WeatherType>? Weathers
+        private IExtendedList<WeatherType>? _Weathers;
+        public IExtendedList<WeatherType>? Weathers
         {
             get => this._Weathers;
             set => this._Weathers = value;
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IClimateInternal>
     {
-        new ExtendedList<WeatherType>? Weathers { get; set; }
+        new IExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
         new Model? Model { get; set; }
@@ -1326,7 +1326,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Climate_FieldIndex.Weathers:
-                    return typeof(ExtendedList<WeatherType>);
+                    return typeof(IExtendedList<WeatherType>);
                 case Climate_FieldIndex.SunTexture:
                     return typeof(String);
                 case Climate_FieldIndex.SunGlareTexture:

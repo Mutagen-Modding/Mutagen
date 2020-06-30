@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Parents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
-        public ExtendedList<ActivateParent> Parents
+        private IExtendedList<ActivateParent> _Parents = new ExtendedList<ActivateParent>();
+        public IExtendedList<ActivateParent> Parents
         {
             get => this._Parents;
             protected set => this._Parents = value;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IActivateParents>
     {
         new ActivateParents.Flag Flags { get; set; }
-        new ExtendedList<ActivateParent> Parents { get; }
+        new IExtendedList<ActivateParent> Parents { get; }
     }
 
     public partial interface IActivateParentsGetter :
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ActivateParents_FieldIndex.Flags:
                     return typeof(ActivateParents.Flag);
                 case ActivateParents_FieldIndex.Parents:
-                    return typeof(ExtendedList<ActivateParent>);
+                    return typeof(IExtendedList<ActivateParent>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

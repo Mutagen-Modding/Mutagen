@@ -68,8 +68,8 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region TargetGroups
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<TargetGroup> _TargetGroups = new ExtendedList<TargetGroup>();
-        public ExtendedList<TargetGroup> TargetGroups
+        private IExtendedList<TargetGroup> _TargetGroups = new ExtendedList<TargetGroup>();
+        public IExtendedList<TargetGroup> TargetGroups
         {
             get => this._TargetGroups;
             protected set => this._TargetGroups = value;
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Tests
         new Boolean TestRecordEnumerables { get; set; }
         new DataFolderLocations DataFolderLocations { get; set; }
         new PassthroughSettings PassthroughSettings { get; set; }
-        new ExtendedList<TargetGroup> TargetGroups { get; }
+        new IExtendedList<TargetGroup> TargetGroups { get; }
     }
 
     public partial interface ITestingSettingsGetter :
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TestingSettings_FieldIndex.PassthroughSettings:
                     return typeof(PassthroughSettings);
                 case TestingSettings_FieldIndex.TargetGroups:
-                    return typeof(ExtendedList<TargetGroup>);
+                    return typeof(IExtendedList<TargetGroup>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

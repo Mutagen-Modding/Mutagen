@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<QuestLogEntry> _LogEntries = new ExtendedList<QuestLogEntry>();
-        public ExtendedList<QuestLogEntry> LogEntries
+        private IExtendedList<QuestLogEntry> _LogEntries = new ExtendedList<QuestLogEntry>();
+        public IExtendedList<QuestLogEntry> LogEntries
         {
             get => this._LogEntries;
             protected set => this._LogEntries = value;
@@ -776,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16 Index { get; set; }
         new QuestStage.Flag Flags { get; set; }
         new Byte Unknown { get; set; }
-        new ExtendedList<QuestLogEntry> LogEntries { get; }
+        new IExtendedList<QuestLogEntry> LogEntries { get; }
         new QuestStage.INDXDataType INDXDataTypeState { get; set; }
     }
 
@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestStage_FieldIndex.Unknown:
                     return typeof(Byte);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(ExtendedList<QuestLogEntry>);
+                    return typeof(IExtendedList<QuestLogEntry>);
                 case QuestStage_FieldIndex.INDXDataTypeState:
                     return typeof(QuestStage.INDXDataType);
                 default:

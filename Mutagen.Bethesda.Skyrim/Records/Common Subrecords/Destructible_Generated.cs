@@ -60,8 +60,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Stages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
-        public ExtendedList<DestructionStage> Stages
+        private IExtendedList<DestructionStage> _Stages = new ExtendedList<DestructionStage>();
+        public IExtendedList<DestructionStage> Stages
         {
             get => this._Stages;
             protected set => this._Stages = value;
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDestructible>
     {
         new DestructableData? Data { get; set; }
-        new ExtendedList<DestructionStage> Stages { get; }
+        new IExtendedList<DestructionStage> Stages { get; }
     }
 
     public partial interface IDestructibleGetter :
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Destructible_FieldIndex.Data:
                     return typeof(DestructableData);
                 case Destructible_FieldIndex.Stages:
-                    return typeof(ExtendedList<DestructionStage>);
+                    return typeof(IExtendedList<DestructionStage>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

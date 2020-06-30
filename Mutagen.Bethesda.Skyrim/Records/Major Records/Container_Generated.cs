@@ -83,8 +83,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerEntry>? _Items;
-        public ExtendedList<ContainerEntry>? Items
+        private IExtendedList<ContainerEntry>? _Items;
+        public IExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -1056,7 +1056,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
         new Model? Model { get; set; }
-        new ExtendedList<ContainerEntry>? Items { get; set; }
+        new IExtendedList<ContainerEntry>? Items { get; set; }
         new Destructible? Destructible { get; set; }
         new Container.Flag Flags { get; set; }
         new Single Weight { get; set; }
@@ -1648,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Container_FieldIndex.Model:
                     return typeof(Model);
                 case Container_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerEntry>);
+                    return typeof(IExtendedList<ContainerEntry>);
                 case Container_FieldIndex.Destructible:
                     return typeof(Destructible);
                 case Container_FieldIndex.Flags:

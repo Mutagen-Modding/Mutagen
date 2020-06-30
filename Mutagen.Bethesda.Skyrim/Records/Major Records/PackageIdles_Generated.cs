@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IdleAnimation>> _Animations = new ExtendedList<IFormLink<IdleAnimation>>();
-        public ExtendedList<IFormLink<IdleAnimation>> Animations
+        private IExtendedList<IFormLink<IdleAnimation>> _Animations = new ExtendedList<IFormLink<IdleAnimation>>();
+        public IExtendedList<IFormLink<IdleAnimation>> Animations
         {
             get => this._Animations;
             protected set => this._Animations = value;
@@ -705,7 +705,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
-        new ExtendedList<IFormLink<IdleAnimation>> Animations { get; }
+        new IExtendedList<IFormLink<IdleAnimation>> Animations { get; }
     }
 
     public partial interface IPackageIdlesGetter :
@@ -1202,7 +1202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageIdles_FieldIndex.TimerSetting:
                     return typeof(Single);
                 case PackageIdles_FieldIndex.Animations:
-                    return typeof(ExtendedList<IFormLink<IdleAnimation>>);
+                    return typeof(IExtendedList<IFormLink<IdleAnimation>>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

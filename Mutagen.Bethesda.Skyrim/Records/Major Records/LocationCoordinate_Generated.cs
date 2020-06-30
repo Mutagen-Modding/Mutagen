@@ -53,8 +53,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<P2Int16> _Coordinates = new ExtendedList<P2Int16>();
-        public ExtendedList<P2Int16> Coordinates
+        private IExtendedList<P2Int16> _Coordinates = new ExtendedList<P2Int16>();
+        public IExtendedList<P2Int16> Coordinates
         {
             get => this._Coordinates;
             protected set => this._Coordinates = value;
@@ -674,7 +674,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILocationCoordinate>
     {
         new FormLink<IComplexLocation> Location { get; set; }
-        new ExtendedList<P2Int16> Coordinates { get; }
+        new IExtendedList<P2Int16> Coordinates { get; }
     }
 
     public partial interface ILocationCoordinateGetter :
@@ -1158,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LocationCoordinate_FieldIndex.Location:
                     return typeof(FormLink<IComplexLocation>);
                 case LocationCoordinate_FieldIndex.Coordinates:
-                    return typeof(ExtendedList<P2Int16>);
+                    return typeof(IExtendedList<P2Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

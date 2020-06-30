@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new FormLinkNullable<EquipType> EquipmentType { get; set; }
         new String Description { get; set; }
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single CastDuration { get; set; }
         new Single Range { get; set; }
         new FormLink<Perk> HalfCostPerk { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
         new Spell.SPITDataType SPITDataTypeState { get; set; }
     }
 
@@ -1929,7 +1929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Spell_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Spell_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Spell_FieldIndex.MenuDisplayObject:
                     return typeof(FormLinkNullable<Static>);
                 case Spell_FieldIndex.EquipmentType:
@@ -1955,7 +1955,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Spell_FieldIndex.HalfCostPerk:
                     return typeof(FormLink<Perk>);
                 case Spell_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 case Spell_FieldIndex.SPITDataTypeState:
                     return typeof(Spell.SPITDataType);
                 default:

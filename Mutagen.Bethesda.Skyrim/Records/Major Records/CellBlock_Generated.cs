@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SubBlocks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<CellSubBlock> _SubBlocks = new ExtendedList<CellSubBlock>();
-        public ExtendedList<CellSubBlock> SubBlocks
+        private IExtendedList<CellSubBlock> _SubBlocks = new ExtendedList<CellSubBlock>();
+        public IExtendedList<CellSubBlock> SubBlocks
         {
             get => this._SubBlocks;
             protected set => this._SubBlocks = value;
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<CellSubBlock> SubBlocks { get; }
+        new IExtendedList<CellSubBlock> SubBlocks { get; }
     }
 
     public partial interface ICellBlockGetter :
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CellBlock_FieldIndex.Unknown:
                     return typeof(Int32);
                 case CellBlock_FieldIndex.SubBlocks:
-                    return typeof(ExtendedList<CellSubBlock>);
+                    return typeof(IExtendedList<CellSubBlock>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

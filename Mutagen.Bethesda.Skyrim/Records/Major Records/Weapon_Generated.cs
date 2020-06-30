@@ -140,8 +140,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -1802,7 +1802,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MaterialType> AlternateBlockMaterial { get; set; }
         new FormLinkNullable<SoundDescriptor> PickUpSound { get; set; }
         new FormLinkNullable<SoundDescriptor> PutDownSound { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new Model? ScopeModel { get; set; }
         new MemorySlice<Byte>? Unused { get; set; }
@@ -2645,7 +2645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weapon_FieldIndex.PutDownSound:
                     return typeof(FormLinkNullable<SoundDescriptor>);
                 case Weapon_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Weapon_FieldIndex.Description:
                     return typeof(TranslatedString);
                 case Weapon_FieldIndex.ScopeModel:

@@ -67,8 +67,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledNpcEntry>? _Entries;
-        public ExtendedList<LeveledNpcEntry>? Entries
+        private IExtendedList<LeveledNpcEntry>? _Entries;
+        public IExtendedList<LeveledNpcEntry>? Entries
         {
             get => this._Entries;
             set => this._Entries = value;
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
         new FormLinkNullable<Global> Global { get; set; }
-        new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
+        new IExtendedList<LeveledNpcEntry>? Entries { get; set; }
         new Model? Model { get; set; }
     }
 
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case LeveledNpc_FieldIndex.Global:
                     return typeof(FormLinkNullable<Global>);
                 case LeveledNpc_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledNpcEntry>);
+                    return typeof(IExtendedList<LeveledNpcEntry>);
                 case LeveledNpc_FieldIndex.Model:
                     return typeof(Model);
                 default:

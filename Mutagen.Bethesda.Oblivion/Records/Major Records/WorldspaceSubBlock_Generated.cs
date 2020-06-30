@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Cell> _Items = new ExtendedList<Cell>();
-        public ExtendedList<Cell> Items
+        private IExtendedList<Cell> _Items = new ExtendedList<Cell>();
+        public IExtendedList<Cell> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Int16 BlockNumberX { get; set; }
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
-        new ExtendedList<Cell> Items { get; }
+        new IExtendedList<Cell> Items { get; }
     }
 
     public partial interface IWorldspaceSubBlockGetter :
@@ -1374,7 +1374,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case WorldspaceSubBlock_FieldIndex.LastModified:
                     return typeof(Int32);
                 case WorldspaceSubBlock_FieldIndex.Items:
-                    return typeof(ExtendedList<Cell>);
+                    return typeof(IExtendedList<Cell>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

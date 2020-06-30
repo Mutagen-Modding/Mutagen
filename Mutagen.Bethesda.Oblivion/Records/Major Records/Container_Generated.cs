@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerItem> _Items = new ExtendedList<ContainerItem>();
-        public ExtendedList<ContainerItem> Items
+        private IExtendedList<ContainerItem> _Items = new ExtendedList<ContainerItem>();
+        public IExtendedList<ContainerItem> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new FormLinkNullable<Script> Script { get; set; }
-        new ExtendedList<ContainerItem> Items { get; }
+        new IExtendedList<ContainerItem> Items { get; }
         new ContainerData? Data { get; set; }
         new FormLinkNullable<Sound> OpenSound { get; set; }
         new FormLinkNullable<Sound> CloseSound { get; set; }
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Container_FieldIndex.Script:
                     return typeof(FormLinkNullable<Script>);
                 case Container_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerItem>);
+                    return typeof(IExtendedList<ContainerItem>);
                 case Container_FieldIndex.Data:
                     return typeof(ContainerData);
                 case Container_FieldIndex.OpenSound:

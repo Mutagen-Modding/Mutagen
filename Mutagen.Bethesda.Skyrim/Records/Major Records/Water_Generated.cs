@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region UnusedNoisemaps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
-        public ExtendedList<String> UnusedNoisemaps
+        private IExtendedList<String> _UnusedNoisemaps = new ExtendedList<String>();
+        public IExtendedList<String> UnusedNoisemaps
         {
             get => this._UnusedNoisemaps;
             protected set => this._UnusedNoisemaps = value;
@@ -2748,7 +2748,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWaterInternal>
     {
         new TranslatedString? Name { get; set; }
-        new ExtendedList<String> UnusedNoisemaps { get; }
+        new IExtendedList<String> UnusedNoisemaps { get; }
         new Byte Opacity { get; set; }
         new Water.Flag? Flags { get; set; }
         new MemorySlice<Byte>? MNAM { get; set; }
@@ -3985,7 +3985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Water_FieldIndex.UnusedNoisemaps:
-                    return typeof(ExtendedList<String>);
+                    return typeof(IExtendedList<String>);
                 case Water_FieldIndex.Opacity:
                     return typeof(Byte);
                 case Water_FieldIndex.Flags:

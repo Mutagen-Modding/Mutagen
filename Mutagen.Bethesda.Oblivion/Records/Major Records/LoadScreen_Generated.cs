@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Locations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LoadScreenLocation> _Locations = new ExtendedList<LoadScreenLocation>();
-        public ExtendedList<LoadScreenLocation> Locations
+        private IExtendedList<LoadScreenLocation> _Locations = new ExtendedList<LoadScreenLocation>();
+        public IExtendedList<LoadScreenLocation> Locations
         {
             get => this._Locations;
             protected set => this._Locations = value;
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<LoadScreenLocation> Locations { get; }
+        new IExtendedList<LoadScreenLocation> Locations { get; }
     }
 
     public partial interface ILoadScreenInternal :
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LoadScreen_FieldIndex.Description:
                     return typeof(String);
                 case LoadScreen_FieldIndex.Locations:
-                    return typeof(ExtendedList<LoadScreenLocation>);
+                    return typeof(IExtendedList<LoadScreenLocation>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

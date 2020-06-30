@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region PointToPointConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PathGridPoint>? _PointToPointConnections;
-        public ExtendedList<PathGridPoint>? PointToPointConnections
+        private IExtendedList<PathGridPoint>? _PointToPointConnections;
+        public IExtendedList<PathGridPoint>? PointToPointConnections
         {
             get => this._PointToPointConnections;
             set => this._PointToPointConnections = value;
@@ -76,8 +76,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region InterCellConnections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<InterCellPoint>? _InterCellConnections;
-        public ExtendedList<InterCellPoint>? InterCellConnections
+        private IExtendedList<InterCellPoint>? _InterCellConnections;
+        public IExtendedList<InterCellPoint>? InterCellConnections
         {
             get => this._InterCellConnections;
             set => this._InterCellConnections = value;
@@ -90,8 +90,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PointToReferenceMappings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
-        public ExtendedList<PointToReferenceMapping> PointToReferenceMappings
+        private IExtendedList<PointToReferenceMapping> _PointToReferenceMappings = new ExtendedList<PointToReferenceMapping>();
+        public IExtendedList<PointToReferenceMapping> PointToReferenceMappings
         {
             get => this._PointToReferenceMappings;
             protected set => this._PointToReferenceMappings = value;
@@ -938,10 +938,10 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecord,
         ILoquiObjectSetter<IPathGridInternal>
     {
-        new ExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
+        new IExtendedList<PathGridPoint>? PointToPointConnections { get; set; }
         new MemorySlice<Byte>? PGAG { get; set; }
-        new ExtendedList<InterCellPoint>? InterCellConnections { get; set; }
-        new ExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
+        new IExtendedList<InterCellPoint>? InterCellConnections { get; set; }
+        new IExtendedList<PointToReferenceMapping> PointToReferenceMappings { get; }
     }
 
     public partial interface IPathGridInternal :
@@ -1429,13 +1429,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case PathGrid_FieldIndex.PointToPointConnections:
-                    return typeof(ExtendedList<PathGridPoint>);
+                    return typeof(IExtendedList<PathGridPoint>);
                 case PathGrid_FieldIndex.PGAG:
                     return typeof(MemorySlice<Byte>);
                 case PathGrid_FieldIndex.InterCellConnections:
-                    return typeof(ExtendedList<InterCellPoint>);
+                    return typeof(IExtendedList<InterCellPoint>);
                 case PathGrid_FieldIndex.PointToReferenceMappings:
-                    return typeof(ExtendedList<PointToReferenceMapping>);
+                    return typeof(IExtendedList<PointToReferenceMapping>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

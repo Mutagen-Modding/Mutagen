@@ -64,8 +64,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WorldspaceSubBlock> _Items = new ExtendedList<WorldspaceSubBlock>();
-        public ExtendedList<WorldspaceSubBlock> Items
+        private IExtendedList<WorldspaceSubBlock> _Items = new ExtendedList<WorldspaceSubBlock>();
+        public IExtendedList<WorldspaceSubBlock> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda.Skyrim
         new GroupTypeEnum GroupType { get; set; }
         new Int32 LastModified { get; set; }
         new Int32 Unknown { get; set; }
-        new ExtendedList<WorldspaceSubBlock> Items { get; }
+        new IExtendedList<WorldspaceSubBlock> Items { get; }
     }
 
     public partial interface IWorldspaceBlockGetter :
@@ -1419,7 +1419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case WorldspaceBlock_FieldIndex.Unknown:
                     return typeof(Int32);
                 case WorldspaceBlock_FieldIndex.Items:
-                    return typeof(ExtendedList<WorldspaceSubBlock>);
+                    return typeof(IExtendedList<WorldspaceSubBlock>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

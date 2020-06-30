@@ -48,8 +48,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ANavigationMesh>> _Navmeshes = new ExtendedList<IFormLink<ANavigationMesh>>();
-        public ExtendedList<IFormLink<ANavigationMesh>> Navmeshes
+        private IExtendedList<IFormLink<ANavigationMesh>> _Navmeshes = new ExtendedList<IFormLink<ANavigationMesh>>();
+        public IExtendedList<IFormLink<ANavigationMesh>> Navmeshes
         {
             get => this._Navmeshes;
             protected set => this._Navmeshes = value;
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         INavmeshSetGetter,
         ILoquiObjectSetter<INavmeshSet>
     {
-        new ExtendedList<IFormLink<ANavigationMesh>> Navmeshes { get; }
+        new IExtendedList<IFormLink<ANavigationMesh>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case NavmeshSet_FieldIndex.Navmeshes:
-                    return typeof(ExtendedList<IFormLink<ANavigationMesh>>);
+                    return typeof(IExtendedList<IFormLink<ANavigationMesh>>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

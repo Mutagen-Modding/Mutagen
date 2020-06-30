@@ -56,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<DialogBranch>> _Branches = new ExtendedList<IFormLink<DialogBranch>>();
-        public ExtendedList<IFormLink<DialogBranch>> Branches
+        private IExtendedList<IFormLink<DialogBranch>> _Branches = new ExtendedList<IFormLink<DialogBranch>>();
+        public IExtendedList<IFormLink<DialogBranch>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
@@ -889,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>
     {
         new FormLink<Quest> Quest { get; set; }
-        new ExtendedList<IFormLink<DialogBranch>> Branches { get; }
+        new IExtendedList<IFormLink<DialogBranch>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -1393,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case DialogView_FieldIndex.Quest:
                     return typeof(FormLink<Quest>);
                 case DialogView_FieldIndex.Branches:
-                    return typeof(ExtendedList<IFormLink<DialogBranch>>);
+                    return typeof(IExtendedList<IFormLink<DialogBranch>>);
                 case DialogView_FieldIndex.TNAMs:
                     return typeof(SliceList<byte>);
                 case DialogView_FieldIndex.ENAM:

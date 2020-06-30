@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
-        public ExtendedList<IFormLink<IIdleRelation>> RelatedIdles
+        private IExtendedList<IFormLink<IIdleRelation>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelation>>();
+        public IExtendedList<IFormLink<IIdleRelation>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
@@ -1037,10 +1037,10 @@ namespace Mutagen.Bethesda.Skyrim
         IIdleRelation,
         ILoquiObjectSetter<IIdleAnimationInternal>
     {
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new ExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
+        new IExtendedList<IFormLink<IIdleRelation>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }
@@ -1602,13 +1602,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case IdleAnimation_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case IdleAnimation_FieldIndex.Filename:
                     return typeof(String);
                 case IdleAnimation_FieldIndex.AnimationEvent:
                     return typeof(String);
                 case IdleAnimation_FieldIndex.RelatedIdles:
-                    return typeof(ExtendedList<IFormLink<IIdleRelation>>);
+                    return typeof(IExtendedList<IFormLink<IIdleRelation>>);
                 case IdleAnimation_FieldIndex.LoopingSecondsMin:
                     return typeof(Byte);
                 case IdleAnimation_FieldIndex.LoopingSecondsMax:

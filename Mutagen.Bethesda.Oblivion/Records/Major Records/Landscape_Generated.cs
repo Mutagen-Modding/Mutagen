@@ -95,8 +95,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Layers
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
-        public ExtendedList<BaseLayer> Layers
+        private IExtendedList<BaseLayer> _Layers = new ExtendedList<BaseLayer>();
+        public IExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
             protected set => this._Layers = value;
@@ -109,8 +109,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LandTexture>>? _Textures;
-        public ExtendedList<IFormLink<LandTexture>>? Textures
+        private IExtendedList<IFormLink<LandTexture>>? _Textures;
+        public IExtendedList<IFormLink<LandTexture>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
@@ -939,8 +939,8 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? VertexNormals { get; set; }
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
-        new ExtendedList<BaseLayer> Layers { get; }
-        new ExtendedList<IFormLink<LandTexture>>? Textures { get; set; }
+        new IExtendedList<BaseLayer> Layers { get; }
+        new IExtendedList<IFormLink<LandTexture>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -1459,9 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Landscape_FieldIndex.VertexColors:
                     return typeof(MemorySlice<Byte>);
                 case Landscape_FieldIndex.Layers:
-                    return typeof(ExtendedList<BaseLayer>);
+                    return typeof(IExtendedList<BaseLayer>);
                 case Landscape_FieldIndex.Textures:
-                    return typeof(ExtendedList<IFormLink<LandTexture>>);
+                    return typeof(IExtendedList<IFormLink<LandTexture>>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

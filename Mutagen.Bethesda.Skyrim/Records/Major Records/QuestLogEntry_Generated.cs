@@ -54,8 +54,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestLogEntry>
     {
         new QuestLogEntry.Flag? Flags { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new TranslatedString? Entry { get; set; }
         new FormLinkNullable<Quest> NextQuest { get; set; }
         new MemorySlice<Byte>? SCHR { get; set; }
@@ -1406,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case QuestLogEntry_FieldIndex.Flags:
                     return typeof(QuestLogEntry.Flag);
                 case QuestLogEntry_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case QuestLogEntry_FieldIndex.Entry:
                     return typeof(TranslatedString);
                 case QuestLogEntry_FieldIndex.NextQuest:

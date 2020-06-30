@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Objects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DefaultObject>? _Objects;
-        public ExtendedList<DefaultObject>? Objects
+        private IExtendedList<DefaultObject>? _Objects;
+        public IExtendedList<DefaultObject>? Objects
         {
             get => this._Objects;
             set => this._Objects = value;
@@ -665,7 +665,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IDefaultObjectManagerInternal>
     {
-        new ExtendedList<DefaultObject>? Objects { get; set; }
+        new IExtendedList<DefaultObject>? Objects { get; set; }
     }
 
     public partial interface IDefaultObjectManagerInternal :
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DefaultObjectManager_FieldIndex.Objects:
-                    return typeof(ExtendedList<DefaultObject>);
+                    return typeof(IExtendedList<DefaultObject>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

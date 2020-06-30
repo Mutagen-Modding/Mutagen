@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ContainerEntry>? _Items;
-        public ExtendedList<ContainerEntry>? Items
+        private IExtendedList<ContainerEntry>? _Items;
+        public IExtendedList<ContainerEntry>? Items
         {
             get => this._Items;
             set => this._Items = value;
@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -882,8 +882,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IConstructibleObjectInternal>
     {
-        new ExtendedList<ContainerEntry>? Items { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<ContainerEntry>? Items { get; set; }
+        new IExtendedList<Condition> Conditions { get; }
         new FormLinkNullable<SkyrimMajorRecord> CreatedObject { get; set; }
         new FormLinkNullable<Keyword> WorkbenchKeyword { get; set; }
         new UInt16? CreatedObjectCount { get; set; }
@@ -1386,9 +1386,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case ConstructibleObject_FieldIndex.Items:
-                    return typeof(ExtendedList<ContainerEntry>);
+                    return typeof(IExtendedList<ContainerEntry>);
                 case ConstructibleObject_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case ConstructibleObject_FieldIndex.CreatedObject:
                     return typeof(FormLinkNullable<SkyrimMajorRecord>);
                 case ConstructibleObject_FieldIndex.WorkbenchKeyword:

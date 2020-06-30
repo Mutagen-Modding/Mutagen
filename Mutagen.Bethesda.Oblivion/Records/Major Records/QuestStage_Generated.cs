@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LogEntries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
-        public ExtendedList<LogEntry> LogEntries
+        private IExtendedList<LogEntry> _LogEntries = new ExtendedList<LogEntry>();
+        public IExtendedList<LogEntry> LogEntries
         {
             get => this._LogEntries;
             protected set => this._LogEntries = value;
@@ -677,7 +677,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IQuestStage>
     {
         new UInt16 Stage { get; set; }
-        new ExtendedList<LogEntry> LogEntries { get; }
+        new IExtendedList<LogEntry> LogEntries { get; }
     }
 
     public partial interface IQuestStageGetter :
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case QuestStage_FieldIndex.Stage:
                     return typeof(UInt16);
                 case QuestStage_FieldIndex.LogEntries:
-                    return typeof(ExtendedList<LogEntry>);
+                    return typeof(IExtendedList<LogEntry>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

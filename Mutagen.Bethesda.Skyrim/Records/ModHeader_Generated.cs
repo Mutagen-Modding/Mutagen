@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
-        public ExtendedList<MasterReference> MasterReferences
+        private IExtendedList<MasterReference> _MasterReferences = new ExtendedList<MasterReference>();
+        public IExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
             protected set => this._MasterReferences = value;
@@ -116,8 +116,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
-        public ExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
+        private IExtendedList<IFormLink<SkyrimMajorRecord>>? _OverriddenForms;
+        public IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
@@ -1177,8 +1177,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? Deleted { get; set; }
         new String? Author { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
+        new IExtendedList<MasterReference> MasterReferences { get; }
+        new IExtendedList<IFormLink<SkyrimMajorRecord>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1815,9 +1815,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModHeader_FieldIndex.Description:
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
-                    return typeof(ExtendedList<MasterReference>);
+                    return typeof(IExtendedList<MasterReference>);
                 case ModHeader_FieldIndex.OverriddenForms:
-                    return typeof(ExtendedList<IFormLink<SkyrimMajorRecord>>);
+                    return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
                 case ModHeader_FieldIndex.INTV:
                     return typeof(Int32);
                 case ModHeader_FieldIndex.INCC:

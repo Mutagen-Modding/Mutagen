@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedPaths
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
-        public ExtendedList<IFormLink<CameraPath>> RelatedPaths
+        private IExtendedList<IFormLink<CameraPath>> _RelatedPaths = new ExtendedList<IFormLink<CameraPath>>();
+        public IExtendedList<IFormLink<CameraPath>> RelatedPaths
         {
             get => this._RelatedPaths;
             protected set => this._RelatedPaths = value;
@@ -85,8 +85,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Shots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
-        public ExtendedList<IFormLink<CameraShot>> Shots
+        private IExtendedList<IFormLink<CameraShot>> _Shots = new ExtendedList<IFormLink<CameraShot>>();
+        public IExtendedList<IFormLink<CameraShot>> Shots
         {
             get => this._Shots;
             protected set => this._Shots = value;
@@ -957,11 +957,11 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICameraPathInternal>
     {
-        new ExtendedList<Condition> Conditions { get; }
-        new ExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
+        new IExtendedList<Condition> Conditions { get; }
+        new IExtendedList<IFormLink<CameraPath>> RelatedPaths { get; }
         new CameraPath.ZoomType Zoom { get; set; }
         new Boolean ZoomMustHaveCameraShots { get; set; }
-        new ExtendedList<IFormLink<CameraShot>> Shots { get; }
+        new IExtendedList<IFormLink<CameraShot>> Shots { get; }
     }
 
     public partial interface ICameraPathInternal :
@@ -1461,15 +1461,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case CameraPath_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case CameraPath_FieldIndex.RelatedPaths:
-                    return typeof(ExtendedList<IFormLink<CameraPath>>);
+                    return typeof(IExtendedList<IFormLink<CameraPath>>);
                 case CameraPath_FieldIndex.Zoom:
                     return typeof(CameraPath.ZoomType);
                 case CameraPath_FieldIndex.ZoomMustHaveCameraShots:
                     return typeof(Boolean);
                 case CameraPath_FieldIndex.Shots:
-                    return typeof(ExtendedList<IFormLink<CameraShot>>);
+                    return typeof(IExtendedList<IFormLink<CameraShot>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

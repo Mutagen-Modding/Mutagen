@@ -72,8 +72,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Keyword>>? _Keywords;
-        public ExtendedList<IFormLink<Keyword>>? Keywords
+        private IExtendedList<IFormLink<Keyword>>? _Keywords;
+        public IExtendedList<IFormLink<Keyword>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
@@ -146,8 +146,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Skyrim
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new ObjectBounds ObjectBounds { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
+        new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new Model? Model { get; set; }
         new Icons? Icons { get; set; }
         new Destructible? Destructible { get; set; }
@@ -1356,7 +1356,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single Weight { get; set; }
         new Int32 IngredientValue { get; set; }
         new Ingredient.Flag Flags { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
         new Ingredient.DATADataType DATADataTypeState { get; set; }
         new Ingredient.ENITDataType ENITDataTypeState { get; set; }
     }
@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Ingredient_FieldIndex.Keywords:
-                    return typeof(ExtendedList<IFormLink<Keyword>>);
+                    return typeof(IExtendedList<IFormLink<Keyword>>);
                 case Ingredient_FieldIndex.Model:
                     return typeof(Model);
                 case Ingredient_FieldIndex.Icons:
@@ -2025,7 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ingredient_FieldIndex.Flags:
                     return typeof(Ingredient.Flag);
                 case Ingredient_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 case Ingredient_FieldIndex.DATADataTypeState:
                     return typeof(Ingredient.DATADataType);
                 case Ingredient_FieldIndex.ENITDataTypeState:

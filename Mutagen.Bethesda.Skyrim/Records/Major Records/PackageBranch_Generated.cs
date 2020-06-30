@@ -52,8 +52,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
-        public ExtendedList<Condition> Conditions
+        private IExtendedList<Condition> _Conditions = new ExtendedList<Condition>();
+        public IExtendedList<Condition> Conditions
         {
             get => this._Conditions;
             protected set => this._Conditions = value;
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DataInputIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
-        public ExtendedList<Byte> DataInputIndices
+        private IExtendedList<Byte> _DataInputIndices = new ExtendedList<Byte>();
+        public IExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
             protected set => this._DataInputIndices = value;
@@ -1114,11 +1114,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageBranch>
     {
         new String BranchType { get; set; }
-        new ExtendedList<Condition> Conditions { get; }
+        new IExtendedList<Condition> Conditions { get; }
         new PackageRoot? Root { get; set; }
         new String? ProcedureType { get; set; }
         new PackageBranch.Flag? Flags { get; set; }
-        new ExtendedList<Byte> DataInputIndices { get; }
+        new IExtendedList<Byte> DataInputIndices { get; }
         new PackageFlagsOverride? FlagsOverride { get; set; }
         new PackageFlagsOverride? FlagsOverrideUnused { get; set; }
         new SliceList<byte> Unknown { get; }
@@ -1683,7 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageBranch_FieldIndex.BranchType:
                     return typeof(String);
                 case PackageBranch_FieldIndex.Conditions:
-                    return typeof(ExtendedList<Condition>);
+                    return typeof(IExtendedList<Condition>);
                 case PackageBranch_FieldIndex.Root:
                     return typeof(PackageRoot);
                 case PackageBranch_FieldIndex.ProcedureType:
@@ -1691,7 +1691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PackageBranch_FieldIndex.Flags:
                     return typeof(PackageBranch.Flag);
                 case PackageBranch_FieldIndex.DataInputIndices:
-                    return typeof(ExtendedList<Byte>);
+                    return typeof(IExtendedList<Byte>);
                 case PackageBranch_FieldIndex.FlagsOverride:
                     return typeof(PackageFlagsOverride);
                 case PackageBranch_FieldIndex.FlagsOverrideUnused:

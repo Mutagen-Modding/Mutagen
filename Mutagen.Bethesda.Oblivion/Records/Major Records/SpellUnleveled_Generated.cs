@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Effect> _Effects = new ExtendedList<Effect>();
-        public ExtendedList<Effect> Effects
+        private IExtendedList<Effect> _Effects = new ExtendedList<Effect>();
+        public IExtendedList<Effect> Effects
         {
             get => this._Effects;
             protected set => this._Effects = value;
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISpellUnleveledInternal>
     {
         new SpellData? Data { get; set; }
-        new ExtendedList<Effect> Effects { get; }
+        new IExtendedList<Effect> Effects { get; }
     }
 
     public partial interface ISpellUnleveledInternal :
@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case SpellUnleveled_FieldIndex.Data:
                     return typeof(SpellData);
                 case SpellUnleveled_FieldIndex.Effects:
-                    return typeof(ExtendedList<Effect>);
+                    return typeof(IExtendedList<Effect>);
                 default:
                     return Spell_Registration.GetNthType(index);
             }

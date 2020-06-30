@@ -129,8 +129,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Regions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Region>>? _Regions;
-        public ExtendedList<IFormLink<Region>>? Regions
+        private IExtendedList<IFormLink<Region>>? _Regions;
+        public IExtendedList<IFormLink<Region>>? Regions
         {
             get => this._Regions;
             set => this._Regions = value;
@@ -243,8 +243,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region NavigationMeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
-        public ExtendedList<ANavigationMesh> NavigationMeshes
+        private IExtendedList<ANavigationMesh> _NavigationMeshes = new ExtendedList<ANavigationMesh>();
+        public IExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
             protected set => this._NavigationMeshes = value;
@@ -269,8 +269,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Persistent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Persistent
+        private IExtendedList<IPlaced> _Persistent = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
             protected set => this._Persistent = value;
@@ -289,8 +289,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Temporary
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
-        public ExtendedList<IPlaced> Temporary
+        private IExtendedList<IPlaced> _Temporary = new ExtendedList<IPlaced>();
+        public IExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
             protected set => this._Temporary = value;
@@ -2124,7 +2124,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? LNAM { get; set; }
         new Single? WaterHeight { get; set; }
         new String? WaterNoiseTexture { get; set; }
-        new ExtendedList<IFormLink<Region>>? Regions { get; set; }
+        new IExtendedList<IFormLink<Region>>? Regions { get; set; }
         new FormLinkNullable<Location> Location { get; set; }
         new MemorySlice<Byte>? XWCN { get; set; }
         new MemorySlice<Byte>? XWCS { get; set; }
@@ -2139,15 +2139,15 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MusicType> Music { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
         new Landscape? Landscape { get; set; }
-        new ExtendedList<ANavigationMesh> NavigationMeshes { get; }
+        new IExtendedList<ANavigationMesh> NavigationMeshes { get; }
         new Int32 Timestamp { get; set; }
         new Int32 UnknownGroupData { get; set; }
         new Int32 PersistentTimestamp { get; set; }
         new Int32 PersistentUnknownGroupData { get; set; }
-        new ExtendedList<IPlaced> Persistent { get; }
+        new IExtendedList<IPlaced> Persistent { get; }
         new Int32 TemporaryTimestamp { get; set; }
         new Int32 TemporaryUnknownGroupData { get; set; }
-        new ExtendedList<IPlaced> Temporary { get; }
+        new IExtendedList<IPlaced> Temporary { get; }
         #region Mutagen
         new Cell.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -3060,7 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.WaterNoiseTexture:
                     return typeof(String);
                 case Cell_FieldIndex.Regions:
-                    return typeof(ExtendedList<IFormLink<Region>>);
+                    return typeof(IExtendedList<IFormLink<Region>>);
                 case Cell_FieldIndex.Location:
                     return typeof(FormLinkNullable<Location>);
                 case Cell_FieldIndex.XWCN:
@@ -3090,7 +3090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.Landscape:
                     return typeof(Landscape);
                 case Cell_FieldIndex.NavigationMeshes:
-                    return typeof(ExtendedList<ANavigationMesh>);
+                    return typeof(IExtendedList<ANavigationMesh>);
                 case Cell_FieldIndex.Timestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.UnknownGroupData:
@@ -3100,13 +3100,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Cell_FieldIndex.PersistentUnknownGroupData:
                     return typeof(Int32);
                 case Cell_FieldIndex.Persistent:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 case Cell_FieldIndex.TemporaryTimestamp:
                     return typeof(Int32);
                 case Cell_FieldIndex.TemporaryUnknownGroupData:
                     return typeof(Int32);
                 case Cell_FieldIndex.Temporary:
-                    return typeof(ExtendedList<IPlaced>);
+                    return typeof(IExtendedList<IPlaced>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }

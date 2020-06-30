@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Connections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Int16> _Connections = new ExtendedList<Int16>();
-        public ExtendedList<Int16> Connections
+        private IExtendedList<Int16> _Connections = new ExtendedList<Int16>();
+        public IExtendedList<Int16> Connections
         {
             get => this._Connections;
             protected set => this._Connections = value;
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Oblivion
         new P3Float Point { get; set; }
         new Byte NumConnections { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new ExtendedList<Int16> Connections { get; }
+        new IExtendedList<Int16> Connections { get; }
     }
 
     public partial interface IPathGridPointGetter :
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case PathGridPoint_FieldIndex.Unused:
                     return typeof(MemorySlice<Byte>);
                 case PathGridPoint_FieldIndex.Connections:
-                    return typeof(ExtendedList<Int16>);
+                    return typeof(IExtendedList<Int16>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

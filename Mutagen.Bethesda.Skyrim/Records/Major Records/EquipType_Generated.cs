@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region SlotParents
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<EquipType>>? _SlotParents;
-        public ExtendedList<IFormLink<EquipType>>? SlotParents
+        private IExtendedList<IFormLink<EquipType>>? _SlotParents;
+        public IExtendedList<IFormLink<EquipType>>? SlotParents
         {
             get => this._SlotParents;
             set => this._SlotParents = value;
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IEquipTypeInternal>
     {
-        new ExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
+        new IExtendedList<IFormLink<EquipType>>? SlotParents { get; set; }
         new Boolean? UseAllParents { get; set; }
     }
 
@@ -1162,7 +1162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case EquipType_FieldIndex.SlotParents:
-                    return typeof(ExtendedList<IFormLink<EquipType>>);
+                    return typeof(IExtendedList<IFormLink<EquipType>>);
                 case EquipType_FieldIndex.UseAllParents:
                     return typeof(Boolean);
                 default:

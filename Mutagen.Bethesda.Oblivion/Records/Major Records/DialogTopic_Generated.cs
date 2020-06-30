@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<Quest>> _Quests = new ExtendedList<IFormLink<Quest>>();
-        public ExtendedList<IFormLink<Quest>> Quests
+        private IExtendedList<IFormLink<Quest>> _Quests = new ExtendedList<IFormLink<Quest>>();
+        public IExtendedList<IFormLink<Quest>> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -78,8 +78,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
-        public ExtendedList<DialogItem> Items
+        private IExtendedList<DialogItem> _Items = new ExtendedList<DialogItem>();
+        public IExtendedList<DialogItem> Items
         {
             get => this._Items;
             protected set => this._Items = value;
@@ -889,11 +889,11 @@ namespace Mutagen.Bethesda.Oblivion
         IMajorRecordEnumerable,
         ILoquiObjectSetter<IDialogTopicInternal>
     {
-        new ExtendedList<IFormLink<Quest>> Quests { get; }
+        new IExtendedList<IFormLink<Quest>> Quests { get; }
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
-        new ExtendedList<DialogItem> Items { get; }
+        new IExtendedList<DialogItem> Items { get; }
     }
 
     public partial interface IDialogTopicInternal :
@@ -1457,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case DialogTopic_FieldIndex.Quests:
-                    return typeof(ExtendedList<IFormLink<Quest>>);
+                    return typeof(IExtendedList<IFormLink<Quest>>);
                 case DialogTopic_FieldIndex.Name:
                     return typeof(String);
                 case DialogTopic_FieldIndex.DialogType:
@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case DialogTopic_FieldIndex.Timestamp:
                     return typeof(Int32);
                 case DialogTopic_FieldIndex.Items:
-                    return typeof(ExtendedList<DialogItem>);
+                    return typeof(IExtendedList<DialogItem>);
                 default:
                     return OblivionMajorRecord_Registration.GetNthType(index);
             }

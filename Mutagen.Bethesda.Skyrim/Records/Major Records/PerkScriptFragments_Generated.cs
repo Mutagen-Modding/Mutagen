@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Fragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
-        public ExtendedList<IndexedScriptFragment> Fragments
+        private IExtendedList<IndexedScriptFragment> _Fragments = new ExtendedList<IndexedScriptFragment>();
+        public IExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
             protected set => this._Fragments = value;
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
-        new ExtendedList<IndexedScriptFragment> Fragments { get; }
+        new IExtendedList<IndexedScriptFragment> Fragments { get; }
     }
 
     public partial interface IPerkScriptFragmentsGetter :
@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PerkScriptFragments_FieldIndex.FileName:
                     return typeof(String);
                 case PerkScriptFragments_FieldIndex.Fragments:
-                    return typeof(ExtendedList<IndexedScriptFragment>);
+                    return typeof(IExtendedList<IndexedScriptFragment>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<RegionSound>? _Sounds;
-        public ExtendedList<RegionSound>? Sounds
+        private IExtendedList<RegionSound>? _Sounds;
+        public IExtendedList<RegionSound>? Sounds
         {
             get => this._Sounds;
             set => this._Sounds = value;
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRegionSounds>
     {
         new MusicType? MusicType { get; set; }
-        new ExtendedList<RegionSound>? Sounds { get; set; }
+        new IExtendedList<RegionSound>? Sounds { get; set; }
     }
 
     public partial interface IRegionSoundsGetter :
@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RegionSounds_FieldIndex.MusicType:
                     return typeof(MusicType);
                 case RegionSounds_FieldIndex.Sounds:
-                    return typeof(ExtendedList<RegionSound>);
+                    return typeof(IExtendedList<RegionSound>);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }

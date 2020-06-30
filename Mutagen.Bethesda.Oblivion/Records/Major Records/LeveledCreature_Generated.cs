@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
-        public ExtendedList<LeveledEntry<ANpcSpawn>> Entries
+        private IExtendedList<LeveledEntry<ANpcSpawn>> _Entries = new ExtendedList<LeveledEntry<ANpcSpawn>>();
+        public IExtendedList<LeveledEntry<ANpcSpawn>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
+        new IExtendedList<LeveledEntry<ANpcSpawn>> Entries { get; }
         new FormLinkNullable<Script> Script { get; set; }
         new FormLinkNullable<ANpc> Template { get; set; }
     }
@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledCreature_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<ANpcSpawn>>);
+                    return typeof(IExtendedList<LeveledEntry<ANpcSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
                     return typeof(FormLinkNullable<Script>);
                 case LeveledCreature_FieldIndex.Template:

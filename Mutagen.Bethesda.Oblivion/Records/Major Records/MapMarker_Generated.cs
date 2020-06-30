@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Types
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<MapMarker.Type>? _Types;
-        public ExtendedList<MapMarker.Type>? Types
+        private IExtendedList<MapMarker.Type>? _Types;
+        public IExtendedList<MapMarker.Type>? Types
         {
             get => this._Types;
             set => this._Types = value;
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MapMarker.Flag? Flags { get; set; }
         new String? Name { get; set; }
-        new ExtendedList<MapMarker.Type>? Types { get; set; }
+        new IExtendedList<MapMarker.Type>? Types { get; set; }
     }
 
     public partial interface IMapMarkerGetter :
@@ -1197,7 +1197,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MapMarker_FieldIndex.Name:
                     return typeof(String);
                 case MapMarker_FieldIndex.Types:
-                    return typeof(ExtendedList<MapMarker.Type>);
+                    return typeof(IExtendedList<MapMarker.Type>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }

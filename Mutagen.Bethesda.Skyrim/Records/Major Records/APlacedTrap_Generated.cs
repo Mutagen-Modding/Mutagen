@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Reflections
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
-        public ExtendedList<WaterReflection> Reflections
+        private IExtendedList<WaterReflection> _Reflections = new ExtendedList<WaterReflection>();
+        public IExtendedList<WaterReflection> Reflections
         {
             get => this._Reflections;
             protected set => this._Reflections = value;
@@ -102,8 +102,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LinkedReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
-        public ExtendedList<LinkedReferences> LinkedReferences
+        private IExtendedList<LinkedReferences> _LinkedReferences = new ExtendedList<LinkedReferences>();
+        public IExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
             protected set => this._LinkedReferences = value;
@@ -159,8 +159,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region LocationRefTypes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
-        public ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
+        private IExtendedList<IFormLink<LocationReferenceType>>? _LocationRefTypes;
+        public IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes
         {
             get => this._LocationRefTypes;
             set => this._LocationRefTypes = value;
@@ -178,8 +178,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region DistantLodData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<Single>? _DistantLodData;
-        public ExtendedList<Single>? DistantLodData
+        private IExtendedList<Single>? _DistantLodData;
+        public IExtendedList<Single>? DistantLodData
         {
             get => this._DistantLodData;
             set => this._DistantLodData = value;
@@ -1552,16 +1552,16 @@ namespace Mutagen.Bethesda.Skyrim
         new Ownership? Ownership { get; set; }
         new Single? HeadTrackingWeight { get; set; }
         new Single? FavorCost { get; set; }
-        new ExtendedList<WaterReflection> Reflections { get; }
-        new ExtendedList<LinkedReferences> LinkedReferences { get; }
+        new IExtendedList<WaterReflection> Reflections { get; }
+        new IExtendedList<LinkedReferences> LinkedReferences { get; }
         new ActivateParents? ActivateParents { get; set; }
         new EnableParent? EnableParent { get; set; }
         new FormLinkNullable<IEmittance> Emittance { get; set; }
         new FormLinkNullable<PlacedObject> MultiBoundReference { get; set; }
         new MemorySlice<Byte>? IgnoredBySandbox { get; set; }
-        new ExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
+        new IExtendedList<IFormLink<LocationReferenceType>>? LocationRefTypes { get; set; }
         new FormLinkNullable<ILocationRecord> LocationReference { get; set; }
-        new ExtendedList<Single>? DistantLodData { get; set; }
+        new IExtendedList<Single>? DistantLodData { get; set; }
         new Single? Scale { get; set; }
         new P3Float Position { get; set; }
         new P3Float Rotation { get; set; }
@@ -2241,9 +2241,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case APlacedTrap_FieldIndex.FavorCost:
                     return typeof(Single);
                 case APlacedTrap_FieldIndex.Reflections:
-                    return typeof(ExtendedList<WaterReflection>);
+                    return typeof(IExtendedList<WaterReflection>);
                 case APlacedTrap_FieldIndex.LinkedReferences:
-                    return typeof(ExtendedList<LinkedReferences>);
+                    return typeof(IExtendedList<LinkedReferences>);
                 case APlacedTrap_FieldIndex.ActivateParents:
                     return typeof(ActivateParents);
                 case APlacedTrap_FieldIndex.EnableParent:
@@ -2255,11 +2255,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case APlacedTrap_FieldIndex.IgnoredBySandbox:
                     return typeof(MemorySlice<Byte>);
                 case APlacedTrap_FieldIndex.LocationRefTypes:
-                    return typeof(ExtendedList<IFormLink<LocationReferenceType>>);
+                    return typeof(IExtendedList<IFormLink<LocationReferenceType>>);
                 case APlacedTrap_FieldIndex.LocationReference:
                     return typeof(FormLinkNullable<ILocationRecord>);
                 case APlacedTrap_FieldIndex.DistantLodData:
-                    return typeof(ExtendedList<Single>);
+                    return typeof(IExtendedList<Single>);
                 case APlacedTrap_FieldIndex.Scale:
                     return typeof(Single);
                 case APlacedTrap_FieldIndex.Position:

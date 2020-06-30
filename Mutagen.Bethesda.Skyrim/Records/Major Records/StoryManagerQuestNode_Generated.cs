@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Quests
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<StoryManagerQuest> _Quests = new ExtendedList<StoryManagerQuest>();
-        public ExtendedList<StoryManagerQuest> Quests
+        private IExtendedList<StoryManagerQuest> _Quests = new ExtendedList<StoryManagerQuest>();
+        public IExtendedList<StoryManagerQuest> Quests
         {
             get => this._Quests;
             protected set => this._Quests = value;
@@ -773,7 +773,7 @@ namespace Mutagen.Bethesda.Skyrim
         new StoryManagerQuestNode.QuestFlag? Flags { get; set; }
         new UInt32? MaxConcurrentQuests { get; set; }
         new UInt32? MaxNumQuestsToRun { get; set; }
-        new ExtendedList<StoryManagerQuest> Quests { get; }
+        new IExtendedList<StoryManagerQuest> Quests { get; }
     }
 
     public partial interface IStoryManagerQuestNodeInternal :
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case StoryManagerQuestNode_FieldIndex.MaxNumQuestsToRun:
                     return typeof(UInt32);
                 case StoryManagerQuestNode_FieldIndex.Quests:
-                    return typeof(ExtendedList<StoryManagerQuest>);
+                    return typeof(IExtendedList<StoryManagerQuest>);
                 default:
                     return AStoryManagerNode_Registration.GetNthType(index);
             }

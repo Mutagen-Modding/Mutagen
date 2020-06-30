@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<LeveledEntry<ASpell>> _Entries = new ExtendedList<LeveledEntry<ASpell>>();
-        public ExtendedList<LeveledEntry<ASpell>> Entries
+        private IExtendedList<LeveledEntry<ASpell>> _Entries = new ExtendedList<LeveledEntry<ASpell>>();
+        public IExtendedList<LeveledEntry<ASpell>> Entries
         {
             get => this._Entries;
             protected set => this._Entries = value;
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte? ChanceNone { get; set; }
         new LeveledFlag? Flags { get; set; }
-        new ExtendedList<LeveledEntry<ASpell>> Entries { get; }
+        new IExtendedList<LeveledEntry<ASpell>> Entries { get; }
     }
 
     public partial interface ILeveledSpellInternal :
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledSpell_FieldIndex.Flags:
                     return typeof(LeveledFlag);
                 case LeveledSpell_FieldIndex.Entries:
-                    return typeof(ExtendedList<LeveledEntry<ASpell>>);
+                    return typeof(IExtendedList<LeveledEntry<ASpell>>);
                 default:
                     return ASpell_Registration.GetNthType(index);
             }
