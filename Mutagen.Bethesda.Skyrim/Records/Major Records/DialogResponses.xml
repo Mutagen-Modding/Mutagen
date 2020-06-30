@@ -66,9 +66,10 @@
   <Object name="DialogResponsesScriptFragments" objType="Subrecord" GUID="6564bb4d-ec2c-4a03-b6dd-5cca0e1b4b11" ID="428">
     <Fields>
       <Int8 name="Unknown" />
-      <Enum name="Flags" enumName="DialogResponsesScriptFragments.Flag" byteLength="1" />
-      <String name="FileName" binaryType="PrependLengthUShort" />
-      <RefList name="Fragments" refName="ScriptFragment" />
+      <CustomLogic name="Flags" />
+      <String name="FileName" binaryType="PrependLengthUShort" binary="NoGeneration" />
+      <RefDirect name="OnBegin" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
+      <RefDirect name="OnEnd" hasBeenSet="True" binary="NoGeneration" refName="ScriptFragment" />
     </Fields>
   </Object>
 </Loqui>

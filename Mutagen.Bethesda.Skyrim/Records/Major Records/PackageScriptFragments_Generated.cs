@@ -50,25 +50,41 @@ namespace Mutagen.Bethesda.Skyrim
         #region Unknown
         public SByte Unknown { get; set; } = default;
         #endregion
-        #region Flags
-        public PackageScriptFragments.Flag Flags { get; set; } = default;
-        #endregion
         #region FileName
         public String FileName { get; set; } = string.Empty;
         #endregion
-        #region Fragments
+        #region OnBegin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<ScriptFragment> _Fragments = new ExtendedList<ScriptFragment>();
-        public IExtendedList<ScriptFragment> Fragments
+        private ScriptFragment? _OnBegin;
+        public ScriptFragment? OnBegin
         {
-            get => this._Fragments;
-            protected set => this._Fragments = value;
+            get => _OnBegin;
+            set => _OnBegin = value;
         }
-        #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IScriptFragmentGetter> IPackageScriptFragmentsGetter.Fragments => _Fragments;
+        IScriptFragmentGetter? IPackageScriptFragmentsGetter.OnBegin => this.OnBegin;
         #endregion
-
+        #region OnEnd
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScriptFragment? _OnEnd;
+        public ScriptFragment? OnEnd
+        {
+            get => _OnEnd;
+            set => _OnEnd = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptFragmentGetter? IPackageScriptFragmentsGetter.OnEnd => this.OnEnd;
+        #endregion
+        #region OnChange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ScriptFragment? _OnChange;
+        public ScriptFragment? OnChange
+        {
+            get => _OnChange;
+            set => _OnChange = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IScriptFragmentGetter? IPackageScriptFragmentsGetter.OnChange => this.OnChange;
         #endregion
 
         #region To String
@@ -240,21 +256,24 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             {
                 this.Unknown = initialValue;
-                this.Flags = initialValue;
                 this.FileName = initialValue;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>());
+                this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
+                this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
+                this.OnChange = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(initialValue, new ScriptFragment.Mask<TItem>(initialValue));
             }
 
             public Mask(
                 TItem Unknown,
-                TItem Flags,
                 TItem FileName,
-                TItem Fragments)
+                TItem OnBegin,
+                TItem OnEnd,
+                TItem OnChange)
             {
                 this.Unknown = Unknown;
-                this.Flags = Flags;
                 this.FileName = FileName;
-                this.Fragments = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>(Fragments, Enumerable.Empty<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>());
+                this.OnBegin = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnBegin, new ScriptFragment.Mask<TItem>(OnBegin));
+                this.OnEnd = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnEnd, new ScriptFragment.Mask<TItem>(OnEnd));
+                this.OnChange = new MaskItem<TItem, ScriptFragment.Mask<TItem>?>(OnChange, new ScriptFragment.Mask<TItem>(OnChange));
             }
 
             #pragma warning disable CS8618
@@ -267,9 +286,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             #region Members
             public TItem Unknown;
-            public TItem Flags;
             public TItem FileName;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, ScriptFragment.Mask<TItem>?>>?>? Fragments;
+            public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnBegin { get; set; }
+            public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnEnd { get; set; }
+            public MaskItem<TItem, ScriptFragment.Mask<TItem>?>? OnChange { get; set; }
             #endregion
 
             #region Equals
@@ -283,18 +303,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
-                if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.FileName, rhs.FileName)) return false;
-                if (!object.Equals(this.Fragments, rhs.Fragments)) return false;
+                if (!object.Equals(this.OnBegin, rhs.OnBegin)) return false;
+                if (!object.Equals(this.OnEnd, rhs.OnEnd)) return false;
+                if (!object.Equals(this.OnChange, rhs.OnChange)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
                 hash.Add(this.Unknown);
-                hash.Add(this.Flags);
                 hash.Add(this.FileName);
-                hash.Add(this.Fragments);
+                hash.Add(this.OnBegin);
+                hash.Add(this.OnEnd);
+                hash.Add(this.OnChange);
                 return hash.ToHashCode();
             }
 
@@ -304,19 +326,21 @@ namespace Mutagen.Bethesda.Skyrim
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Unknown)) return false;
-                if (!eval(this.Flags)) return false;
                 if (!eval(this.FileName)) return false;
-                if (this.Fragments != null)
+                if (OnBegin != null)
                 {
-                    if (!eval(this.Fragments.Overall)) return false;
-                    if (this.Fragments.Specific != null)
-                    {
-                        foreach (var item in this.Fragments.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (!eval(this.OnBegin.Overall)) return false;
+                    if (this.OnBegin.Specific != null && !this.OnBegin.Specific.All(eval)) return false;
+                }
+                if (OnEnd != null)
+                {
+                    if (!eval(this.OnEnd.Overall)) return false;
+                    if (this.OnEnd.Specific != null && !this.OnEnd.Specific.All(eval)) return false;
+                }
+                if (OnChange != null)
+                {
+                    if (!eval(this.OnChange.Overall)) return false;
+                    if (this.OnChange.Specific != null && !this.OnChange.Specific.All(eval)) return false;
                 }
                 return true;
             }
@@ -326,19 +350,21 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Unknown)) return true;
-                if (eval(this.Flags)) return true;
                 if (eval(this.FileName)) return true;
-                if (this.Fragments != null)
+                if (OnBegin != null)
                 {
-                    if (eval(this.Fragments.Overall)) return true;
-                    if (this.Fragments.Specific != null)
-                    {
-                        foreach (var item in this.Fragments.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
+                    if (eval(this.OnBegin.Overall)) return true;
+                    if (this.OnBegin.Specific != null && this.OnBegin.Specific.Any(eval)) return true;
+                }
+                if (OnEnd != null)
+                {
+                    if (eval(this.OnEnd.Overall)) return true;
+                    if (this.OnEnd.Specific != null && this.OnEnd.Specific.Any(eval)) return true;
+                }
+                if (OnChange != null)
+                {
+                    if (eval(this.OnChange.Overall)) return true;
+                    if (this.OnChange.Specific != null && this.OnChange.Specific.Any(eval)) return true;
                 }
                 return false;
             }
@@ -355,23 +381,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Unknown = eval(this.Unknown);
-                obj.Flags = eval(this.Flags);
                 obj.FileName = eval(this.FileName);
-                if (Fragments != null)
-                {
-                    obj.Fragments = new MaskItem<R, IEnumerable<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>?>(eval(this.Fragments.Overall), Enumerable.Empty<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>());
-                    if (Fragments.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, ScriptFragment.Mask<R>?>>();
-                        obj.Fragments.Specific = l;
-                        foreach (var item in Fragments.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, ScriptFragment.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, ScriptFragment.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.OnBegin = this.OnBegin == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnBegin.Overall), this.OnBegin.Specific?.Translate(eval));
+                obj.OnEnd = this.OnEnd == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnEnd.Overall), this.OnEnd.Specific?.Translate(eval));
+                obj.OnChange = this.OnChange == null ? null : new MaskItem<R, ScriptFragment.Mask<R>?>(eval(this.OnChange.Overall), this.OnChange.Specific?.Translate(eval));
             }
             #endregion
 
@@ -398,36 +411,21 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Unknown, "Unknown");
                     }
-                    if (printMask?.Flags ?? true)
-                    {
-                        fg.AppendItem(Flags, "Flags");
-                    }
                     if (printMask?.FileName ?? true)
                     {
                         fg.AppendItem(FileName, "FileName");
                     }
-                    if ((printMask?.Fragments?.Overall ?? true)
-                        && Fragments.TryGet(out var FragmentsItem))
+                    if (printMask?.OnBegin?.Overall ?? true)
                     {
-                        fg.AppendLine("Fragments =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(FragmentsItem.Overall);
-                            if (FragmentsItem.Specific != null)
-                            {
-                                foreach (var subItem in FragmentsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        OnBegin?.ToString(fg);
+                    }
+                    if (printMask?.OnEnd?.Overall ?? true)
+                    {
+                        OnEnd?.ToString(fg);
+                    }
+                    if (printMask?.OnChange?.Overall ?? true)
+                    {
+                        OnChange?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -455,9 +453,10 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
             public Exception? Unknown;
-            public Exception? Flags;
             public Exception? FileName;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>? Fragments;
+            public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnBegin;
+            public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnEnd;
+            public MaskItem<Exception?, ScriptFragment.ErrorMask?>? OnChange;
             #endregion
 
             #region IErrorMask
@@ -468,12 +467,14 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     case PackageScriptFragments_FieldIndex.Unknown:
                         return Unknown;
-                    case PackageScriptFragments_FieldIndex.Flags:
-                        return Flags;
                     case PackageScriptFragments_FieldIndex.FileName:
                         return FileName;
-                    case PackageScriptFragments_FieldIndex.Fragments:
-                        return Fragments;
+                    case PackageScriptFragments_FieldIndex.OnBegin:
+                        return OnBegin;
+                    case PackageScriptFragments_FieldIndex.OnEnd:
+                        return OnEnd;
+                    case PackageScriptFragments_FieldIndex.OnChange:
+                        return OnChange;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -487,14 +488,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case PackageScriptFragments_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case PackageScriptFragments_FieldIndex.Flags:
-                        this.Flags = ex;
-                        break;
                     case PackageScriptFragments_FieldIndex.FileName:
                         this.FileName = ex;
                         break;
-                    case PackageScriptFragments_FieldIndex.Fragments:
-                        this.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>(ex, null);
+                    case PackageScriptFragments_FieldIndex.OnBegin:
+                        this.OnBegin = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
+                        break;
+                    case PackageScriptFragments_FieldIndex.OnEnd:
+                        this.OnEnd = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
+                        break;
+                    case PackageScriptFragments_FieldIndex.OnChange:
+                        this.OnChange = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -509,14 +513,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case PackageScriptFragments_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case PackageScriptFragments_FieldIndex.Flags:
-                        this.Flags = (Exception?)obj;
-                        break;
                     case PackageScriptFragments_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
                         break;
-                    case PackageScriptFragments_FieldIndex.Fragments:
-                        this.Fragments = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>)obj;
+                    case PackageScriptFragments_FieldIndex.OnBegin:
+                        this.OnBegin = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
+                        break;
+                    case PackageScriptFragments_FieldIndex.OnEnd:
+                        this.OnEnd = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
+                        break;
+                    case PackageScriptFragments_FieldIndex.OnChange:
+                        this.OnChange = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -527,9 +534,10 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (Overall != null) return true;
                 if (Unknown != null) return true;
-                if (Flags != null) return true;
                 if (FileName != null) return true;
-                if (Fragments != null) return true;
+                if (OnBegin != null) return true;
+                if (OnEnd != null) return true;
+                if (OnChange != null) return true;
                 return false;
             }
             #endregion
@@ -565,30 +573,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Unknown, "Unknown");
-                fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(FileName, "FileName");
-                if (Fragments.TryGet(out var FragmentsItem))
-                {
-                    fg.AppendLine("Fragments =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(FragmentsItem.Overall);
-                        if (FragmentsItem.Specific != null)
-                        {
-                            foreach (var subItem in FragmentsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                OnBegin?.ToString(fg);
+                OnEnd?.ToString(fg);
+                OnChange?.ToString(fg);
             }
             #endregion
 
@@ -598,9 +586,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Unknown = this.Unknown.Combine(rhs.Unknown);
-                ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.FileName = this.FileName.Combine(rhs.FileName);
-                ret.Fragments = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, ScriptFragment.ErrorMask?>>?>(ExceptionExt.Combine(this.Fragments?.Overall, rhs.Fragments?.Overall), ExceptionExt.Combine(this.Fragments?.Specific, rhs.Fragments?.Specific));
+                ret.OnBegin = this.OnBegin.Combine(rhs.OnBegin, (l, r) => l.Combine(r));
+                ret.OnEnd = this.OnEnd.Combine(rhs.OnEnd, (l, r) => l.Combine(r));
+                ret.OnChange = this.OnChange.Combine(rhs.OnChange, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -623,18 +612,20 @@ namespace Mutagen.Bethesda.Skyrim
             #region Members
             private TranslationCrystal? _crystal;
             public bool Unknown;
-            public bool Flags;
             public bool FileName;
-            public MaskItem<bool, ScriptFragment.TranslationMask?> Fragments;
+            public MaskItem<bool, ScriptFragment.TranslationMask?> OnBegin;
+            public MaskItem<bool, ScriptFragment.TranslationMask?> OnEnd;
+            public MaskItem<bool, ScriptFragment.TranslationMask?> OnChange;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
                 this.Unknown = defaultOn;
-                this.Flags = defaultOn;
                 this.FileName = defaultOn;
-                this.Fragments = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
+                this.OnBegin = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
+                this.OnEnd = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
+                this.OnChange = new MaskItem<bool, ScriptFragment.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -651,9 +642,10 @@ namespace Mutagen.Bethesda.Skyrim
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Unknown, null));
-                ret.Add((Flags, null));
                 ret.Add((FileName, null));
-                ret.Add((Fragments?.Overall ?? true, Fragments?.Specific?.GetCrystal()));
+                ret.Add((OnBegin?.Overall ?? true, OnBegin?.Specific?.GetCrystal()));
+                ret.Add((OnEnd?.Overall ?? true, OnEnd?.Specific?.GetCrystal()));
+                ret.Add((OnChange?.Overall ?? true, OnChange?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -729,9 +721,10 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageScriptFragments>
     {
         new SByte Unknown { get; set; }
-        new PackageScriptFragments.Flag Flags { get; set; }
         new String FileName { get; set; }
-        new IExtendedList<ScriptFragment> Fragments { get; }
+        new ScriptFragment? OnBegin { get; set; }
+        new ScriptFragment? OnEnd { get; set; }
+        new ScriptFragment? OnChange { get; set; }
     }
 
     public partial interface IPackageScriptFragmentsGetter :
@@ -748,9 +741,10 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PackageScriptFragments_Registration.Instance;
         SByte Unknown { get; }
-        PackageScriptFragments.Flag Flags { get; }
         String FileName { get; }
-        IReadOnlyList<IScriptFragmentGetter> Fragments { get; }
+        IScriptFragmentGetter? OnBegin { get; }
+        IScriptFragmentGetter? OnEnd { get; }
+        IScriptFragmentGetter? OnChange { get; }
 
     }
 
@@ -1069,9 +1063,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     public enum PackageScriptFragments_FieldIndex
     {
         Unknown = 0,
-        Flags = 1,
-        FileName = 2,
-        Fragments = 3,
+        FileName = 1,
+        OnBegin = 2,
+        OnEnd = 3,
+        OnChange = 4,
     }
     #endregion
 
@@ -1089,9 +1084,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2ec19b11-bd07-4dcc-beb4-826dfc1de531";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(PackageScriptFragments.Mask<>);
 
@@ -1123,12 +1118,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case "UNKNOWN":
                     return (ushort)PackageScriptFragments_FieldIndex.Unknown;
-                case "FLAGS":
-                    return (ushort)PackageScriptFragments_FieldIndex.Flags;
                 case "FILENAME":
                     return (ushort)PackageScriptFragments_FieldIndex.FileName;
-                case "FRAGMENTS":
-                    return (ushort)PackageScriptFragments_FieldIndex.Fragments;
+                case "ONBEGIN":
+                    return (ushort)PackageScriptFragments_FieldIndex.OnBegin;
+                case "ONEND":
+                    return (ushort)PackageScriptFragments_FieldIndex.OnEnd;
+                case "ONCHANGE":
+                    return (ushort)PackageScriptFragments_FieldIndex.OnChange;
                 default:
                     return null;
             }
@@ -1139,11 +1136,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case PackageScriptFragments_FieldIndex.Fragments:
-                    return true;
                 case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.Flags:
                 case PackageScriptFragments_FieldIndex.FileName:
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                case PackageScriptFragments_FieldIndex.OnChange:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1155,10 +1152,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageScriptFragments_FieldIndex enu = (PackageScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case PackageScriptFragments_FieldIndex.Fragments:
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                case PackageScriptFragments_FieldIndex.OnChange:
                     return true;
                 case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.Flags:
                 case PackageScriptFragments_FieldIndex.FileName:
                     return false;
                 default:
@@ -1172,9 +1170,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.Flags:
                 case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.Fragments:
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                case PackageScriptFragments_FieldIndex.OnChange:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1188,12 +1187,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case PackageScriptFragments_FieldIndex.Unknown:
                     return "Unknown";
-                case PackageScriptFragments_FieldIndex.Flags:
-                    return "Flags";
                 case PackageScriptFragments_FieldIndex.FileName:
                     return "FileName";
-                case PackageScriptFragments_FieldIndex.Fragments:
-                    return "Fragments";
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                    return "OnBegin";
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                    return "OnEnd";
+                case PackageScriptFragments_FieldIndex.OnChange:
+                    return "OnChange";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1205,9 +1206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.Flags:
                 case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.Fragments:
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                case PackageScriptFragments_FieldIndex.OnChange:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1220,9 +1222,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case PackageScriptFragments_FieldIndex.Unknown:
-                case PackageScriptFragments_FieldIndex.Flags:
                 case PackageScriptFragments_FieldIndex.FileName:
-                case PackageScriptFragments_FieldIndex.Fragments:
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                case PackageScriptFragments_FieldIndex.OnChange:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1236,12 +1239,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case PackageScriptFragments_FieldIndex.Unknown:
                     return typeof(SByte);
-                case PackageScriptFragments_FieldIndex.Flags:
-                    return typeof(PackageScriptFragments.Flag);
                 case PackageScriptFragments_FieldIndex.FileName:
                     return typeof(String);
-                case PackageScriptFragments_FieldIndex.Fragments:
-                    return typeof(IExtendedList<ScriptFragment>);
+                case PackageScriptFragments_FieldIndex.OnBegin:
+                    return typeof(ScriptFragment);
+                case PackageScriptFragments_FieldIndex.OnEnd:
+                    return typeof(ScriptFragment);
+                case PackageScriptFragments_FieldIndex.OnChange:
+                    return typeof(ScriptFragment);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1291,9 +1296,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Flags = default;
             item.FileName = string.Empty;
-            item.Fragments.Clear();
+            item.OnBegin = null;
+            item.OnEnd = null;
+            item.OnChange = null;
         }
         
         #region Xml Translation
@@ -1366,11 +1372,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (rhs == null) return;
             ret.Unknown = item.Unknown == rhs.Unknown;
-            ret.Flags = item.Flags == rhs.Flags;
             ret.FileName = string.Equals(item.FileName, rhs.FileName);
-            ret.Fragments = item.Fragments.CollectionEqualsHelper(
-                rhs.Fragments,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
+            ret.OnBegin = EqualsMaskHelper.EqualsHelper(
+                item.OnBegin,
+                rhs.OnBegin,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OnEnd = EqualsMaskHelper.EqualsHelper(
+                item.OnEnd,
+                rhs.OnEnd,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.OnChange = EqualsMaskHelper.EqualsHelper(
+                item.OnChange,
+                rhs.OnChange,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
         }
         
@@ -1422,31 +1438,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Unknown, "Unknown");
             }
-            if (printMask?.Flags ?? true)
-            {
-                fg.AppendItem(item.Flags, "Flags");
-            }
             if (printMask?.FileName ?? true)
             {
                 fg.AppendItem(item.FileName, "FileName");
             }
-            if (printMask?.Fragments?.Overall ?? true)
+            if ((printMask?.OnBegin?.Overall ?? true)
+                && item.OnBegin.TryGet(out var OnBeginItem))
             {
-                fg.AppendLine("Fragments =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.Fragments)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                OnBeginItem?.ToString(fg, "OnBegin");
+            }
+            if ((printMask?.OnEnd?.Overall ?? true)
+                && item.OnEnd.TryGet(out var OnEndItem))
+            {
+                OnEndItem?.ToString(fg, "OnEnd");
+            }
+            if ((printMask?.OnChange?.Overall ?? true)
+                && item.OnChange.TryGet(out var OnChangeItem))
+            {
+                OnChangeItem?.ToString(fg, "OnChange");
             }
         }
         
@@ -1454,6 +1463,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageScriptFragmentsGetter item,
             PackageScriptFragments.Mask<bool?> checkMask)
         {
+            if (checkMask.OnBegin?.Overall.HasValue ?? false && checkMask.OnBegin.Overall.Value != (item.OnBegin != null)) return false;
+            if (checkMask.OnBegin?.Specific != null && (item.OnBegin == null || !item.OnBegin.HasBeenSet(checkMask.OnBegin.Specific))) return false;
+            if (checkMask.OnEnd?.Overall.HasValue ?? false && checkMask.OnEnd.Overall.Value != (item.OnEnd != null)) return false;
+            if (checkMask.OnEnd?.Specific != null && (item.OnEnd == null || !item.OnEnd.HasBeenSet(checkMask.OnEnd.Specific))) return false;
+            if (checkMask.OnChange?.Overall.HasValue ?? false && checkMask.OnChange.Overall.Value != (item.OnChange != null)) return false;
+            if (checkMask.OnChange?.Specific != null && (item.OnChange == null || !item.OnChange.HasBeenSet(checkMask.OnChange.Specific))) return false;
             return true;
         }
         
@@ -1462,10 +1477,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             PackageScriptFragments.Mask<bool> mask)
         {
             mask.Unknown = true;
-            mask.Flags = true;
             mask.FileName = true;
-            var FragmentsItem = item.Fragments;
-            mask.Fragments = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, ScriptFragment.Mask<bool>?>>?>(true, FragmentsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, ScriptFragment.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
+            var itemOnBegin = item.OnBegin;
+            mask.OnBegin = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnBegin != null, itemOnBegin?.GetHasBeenSetMask());
+            var itemOnEnd = item.OnEnd;
+            mask.OnEnd = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnEnd != null, itemOnEnd?.GetHasBeenSetMask());
+            var itemOnChange = item.OnChange;
+            mask.OnChange = new MaskItem<bool, ScriptFragment.Mask<bool>?>(itemOnChange != null, itemOnChange?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -1476,9 +1494,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.Flags != rhs.Flags) return false;
             if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (!lhs.Fragments.SequenceEqual(rhs.Fragments)) return false;
+            if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
+            if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+            if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;
             return true;
         }
         
@@ -1486,9 +1505,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Unknown);
-            hash.Add(item.Flags);
             hash.Add(item.FileName);
-            hash.Add(item.Fragments);
+            if (item.OnBegin.TryGet(out var OnBeginitem))
+            {
+                hash.Add(OnBeginitem);
+            }
+            if (item.OnEnd.TryGet(out var OnEnditem))
+            {
+                hash.Add(OnEnditem);
+            }
+            if (item.OnChange.TryGet(out var OnChangeitem))
+            {
+                hash.Add(OnChangeitem);
+            }
             return hash.ToHashCode();
         }
         
@@ -1525,27 +1554,77 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Flags) ?? true))
-            {
-                item.Flags = rhs.Flags;
-            }
             if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.FileName) ?? true))
             {
                 item.FileName = rhs.FileName;
             }
-            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Fragments) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnBegin) ?? true))
             {
-                errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.Fragments);
+                errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnBegin);
                 try
                 {
-                    item.Fragments.SetTo(
-                        rhs.Fragments
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
+                    if(rhs.OnBegin.TryGet(out var rhsOnBegin))
+                    {
+                        item.OnBegin = rhsOnBegin.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnBegin));
+                    }
+                    else
+                    {
+                        item.OnBegin = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnEnd) ?? true))
+            {
+                errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnEnd);
+                try
+                {
+                    if(rhs.OnEnd.TryGet(out var rhsOnEnd))
+                    {
+                        item.OnEnd = rhsOnEnd.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnEnd));
+                    }
+                    else
+                    {
+                        item.OnEnd = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnChange) ?? true))
+            {
+                errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnChange);
+                try
+                {
+                    if(rhs.OnChange.TryGet(out var rhsOnChange))
+                    {
+                        item.OnChange = rhsOnChange.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnChange));
+                    }
+                    else
+                    {
+                        item.OnChange = default;
+                    }
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1655,15 +1734,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PackageScriptFragments_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Flags) ?? true))
-            {
-                EnumXmlTranslation<PackageScriptFragments.Flag>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Flags),
-                    item: item.Flags,
-                    fieldIndex: (int)PackageScriptFragments_FieldIndex.Flags,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.FileName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
@@ -1673,25 +1743,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PackageScriptFragments_FieldIndex.FileName,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Fragments) ?? true))
+            if ((item.OnBegin != null)
+                && (translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnBegin) ?? true))
             {
-                ListXmlTranslation<IScriptFragmentGetter>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Fragments),
-                    item: item.Fragments,
-                    fieldIndex: (int)PackageScriptFragments_FieldIndex.Fragments,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.Fragments),
-                    transl: (XElement subNode, IScriptFragmentGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((ScriptFragmentXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
+                if (item.OnBegin.TryGet(out var OnBeginItem))
+                {
+                    ((ScriptFragmentXmlWriteTranslation)((IXmlItem)OnBeginItem).XmlWriteTranslator).Write(
+                        item: OnBeginItem,
+                        node: node,
+                        name: nameof(item.OnBegin),
+                        fieldIndex: (int)PackageScriptFragments_FieldIndex.OnBegin,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnBegin));
+                }
+            }
+            if ((item.OnEnd != null)
+                && (translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnEnd) ?? true))
+            {
+                if (item.OnEnd.TryGet(out var OnEndItem))
+                {
+                    ((ScriptFragmentXmlWriteTranslation)((IXmlItem)OnEndItem).XmlWriteTranslator).Write(
+                        item: OnEndItem,
+                        node: node,
+                        name: nameof(item.OnEnd),
+                        fieldIndex: (int)PackageScriptFragments_FieldIndex.OnEnd,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnEnd));
+                }
+            }
+            if ((item.OnChange != null)
+                && (translationMask?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnChange) ?? true))
+            {
+                if (item.OnChange.TryGet(out var OnChangeItem))
+                {
+                    ((ScriptFragmentXmlWriteTranslation)((IXmlItem)OnChangeItem).XmlWriteTranslator).Write(
+                        item: OnChangeItem,
+                        node: node,
+                        name: nameof(item.OnChange),
+                        fieldIndex: (int)PackageScriptFragments_FieldIndex.OnChange,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnChange));
+                }
             }
         }
 
@@ -1817,24 +1909,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Flags":
-                    errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.Flags);
-                    try
-                    {
-                        item.Flags = EnumXmlTranslation<PackageScriptFragments.Flag>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FileName":
                     errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.FileName);
                     try
@@ -1853,23 +1927,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Fragments":
-                    errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.Fragments);
+                case "OnBegin":
+                    errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnBegin);
                     try
                     {
-                        if (ListXmlTranslation<ScriptFragment>.Instance.Parse(
+                        item.OnBegin = LoquiXmlTranslation<ScriptFragment>.Instance.Parse(
                             node: node,
-                            enumer: out var FragmentsItem,
-                            transl: LoquiXmlTranslation<ScriptFragment>.Instance.Parse,
                             errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Fragments.SetTo(FragmentsItem);
-                        }
-                        else
-                        {
-                            item.Fragments.Clear();
-                        }
+                            translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnBegin));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OnEnd":
+                    errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnEnd);
+                    try
+                    {
+                        item.OnEnd = LoquiXmlTranslation<ScriptFragment>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnEnd));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "OnChange":
+                    errorMask?.PushIndex((int)PackageScriptFragments_FieldIndex.OnChange);
+                    try
+                    {
+                        item.OnChange = LoquiXmlTranslation<ScriptFragment>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnChange));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2052,30 +2155,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageScriptFragmentsBinaryWriteTranslation Instance = new PackageScriptFragmentsBinaryWriteTranslation();
 
+        static partial void WriteBinaryFlagsParseCustom(
+            MutagenWriter writer,
+            IPackageScriptFragmentsGetter item);
+
+        public static void WriteBinaryFlagsParse(
+            MutagenWriter writer,
+            IPackageScriptFragmentsGetter item)
+        {
+            WriteBinaryFlagsParseCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteEmbedded(
             IPackageScriptFragmentsGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PackageScriptFragments.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 1);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
                 writer: writer,
-                item: item.FileName,
-                binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptFragmentGetter>.Instance.Write(
-                writer: writer,
-                items: item.Fragments,
-                transl: (MutagenWriter subWriter, IScriptFragmentGetter subItem, RecordTypeConverter? conv) =>
-                {
-                    var Item = subItem;
-                    ((ScriptFragmentBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        recordTypeConverter: conv);
-                });
+                item: item);
         }
 
         public void Write(
@@ -2110,15 +2210,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt8();
-            item.Flags = EnumBinaryTranslation<PackageScriptFragments.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+            PackageScriptFragmentsBinaryCreateTranslation.FillBinaryFlagsParseCustom(
                 frame: frame,
-                stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.Fragments.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptFragment>.Instance.Parse(
-                    frame: frame,
-                    transl: ScriptFragment.TryCreateFromBinary));
+                item: item);
         }
+
+        static partial void FillBinaryFlagsParseCustom(
+            MutagenFrame frame,
+            IPackageScriptFragments item);
 
     }
 
@@ -2202,14 +2301,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public SByte Unknown => (sbyte)_data.Slice(0x0, 0x1)[0];
-        public PackageScriptFragments.Flag Flags => (PackageScriptFragments.Flag)_data.Span.Slice(0x1, 0x1)[0];
-        #region FileName
-        public String FileName => BinaryStringUtility.ParsePrependedString(_data.Slice(0x2), lengthLength: 2);
-        protected int FileNameEndingPos;
-        #endregion
-        #region Fragments
-        public IReadOnlyList<IScriptFragmentGetter> Fragments => BinaryOverlayList<ScriptFragmentBinaryOverlay>.FactoryByLazyParse(_data.Slice(FileNameEndingPos), _package, (s, p) => ScriptFragmentBinaryOverlay.ScriptFragmentFactory(s, p));
-        protected int FragmentsEndingPos;
+        #region FlagsParse
+        partial void FlagsParseCustomParse(
+            OverlayStream stream,
+            int offset);
+        protected int FlagsParseEndingPos;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2236,9 +2332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.FileNameEndingPos = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(ret._data.Slice(0x2)) + 2;
-            ret.FragmentsEndingPos = ret._data.Length;
-            stream.Position += ret.FragmentsEndingPos;
+            stream.Position += 0x1;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
