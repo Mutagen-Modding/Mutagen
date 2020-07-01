@@ -4622,7 +4622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Hair>>();
+                        .CastExtendedList<IFormLink<Hair>>();
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
@@ -4632,7 +4632,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Eye>>();
+                        .CastExtendedList<IFormLink<Eye>>();
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.FGGS:

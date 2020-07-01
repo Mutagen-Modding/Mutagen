@@ -6990,7 +6990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
+                        .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.ActorCellPersistentReferences;
                 }
                 case RecordTypeInts.LCPR:
@@ -7000,7 +7000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
+                        .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.LocationCellPersistentReferences;
                 }
                 case RecordTypeInts.RCPR:
@@ -7010,7 +7010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlacedSimple>>();
+                        .CastExtendedList<IFormLink<IPlacedSimple>>();
                     return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
@@ -7020,7 +7020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
+                        .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.ActorCellUniques;
                 }
                 case RecordTypeInts.LCUN:
@@ -7030,7 +7030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationReference>();
+                        .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.LocationCellUniques;
                 }
                 case RecordTypeInts.RCUN:
@@ -7040,7 +7040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Npc>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Npc>>();
+                        .CastExtendedList<IFormLink<Npc>>();
                     return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
@@ -7050,7 +7050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellStaticReference>();
+                        .CastExtendedList<LocationCellStaticReference>();
                     return (int)Location_FieldIndex.ActorCellStaticReferences;
                 }
                 case RecordTypeInts.LCSR:
@@ -7060,7 +7060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellStaticReference>();
+                        .CastExtendedList<LocationCellStaticReference>();
                     return (int)Location_FieldIndex.LocationCellStaticReferences;
                 }
                 case RecordTypeInts.RCSR:
@@ -7070,7 +7070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimple>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlacedSimple>>();
+                        .CastExtendedList<IFormLink<IPlacedSimple>>();
                     return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
@@ -7113,7 +7113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlaced>>();
+                        .CastExtendedList<IFormLink<IPlaced>>();
                     return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
@@ -7123,7 +7123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlaced>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IPlaced>>();
+                        .CastExtendedList<IFormLink<IPlaced>>();
                     return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
@@ -7133,7 +7133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellEnablePoint>();
+                        .CastExtendedList<LocationCellEnablePoint>();
                     return (int)Location_FieldIndex.ActorCellEnablePoint;
                 }
                 case RecordTypeInts.LCEP:
@@ -7143,7 +7143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
-                        .ToExtendedList<LocationCellEnablePoint>();
+                        .CastExtendedList<LocationCellEnablePoint>();
                     return (int)Location_FieldIndex.LocationCellEnablePoint;
                 }
                 case RecordTypeInts.FULL:
@@ -7165,7 +7165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

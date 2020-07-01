@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionSound.TryCreateFromBinary)
-                        .ToExtendedList<RegionSound>();
+                        .CastExtendedList<RegionSound>();
                     return (int)RegionSounds_FieldIndex.Sounds;
                 }
                 default:

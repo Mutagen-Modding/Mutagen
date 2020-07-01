@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Grass>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Grass>>();
+                        .CastExtendedList<IFormLink<Grass>>();
                     return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:

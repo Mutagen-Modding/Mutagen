@@ -2716,7 +2716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: InterCellPoint.TryCreateFromBinary)
-                        .ToExtendedList<InterCellPoint>();
+                        .CastExtendedList<InterCellPoint>();
                     return (int)PathGrid_FieldIndex.InterCellConnections;
                 }
                 case RecordTypeInts.PGRL:

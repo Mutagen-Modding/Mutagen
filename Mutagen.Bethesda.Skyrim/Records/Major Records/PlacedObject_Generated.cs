@@ -9526,7 +9526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Portal>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: Portal.TryCreateFromBinary)
-                        .ToExtendedList<Portal>();
+                        .CastExtendedList<Portal>();
                     return (int)PlacedObject_FieldIndex.Portals;
                 }
                 case RecordTypeInts.XPTL:
@@ -9742,7 +9742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LocationReferenceType>>();
+                        .CastExtendedList<IFormLink<LocationReferenceType>>();
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XIS2:

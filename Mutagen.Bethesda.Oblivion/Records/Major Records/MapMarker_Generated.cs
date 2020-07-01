@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     frame: r.SpawnWithLength(2),
                                     item: out listSubItem);
                             })
-                        .ToExtendedList<MapMarker.Type>();
+                        .CastExtendedList<MapMarker.Type>();
                     return (int)MapMarker_FieldIndex.Types;
                 }
                 default:

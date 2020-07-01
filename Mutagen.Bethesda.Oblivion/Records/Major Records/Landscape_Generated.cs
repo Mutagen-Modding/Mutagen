@@ -2831,7 +2831,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LandTexture>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LandTexture>>();
+                        .CastExtendedList<IFormLink<LandTexture>>();
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 default:

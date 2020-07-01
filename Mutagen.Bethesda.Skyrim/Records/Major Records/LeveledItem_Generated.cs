@@ -2550,7 +2550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: LeveledItemEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledItemEntry.TryCreateFromBinary)
-                        .ToExtendedList<LeveledItemEntry>();
+                        .CastExtendedList<LeveledItemEntry>();
                     return (int)LeveledItem_FieldIndex.Entries;
                 }
                 default:

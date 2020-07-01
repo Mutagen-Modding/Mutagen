@@ -3231,7 +3231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)TalkingActivator_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:

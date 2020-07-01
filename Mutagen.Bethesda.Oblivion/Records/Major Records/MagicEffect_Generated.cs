@@ -2715,7 +2715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IEDIDLink<MagicEffect>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IEDIDLink<MagicEffect>>();
+                        .CastExtendedList<IEDIDLink<MagicEffect>>();
                     return (int)MagicEffect_FieldIndex.CounterEffects;
                 }
                 default:

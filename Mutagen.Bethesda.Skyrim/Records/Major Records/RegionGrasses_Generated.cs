@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionGrass>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionGrass.TryCreateFromBinary)
-                        .ToExtendedList<RegionGrass>();
+                        .CastExtendedList<RegionGrass>();
                     return (int)RegionGrasses_FieldIndex.Grasses;
                 }
                 default:

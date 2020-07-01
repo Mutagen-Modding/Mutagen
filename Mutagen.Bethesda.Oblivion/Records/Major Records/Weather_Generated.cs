@@ -3150,7 +3150,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherColors>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherColors.TryCreateFromBinary)
-                        .ToExtendedList<WeatherColors>();
+                        .CastExtendedList<WeatherColors>();
                     return (int)Weather_FieldIndex.Colors;
                 }
                 case RecordTypeInts.FNAM:

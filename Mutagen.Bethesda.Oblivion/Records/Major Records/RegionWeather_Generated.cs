@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherType.TryCreateFromBinary)
-                        .ToExtendedList<WeatherType>();
+                        .CastExtendedList<WeatherType>();
                     return (int)RegionWeather_FieldIndex.Weathers;
                 }
                 default:

@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<EquipType>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<EquipType>>();
+                        .CastExtendedList<IFormLink<EquipType>>();
                     return (int)EquipType_FieldIndex.SlotParents;
                 }
                 case RecordTypeInts.DATA:

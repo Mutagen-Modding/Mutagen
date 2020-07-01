@@ -2666,7 +2666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
-                        .ToExtendedList<ContainerEntry>();
+                        .CastExtendedList<ContainerEntry>();
                     return (int)ConstructibleObject_FieldIndex.Items;
                 }
                 case RecordTypeInts.CTDA:

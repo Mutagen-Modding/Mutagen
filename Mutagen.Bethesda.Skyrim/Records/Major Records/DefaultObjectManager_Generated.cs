@@ -2107,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<DefaultObject>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: DefaultObject.TryCreateFromBinary)
-                        .ToExtendedList<DefaultObject>();
+                        .CastExtendedList<DefaultObject>();
                     return (int)DefaultObjectManager_FieldIndex.Objects;
                 }
                 default:

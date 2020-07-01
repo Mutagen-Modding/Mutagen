@@ -3359,7 +3359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<SkyrimMajorRecord>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<SkyrimMajorRecord>>();
+                        .CastExtendedList<IFormLink<SkyrimMajorRecord>>();
                     return (int)ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:

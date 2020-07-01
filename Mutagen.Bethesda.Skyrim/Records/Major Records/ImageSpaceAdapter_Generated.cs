@@ -16531,7 +16531,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.BlurRadius;
                 }
                 case RecordTypeInts.VNAM:
@@ -16541,7 +16541,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
                 }
                 case RecordTypeInts.TNAM:
@@ -16551,7 +16551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
-                        .ToExtendedList<ColorFrame>();
+                        .CastExtendedList<ColorFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.TintColor;
                 }
                 case RecordTypeInts.NAM3:
@@ -16561,7 +16561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
-                        .ToExtendedList<ColorFrame>();
+                        .CastExtendedList<ColorFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.FadeColor;
                 }
                 case RecordTypeInts.RNAM:
@@ -16571,7 +16571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
                 }
                 case RecordTypeInts.SNAM:
@@ -16581,7 +16581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
                 }
                 case RecordTypeInts.UNAM:
@@ -16591,7 +16591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
                 }
                 case RecordTypeInts.NAM1:
@@ -16601,7 +16601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
                 }
                 case RecordTypeInts.NAM2:
@@ -16611,7 +16611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
                 }
                 case RecordTypeInts.WNAM:
@@ -16621,7 +16621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
                 }
                 case RecordTypeInts.XNAM:
@@ -16631,7 +16631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
                 }
                 case RecordTypeInts.YNAM:
@@ -16641,7 +16641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
                 }
                 case RecordTypeInts.NAM4:
@@ -16651,7 +16651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
                 }
                 case RecordTypeInts._0_IAD:
@@ -16661,7 +16661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
                 }
                 case RecordTypeInts.@IAD:
@@ -16671,7 +16671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
                 }
                 case RecordTypeInts._1_IAD:
@@ -16681,7 +16681,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
                 }
                 case RecordTypeInts.AIAD:
@@ -16691,7 +16691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
                 }
                 case RecordTypeInts._2_IAD:
@@ -16701,7 +16701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
                 }
                 case RecordTypeInts.BIAD:
@@ -16711,7 +16711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
                 }
                 case RecordTypeInts._3_IAD:
@@ -16721,7 +16721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
                 }
                 case RecordTypeInts.CIAD:
@@ -16731,7 +16731,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
                 }
                 case RecordTypeInts._4_IAD:
@@ -16741,7 +16741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
                 }
                 case RecordTypeInts.DIAD:
@@ -16751,7 +16751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
                 }
                 case RecordTypeInts._5_IAD:
@@ -16761,7 +16761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
                 }
                 case RecordTypeInts.EIAD:
@@ -16771,7 +16771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
                 }
                 case RecordTypeInts._6_IAD:
@@ -16781,7 +16781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
                 }
                 case RecordTypeInts.FIAD:
@@ -16791,7 +16791,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
                 }
                 case RecordTypeInts._7_IAD:
@@ -16801,7 +16801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
                 }
                 case RecordTypeInts.GIAD:
@@ -16811,7 +16811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
                 }
                 case RecordTypeInts._8_IAD:
@@ -16821,7 +16821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown08;
                 }
                 case RecordTypeInts.HIAD:
@@ -16831,7 +16831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown48;
                 }
                 case RecordTypeInts._9_IAD:
@@ -16841,7 +16841,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown09;
                 }
                 case RecordTypeInts.IIAD:
@@ -16851,7 +16851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown49;
                 }
                 case RecordTypeInts._A_IAD:
@@ -16861,7 +16861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0A;
                 }
                 case RecordTypeInts.JIAD:
@@ -16871,7 +16871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4A;
                 }
                 case RecordTypeInts._B_IAD:
@@ -16881,7 +16881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0B;
                 }
                 case RecordTypeInts.KIAD:
@@ -16891,7 +16891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4B;
                 }
                 case RecordTypeInts._C_IAD:
@@ -16901,7 +16901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0C;
                 }
                 case RecordTypeInts.LIAD:
@@ -16911,7 +16911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4C;
                 }
                 case RecordTypeInts._D_IAD:
@@ -16921,7 +16921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0D;
                 }
                 case RecordTypeInts.MIAD:
@@ -16931,7 +16931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4D;
                 }
                 case RecordTypeInts._E_IAD:
@@ -16941,7 +16941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0E;
                 }
                 case RecordTypeInts.NIAD:
@@ -16951,7 +16951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4E;
                 }
                 case RecordTypeInts._F_IAD:
@@ -16961,7 +16961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0F;
                 }
                 case RecordTypeInts.OIAD:
@@ -16971,7 +16971,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4F;
                 }
                 case RecordTypeInts._10_IAD:
@@ -16981,7 +16981,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown10;
                 }
                 case RecordTypeInts.PIAD:
@@ -16991,7 +16991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown50;
                 }
                 case RecordTypeInts._11_IAD:
@@ -17001,7 +17001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
                 }
                 case RecordTypeInts.QIAD:
@@ -17011,7 +17011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
                 }
                 case RecordTypeInts._12_IAD:
@@ -17021,7 +17021,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
                 }
                 case RecordTypeInts.RIAD:
@@ -17031,7 +17031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
                 }
                 case RecordTypeInts._13_IAD:
@@ -17041,7 +17041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
                 }
                 case RecordTypeInts.SIAD:
@@ -17051,7 +17051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
                 }
                 case RecordTypeInts._14_IAD:
@@ -17061,7 +17061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown14;
                 }
                 case RecordTypeInts.TIAD:
@@ -17071,7 +17071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
-                        .ToExtendedList<KeyFrame>();
+                        .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown54;
                 }
                 default:

@@ -2092,7 +2092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTarget>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IOutfitTarget>>();
+                        .CastExtendedList<IFormLink<IOutfitTarget>>();
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:

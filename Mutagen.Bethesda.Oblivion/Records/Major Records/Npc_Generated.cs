@@ -5536,7 +5536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: out listSubItem,
                                     parseWhole: false);
                             })
-                        .ToExtendedList<String>();
+                        .CastExtendedList<String>();
                     return (int)Npc_FieldIndex.Animations;
                 }
                 case RecordTypeInts.CNAM:
@@ -5573,7 +5573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eye>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Eye>>();
+                        .CastExtendedList<IFormLink<Eye>>();
                     return (int)Npc_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.HCLR:

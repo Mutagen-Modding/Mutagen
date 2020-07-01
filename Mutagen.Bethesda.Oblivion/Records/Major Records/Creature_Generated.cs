@@ -5571,7 +5571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: out listSubItem,
                                     parseWhole: false);
                             })
-                        .ToExtendedList<String>();
+                        .CastExtendedList<String>();
                     return (int)Creature_FieldIndex.Models;
                 }
                 case RecordTypeInts.NIFT:
@@ -5638,7 +5638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: out listSubItem,
                                     parseWhole: false);
                             })
-                        .ToExtendedList<String>();
+                        .CastExtendedList<String>();
                     return (int)Creature_FieldIndex.Animations;
                 }
                 case RecordTypeInts.DATA:

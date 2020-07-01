@@ -30,6 +30,7 @@ namespace Mutagen.Bethesda.Generation
         const string ThreadKey = "ListThread";
         public const string CounterRecordType = "ListCounterRecordType";
         public const string CounterByteLength = "CounterByteLength";
+        public const string NullIfCounterZero = "NullIfCounterZero";
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -57,6 +58,7 @@ namespace Mutagen.Bethesda.Generation
             listType.CustomData[ThreadKey] = node.GetAttribute<bool>("thread", false);
             listType.CustomData[CounterRecordType] = node.GetAttribute("counterRecType", null);
             listType.CustomData[CounterByteLength] = node.GetAttribute("counterLength", default(byte));
+            listType.CustomData[NullIfCounterZero] = node.GetAttribute("nullIfCounterZero", false);
             var asyncItem = node.GetAttribute<bool>("asyncItems", false);
             if (asyncItem && listType.SubTypeGeneration is LoquiType loqui)
             {
@@ -298,7 +300,7 @@ namespace Mutagen.Bethesda.Generation
                 recordPerItem = true;
             }
 
-            list.WrapSet(fg, itemAccessor, (wrapFg) =>
+            WrapSet(fg, itemAccessor, list, (wrapFg) =>
             {
                 using (var args = new ArgsWrapper(wrapFg,
                     $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
@@ -522,6 +524,36 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             });
+        }
+
+        public void WrapSet(FileGeneration fg, Accessor accessor, ListType list, Action<FileGeneration> a)
+        {
+            if (list.HasBeenSet)
+            {
+                fg.AppendLine($"{accessor.PropertyOrDirectAccess} = ");
+                using (new DepthWrapper(fg))
+                {
+                    a(fg);
+                    if (list.CustomData.TryGetValue(NullIfCounterZero, out var val)
+                        && (bool)val)
+                    {
+
+                        fg.AppendLine($".CastExtendedListIfAny<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    }
+                    else
+                    {
+                        fg.AppendLine($".CastExtendedList<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>();");
+                    }
+                }
+            }
+            else
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"{accessor.PropertyOrDirectAccess}.SetTo"))
+                {
+                    args.Add(subFg => a(subFg));
+                }
+            }
         }
 
         public override void GenerateCopyInRet(

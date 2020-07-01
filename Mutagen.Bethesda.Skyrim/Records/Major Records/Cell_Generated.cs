@@ -6355,7 +6355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Region>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Region>>();
+                        .CastExtendedList<IFormLink<Region>>();
                     return (int)Cell_FieldIndex.Regions;
                 }
                 case RecordTypeInts.XLCN:

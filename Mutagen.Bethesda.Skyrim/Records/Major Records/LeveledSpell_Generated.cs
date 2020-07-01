@@ -2561,7 +2561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: LeveledSpellEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledSpellEntry.TryCreateFromBinary)
-                        .ToExtendedList<LeveledSpellEntry>();
+                        .CastExtendedList<LeveledSpellEntry>();
                     return (int)LeveledSpell_FieldIndex.Entries;
                 }
                 default:

@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: P2FloatBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<P2Float>();
+                        .CastExtendedList<P2Float>();
                     return (int)RegionArea_FieldIndex.RegionPoints;
                 }
                 default:

@@ -5560,7 +5560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<LocationReferenceType>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<LocationReferenceType>>();
+                        .CastExtendedList<IFormLink<LocationReferenceType>>();
                     return (int)PlacedNpc_FieldIndex.LocationRefTypes;
                 }
                 case RecordTypeInts.XHTW:

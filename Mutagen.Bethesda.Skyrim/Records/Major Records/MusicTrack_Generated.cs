@@ -3263,7 +3263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FloatBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<Single>();
+                        .CastExtendedList<Single>();
                     return (int)MusicTrack_FieldIndex.CuePoints;
                 }
                 case RecordTypeInts.CTDA:
@@ -3281,7 +3281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<MusicTrack>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<MusicTrack>>();
+                        .CastExtendedList<IFormLink<MusicTrack>>();
                     return (int)MusicTrack_FieldIndex.Tracks;
                 }
                 default:

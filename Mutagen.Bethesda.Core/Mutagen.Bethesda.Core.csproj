@@ -41,6 +41,7 @@
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
+    <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Links\DirectModLinkCache.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\ILinkCache.cs" />

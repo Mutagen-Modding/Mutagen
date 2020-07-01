@@ -5390,7 +5390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)QuestAlias_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNTO:
@@ -5404,7 +5404,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
-                        .ToExtendedList<ContainerEntry>();
+                        .CastExtendedList<ContainerEntry>();
                     return (int)QuestAlias_FieldIndex.Items;
                 }
                 case RecordTypeInts.SPOR:

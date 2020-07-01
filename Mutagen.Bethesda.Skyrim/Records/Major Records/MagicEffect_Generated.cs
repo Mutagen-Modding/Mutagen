@@ -6789,7 +6789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)MagicEffect_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -6886,7 +6886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<MagicEffectSound>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: MagicEffectSound.TryCreateFromBinary)
-                        .ToExtendedList<MagicEffectSound>();
+                        .CastExtendedList<MagicEffectSound>();
                     return (int)MagicEffect_FieldIndex.Sounds;
                 }
                 case RecordTypeInts.DNAM:

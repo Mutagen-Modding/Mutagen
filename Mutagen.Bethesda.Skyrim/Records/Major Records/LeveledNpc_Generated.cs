@@ -2698,7 +2698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: LeveledNpcEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledNpcEntry.TryCreateFromBinary)
-                        .ToExtendedList<LeveledNpcEntry>();
+                        .CastExtendedList<LeveledNpcEntry>();
                     return (int)LeveledNpc_FieldIndex.Entries;
                 }
                 case RecordTypeInts.MODL:

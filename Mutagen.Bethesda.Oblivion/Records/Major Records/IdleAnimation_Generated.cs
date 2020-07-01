@@ -2600,7 +2600,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IdleAnimation>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<IdleAnimation>>();
+                        .CastExtendedList<IFormLink<IdleAnimation>>();
                     return (int)IdleAnimation_FieldIndex.RelatedIdleAnimations;
                 }
                 default:

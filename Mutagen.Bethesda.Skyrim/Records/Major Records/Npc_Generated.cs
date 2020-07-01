@@ -8101,7 +8101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ASpell>>();
+                        .CastExtendedList<IFormLink<ASpell>>();
                     return (int)Npc_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.DEST:
@@ -8191,7 +8191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.PRKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: PerkPlacement.TryCreateFromBinary)
-                        .ToExtendedList<PerkPlacement>();
+                        .CastExtendedList<PerkPlacement>();
                     return (int)Npc_FieldIndex.Perks;
                 }
                 case RecordTypeInts.CNTO:
@@ -8205,7 +8205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerEntry.TryCreateFromBinary)
-                        .ToExtendedList<ContainerEntry>();
+                        .CastExtendedList<ContainerEntry>();
                     return (int)Npc_FieldIndex.Items;
                 }
                 case RecordTypeInts.AIDT:
@@ -8232,7 +8232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)Npc_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.CNAM:

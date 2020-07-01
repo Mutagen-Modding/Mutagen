@@ -2623,7 +2623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: UInt32BinaryTranslation.Instance.Parse)
-                        .ToExtendedList<UInt32>();
+                        .CastExtendedList<UInt32>();
                     return (int)Tree_FieldIndex.SpeedTreeSeeds;
                 }
                 case RecordTypeInts.CNAM:

@@ -3179,7 +3179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: WeatherType.TryCreateFromBinary)
-                        .ToExtendedList<WeatherType>();
+                        .CastExtendedList<WeatherType>();
                     return (int)Climate_FieldIndex.WeatherTypes;
                 }
                 case RecordTypeInts.FNAM:

@@ -1872,7 +1872,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             amount: frame.ReadInt32(),
                             frame: frame,
                             transl: AlternateTexture.TryCreateFromBinary)
-                        .ToExtendedList<AlternateTexture>();
+                        .CastExtendedList<AlternateTexture>();
                     return (int)Model_FieldIndex.AlternateTextures;
                 }
                 default:

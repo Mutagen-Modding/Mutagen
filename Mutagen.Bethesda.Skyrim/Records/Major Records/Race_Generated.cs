@@ -10828,7 +10828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<ASpell>>();
+                        .CastExtendedList<IFormLink<ASpell>>();
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
@@ -10854,7 +10854,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Keyword>>();
+                        .CastExtendedList<IFormLink<Keyword>>();
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.DATA:
@@ -11015,7 +11015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Hair>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Hair>>();
+                        .CastExtendedList<IFormLink<Hair>>();
                     return (int)Race_FieldIndex.Hairs;
                 }
                 case RecordTypeInts.ENAM:
@@ -11025,7 +11025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<Eyes>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .ToExtendedList<IFormLink<Eyes>>();
+                        .CastExtendedList<IFormLink<Eyes>>();
                     return (int)Race_FieldIndex.Eyes;
                 }
                 case RecordTypeInts.GNAM:
