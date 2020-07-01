@@ -45,7 +45,7 @@
     <Compile Include="Enums\TargetObjectType.cs" />
     <Compile Include="Enums\TargetType.cs" />
     <Compile Include="Enums\WeaponAnimationType.cs" />
-    <Compile Include="Enums\EmotionType.cs" />
+    <Compile Include="Enums\Emotion.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
     <Compile Include="Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
@@ -103,6 +103,9 @@
       <DependentUpon>Patrol.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEntry.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptFragments.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptProperty.cs">
@@ -253,9 +256,6 @@
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogResponsesAdapter.cs">
-      <DependentUpon>DialogResponses.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogResponsesScriptFragments.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogTopic.cs">
@@ -531,6 +531,15 @@
     <Compile Include="Records\Major Records\PerkScriptFragments.cs">
       <DependentUpon>Perk.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SceneAction.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneActor.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhaseFragment.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Phoneme.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -620,6 +629,18 @@
     </Compile>
     <Compile Include="Records\Major Records\Relationship.cs">
       <DependentUpon>Relationship.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Scene.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneAdapter.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhase.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhaseFragments.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Scroll.cs">
       <DependentUpon>Scroll.xml</DependentUpon>
@@ -1088,9 +1109,6 @@
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogResponsesAdapter_Generated.cs">
-      <DependentUpon>DialogResponses.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\DialogResponsesScriptFragments_Generated.cs">
       <DependentUpon>DialogResponses.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\DialogTopic_Generated.cs">
@@ -1999,6 +2017,33 @@
     </Compile>
     <Compile Include="Records\Major Records\WordOfPower_Generated.cs">
       <DependentUpon>WordOfPower.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Scene_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneAdapter_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhaseFragment_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhase_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScenePhaseUnusedData_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneActor_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneAction_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptFragments_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SceneScriptFragments_Generated.cs">
+      <DependentUpon>Scene.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

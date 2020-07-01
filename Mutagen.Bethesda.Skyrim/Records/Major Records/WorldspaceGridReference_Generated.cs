@@ -2056,7 +2056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public P2Int16 GridPosition => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
         #region References
-        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList<IWorldspaceReferenceGetter>.FactoryByCountLength(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
+        public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList<WorldspaceReferenceBinaryOverlay>.FactoryByCountLength(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

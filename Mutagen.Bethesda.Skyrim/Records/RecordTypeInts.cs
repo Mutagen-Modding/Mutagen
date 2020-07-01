@@ -109,14 +109,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int DATA = 0x41544144;
         public const int DEBR = 0x52424544;
         public const int DELE = 0x454C4544;
+        public const int DEMO = 0x4F4D4544;
         public const int DESC = 0x43534544;
         public const int DEST = 0x54534544;
+        public const int DEVA = 0x41564544;
         public const int DFTM = 0x4D544644;
         public const int DIAD = 0x44414944;
         public const int DIAL = 0x4C414944;
         public const int DLBR = 0x52424C44;
         public const int DLVW = 0x57564C44;
+        public const int DMAX = 0x58414D44;
         public const int DMDL = 0x4C444D44;
+        public const int DMIN = 0x4E494D44;
         public const int DNAM = 0x4D414E44;
         public const int DOBJ = 0x4A424F44;
         public const int DODT = 0x54444F44;
@@ -176,6 +180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int HEDR = 0x52444548;
         public const int HIAD = 0x44414948;
         public const int HNAM = 0x4D414E48;
+        public const int HTID = 0x44495448;
         public const int _0_IAD = 0x44414900;
         public const int _1_IAD = 0x44414901;
         public const int _2_IAD = 0x44414902;
@@ -373,8 +378,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int RPLI = 0x494C5052;
         public const int RPRM = 0x4D525052;
         public const int SCDA = 0x41444353;
+        public const int SCEN = 0x4E454353;
         public const int SCHR = 0x52484353;
         public const int SCRL = 0x4C524353;
+        public const int SCRO = 0x4F524353;
         public const int SCTX = 0x58544353;
         public const int SDSC = 0x43534453;
         public const int SHOU = 0x554F4853;

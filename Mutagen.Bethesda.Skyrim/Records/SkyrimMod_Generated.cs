@@ -142,6 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Shouts_Object = new Group<Shout>(this);
             _EquipTypes_Object = new Group<EquipType>(this);
             _Relationships_Object = new Group<Relationship>(this);
+            _Scenes_Object = new Group<Scene>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -847,6 +848,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IRelationshipGetter> ISkyrimModGetter.Relationships => _Relationships_Object;
         #endregion
+        #region Scenes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Scene> _Scenes_Object;
+        public Group<Scene> Scenes => _Scenes_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ISceneGetter> ISkyrimModGetter.Scenes => _Scenes_Object;
+        #endregion
 
         #region To String
 
@@ -1116,6 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1218,7 +1227,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem WordsOfPower,
                 TItem Shouts,
                 TItem EquipTypes,
-                TItem Relationships)
+                TItem Relationships,
+                TItem Scenes)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1320,6 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<TItem, Group.Mask<TItem>?>(Shouts, new Group.Mask<TItem>(Shouts));
                 this.EquipTypes = new MaskItem<TItem, Group.Mask<TItem>?>(EquipTypes, new Group.Mask<TItem>(EquipTypes));
                 this.Relationships = new MaskItem<TItem, Group.Mask<TItem>?>(Relationships, new Group.Mask<TItem>(Relationships));
+                this.Scenes = new MaskItem<TItem, Group.Mask<TItem>?>(Scenes, new Group.Mask<TItem>(Scenes));
             }
 
             #pragma warning disable CS8618
@@ -1431,6 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? Shouts { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? EquipTypes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Relationships { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Scenes { get; set; }
             #endregion
 
             #region Equals
@@ -1543,6 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Shouts, rhs.Shouts)) return false;
                 if (!object.Equals(this.EquipTypes, rhs.EquipTypes)) return false;
                 if (!object.Equals(this.Relationships, rhs.Relationships)) return false;
+                if (!object.Equals(this.Scenes, rhs.Scenes)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1648,6 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Shouts);
                 hash.Add(this.EquipTypes);
                 hash.Add(this.Relationships);
+                hash.Add(this.Scenes);
                 return hash.ToHashCode();
             }
 
@@ -2156,6 +2170,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Relationships.Overall)) return false;
                     if (this.Relationships.Specific != null && !this.Relationships.Specific.All(eval)) return false;
                 }
+                if (Scenes != null)
+                {
+                    if (!eval(this.Scenes.Overall)) return false;
+                    if (this.Scenes.Specific != null && !this.Scenes.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2663,6 +2682,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Relationships.Overall)) return true;
                     if (this.Relationships.Specific != null && this.Relationships.Specific.Any(eval)) return true;
                 }
+                if (Scenes != null)
+                {
+                    if (eval(this.Scenes.Overall)) return true;
+                    if (this.Scenes.Specific != null && this.Scenes.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -2777,6 +2801,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Shouts = this.Shouts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Shouts.Overall), this.Shouts.Specific?.Translate(eval));
                 obj.EquipTypes = this.EquipTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.EquipTypes.Overall), this.EquipTypes.Specific?.Translate(eval));
                 obj.Relationships = this.Relationships == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Relationships.Overall), this.Relationships.Specific?.Translate(eval));
+                obj.Scenes = this.Scenes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Scenes.Overall), this.Scenes.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3199,6 +3224,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Relationships?.ToString(fg);
                     }
+                    if (printMask?.Scenes?.Overall ?? true)
+                    {
+                        Scenes?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3324,6 +3353,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<Shout.ErrorMask>?>? Shouts;
             public MaskItem<Exception?, Group.ErrorMask<EquipType.ErrorMask>?>? EquipTypes;
             public MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>? Relationships;
+            public MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>? Scenes;
             #endregion
 
             #region IErrorMask
@@ -3532,6 +3562,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return EquipTypes;
                     case SkyrimMod_FieldIndex.Relationships:
                         return Relationships;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        return Scenes;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -3841,6 +3873,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.Relationships:
                         this.Relationships = new MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        this.Scenes = new MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4152,6 +4187,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.Relationships:
                         this.Relationships = (MaskItem<Exception?, Group.ErrorMask<Relationship.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.Scenes:
+                        this.Scenes = (MaskItem<Exception?, Group.ErrorMask<Scene.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4260,6 +4298,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Shouts != null) return true;
                 if (EquipTypes != null) return true;
                 if (Relationships != null) return true;
+                if (Scenes != null) return true;
                 return false;
             }
             #endregion
@@ -4394,6 +4433,7 @@ namespace Mutagen.Bethesda.Skyrim
                 Shouts?.ToString(fg);
                 EquipTypes?.ToString(fg);
                 Relationships?.ToString(fg);
+                Scenes?.ToString(fg);
             }
             #endregion
 
@@ -4502,6 +4542,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Shouts = this.Shouts.Combine(rhs.Shouts, (l, r) => l.Combine(r));
                 ret.EquipTypes = this.EquipTypes.Combine(rhs.EquipTypes, (l, r) => l.Combine(r));
                 ret.Relationships = this.Relationships.Combine(rhs.Relationships, (l, r) => l.Combine(r));
+                ret.Scenes = this.Scenes.Combine(rhs.Scenes, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -4623,6 +4664,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?> Shouts;
             public MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?> EquipTypes;
             public MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?> Relationships;
+            public MaskItem<bool, Group.TranslationMask<Scene.TranslationMask>?> Scenes;
             #endregion
 
             #region Ctors
@@ -4728,6 +4770,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Shouts = new MaskItem<bool, Group.TranslationMask<Shout.TranslationMask>?>(defaultOn, null);
                 this.EquipTypes = new MaskItem<bool, Group.TranslationMask<EquipType.TranslationMask>?>(defaultOn, null);
                 this.Relationships = new MaskItem<bool, Group.TranslationMask<Relationship.TranslationMask>?>(defaultOn, null);
+                this.Scenes = new MaskItem<bool, Group.TranslationMask<Scene.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -4843,6 +4886,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Shouts?.Overall ?? true, Shouts?.Specific?.GetCrystal()));
                 ret.Add((EquipTypes?.Overall ?? true, EquipTypes?.Specific?.GetCrystal()));
                 ret.Add((Relationships?.Overall ?? true, Relationships?.Specific?.GetCrystal()));
+                ret.Add((Scenes?.Overall ?? true, Scenes?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -4967,6 +5011,7 @@ namespace Mutagen.Bethesda.Skyrim
             _Shouts_Object = new Group<Shout>(this);
             _EquipTypes_Object = new Group<EquipType>(this);
             _Relationships_Object = new Group<Relationship>(this);
+            _Scenes_Object = new Group<Scene>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -5370,6 +5415,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.Relationships ?? true)
             {
                 this.Relationships.RecordCache.Set(rhsMod.Relationships.RecordCache.Items);
+            }
+            if (mask?.Scenes ?? true)
+            {
+                this.Scenes.RecordCache.Set(rhsMod.Scenes.RecordCache.Items);
             }
         }
 
@@ -6071,6 +6120,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<Relationship>());
             }
+            if (mask?.Scenes ?? true)
+            {
+                this.Scenes.RecordCache.Set(
+                    rhs.Scenes.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<Scene>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -6189,6 +6245,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += Shouts.RecordCache.Count > 0 ? 1 : 0;
             count += EquipTypes.RecordCache.Count > 0 ? 1 : 0;
             count += Relationships.RecordCache.Count > 0 ? 1 : 0;
+            count += Scenes.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -6511,6 +6568,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<Shout> Shouts { get; }
         new Group<EquipType> EquipTypes { get; }
         new Group<Relationship> Relationships { get; }
+        new Group<Scene> Scenes { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -6628,6 +6686,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IShoutGetter> Shouts { get; }
         IGroupGetter<IEquipTypeGetter> EquipTypes { get; }
         IGroupGetter<IRelationshipGetter> Relationships { get; }
+        IGroupGetter<ISceneGetter> Scenes { get; }
 
     }
 
@@ -7217,6 +7276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Shouts = 97,
         EquipTypes = 98,
         Relationships = 99,
+        Scenes = 100,
     }
     #endregion
 
@@ -7234,9 +7294,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 100;
+        public const ushort AdditionalFieldCount = 101;
 
-        public const ushort FieldCount = 100;
+        public const ushort FieldCount = 101;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -7466,6 +7526,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.EquipTypes;
                 case "RELATIONSHIPS":
                     return (ushort)SkyrimMod_FieldIndex.Relationships;
+                case "SCENES":
+                    return (ushort)SkyrimMod_FieldIndex.Scenes;
                 default:
                     return null;
             }
@@ -7576,6 +7638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7687,6 +7750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7798,6 +7862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8009,6 +8074,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "EquipTypes";
                 case SkyrimMod_FieldIndex.Relationships:
                     return "Relationships";
+                case SkyrimMod_FieldIndex.Scenes:
+                    return "Scenes";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8119,6 +8186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8231,6 +8299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.Shouts:
                 case SkyrimMod_FieldIndex.EquipTypes:
                 case SkyrimMod_FieldIndex.Relationships:
+                case SkyrimMod_FieldIndex.Scenes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8442,6 +8511,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<EquipType>);
                 case SkyrimMod_FieldIndex.Relationships:
                     return typeof(Group<Relationship>);
+                case SkyrimMod_FieldIndex.Scenes:
+                    return typeof(Group<Scene>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8589,6 +8660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Shouts.Clear();
             item.EquipTypes.Clear();
             item.Relationships.Clear();
+            item.Scenes.Clear();
         }
         
         #region Xml Translation
@@ -8845,6 +8917,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Shouts = MaskItemExt.Factory(item.Shouts.GetEqualsMask(rhs.Shouts, include), include);
             ret.EquipTypes = MaskItemExt.Factory(item.EquipTypes.GetEqualsMask(rhs.EquipTypes, include), include);
             ret.Relationships = MaskItemExt.Factory(item.Relationships.GetEqualsMask(rhs.Relationships, include), include);
+            ret.Scenes = MaskItemExt.Factory(item.Scenes.GetEqualsMask(rhs.Scenes, include), include);
         }
         
         public string ToString(
@@ -9291,6 +9364,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Relationships?.ToString(fg, "Relationships");
             }
+            if (printMask?.Scenes?.Overall ?? true)
+            {
+                item.Scenes?.ToString(fg, "Scenes");
+            }
         }
         
         public bool HasBeenSet(
@@ -9404,6 +9481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Shouts = new MaskItem<bool, Group.Mask<bool>?>(true, item.Shouts?.GetHasBeenSetMask());
             mask.EquipTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.EquipTypes?.GetHasBeenSetMask());
             mask.Relationships = new MaskItem<bool, Group.Mask<bool>?>(true, item.Relationships?.GetHasBeenSetMask());
+            mask.Scenes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Scenes?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -9513,6 +9591,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Shouts, rhs.Shouts)) return false;
             if (!object.Equals(lhs.EquipTypes, rhs.EquipTypes)) return false;
             if (!object.Equals(lhs.Relationships, rhs.Relationships)) return false;
+            if (!object.Equals(lhs.Scenes, rhs.Scenes)) return false;
             return true;
         }
         
@@ -9619,6 +9698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Shouts);
             hash.Add(item.EquipTypes);
             hash.Add(item.Relationships);
+            hash.Add(item.Scenes);
             return hash.ToHashCode();
         }
         
@@ -10130,6 +10210,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationship":
                 case "IRelationshipInternal":
                     return obj.Relationships.RecordCache;
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    return obj.Scenes.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -10149,7 +10234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[99];
+            Stream[] outputStreams = new Stream[100];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -10250,6 +10335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -10993,6 +11079,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.Scenes is ILinkedFormKeyContainer SceneslinkCont)
+            {
+                foreach (var item in SceneslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -11392,6 +11485,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.Relationships.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Scenes.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -12301,6 +12398,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IRelationship":
                 case "IRelationshipInternal":
                     foreach (var item in obj.Relationships.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "Scene":
+                case "ISceneGetter":
+                case "IScene":
+                case "ISceneInternal":
+                    foreach (var item in obj.Scenes.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -14778,6 +14884,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scenes) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scenes);
+                try
+                {
+                    item.Scenes.DeepCopyIn(
+                        rhs: rhs.Scenes,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scenes));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -15966,6 +16092,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.Relationships,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Relationships));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scenes) ?? true))
+            {
+                var ScenesItem = item.Scenes;
+                ((GroupXmlWriteTranslation)((IXmlItem)ScenesItem).XmlWriteTranslator).Write<ISceneGetter>(
+                    item: ScenesItem,
+                    node: node,
+                    name: nameof(item.Scenes),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Scenes,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Scenes));
             }
         }
 
@@ -17935,6 +18072,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Scenes":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Scenes);
+                    try
+                    {
+                        item.Scenes.CopyInFromXml<Scene>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -18203,6 +18359,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool Shouts;
         public bool EquipTypes;
         public bool Relationships;
+        public bool Scenes;
         public GroupMask()
         {
         }
@@ -18307,6 +18464,7 @@ namespace Mutagen.Bethesda.Skyrim
             Shouts = defaultValue;
             EquipTypes = defaultValue;
             Relationships = defaultValue;
+            Scenes = defaultValue;
         }
     }
 
@@ -19420,6 +19578,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)RelationshipsItem).BinaryWriteTranslator).Write<IRelationshipGetter>(
                         item: RelationshipsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Scenes ?? true)
+            {
+                var ScenesItem = item.Scenes;
+                if (ScenesItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ScenesItem).BinaryWriteTranslator).Write<ISceneGetter>(
+                        item: ScenesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -20879,6 +21048,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return (int)SkyrimMod_FieldIndex.Relationships;
                 }
+                case RecordTypeInts.SCEN:
+                {
+                    if (importMask?.Scenes ?? true)
+                    {
+                        item.Scenes.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.Scenes;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -21547,6 +21730,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IRelationshipGetter>? _Relationships => _RelationshipsLocation.HasValue ? GroupBinaryOverlay<IRelationshipGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _RelationshipsLocation!.Value.Min, _RelationshipsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IRelationshipGetter> Relationships => _Relationships ?? new Group<Relationship>(this);
         #endregion
+        #region Scenes
+        private RangeInt64? _ScenesLocation;
+        private IGroupGetter<ISceneGetter>? _Scenes => _ScenesLocation.HasValue ? GroupBinaryOverlay<ISceneGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ScenesLocation!.Value.Min, _ScenesLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ISceneGetter> Scenes => _Scenes ?? new Group<Scene>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -22136,6 +22324,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _RelationshipsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)SkyrimMod_FieldIndex.Relationships;
+                }
+                case RecordTypeInts.SCEN:
+                {
+                    _ScenesLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.Scenes;
                 }
                 default:
                     return default(int?);

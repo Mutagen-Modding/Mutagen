@@ -18,6 +18,7 @@
 
   <PropertyGroup>
     <Nullable>disable</Nullable>
+    <Description>Skyrim</Description>
   </PropertyGroup>
 
 </Project>

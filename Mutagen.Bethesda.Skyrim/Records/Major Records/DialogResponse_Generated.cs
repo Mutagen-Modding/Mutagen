@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Emotion
-        public EmotionType Emotion { get; set; } = default;
+        public Emotion Emotion { get; set; } = default;
         #endregion
         #region EmotionValue
         public UInt32 EmotionValue { get; set; } = default;
@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDialogResponseGetter,
         ILoquiObjectSetter<IDialogResponse>
     {
-        new EmotionType Emotion { get; set; }
+        new Emotion Emotion { get; set; }
         new UInt32 EmotionValue { get; set; }
         new Int32 Unknown { get; set; }
         new Byte ResponseNumber { get; set; }
@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DialogResponse_Registration.Instance;
-        EmotionType Emotion { get; }
+        Emotion Emotion { get; }
         UInt32 EmotionValue { get; }
         Int32 Unknown { get; }
         Byte ResponseNumber { get; }
@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case DialogResponse_FieldIndex.Emotion:
-                    return typeof(EmotionType);
+                    return typeof(Emotion);
                 case DialogResponse_FieldIndex.EmotionValue:
                     return typeof(UInt32);
                 case DialogResponse_FieldIndex.Unknown:
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((translationMask?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
-                EnumXmlTranslation<EmotionType>.Instance.Write(
+                EnumXmlTranslation<Emotion>.Instance.Write(
                     node: node,
                     name: nameof(item.Emotion),
                     item: item.Emotion,
@@ -2394,7 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)DialogResponse_FieldIndex.Emotion);
                     try
                     {
-                        item.Emotion = EnumXmlTranslation<EmotionType>.Instance.Parse(
+                        item.Emotion = EnumXmlTranslation<Emotion>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2828,7 +2828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.TRDT)))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Emotion>.Instance.Write(
                     writer,
                     item.Emotion,
                     length: 4);
@@ -2929,7 +2929,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponse_FieldIndex.Unknown3) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Emotion = EnumBinaryTranslation<Emotion>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.EmotionValue = dataFrame.ReadUInt32();
                     item.Unknown = dataFrame.ReadInt32();
                     item.ResponseNumber = dataFrame.ReadUInt8();
@@ -3079,7 +3079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Emotion
         private int _EmotionLocation => _TRDTLocation!.Value;
         private bool _Emotion_IsSet => _TRDTLocation.HasValue;
-        public EmotionType Emotion => _Emotion_IsSet ? (EmotionType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)) : default;
+        public Emotion Emotion => _Emotion_IsSet ? (Emotion)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_EmotionLocation, 0x4)) : default;
         #endregion
         #region EmotionValue
         private int _EmotionValueLocation => _TRDTLocation!.Value + 0x4;

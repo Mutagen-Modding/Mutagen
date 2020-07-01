@@ -542,6 +542,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!field.IntegrateField
                     && !(field is DataType)
+                    && !(field is MarkerType)
                     && !(field is CustomLogic)) continue;
                 var fieldData = field.GetFieldData();
                 if (!fieldData.HasTrigger) break;

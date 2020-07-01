@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IDialogResponsesAdapter item)
             {
-                item.ScriptFragments = Mutagen.Bethesda.Skyrim.DialogResponsesScriptFragments.CreateFromBinary(frame: frame);
+                item.ScriptFragments = Mutagen.Bethesda.Skyrim.ScriptFragments.CreateFromBinary(frame: frame);
             }
         }
 
@@ -26,10 +26,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class DialogResponsesAdapterBinaryOverlay
         {
-            IDialogResponsesScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
+            IScriptFragmentsGetter? GetScriptFragmentsCustom(int location)
             {
                 if (this.ScriptsEndingPos == _data.Length) return null;
-                return DialogResponsesScriptFragmentsBinaryOverlay.DialogResponsesScriptFragmentsFactory(
+                return ScriptFragmentsBinaryOverlay.ScriptFragmentsFactory(
                     _data.Slice(this.ScriptsEndingPos),
                     _package);
             }

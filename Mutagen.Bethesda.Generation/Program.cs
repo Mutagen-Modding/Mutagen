@@ -79,10 +79,10 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
             gen.AddTypeAssociation<CustomLogic>("CustomLogic");
-            gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
             gen.AddTypeAssociation<GenderedType>("Gendered");
             gen.AddTypeAssociation<BreakType>("Break");
+            gen.AddTypeAssociation<MarkerType>("Marker");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();

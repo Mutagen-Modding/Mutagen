@@ -4,13 +4,13 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
-using static Mutagen.Bethesda.Skyrim.Internals.DialogResponsesScriptFragmentsBinaryCreateTranslation;
+using static Mutagen.Bethesda.Skyrim.Internals.ScriptFragmentsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     namespace Internals
     {
-        public partial class DialogResponsesScriptFragmentsBinaryCreateTranslation
+        public partial class ScriptFragmentsBinaryCreateTranslation
         {
             [Flags]
             public enum Flag
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
                 OnEnd = 0x02,
             }
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IDialogResponsesScriptFragments item)
+            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
             {
                 var flag = (Flag)frame.ReadUInt8();
                 item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -36,9 +36,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class DialogResponsesScriptFragmentsBinaryWriteTranslation
+        public partial class ScriptFragmentsBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IDialogResponsesScriptFragmentsGetter item)
+            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
             {
                 var begin = item.OnBegin;
                 var end = item.OnEnd;
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class DialogResponsesScriptFragmentsBinaryOverlay
+        public partial class ScriptFragmentsBinaryOverlay
         {
             Flag Flags => (Flag)_data.Span.Slice(0x1, 0x1)[0];
 
@@ -69,22 +69,37 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IScriptFragmentGetter? OnBegin { get; private set; }
 
-            int _onBeginEnd;
-            public IScriptFragmentGetter? OnEnd => Flags.HasFlag(Flag.OnEnd) ? ScriptFragmentBinaryOverlay.ScriptFragmentFactory(_data.Slice(_onBeginEnd), _package) : default;
+            public IScriptFragmentGetter? OnEnd { get; private set; }
 
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
+                Initialize(stream);
+            }
+
+            protected void Initialize(OverlayStream stream)
+            {
                 var fileNameEnd = 0x2 + BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2)) + 2;
                 stream.Position = fileNameEnd;
+                int onBeginEnd;
                 if (Flags.HasFlag(Flag.OnBegin))
                 {
                     stream.Position = fileNameEnd;
                     OnBegin = ScriptFragmentBinaryOverlay.ScriptFragmentFactory(stream, _package);
-                    _onBeginEnd = stream.Position;
+                    onBeginEnd = stream.Position;
                 }
                 else
                 {
-                    _onBeginEnd = fileNameEnd;
+                    onBeginEnd = fileNameEnd;
+                }
+                if (Flags.HasFlag(Flag.OnEnd))
+                {
+                    stream.Position = onBeginEnd;
+                    OnEnd = ScriptFragmentBinaryOverlay.ScriptFragmentFactory(stream, _package);
+                    FlagsEndingPos = stream.Position;
+                }
+                else
+                {
+                    FlagsEndingPos = onBeginEnd;
                 }
             }
         }

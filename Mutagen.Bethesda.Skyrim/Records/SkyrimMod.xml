@@ -106,6 +106,7 @@
       <Group name="Shouts" refName="Shout" />
       <Group name="EquipTypes" refName="EquipType" />
       <Group name="Relationships" refName="Relationship" />
+      <Group name="Scenes" refName="Scene" />
     </Fields>
   </Object>
 </Loqui>

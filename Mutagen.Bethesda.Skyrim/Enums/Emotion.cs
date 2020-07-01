@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public enum EmotionType
+    public enum Emotion
     {
         Neutral,
         Anger,

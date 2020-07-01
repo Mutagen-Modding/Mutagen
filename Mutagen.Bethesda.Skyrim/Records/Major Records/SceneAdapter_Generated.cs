@@ -33,15 +33,15 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class DialogResponsesAdapter :
+    public partial class SceneAdapter :
         AVirtualMachineAdapter,
-        IDialogResponsesAdapter,
-        ILoquiObjectSetter<DialogResponsesAdapter>,
-        IEquatable<DialogResponsesAdapter>,
+        ISceneAdapter,
+        ILoquiObjectSetter<SceneAdapter>,
+        IEquatable<SceneAdapter>,
         IEqualsMask
     {
         #region Ctor
-        public DialogResponsesAdapter()
+        public SceneAdapter()
         {
             CustomCtor();
         }
@@ -50,14 +50,14 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ScriptFragments
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ScriptFragments? _ScriptFragments;
-        public ScriptFragments? ScriptFragments
+        private SceneScriptFragments? _ScriptFragments;
+        public SceneScriptFragments? ScriptFragments
         {
             get => _ScriptFragments;
             set => _ScriptFragments = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFragmentsGetter? IDialogResponsesAdapterGetter.ScriptFragments => this.ScriptFragments;
+        ISceneScriptFragmentsGetter? ISceneAdapterGetter.ScriptFragments => this.ScriptFragments;
         #endregion
 
         #region To String
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            DialogResponsesAdapterMixIn.ToString(
+            SceneAdapterMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -76,29 +76,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesAdapterGetter rhs)) return false;
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ISceneAdapterGetter rhs)) return false;
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponsesAdapter? obj)
+        public bool Equals(SceneAdapter? obj)
         {
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SceneAdapterCommon)((ISceneAdapterGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogResponsesAdapterXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => SceneAdapterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogResponsesAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SceneAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -107,9 +107,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new DialogResponsesAdapter CreateFromXml(
+        public static new SceneAdapter CreateFromXml(
             XElement node,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -118,27 +118,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             XElement node,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SceneAdapter.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static DialogResponsesAdapter CreateFromXml(
+        public new static SceneAdapter CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new DialogResponsesAdapter();
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new SceneAdapter();
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -146,9 +146,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             string path,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -156,10 +156,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             string path,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -168,10 +168,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -180,9 +180,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             Stream stream,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -190,10 +190,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             Stream stream,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -202,10 +202,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesAdapter CreateFromXml(
+        public static SceneAdapter CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ScriptFragments = new MaskItem<TItem, ScriptFragments.Mask<TItem>?>(initialValue, new ScriptFragments.Mask<TItem>(initialValue));
+                this.ScriptFragments = new MaskItem<TItem, SceneScriptFragments.Mask<TItem>?>(initialValue, new SceneScriptFragments.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ObjectFormat: ObjectFormat,
                 Scripts: Scripts)
             {
-                this.ScriptFragments = new MaskItem<TItem, ScriptFragments.Mask<TItem>?>(ScriptFragments, new ScriptFragments.Mask<TItem>(ScriptFragments));
+                this.ScriptFragments = new MaskItem<TItem, SceneScriptFragments.Mask<TItem>?>(ScriptFragments, new SceneScriptFragments.Mask<TItem>(ScriptFragments));
             }
 
             #pragma warning disable CS8618
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, ScriptFragments.Mask<TItem>?>? ScriptFragments { get; set; }
+            public MaskItem<TItem, SceneScriptFragments.Mask<TItem>?>? ScriptFragments { get; set; }
             #endregion
 
             #region Equals
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new DialogResponsesAdapter.Mask<R>();
+                var ret = new SceneAdapter.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ScriptFragments = this.ScriptFragments == null ? null : new MaskItem<R, ScriptFragments.Mask<R>?>(eval(this.ScriptFragments.Overall), this.ScriptFragments.Specific?.Translate(eval));
+                obj.ScriptFragments = this.ScriptFragments == null ? null : new MaskItem<R, SceneScriptFragments.Mask<R>?>(eval(this.ScriptFragments.Overall), this.ScriptFragments.Specific?.Translate(eval));
             }
             #endregion
 
@@ -327,16 +327,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(DialogResponsesAdapter.Mask<bool>? printMask = null)
+            public string ToString(SceneAdapter.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogResponsesAdapter.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SceneAdapter.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogResponsesAdapter.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SceneAdapter.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -356,16 +356,16 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, ScriptFragments.ErrorMask?>? ScriptFragments;
+            public MaskItem<Exception?, SceneScriptFragments.ErrorMask?>? ScriptFragments;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+                SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                    case SceneAdapter_FieldIndex.ScriptFragments:
                         return ScriptFragments;
                     default:
                         return base.GetNthMask(index);
@@ -374,11 +374,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+                SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesAdapter_FieldIndex.ScriptFragments:
-                        this.ScriptFragments = new MaskItem<Exception?, ScriptFragments.ErrorMask?>(ex, null);
+                    case SceneAdapter_FieldIndex.ScriptFragments:
+                        this.ScriptFragments = new MaskItem<Exception?, SceneScriptFragments.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -388,11 +388,11 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+                SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesAdapter_FieldIndex.ScriptFragments:
-                        this.ScriptFragments = (MaskItem<Exception?, ScriptFragments.ErrorMask?>?)obj;
+                    case SceneAdapter_FieldIndex.ScriptFragments:
+                        this.ScriptFragments = (MaskItem<Exception?, SceneScriptFragments.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -471,14 +471,14 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ScriptFragments.TranslationMask?> ScriptFragments;
+            public MaskItem<bool, SceneScriptFragments.TranslationMask?> ScriptFragments;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ScriptFragments = new MaskItem<bool, ScriptFragments.TranslationMask?>(defaultOn, null);
+                this.ScriptFragments = new MaskItem<bool, SceneScriptFragments.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -492,36 +492,36 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogResponsesAdapter_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = SceneAdapter_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => DialogResponsesAdapterBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SceneAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SceneAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new DialogResponsesAdapter CreateFromBinary(MutagenFrame frame)
+        public static new SceneAdapter CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static DialogResponsesAdapter CreateFromBinary(
+        public new static SceneAdapter CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new DialogResponsesAdapter();
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SceneAdapter();
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out DialogResponsesAdapter item,
+            out SceneAdapter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -543,80 +543,80 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesAdapterGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneAdapterGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new DialogResponsesAdapter GetNew()
+        internal static new SceneAdapter GetNew()
         {
-            return new DialogResponsesAdapter();
+            return new SceneAdapter();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IDialogResponsesAdapter :
-        IDialogResponsesAdapterGetter,
+    public partial interface ISceneAdapter :
+        ISceneAdapterGetter,
         IAVirtualMachineAdapter,
-        ILoquiObjectSetter<IDialogResponsesAdapter>
+        ILoquiObjectSetter<ISceneAdapter>
     {
-        new ScriptFragments? ScriptFragments { get; set; }
+        new SceneScriptFragments? ScriptFragments { get; set; }
     }
 
-    public partial interface IDialogResponsesAdapterGetter :
+    public partial interface ISceneAdapterGetter :
         IAVirtualMachineAdapterGetter,
-        ILoquiObject<IDialogResponsesAdapterGetter>,
+        ILoquiObject<ISceneAdapterGetter>,
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogResponsesAdapter_Registration.Instance;
-        IScriptFragmentsGetter? ScriptFragments { get; }
+        static ILoquiRegistration Registration => SceneAdapter_Registration.Instance;
+        ISceneScriptFragmentsGetter? ScriptFragments { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class DialogResponsesAdapterMixIn
+    public static partial class SceneAdapterMixIn
     {
-        public static void Clear(this IDialogResponsesAdapter item)
+        public static void Clear(this ISceneAdapter item)
         {
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static DialogResponsesAdapter.Mask<bool> GetEqualsMask(
-            this IDialogResponsesAdapterGetter item,
-            IDialogResponsesAdapterGetter rhs,
+        public static SceneAdapter.Mask<bool> GetEqualsMask(
+            this ISceneAdapterGetter item,
+            ISceneAdapterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IDialogResponsesAdapterGetter item,
+            this ISceneAdapterGetter item,
             string? name = null,
-            DialogResponsesAdapter.Mask<bool>? printMask = null)
+            SceneAdapter.Mask<bool>? printMask = null)
         {
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).ToString(
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IDialogResponsesAdapterGetter item,
+            this ISceneAdapterGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponsesAdapter.Mask<bool>? printMask = null)
+            SceneAdapter.Mask<bool>? printMask = null)
         {
-            ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).ToString(
+            ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -624,86 +624,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IDialogResponsesAdapterGetter item,
-            DialogResponsesAdapter.Mask<bool?> checkMask)
+            this ISceneAdapterGetter item,
+            SceneAdapter.Mask<bool?> checkMask)
         {
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).HasBeenSet(
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DialogResponsesAdapter.Mask<bool> GetHasBeenSetMask(this IDialogResponsesAdapterGetter item)
+        public static SceneAdapter.Mask<bool> GetHasBeenSetMask(this ISceneAdapterGetter item)
         {
-            var ret = new DialogResponsesAdapter.Mask<bool>(false);
-            ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new SceneAdapter.Mask<bool>(false);
+            ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IDialogResponsesAdapterGetter item,
-            IDialogResponsesAdapterGetter rhs)
+            this ISceneAdapterGetter item,
+            ISceneAdapterGetter rhs)
         {
-            return ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).Equals(
+            return ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesAdapter lhs,
-            IDialogResponsesAdapterGetter rhs,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? copyMask = null)
+            this ISceneAdapter lhs,
+            ISceneAdapterGetter rhs,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponsesAdapterSetterTranslationCommon)((IDialogResponsesAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SceneAdapterSetterTranslationCommon)((ISceneAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = DialogResponsesAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SceneAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesAdapter lhs,
-            IDialogResponsesAdapterGetter rhs,
+            this ISceneAdapter lhs,
+            ISceneAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DialogResponsesAdapterSetterTranslationCommon)((IDialogResponsesAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SceneAdapterSetterTranslationCommon)((ISceneAdapterGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static DialogResponsesAdapter DeepCopy(
-            this IDialogResponsesAdapterGetter item,
-            DialogResponsesAdapter.TranslationMask? copyMask = null)
+        public static SceneAdapter DeepCopy(
+            this ISceneAdapterGetter item,
+            SceneAdapter.TranslationMask? copyMask = null)
         {
-            return ((DialogResponsesAdapterSetterTranslationCommon)((IDialogResponsesAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SceneAdapterSetterTranslationCommon)((ISceneAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static DialogResponsesAdapter DeepCopy(
-            this IDialogResponsesAdapterGetter item,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? copyMask = null)
+        public static SceneAdapter DeepCopy(
+            this ISceneAdapterGetter item,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? copyMask = null)
         {
-            return ((DialogResponsesAdapterSetterTranslationCommon)((IDialogResponsesAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SceneAdapterSetterTranslationCommon)((ISceneAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static DialogResponsesAdapter DeepCopy(
-            this IDialogResponsesAdapterGetter item,
+        public static SceneAdapter DeepCopy(
+            this ISceneAdapterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((DialogResponsesAdapterSetterTranslationCommon)((IDialogResponsesAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SceneAdapterSetterTranslationCommon)((ISceneAdapterGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -712,9 +712,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             XElement node,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -725,10 +725,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             XElement node,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -736,16 +736,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SceneAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -753,9 +753,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             string path,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -765,10 +765,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             string path,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -779,10 +779,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -793,9 +793,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             Stream stream,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -805,10 +805,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             Stream stream,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -819,10 +819,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null)
+            SceneAdapter.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -847,11 +847,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IDialogResponsesAdapter item,
+            this ISceneAdapter item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesAdapterSetterCommon)((IDialogResponsesAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SceneAdapterSetterCommon)((ISceneAdapterGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum DialogResponsesAdapter_FieldIndex
+    public enum SceneAdapter_FieldIndex
     {
         Version = 0,
         ObjectFormat = 1,
@@ -877,40 +877,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponsesAdapter_Registration : ILoquiRegistration
+    public partial class SceneAdapter_Registration : ILoquiRegistration
     {
-        public static readonly DialogResponsesAdapter_Registration Instance = new DialogResponsesAdapter_Registration();
+        public static readonly SceneAdapter_Registration Instance = new SceneAdapter_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 427,
+            msgID: 465,
             version: 0);
 
-        public const string GUID = "c3525bcf-a5cc-4d2e-8f6f-1a38cbf3545b";
+        public const string GUID = "a0b825f4-0bce-4fbd-8655-db9ba9e77e0e";
 
         public const ushort AdditionalFieldCount = 1;
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(DialogResponsesAdapter.Mask<>);
+        public static readonly Type MaskType = typeof(SceneAdapter.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DialogResponsesAdapter.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SceneAdapter.ErrorMask);
 
-        public static readonly Type ClassType = typeof(DialogResponsesAdapter);
+        public static readonly Type ClassType = typeof(SceneAdapter);
 
-        public static readonly Type GetterType = typeof(IDialogResponsesAdapterGetter);
+        public static readonly Type GetterType = typeof(ISceneAdapterGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IDialogResponsesAdapter);
+        public static readonly Type SetterType = typeof(ISceneAdapter);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.DialogResponsesAdapter";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.SceneAdapter";
 
-        public const string Name = "DialogResponsesAdapter";
+        public const string Name = "SceneAdapter";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -923,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "SCRIPTFRAGMENTS":
-                    return (ushort)DialogResponsesAdapter_FieldIndex.ScriptFragments;
+                    return (ushort)SceneAdapter_FieldIndex.ScriptFragments;
                 default:
                     return null;
             }
@@ -931,10 +931,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return false;
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthIsEnumerable(index);
@@ -943,10 +943,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return true;
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthIsLoqui(index);
@@ -955,10 +955,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return false;
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthIsSingleton(index);
@@ -967,10 +967,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return "ScriptFragments";
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthName(index);
@@ -979,10 +979,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return false;
                 default:
                     return AVirtualMachineAdapter_Registration.IsNthDerivative(index);
@@ -991,10 +991,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
+                case SceneAdapter_FieldIndex.ScriptFragments:
                     return false;
                 default:
                     return AVirtualMachineAdapter_Registration.IsProtected(index);
@@ -1003,19 +1003,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            DialogResponsesAdapter_FieldIndex enu = (DialogResponsesAdapter_FieldIndex)index;
+            SceneAdapter_FieldIndex enu = (SceneAdapter_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesAdapter_FieldIndex.ScriptFragments:
-                    return typeof(ScriptFragments);
+                case SceneAdapter_FieldIndex.ScriptFragments:
+                    return typeof(SceneScriptFragments);
                 default:
                     return AVirtualMachineAdapter_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogResponsesAdapterXmlWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SceneAdapterXmlWriteTranslation);
         public static readonly RecordType TriggeringRecordType = RecordTypes.VMAD;
-        public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesAdapterBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SceneAdapterBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1048,13 +1048,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponsesAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
+    public partial class SceneAdapterSetterCommon : AVirtualMachineAdapterSetterCommon
     {
-        public new static readonly DialogResponsesAdapterSetterCommon Instance = new DialogResponsesAdapterSetterCommon();
+        public new static readonly SceneAdapterSetterCommon Instance = new SceneAdapterSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IDialogResponsesAdapter item)
+        public void Clear(ISceneAdapter item)
         {
             ClearPartial();
             item.ScriptFragments = null;
@@ -1063,12 +1063,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void Clear(IAVirtualMachineAdapter item)
         {
-            Clear(item: (IDialogResponsesAdapter)item);
+            Clear(item: (ISceneAdapter)item);
         }
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IDialogResponsesAdapter item,
+            ISceneAdapter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogResponsesAdapterXmlCreateTranslation.FillPublicElementXml(
+                    SceneAdapterXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (DialogResponsesAdapter)item,
+                item: (SceneAdapter)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1109,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IDialogResponsesAdapter item,
+            ISceneAdapter item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: DialogResponsesAdapterBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: SceneAdapterBinaryCreateTranslation.FillBinaryStructs);
         }
         
         public override void CopyInFromBinary(
@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (DialogResponsesAdapter)item,
+                item: (SceneAdapter)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1137,17 +1137,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class DialogResponsesAdapterCommon : AVirtualMachineAdapterCommon
+    public partial class SceneAdapterCommon : AVirtualMachineAdapterCommon
     {
-        public new static readonly DialogResponsesAdapterCommon Instance = new DialogResponsesAdapterCommon();
+        public new static readonly SceneAdapterCommon Instance = new SceneAdapterCommon();
 
-        public DialogResponsesAdapter.Mask<bool> GetEqualsMask(
-            IDialogResponsesAdapterGetter item,
-            IDialogResponsesAdapterGetter rhs,
+        public SceneAdapter.Mask<bool> GetEqualsMask(
+            ISceneAdapterGetter item,
+            ISceneAdapterGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DialogResponsesAdapter.Mask<bool>(false);
-            ((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SceneAdapter.Mask<bool>(false);
+            ((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1156,9 +1156,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IDialogResponsesAdapterGetter item,
-            IDialogResponsesAdapterGetter rhs,
-            DialogResponsesAdapter.Mask<bool> ret,
+            ISceneAdapterGetter item,
+            ISceneAdapterGetter rhs,
+            SceneAdapter.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1171,9 +1171,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             string? name = null,
-            DialogResponsesAdapter.Mask<bool>? printMask = null)
+            SceneAdapter.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1185,18 +1185,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponsesAdapter.Mask<bool>? printMask = null)
+            SceneAdapter.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponsesAdapter =>");
+                fg.AppendLine($"SceneAdapter =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponsesAdapter) =>");
+                fg.AppendLine($"{name} (SceneAdapter) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1210,9 +1210,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             FileGeneration fg,
-            DialogResponsesAdapter.Mask<bool>? printMask = null)
+            SceneAdapter.Mask<bool>? printMask = null)
         {
             AVirtualMachineAdapterCommon.ToStringFields(
                 item: item,
@@ -1226,8 +1226,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IDialogResponsesAdapterGetter item,
-            DialogResponsesAdapter.Mask<bool?> checkMask)
+            ISceneAdapterGetter item,
+            SceneAdapter.Mask<bool?> checkMask)
         {
             if (checkMask.ScriptFragments?.Overall.HasValue ?? false && checkMask.ScriptFragments.Overall.Value != (item.ScriptFragments != null)) return false;
             if (checkMask.ScriptFragments?.Specific != null && (item.ScriptFragments == null || !item.ScriptFragments.HasBeenSet(checkMask.ScriptFragments.Specific))) return false;
@@ -1237,26 +1237,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IDialogResponsesAdapterGetter item,
-            DialogResponsesAdapter.Mask<bool> mask)
+            ISceneAdapterGetter item,
+            SceneAdapter.Mask<bool> mask)
         {
             var itemScriptFragments = item.ScriptFragments;
-            mask.ScriptFragments = new MaskItem<bool, ScriptFragments.Mask<bool>?>(itemScriptFragments != null, itemScriptFragments?.GetHasBeenSetMask());
+            mask.ScriptFragments = new MaskItem<bool, SceneScriptFragments.Mask<bool>?>(itemScriptFragments != null, itemScriptFragments?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static DialogResponsesAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
+        public static SceneAdapter_FieldIndex ConvertFieldIndex(AVirtualMachineAdapter_FieldIndex index)
         {
             switch (index)
             {
                 case AVirtualMachineAdapter_FieldIndex.Version:
-                    return (DialogResponsesAdapter_FieldIndex)((int)index);
+                    return (SceneAdapter_FieldIndex)((int)index);
                 case AVirtualMachineAdapter_FieldIndex.ObjectFormat:
-                    return (DialogResponsesAdapter_FieldIndex)((int)index);
+                    return (SceneAdapter_FieldIndex)((int)index);
                 case AVirtualMachineAdapter_FieldIndex.Scripts:
-                    return (DialogResponsesAdapter_FieldIndex)((int)index);
+                    return (SceneAdapter_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1264,8 +1264,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDialogResponsesAdapterGetter? lhs,
-            IDialogResponsesAdapterGetter? rhs)
+            ISceneAdapterGetter? lhs,
+            ISceneAdapterGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1279,11 +1279,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAVirtualMachineAdapterGetter? rhs)
         {
             return Equals(
-                lhs: (IDialogResponsesAdapterGetter?)lhs,
-                rhs: rhs as IDialogResponsesAdapterGetter);
+                lhs: (ISceneAdapterGetter?)lhs,
+                rhs: rhs as ISceneAdapterGetter);
         }
         
-        public virtual int GetHashCode(IDialogResponsesAdapterGetter item)
+        public virtual int GetHashCode(ISceneAdapterGetter item)
         {
             var hash = new HashCode();
             if (item.ScriptFragments.TryGet(out var ScriptFragmentsitem))
@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override int GetHashCode(IAVirtualMachineAdapterGetter item)
         {
-            return GetHashCode(item: (IDialogResponsesAdapterGetter)item);
+            return GetHashCode(item: (ISceneAdapterGetter)item);
         }
         
         #endregion
@@ -1304,11 +1304,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return DialogResponsesAdapter.GetNew();
+            return SceneAdapter.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesAdapterGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ISceneAdapterGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
@@ -1317,18 +1317,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IDialogResponsesAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(ISceneAdapterGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class DialogResponsesAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
+    public partial class SceneAdapterSetterTranslationCommon : AVirtualMachineAdapterSetterTranslationCommon
     {
-        public new static readonly DialogResponsesAdapterSetterTranslationCommon Instance = new DialogResponsesAdapterSetterTranslationCommon();
+        public new static readonly SceneAdapterSetterTranslationCommon Instance = new SceneAdapterSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IDialogResponsesAdapter item,
-            IDialogResponsesAdapterGetter rhs,
+            ISceneAdapter item,
+            ISceneAdapterGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1337,16 +1337,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (IAVirtualMachineAdapterGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesAdapter_FieldIndex.ScriptFragments) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SceneAdapter_FieldIndex.ScriptFragments) ?? true))
             {
-                errorMask?.PushIndex((int)DialogResponsesAdapter_FieldIndex.ScriptFragments);
+                errorMask?.PushIndex((int)SceneAdapter_FieldIndex.ScriptFragments);
                 try
                 {
                     if(rhs.ScriptFragments.TryGet(out var rhsScriptFragments))
                     {
                         item.ScriptFragments = rhsScriptFragments.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)DialogResponsesAdapter_FieldIndex.ScriptFragments));
+                            copyMask?.GetSubCrystal((int)SceneAdapter_FieldIndex.ScriptFragments));
                     }
                     else
                     {
@@ -1373,31 +1373,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (IDialogResponsesAdapter)item,
-                rhs: (IDialogResponsesAdapterGetter)rhs,
+                item: (ISceneAdapter)item,
+                rhs: (ISceneAdapterGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public DialogResponsesAdapter DeepCopy(
-            IDialogResponsesAdapterGetter item,
-            DialogResponsesAdapter.TranslationMask? copyMask = null)
+        public SceneAdapter DeepCopy(
+            ISceneAdapterGetter item,
+            SceneAdapter.TranslationMask? copyMask = null)
         {
-            DialogResponsesAdapter ret = (DialogResponsesAdapter)((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).GetNew();
+            SceneAdapter ret = (SceneAdapter)((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public DialogResponsesAdapter DeepCopy(
-            IDialogResponsesAdapterGetter item,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? copyMask = null)
+        public SceneAdapter DeepCopy(
+            ISceneAdapterGetter item,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? copyMask = null)
         {
-            DialogResponsesAdapter ret = (DialogResponsesAdapter)((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).GetNew();
+            SceneAdapter ret = (SceneAdapter)((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1405,12 +1405,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public DialogResponsesAdapter DeepCopy(
-            IDialogResponsesAdapterGetter item,
+        public SceneAdapter DeepCopy(
+            ISceneAdapterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            DialogResponsesAdapter ret = (DialogResponsesAdapter)((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)item).CommonInstance()!).GetNew();
+            SceneAdapter ret = (SceneAdapter)((SceneAdapterCommon)((ISceneAdapterGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1425,21 +1425,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponsesAdapter
+    public partial class SceneAdapter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogResponsesAdapter_Registration.Instance;
-        public new static DialogResponsesAdapter_Registration Registration => DialogResponsesAdapter_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
+        public new static SceneAdapter_Registration Registration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => DialogResponsesAdapterCommon.Instance;
+        protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return DialogResponsesAdapterSetterCommon.Instance;
+            return SceneAdapterSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => DialogResponsesAdapterSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SceneAdapterSetterTranslationCommon.Instance;
 
         #endregion
 
@@ -1450,14 +1450,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesAdapterXmlWriteTranslation :
+    public partial class SceneAdapterXmlWriteTranslation :
         AVirtualMachineAdapterXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static DialogResponsesAdapterXmlWriteTranslation Instance = new DialogResponsesAdapterXmlWriteTranslation();
+        public new readonly static SceneAdapterXmlWriteTranslation Instance = new SceneAdapterXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1468,33 +1468,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 errorMask: errorMask,
                 translationMask: translationMask);
             if ((item.ScriptFragments != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesAdapter_FieldIndex.ScriptFragments) ?? true))
+                && (translationMask?.GetShouldTranslate((int)SceneAdapter_FieldIndex.ScriptFragments) ?? true))
             {
                 if (item.ScriptFragments.TryGet(out var ScriptFragmentsItem))
                 {
-                    ((ScriptFragmentsXmlWriteTranslation)((IXmlItem)ScriptFragmentsItem).XmlWriteTranslator).Write(
+                    ((SceneScriptFragmentsXmlWriteTranslation)((IXmlItem)ScriptFragmentsItem).XmlWriteTranslator).Write(
                         item: ScriptFragmentsItem,
                         node: node,
                         name: nameof(item.ScriptFragments),
-                        fieldIndex: (int)DialogResponsesAdapter_FieldIndex.ScriptFragments,
+                        fieldIndex: (int)SceneAdapter_FieldIndex.ScriptFragments,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)DialogResponsesAdapter_FieldIndex.ScriptFragments));
+                        translationMask: translationMask?.GetSubCrystal((int)SceneAdapter_FieldIndex.ScriptFragments));
                 }
             }
         }
 
         public void Write(
             XElement node,
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DialogResponsesAdapter");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.SceneAdapter");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DialogResponsesAdapter");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SceneAdapter");
             }
             WriteToNodeXml(
                 item: item,
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogResponsesAdapterGetter)item,
+                item: (ISceneAdapterGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogResponsesAdapterGetter)item,
+                item: (ISceneAdapterGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1535,12 +1535,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponsesAdapterXmlCreateTranslation : AVirtualMachineAdapterXmlCreateTranslation
+    public partial class SceneAdapterXmlCreateTranslation : AVirtualMachineAdapterXmlCreateTranslation
     {
-        public new readonly static DialogResponsesAdapterXmlCreateTranslation Instance = new DialogResponsesAdapterXmlCreateTranslation();
+        public new readonly static SceneAdapterXmlCreateTranslation Instance = new SceneAdapterXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IDialogResponsesAdapter item,
+            ISceneAdapter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogResponsesAdapterXmlCreateTranslation.FillPublicElementXml(
+                    SceneAdapterXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IDialogResponsesAdapter item,
+            ISceneAdapter item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1574,13 +1574,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "ScriptFragments":
-                    errorMask?.PushIndex((int)DialogResponsesAdapter_FieldIndex.ScriptFragments);
+                    errorMask?.PushIndex((int)SceneAdapter_FieldIndex.ScriptFragments);
                     try
                     {
-                        item.ScriptFragments = LoquiXmlTranslation<ScriptFragments>.Instance.Parse(
+                        item.ScriptFragments = LoquiXmlTranslation<SceneScriptFragments>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)DialogResponsesAdapter_FieldIndex.ScriptFragments));
+                            translationMask: translationMask?.GetSubCrystal((int)SceneAdapter_FieldIndex.ScriptFragments));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1609,30 +1609,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class DialogResponsesAdapterXmlTranslationMixIn
+    public static class SceneAdapterXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IDialogResponsesAdapterGetter item,
+            this ISceneAdapterGetter item,
             XElement node,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponsesAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SceneAdapterXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesAdapter.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SceneAdapter.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IDialogResponsesAdapterGetter item,
+            this ISceneAdapterGetter item,
             string path,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1646,10 +1646,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesAdapterGetter item,
+            this ISceneAdapterGetter item,
             Stream stream,
-            out DialogResponsesAdapter.ErrorMask errorMask,
-            DialogResponsesAdapter.TranslationMask? translationMask = null,
+            out SceneAdapter.ErrorMask errorMask,
+            SceneAdapter.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1672,19 +1672,19 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesAdapterBinaryWriteTranslation :
+    public partial class SceneAdapterBinaryWriteTranslation :
         AVirtualMachineAdapterBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static DialogResponsesAdapterBinaryWriteTranslation Instance = new DialogResponsesAdapterBinaryWriteTranslation();
+        public new readonly static SceneAdapterBinaryWriteTranslation Instance = new SceneAdapterBinaryWriteTranslation();
 
         static partial void WriteBinaryScriptFragmentsCustom(
             MutagenWriter writer,
-            IDialogResponsesAdapterGetter item);
+            ISceneAdapterGetter item);
 
         public static void WriteBinaryScriptFragments(
             MutagenWriter writer,
-            IDialogResponsesAdapterGetter item)
+            ISceneAdapterGetter item)
         {
             WriteBinaryScriptFragmentsCustom(
                 writer: writer,
@@ -1692,20 +1692,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteEmbedded(
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             MutagenWriter writer)
         {
             AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            DialogResponsesAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
+            SceneAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
                 writer: writer,
                 item: item);
         }
 
         public void Write(
             MutagenWriter writer,
-            IDialogResponsesAdapterGetter item,
+            ISceneAdapterGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
@@ -1725,7 +1725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogResponsesAdapterGetter)item,
+                item: (ISceneAdapterGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1736,33 +1736,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogResponsesAdapterGetter)item,
+                item: (ISceneAdapterGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class DialogResponsesAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
+    public partial class SceneAdapterBinaryCreateTranslation : AVirtualMachineAdapterBinaryCreateTranslation
     {
-        public new readonly static DialogResponsesAdapterBinaryCreateTranslation Instance = new DialogResponsesAdapterBinaryCreateTranslation();
+        public new readonly static SceneAdapterBinaryCreateTranslation Instance = new SceneAdapterBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IDialogResponsesAdapter item,
+            ISceneAdapter item,
             MutagenFrame frame)
         {
             AVirtualMachineAdapterBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
             if (frame.Complete) return;
-            DialogResponsesAdapterBinaryCreateTranslation.FillBinaryScriptFragmentsCustom(
+            SceneAdapterBinaryCreateTranslation.FillBinaryScriptFragmentsCustom(
                 frame: frame,
                 item: item);
         }
 
         static partial void FillBinaryScriptFragmentsCustom(
             MutagenFrame frame,
-            IDialogResponsesAdapter item);
+            ISceneAdapter item);
 
     }
 
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class DialogResponsesAdapterBinaryTranslationMixIn
+    public static class SceneAdapterBinaryTranslationMixIn
     {
     }
     #endregion
@@ -1779,34 +1779,34 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesAdapterBinaryOverlay :
+    public partial class SceneAdapterBinaryOverlay :
         AVirtualMachineAdapterBinaryOverlay,
-        IDialogResponsesAdapterGetter
+        ISceneAdapterGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogResponsesAdapter_Registration.Instance;
-        public new static DialogResponsesAdapter_Registration Registration => DialogResponsesAdapter_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SceneAdapter_Registration.Instance;
+        public new static SceneAdapter_Registration Registration => SceneAdapter_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => DialogResponsesAdapterCommon.Instance;
+        protected override object CommonInstance() => SceneAdapterCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => DialogResponsesAdapterSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SceneAdapterSetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesAdapterGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISceneAdapterGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => DialogResponsesAdapterXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => SceneAdapterXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogResponsesAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SceneAdapterXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -1814,19 +1814,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => DialogResponsesAdapterBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SceneAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SceneAdapterBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
         #region ScriptFragments
-        public IScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: ScriptsEndingPos);
+        public ISceneScriptFragmentsGetter? ScriptFragments => GetScriptFragmentsCustom(location: ScriptsEndingPos);
         protected int ScriptFragmentsEndingPos;
         partial void CustomScriptFragmentsEndPos();
         #endregion
@@ -1836,7 +1836,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected DialogResponsesAdapterBinaryOverlay(
+        protected SceneAdapterBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -1846,12 +1846,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static DialogResponsesAdapterBinaryOverlay DialogResponsesAdapterFactory(
+        public static SceneAdapterBinaryOverlay SceneAdapterFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new DialogResponsesAdapterBinaryOverlay(
+            var ret = new SceneAdapterBinaryOverlay(
                 bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
@@ -1864,12 +1864,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static DialogResponsesAdapterBinaryOverlay DialogResponsesAdapterFactory(
+        public static SceneAdapterBinaryOverlay SceneAdapterFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return DialogResponsesAdapterFactory(
+            return SceneAdapterFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -1881,7 +1881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            DialogResponsesAdapterMixIn.ToString(
+            SceneAdapterMixIn.ToString(
                 item: this,
                 name: name);
         }

@@ -410,7 +410,7 @@
         <xs:element name="RecordType" type="NRecordType"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
-        <xs:element name="Transfer" type="TransferType"/>
+        <xs:element name="Marker" type="NMarkerType"/>
         <xs:element name="Group" type="GroupType" />
         <xs:element name="CustomLogic" type="CustomLogic" />
         <xs:element name="Gendered" type="NGenderedItem" />
@@ -429,7 +429,7 @@
         <xs:element name="RecordType" type="RecordType"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="Zero" type="ZeroType"/>
-        <xs:element name="Transfer" type="TransferType"/>
+        <xs:element name="Marker" type="MarkerType"/>
         <xs:element name="Gendered" type="GenderedItem" />
         <xs:element name="Break" />
       </xs:choice>
@@ -530,8 +530,18 @@
     </xs:attribute>
   </xs:complexType>
 
-  <xs:complexType name="TransferType">
-    <xs:attribute name="byteLength" type="xs:int" use="required" />
+  <xs:complexType name="MarkerType">
+    <xs:complexContent>
+      <xs:extension base="Field" />
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NMarkerType" >
+    <xs:complexContent>
+      <xs:extension base="MarkerType">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:simpleType name="FormIDType" final="restriction" >

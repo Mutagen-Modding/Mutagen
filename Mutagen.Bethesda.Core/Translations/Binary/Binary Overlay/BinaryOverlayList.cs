@@ -307,15 +307,11 @@ namespace Mutagen.Bethesda.Binary
             byte countLength,
             BinaryOverlay.SpanFactory<T> getter)
         {
-            uint count;
-            switch (countLength)
+            var count = countLength switch
             {
-                case 4:
-                    count = BinaryPrimitives.ReadUInt32LittleEndian(mem);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
+                4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
+                _ => throw new NotImplementedException(),
+            };
             if (((mem.Length - countLength) / itemLength) < count)
             {
                 throw new ArgumentException("Item count and expected size did not match.");
@@ -372,6 +368,15 @@ namespace Mutagen.Bethesda.Binary
                 mem,
                 package,
                 getter);
+        }
+
+        public static IReadOnlyList<T> FactoryByLazyParse(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
+            byte countLength,
+            BinaryOverlay.Factory<T> getter)
+        {
+            return FactoryByLazyParse(mem.Slice(countLength), package, getter);
         }
 
         private class BinaryOverlayListByLocationArray : IReadOnlyList<T>

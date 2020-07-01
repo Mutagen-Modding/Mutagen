@@ -105,6 +105,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
             this._typeGenerations[typeof(GenderedType)] = new GenderedTypeBinaryTranslationGeneration();
             this._typeGenerations[typeof(BreakType)] = new BreakBinaryTranslationGeneration();
+            this._typeGenerations[typeof(MarkerType)] = new MarkerBinaryTranslationGeneration();
             APILine[] modAPILines = new APILine[]
             {
                 new APILine(
@@ -953,7 +954,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){prevField.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                     }
                 }
-                else
+                else if (!(field.Field is MarkerType))
                 {
                     fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= (int){field.Field.IndexEnumName}) return {nameof(ParseResult)}.Stop;");
                 }
@@ -966,6 +967,24 @@ namespace Mutagen.Bethesda.Generation
             else if (field.Field is CustomLogic)
             {
                 fg.AppendLine($"return {(typelessStruct ? "lastParsed" : "null")};");
+            }
+            else if (field.Field is MarkerType marker)
+            {
+                if (marker.EndMarker)
+                {
+                    fg.AppendLine($"return {nameof(ParseResult)}.{nameof(ParseResult.Stop)};");
+                }
+                else
+                {
+                    if (doublesPotential)
+                    {
+                        fg.AppendLine($"return new {nameof(ParseResult)}(default(int?), {nextRecAccessor});");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"return default(int?);");
+                    }
+                }
             }
             else
             {
@@ -2865,7 +2884,7 @@ namespace Mutagen.Bethesda.Generation
                                                                 await doubleGen.GenerateWrapperRecordTypeParse(
                                                                     fg: fg,
                                                                     objGen: obj,
-                                                                    typeGen: gen.Value,
+                                                                    typeGen: doublesField.Field,
                                                                     locationAccessor: "(stream.Position - offset)",
                                                                     packageAccessor: "_package",
                                                                     converterAccessor: recConverter);

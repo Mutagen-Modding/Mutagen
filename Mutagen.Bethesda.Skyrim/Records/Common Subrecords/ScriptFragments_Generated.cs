@@ -33,14 +33,14 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class DialogResponsesScriptFragments :
-        IDialogResponsesScriptFragments,
-        ILoquiObjectSetter<DialogResponsesScriptFragments>,
-        IEquatable<DialogResponsesScriptFragments>,
+    public partial class ScriptFragments :
+        IScriptFragments,
+        ILoquiObjectSetter<ScriptFragments>,
+        IEquatable<ScriptFragments>,
         IEqualsMask
     {
         #region Ctor
-        public DialogResponsesScriptFragments()
+        public ScriptFragments()
         {
             CustomCtor();
         }
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => _OnBegin = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFragmentGetter? IDialogResponsesScriptFragmentsGetter.OnBegin => this.OnBegin;
+        IScriptFragmentGetter? IScriptFragmentsGetter.OnBegin => this.OnBegin;
         #endregion
         #region OnEnd
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,16 +73,16 @@ namespace Mutagen.Bethesda.Skyrim
             set => _OnEnd = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IScriptFragmentGetter? IDialogResponsesScriptFragmentsGetter.OnEnd => this.OnEnd;
+        IScriptFragmentGetter? IScriptFragmentsGetter.OnEnd => this.OnEnd;
         #endregion
 
         #region To String
 
-        public void ToString(
+        public virtual void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            DialogResponsesScriptFragmentsMixIn.ToString(
+            ScriptFragmentsMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -92,22 +92,22 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesScriptFragmentsGetter rhs)) return false;
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is IScriptFragmentsGetter rhs)) return false;
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(DialogResponsesScriptFragments? obj)
+        public bool Equals(ScriptFragments? obj)
         {
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => DialogResponsesScriptFragmentsXmlWriteTranslation.Instance;
+        protected virtual object XmlWriteTranslator => ScriptFragmentsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -125,9 +125,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             XElement node,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -136,27 +136,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             XElement node,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new DialogResponsesScriptFragments();
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new ScriptFragments();
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -164,9 +164,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             string path,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -174,10 +174,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             string path,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -186,10 +186,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -198,9 +198,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             Stream stream,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -208,10 +208,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             Stream stream,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -220,10 +220,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static DialogResponsesScriptFragments CreateFromXml(
+        public static ScriptFragments CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region All
-            public bool All(Func<TItem, bool> eval)
+            public virtual bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Unknown)) return false;
                 if (!eval(this.FileName)) return false;
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Any
-            public bool Any(Func<TItem, bool> eval)
+            public virtual bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Unknown)) return true;
                 if (eval(this.FileName)) return true;
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new DialogResponsesScriptFragments.Mask<R>();
+                var ret = new ScriptFragments.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -366,16 +366,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            public string ToString(ScriptFragments.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, ScriptFragments.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(DialogResponsesScriptFragments.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(ScriptFragments.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -427,39 +427,39 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region IErrorMask
-            public object? GetNthMask(int index)
+            public virtual object? GetNthMask(int index)
             {
-                DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesScriptFragments_FieldIndex.Unknown:
+                    case ScriptFragments_FieldIndex.Unknown:
                         return Unknown;
-                    case DialogResponsesScriptFragments_FieldIndex.FileName:
+                    case ScriptFragments_FieldIndex.FileName:
                         return FileName;
-                    case DialogResponsesScriptFragments_FieldIndex.OnBegin:
+                    case ScriptFragments_FieldIndex.OnBegin:
                         return OnBegin;
-                    case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                    case ScriptFragments_FieldIndex.OnEnd:
                         return OnEnd;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public void SetNthException(int index, Exception ex)
+            public virtual void SetNthException(int index, Exception ex)
             {
-                DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesScriptFragments_FieldIndex.Unknown:
+                    case ScriptFragments_FieldIndex.Unknown:
                         this.Unknown = ex;
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.FileName:
+                    case ScriptFragments_FieldIndex.FileName:
                         this.FileName = ex;
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.OnBegin:
+                    case ScriptFragments_FieldIndex.OnBegin:
                         this.OnBegin = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                    case ScriptFragments_FieldIndex.OnEnd:
                         this.OnEnd = new MaskItem<Exception?, ScriptFragment.ErrorMask?>(ex, null);
                         break;
                     default:
@@ -467,21 +467,21 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public void SetNthMask(int index, object obj)
+            public virtual void SetNthMask(int index, object obj)
             {
-                DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+                ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
                 switch (enu)
                 {
-                    case DialogResponsesScriptFragments_FieldIndex.Unknown:
+                    case ScriptFragments_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.FileName:
+                    case ScriptFragments_FieldIndex.FileName:
                         this.FileName = (Exception?)obj;
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.OnBegin:
+                    case ScriptFragments_FieldIndex.OnBegin:
                         this.OnBegin = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
                         break;
-                    case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                    case ScriptFragments_FieldIndex.OnEnd:
                         this.OnEnd = (MaskItem<Exception?, ScriptFragment.ErrorMask?>?)obj;
                         break;
                     default:
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public bool IsInError()
+            public virtual bool IsInError()
             {
                 if (Overall != null) return true;
                 if (Unknown != null) return true;
@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, string? name = null)
+            public virtual void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -528,7 +528,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 fg.AppendLine("]");
             }
-            protected void ToString_FillInternal(FileGeneration fg)
+            protected virtual void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Unknown, "Unknown");
                 fg.AppendItem(FileName, "FileName");
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return _crystal;
             }
 
-            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Unknown, null));
                 ret.Add((FileName, null));
@@ -605,33 +605,33 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => DialogResponsesScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static DialogResponsesScriptFragments CreateFromBinary(MutagenFrame frame)
+        public static ScriptFragments CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static DialogResponsesScriptFragments CreateFromBinary(
+        public static ScriptFragments CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new DialogResponsesScriptFragments();
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new ScriptFragments();
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out DialogResponsesScriptFragments item,
+            out ScriptFragments item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -653,25 +653,25 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesScriptFragmentsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFragmentsGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)this).CommonSetterInstance()!).Clear(this);
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static DialogResponsesScriptFragments GetNew()
+        internal static ScriptFragments GetNew()
         {
-            return new DialogResponsesScriptFragments();
+            return new ScriptFragments();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IDialogResponsesScriptFragments :
-        IDialogResponsesScriptFragmentsGetter,
-        ILoquiObjectSetter<IDialogResponsesScriptFragments>
+    public partial interface IScriptFragments :
+        IScriptFragmentsGetter,
+        ILoquiObjectSetter<IScriptFragments>
     {
         new SByte Unknown { get; set; }
         new String FileName { get; set; }
@@ -679,9 +679,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ScriptFragment? OnEnd { get; set; }
     }
 
-    public partial interface IDialogResponsesScriptFragmentsGetter :
+    public partial interface IScriptFragmentsGetter :
         ILoquiObject,
-        ILoquiObject<IDialogResponsesScriptFragmentsGetter>,
+        ILoquiObject<IScriptFragmentsGetter>,
         IXmlItem,
         IBinaryItem
     {
@@ -691,7 +691,7 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => DialogResponsesScriptFragments_Registration.Instance;
+        static ILoquiRegistration Registration => ScriptFragments_Registration.Instance;
         SByte Unknown { get; }
         String FileName { get; }
         IScriptFragmentGetter? OnBegin { get; }
@@ -702,42 +702,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class DialogResponsesScriptFragmentsMixIn
+    public static partial class ScriptFragmentsMixIn
     {
-        public static void Clear(this IDialogResponsesScriptFragments item)
+        public static void Clear(this IScriptFragments item)
         {
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static DialogResponsesScriptFragments.Mask<bool> GetEqualsMask(
-            this IDialogResponsesScriptFragmentsGetter item,
-            IDialogResponsesScriptFragmentsGetter rhs,
+        public static ScriptFragments.Mask<bool> GetEqualsMask(
+            this IScriptFragmentsGetter item,
+            IScriptFragmentsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             string? name = null,
-            DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            ScriptFragments.Mask<bool>? printMask = null)
         {
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            ScriptFragments.Mask<bool>? printMask = null)
         {
-            ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).ToString(
+            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -745,37 +745,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IDialogResponsesScriptFragmentsGetter item,
-            DialogResponsesScriptFragments.Mask<bool?> checkMask)
+            this IScriptFragmentsGetter item,
+            ScriptFragments.Mask<bool?> checkMask)
         {
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static DialogResponsesScriptFragments.Mask<bool> GetHasBeenSetMask(this IDialogResponsesScriptFragmentsGetter item)
+        public static ScriptFragments.Mask<bool> GetHasBeenSetMask(this IScriptFragmentsGetter item)
         {
-            var ret = new DialogResponsesScriptFragments.Mask<bool>(false);
-            ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new ScriptFragments.Mask<bool>(false);
+            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IDialogResponsesScriptFragmentsGetter item,
-            IDialogResponsesScriptFragmentsGetter rhs)
+            this IScriptFragmentsGetter item,
+            IScriptFragmentsGetter rhs)
         {
-            return ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).Equals(
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesScriptFragments lhs,
-            IDialogResponsesScriptFragmentsGetter rhs)
+            this IScriptFragments lhs,
+            IScriptFragmentsGetter rhs)
         {
-            ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -783,11 +783,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesScriptFragments lhs,
-            IDialogResponsesScriptFragmentsGetter rhs,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+            this IScriptFragments lhs,
+            IScriptFragmentsGetter rhs,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
-            ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -795,59 +795,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesScriptFragments lhs,
-            IDialogResponsesScriptFragmentsGetter rhs,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+            this IScriptFragments lhs,
+            IScriptFragmentsGetter rhs,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = DialogResponsesScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IDialogResponsesScriptFragments lhs,
-            IDialogResponsesScriptFragmentsGetter rhs,
+            this IScriptFragments lhs,
+            IScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static DialogResponsesScriptFragments DeepCopy(
-            this IDialogResponsesScriptFragmentsGetter item,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+        public static ScriptFragments DeepCopy(
+            this IScriptFragmentsGetter item,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
-            return ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static DialogResponsesScriptFragments DeepCopy(
-            this IDialogResponsesScriptFragmentsGetter item,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+        public static ScriptFragments DeepCopy(
+            this IScriptFragmentsGetter item,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
-            return ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static DialogResponsesScriptFragments DeepCopy(
-            this IDialogResponsesScriptFragmentsGetter item,
+        public static ScriptFragments DeepCopy(
+            this IScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((DialogResponsesScriptFragmentsSetterTranslationCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((ScriptFragmentsSetterTranslationCommon)((IScriptFragmentsGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -856,9 +856,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             XElement node,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -869,10 +869,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             XElement node,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -880,16 +880,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -897,9 +897,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             string path,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -909,10 +909,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             string path,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -923,10 +923,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             string path,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -937,9 +937,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             Stream stream,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -949,10 +949,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             Stream stream,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -963,10 +963,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -991,11 +991,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IDialogResponsesScriptFragments item,
+            this IScriptFragments item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesScriptFragmentsSetterCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((ScriptFragmentsSetterCommon)((IScriptFragmentsGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum DialogResponsesScriptFragments_FieldIndex
+    public enum ScriptFragments_FieldIndex
     {
         Unknown = 0,
         FileName = 1,
@@ -1021,9 +1021,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class DialogResponsesScriptFragments_Registration : ILoquiRegistration
+    public partial class ScriptFragments_Registration : ILoquiRegistration
     {
-        public static readonly DialogResponsesScriptFragments_Registration Instance = new DialogResponsesScriptFragments_Registration();
+        public static readonly ScriptFragments_Registration Instance = new ScriptFragments_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -1038,23 +1038,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(DialogResponsesScriptFragments.Mask<>);
+        public static readonly Type MaskType = typeof(ScriptFragments.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(DialogResponsesScriptFragments.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptFragments.ErrorMask);
 
-        public static readonly Type ClassType = typeof(DialogResponsesScriptFragments);
+        public static readonly Type ClassType = typeof(ScriptFragments);
 
-        public static readonly Type GetterType = typeof(IDialogResponsesScriptFragmentsGetter);
+        public static readonly Type GetterType = typeof(IScriptFragmentsGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IDialogResponsesScriptFragments);
+        public static readonly Type SetterType = typeof(IScriptFragments);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.DialogResponsesScriptFragments";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.ScriptFragments";
 
-        public const string Name = "DialogResponsesScriptFragments";
+        public const string Name = "ScriptFragments";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1067,13 +1067,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "UNKNOWN":
-                    return (ushort)DialogResponsesScriptFragments_FieldIndex.Unknown;
+                    return (ushort)ScriptFragments_FieldIndex.Unknown;
                 case "FILENAME":
-                    return (ushort)DialogResponsesScriptFragments_FieldIndex.FileName;
+                    return (ushort)ScriptFragments_FieldIndex.FileName;
                 case "ONBEGIN":
-                    return (ushort)DialogResponsesScriptFragments_FieldIndex.OnBegin;
+                    return (ushort)ScriptFragments_FieldIndex.OnBegin;
                 case "ONEND":
-                    return (ushort)DialogResponsesScriptFragments_FieldIndex.OnEnd;
+                    return (ushort)ScriptFragments_FieldIndex.OnEnd;
                 default:
                     return null;
             }
@@ -1081,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1096,14 +1096,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return true;
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.FileName:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1112,13 +1112,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1127,16 +1127,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.Unknown:
                     return "Unknown";
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.FileName:
                     return "FileName";
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnBegin:
                     return "OnBegin";
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return "OnEnd";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1145,13 +1145,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1160,13 +1160,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1175,24 +1175,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            DialogResponsesScriptFragments_FieldIndex enu = (DialogResponsesScriptFragments_FieldIndex)index;
+            ScriptFragments_FieldIndex enu = (ScriptFragments_FieldIndex)index;
             switch (enu)
             {
-                case DialogResponsesScriptFragments_FieldIndex.Unknown:
+                case ScriptFragments_FieldIndex.Unknown:
                     return typeof(SByte);
-                case DialogResponsesScriptFragments_FieldIndex.FileName:
+                case ScriptFragments_FieldIndex.FileName:
                     return typeof(String);
-                case DialogResponsesScriptFragments_FieldIndex.OnBegin:
+                case ScriptFragments_FieldIndex.OnBegin:
                     return typeof(ScriptFragment);
-                case DialogResponsesScriptFragments_FieldIndex.OnEnd:
+                case ScriptFragments_FieldIndex.OnEnd:
                     return typeof(ScriptFragment);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(DialogResponsesScriptFragmentsXmlWriteTranslation);
-        public static readonly Type BinaryWriteTranslation = typeof(DialogResponsesScriptFragmentsBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(ScriptFragmentsXmlWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(ScriptFragmentsBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1225,13 +1225,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class DialogResponsesScriptFragmentsSetterCommon
+    public partial class ScriptFragmentsSetterCommon
     {
-        public static readonly DialogResponsesScriptFragmentsSetterCommon Instance = new DialogResponsesScriptFragmentsSetterCommon();
+        public static readonly ScriptFragmentsSetterCommon Instance = new ScriptFragmentsSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IDialogResponsesScriptFragments item)
+        public virtual void Clear(IScriptFragments item)
         {
             ClearPartial();
             item.Unknown = default;
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Xml Translation
         public virtual void CopyInFromXml(
-            IDialogResponsesScriptFragments item,
+            IScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogResponsesScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
+                    ScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1270,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IDialogResponsesScriptFragments item,
+            IScriptFragments item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1278,23 +1278,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: DialogResponsesScriptFragmentsBinaryCreateTranslation.FillBinaryStructs);
+                fillStructs: ScriptFragmentsBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
         
     }
-    public partial class DialogResponsesScriptFragmentsCommon
+    public partial class ScriptFragmentsCommon
     {
-        public static readonly DialogResponsesScriptFragmentsCommon Instance = new DialogResponsesScriptFragmentsCommon();
+        public static readonly ScriptFragmentsCommon Instance = new ScriptFragmentsCommon();
 
-        public DialogResponsesScriptFragments.Mask<bool> GetEqualsMask(
-            IDialogResponsesScriptFragmentsGetter item,
-            IDialogResponsesScriptFragmentsGetter rhs,
+        public ScriptFragments.Mask<bool> GetEqualsMask(
+            IScriptFragmentsGetter item,
+            IScriptFragmentsGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new DialogResponsesScriptFragments.Mask<bool>(false);
-            ((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new ScriptFragments.Mask<bool>(false);
+            ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1303,9 +1303,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IDialogResponsesScriptFragmentsGetter item,
-            IDialogResponsesScriptFragmentsGetter rhs,
-            DialogResponsesScriptFragments.Mask<bool> ret,
+            IScriptFragmentsGetter item,
+            IScriptFragmentsGetter rhs,
+            ScriptFragments.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1324,9 +1324,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             string? name = null,
-            DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            ScriptFragments.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1338,18 +1338,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             FileGeneration fg,
             string? name = null,
-            DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            ScriptFragments.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"DialogResponsesScriptFragments =>");
+                fg.AppendLine($"ScriptFragments =>");
             }
             else
             {
-                fg.AppendLine($"{name} (DialogResponsesScriptFragments) =>");
+                fg.AppendLine($"{name} (ScriptFragments) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1363,9 +1363,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             FileGeneration fg,
-            DialogResponsesScriptFragments.Mask<bool>? printMask = null)
+            ScriptFragments.Mask<bool>? printMask = null)
         {
             if (printMask?.Unknown ?? true)
             {
@@ -1388,8 +1388,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IDialogResponsesScriptFragmentsGetter item,
-            DialogResponsesScriptFragments.Mask<bool?> checkMask)
+            IScriptFragmentsGetter item,
+            ScriptFragments.Mask<bool?> checkMask)
         {
             if (checkMask.OnBegin?.Overall.HasValue ?? false && checkMask.OnBegin.Overall.Value != (item.OnBegin != null)) return false;
             if (checkMask.OnBegin?.Specific != null && (item.OnBegin == null || !item.OnBegin.HasBeenSet(checkMask.OnBegin.Specific))) return false;
@@ -1399,8 +1399,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IDialogResponsesScriptFragmentsGetter item,
-            DialogResponsesScriptFragments.Mask<bool> mask)
+            IScriptFragmentsGetter item,
+            ScriptFragments.Mask<bool> mask)
         {
             mask.Unknown = true;
             mask.FileName = true;
@@ -1412,8 +1412,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IDialogResponsesScriptFragmentsGetter? lhs,
-            IDialogResponsesScriptFragmentsGetter? rhs)
+            IScriptFragmentsGetter? lhs,
+            IScriptFragmentsGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return true;
         }
         
-        public virtual int GetHashCode(IDialogResponsesScriptFragmentsGetter item)
+        public virtual int GetHashCode(IScriptFragmentsGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Unknown);
@@ -1443,50 +1443,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
         
-        public object GetNew()
+        public virtual object GetNew()
         {
-            return DialogResponsesScriptFragments.GetNew();
+            return ScriptFragments.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IDialogResponsesScriptFragmentsGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(IScriptFragmentsGetter obj)
         {
             yield break;
         }
         
-        public void RemapLinks(IDialogResponsesScriptFragmentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(IScriptFragmentsGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class DialogResponsesScriptFragmentsSetterTranslationCommon
+    public partial class ScriptFragmentsSetterTranslationCommon
     {
-        public static readonly DialogResponsesScriptFragmentsSetterTranslationCommon Instance = new DialogResponsesScriptFragmentsSetterTranslationCommon();
+        public static readonly ScriptFragmentsSetterTranslationCommon Instance = new ScriptFragmentsSetterTranslationCommon();
 
         #region Deep Copy Fields From
-        public void DeepCopyIn(
-            IDialogResponsesScriptFragments item,
-            IDialogResponsesScriptFragmentsGetter rhs,
+        public virtual void DeepCopyIn(
+            IScriptFragments item,
+            IScriptFragmentsGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
             {
                 item.Unknown = rhs.Unknown;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.FileName) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
             {
                 item.FileName = rhs.FileName;
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.OnBegin) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
             {
-                errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.OnBegin);
+                errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnBegin);
                 try
                 {
                     if(rhs.OnBegin.TryGet(out var rhsOnBegin))
                     {
                         item.OnBegin = rhsOnBegin.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnBegin));
+                            copyMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnBegin));
                     }
                     else
                     {
@@ -1503,16 +1503,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.OnEnd) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnEnd) ?? true))
             {
-                errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.OnEnd);
+                errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnEnd);
                 try
                 {
                     if(rhs.OnEnd.TryGet(out var rhsOnEnd))
                     {
                         item.OnEnd = rhsOnEnd.DeepCopy(
                             errorMask: errorMask,
-                            copyMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnEnd));
+                            copyMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnEnd));
                     }
                     else
                     {
@@ -1533,23 +1533,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public DialogResponsesScriptFragments DeepCopy(
-            IDialogResponsesScriptFragmentsGetter item,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+        public ScriptFragments DeepCopy(
+            IScriptFragmentsGetter item,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
-            DialogResponsesScriptFragments ret = (DialogResponsesScriptFragments)((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public DialogResponsesScriptFragments DeepCopy(
-            IDialogResponsesScriptFragmentsGetter item,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? copyMask = null)
+        public ScriptFragments DeepCopy(
+            IScriptFragmentsGetter item,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? copyMask = null)
         {
-            DialogResponsesScriptFragments ret = (DialogResponsesScriptFragments)((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1557,12 +1557,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public DialogResponsesScriptFragments DeepCopy(
-            IDialogResponsesScriptFragmentsGetter item,
+        public ScriptFragments DeepCopy(
+            IScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            DialogResponsesScriptFragments ret = (DialogResponsesScriptFragments)((DialogResponsesScriptFragmentsCommon)((IDialogResponsesScriptFragmentsGetter)item).CommonInstance()!).GetNew();
+            ScriptFragments ret = (ScriptFragments)((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1577,27 +1577,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class DialogResponsesScriptFragments
+    public partial class ScriptFragments
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogResponsesScriptFragments_Registration.Instance;
-        public static DialogResponsesScriptFragments_Registration Registration => DialogResponsesScriptFragments_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
+        public static ScriptFragments_Registration Registration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => DialogResponsesScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterInstance()
+        protected virtual object CommonSetterInstance()
         {
-            return DialogResponsesScriptFragmentsSetterCommon.Instance;
+            return ScriptFragmentsSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => DialogResponsesScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IDialogResponsesScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IDialogResponsesScriptFragmentsGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object IScriptFragmentsGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IDialogResponsesScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -1608,36 +1608,36 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesScriptFragmentsXmlWriteTranslation : IXmlWriteTranslator
+    public partial class ScriptFragmentsXmlWriteTranslation : IXmlWriteTranslator
     {
-        public readonly static DialogResponsesScriptFragmentsXmlWriteTranslation Instance = new DialogResponsesScriptFragmentsXmlWriteTranslation();
+        public readonly static ScriptFragmentsXmlWriteTranslation Instance = new ScriptFragmentsXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.Unknown) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
             {
                 Int8XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unknown),
                     item: item.Unknown,
-                    fieldIndex: (int)DialogResponsesScriptFragments_FieldIndex.Unknown,
+                    fieldIndex: (int)ScriptFragments_FieldIndex.Unknown,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.FileName) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
             {
                 StringXmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FileName),
                     item: item.FileName,
-                    fieldIndex: (int)DialogResponsesScriptFragments_FieldIndex.FileName,
+                    fieldIndex: (int)ScriptFragments_FieldIndex.FileName,
                     errorMask: errorMask);
             }
             if ((item.OnBegin != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.OnBegin) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
             {
                 if (item.OnBegin.TryGet(out var OnBeginItem))
                 {
@@ -1645,13 +1645,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: OnBeginItem,
                         node: node,
                         name: nameof(item.OnBegin),
-                        fieldIndex: (int)DialogResponsesScriptFragments_FieldIndex.OnBegin,
+                        fieldIndex: (int)ScriptFragments_FieldIndex.OnBegin,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnBegin));
+                        translationMask: translationMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnBegin));
                 }
             }
             if ((item.OnEnd != null)
-                && (translationMask?.GetShouldTranslate((int)DialogResponsesScriptFragments_FieldIndex.OnEnd) ?? true))
+                && (translationMask?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnEnd) ?? true))
             {
                 if (item.OnEnd.TryGet(out var OnEndItem))
                 {
@@ -1659,25 +1659,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: OnEndItem,
                         node: node,
                         name: nameof(item.OnEnd),
-                        fieldIndex: (int)DialogResponsesScriptFragments_FieldIndex.OnEnd,
+                        fieldIndex: (int)ScriptFragments_FieldIndex.OnEnd,
                         errorMask: errorMask,
-                        translationMask: translationMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnEnd));
+                        translationMask: translationMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnEnd));
                 }
             }
         }
 
-        public void Write(
+        public virtual void Write(
             XElement node,
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.DialogResponsesScriptFragments");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.ScriptFragments");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.DialogResponsesScriptFragments");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.ScriptFragments");
             }
             WriteToNodeXml(
                 item: item,
@@ -1686,7 +1686,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
 
-        public void Write(
+        public virtual void Write(
             XElement node,
             object item,
             ErrorMaskBuilder? errorMask,
@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (IDialogResponsesScriptFragmentsGetter)item,
+                item: (IScriptFragmentsGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -1703,7 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             XElement node,
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             ErrorMaskBuilder? errorMask,
             int fieldIndex,
             TranslationCrystal? translationMask,
@@ -1713,7 +1713,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             try
             {
                 Write(
-                    item: (IDialogResponsesScriptFragmentsGetter)item,
+                    item: (IScriptFragmentsGetter)item,
                     name: name,
                     node: node,
                     errorMask: errorMask,
@@ -1732,12 +1732,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class DialogResponsesScriptFragmentsXmlCreateTranslation
+    public partial class ScriptFragmentsXmlCreateTranslation
     {
-        public readonly static DialogResponsesScriptFragmentsXmlCreateTranslation Instance = new DialogResponsesScriptFragmentsXmlCreateTranslation();
+        public readonly static ScriptFragmentsXmlCreateTranslation Instance = new ScriptFragmentsXmlCreateTranslation();
 
         public static void FillPublicXml(
-            IDialogResponsesScriptFragments item,
+            IScriptFragments item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1746,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    DialogResponsesScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
+                    ScriptFragmentsXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            IDialogResponsesScriptFragments item,
+            IScriptFragments item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (name)
             {
                 case "Unknown":
-                    errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.Unknown);
+                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.Unknown);
                     try
                     {
                         item.Unknown = Int8XmlTranslation.Instance.Parse(
@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "FileName":
-                    errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.FileName);
+                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.FileName);
                     try
                     {
                         item.FileName = StringXmlTranslation.Instance.Parse(
@@ -1807,13 +1807,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "OnBegin":
-                    errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.OnBegin);
+                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnBegin);
                     try
                     {
                         item.OnBegin = LoquiXmlTranslation<ScriptFragment>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnBegin));
+                            translationMask: translationMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnBegin));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1826,13 +1826,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "OnEnd":
-                    errorMask?.PushIndex((int)DialogResponsesScriptFragments_FieldIndex.OnEnd);
+                    errorMask?.PushIndex((int)ScriptFragments_FieldIndex.OnEnd);
                     try
                     {
                         item.OnEnd = LoquiXmlTranslation<ScriptFragment>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)DialogResponsesScriptFragments_FieldIndex.OnEnd));
+                            translationMask: translationMask?.GetSubCrystal((int)ScriptFragments_FieldIndex.OnEnd));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -1855,30 +1855,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class DialogResponsesScriptFragmentsXmlTranslationMixIn
+    public static class ScriptFragmentsXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             XElement node,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = DialogResponsesScriptFragments.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = ScriptFragments.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             string path,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             string path,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1909,10 +1909,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             Stream stream,
-            out DialogResponsesScriptFragments.ErrorMask errorMask,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null,
+            out ScriptFragments.ErrorMask errorMask,
+            ScriptFragments.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -1926,7 +1926,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
@@ -1943,13 +1943,13 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask = null,
             string? name = null)
         {
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1958,12 +1958,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             XElement node,
             string? name = null,
-            DialogResponsesScriptFragments.TranslationMask? translationMask = null)
+            ScriptFragments.TranslationMask? translationMask = null)
         {
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1972,12 +1972,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             string path,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -1987,12 +1987,12 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             Stream stream,
             string? name = null)
         {
             var node = new XElement("topnode");
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
@@ -2011,17 +2011,17 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class ScriptFragmentsBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static DialogResponsesScriptFragmentsBinaryWriteTranslation Instance = new DialogResponsesScriptFragmentsBinaryWriteTranslation();
+        public readonly static ScriptFragmentsBinaryWriteTranslation Instance = new ScriptFragmentsBinaryWriteTranslation();
 
         static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
-            IDialogResponsesScriptFragmentsGetter item);
+            IScriptFragmentsGetter item);
 
         public static void WriteBinaryFlags(
             MutagenWriter writer,
-            IDialogResponsesScriptFragmentsGetter item)
+            IScriptFragmentsGetter item)
         {
             WriteBinaryFlagsCustom(
                 writer: writer,
@@ -2029,18 +2029,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteEmbedded(
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            DialogResponsesScriptFragmentsBinaryWriteTranslation.WriteBinaryFlags(
+            ScriptFragmentsBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
                 item: item);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
-            IDialogResponsesScriptFragmentsGetter item,
+            IScriptFragmentsGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             WriteEmbedded(
@@ -2048,36 +2048,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer);
         }
 
-        public void Write(
+        public virtual void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IDialogResponsesScriptFragmentsGetter)item,
+                item: (IScriptFragmentsGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class DialogResponsesScriptFragmentsBinaryCreateTranslation
+    public partial class ScriptFragmentsBinaryCreateTranslation
     {
-        public readonly static DialogResponsesScriptFragmentsBinaryCreateTranslation Instance = new DialogResponsesScriptFragmentsBinaryCreateTranslation();
+        public readonly static ScriptFragmentsBinaryCreateTranslation Instance = new ScriptFragmentsBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IDialogResponsesScriptFragments item,
+            IScriptFragments item,
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt8();
-            DialogResponsesScriptFragmentsBinaryCreateTranslation.FillBinaryFlagsCustom(
+            ScriptFragmentsBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
         }
 
         static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
-            IDialogResponsesScriptFragments item);
+            IScriptFragments item);
 
     }
 
@@ -2085,13 +2085,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class DialogResponsesScriptFragmentsBinaryTranslationMixIn
+    public static class ScriptFragmentsBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IDialogResponsesScriptFragmentsGetter item,
+            this IScriptFragmentsGetter item,
             MutagenWriter writer)
         {
-            ((DialogResponsesScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((ScriptFragmentsBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2104,33 +2104,33 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class DialogResponsesScriptFragmentsBinaryOverlay :
+    public partial class ScriptFragmentsBinaryOverlay :
         BinaryOverlay,
-        IDialogResponsesScriptFragmentsGetter
+        IScriptFragmentsGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => DialogResponsesScriptFragments_Registration.Instance;
-        public static DialogResponsesScriptFragments_Registration Registration => DialogResponsesScriptFragments_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ScriptFragments_Registration.Instance;
+        public static ScriptFragments_Registration Registration => ScriptFragments_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => DialogResponsesScriptFragmentsCommon.Instance;
+        protected virtual object CommonInstance() => ScriptFragmentsCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => DialogResponsesScriptFragmentsSetterTranslationCommon.Instance;
+        protected virtual object CommonSetterTranslationInstance() => ScriptFragmentsSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IDialogResponsesScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
+        object IScriptFragmentsGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IDialogResponsesScriptFragmentsGetter.CommonSetterInstance() => null;
+        object? IScriptFragmentsGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IDialogResponsesScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object IScriptFragmentsGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDialogResponsesScriptFragmentsGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IScriptFragmentsGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object XmlWriteTranslator => DialogResponsesScriptFragmentsXmlWriteTranslation.Instance;
+        protected virtual object XmlWriteTranslator => ScriptFragmentsXmlWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IXmlItem.XmlWriteTranslator => this.XmlWriteTranslator;
         void IXmlItem.WriteToXml(
@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((DialogResponsesScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((ScriptFragmentsXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2147,14 +2147,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => DialogResponsesScriptFragmentsBinaryWriteTranslation.Instance;
+        protected virtual object BinaryWriteTranslator => ScriptFragmentsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((DialogResponsesScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((ScriptFragmentsBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected DialogResponsesScriptFragmentsBinaryOverlay(
+        protected ScriptFragmentsBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2183,12 +2183,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static DialogResponsesScriptFragmentsBinaryOverlay DialogResponsesScriptFragmentsFactory(
+        public static ScriptFragmentsBinaryOverlay ScriptFragmentsFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new DialogResponsesScriptFragmentsBinaryOverlay(
+            var ret = new ScriptFragmentsBinaryOverlay(
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
@@ -2200,12 +2200,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static DialogResponsesScriptFragmentsBinaryOverlay DialogResponsesScriptFragmentsFactory(
+        public static ScriptFragmentsBinaryOverlay ScriptFragmentsFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return DialogResponsesScriptFragmentsFactory(
+            return ScriptFragmentsFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2213,11 +2213,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region To String
 
-        public void ToString(
+        public virtual void ToString(
             FileGeneration fg,
             string? name = null)
         {
-            DialogResponsesScriptFragmentsMixIn.ToString(
+            ScriptFragmentsMixIn.ToString(
                 item: this,
                 name: name);
         }
