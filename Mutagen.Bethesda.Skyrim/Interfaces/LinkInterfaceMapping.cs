@@ -69,6 +69,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 typeof(Weapon),
             };
             dict[typeof(IItemGetter)] = dict[typeof(IItem)];
+            dict[typeof(IOutfitTarget)] = new Type[]
+            {
+                typeof(Armor),
+                typeof(LeveledItem),
+            };
+            dict[typeof(IOutfitTargetGetter)] = dict[typeof(IOutfitTarget)];
             dict[typeof(IComplexLocation)] = new Type[]
             {
                 typeof(Cell),

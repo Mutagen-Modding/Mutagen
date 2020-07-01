@@ -151,6 +151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType EXPL = new RecordType(0x4C505845);
         public static readonly RecordType EYES = new RecordType(0x53455945);
         public static readonly RecordType FACT = new RecordType(0x54434146);
+        public static readonly RecordType FCHT = new RecordType(0x54484346);
         public static readonly RecordType FIAD = new RecordType(0x44414946);
         public static readonly RecordType FLMV = new RecordType(0x564D4C46);
         public static readonly RecordType FLOR = new RecordType(0x524F4C46);
@@ -159,6 +160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType FLTV = new RecordType(0x56544C46);
         public static readonly RecordType FNAM = new RecordType(0x4D414E46);
         public static readonly RecordType FNPR = new RecordType(0x52504E46);
+        public static readonly RecordType FPRT = new RecordType(0x54525046);
         public static readonly RecordType FSTP = new RecordType(0x50545346);
         public static readonly RecordType FSTS = new RecordType(0x53545346);
         public static readonly RecordType FTSM = new RecordType(0x4D535446);
@@ -257,6 +259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MAST = new RecordType(0x5453414D);
         public static readonly RecordType MATO = new RecordType(0x4F54414D);
         public static readonly RecordType MATT = new RecordType(0x5454414D);
+        public static readonly RecordType MCHT = new RecordType(0x5448434D);
         public static readonly RecordType MDOB = new RecordType(0x424F444D);
         public static readonly RecordType MESG = new RecordType(0x4753454D);
         public static readonly RecordType MGEF = new RecordType(0x4645474D);
@@ -274,6 +277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType MODT = new RecordType(0x54444F4D);
         public static readonly RecordType MOVT = new RecordType(0x54564F4D);
         public static readonly RecordType MPAI = new RecordType(0x4941504D);
+        public static readonly RecordType MPRT = new RecordType(0x5452504D);
         public static readonly RecordType MSTT = new RecordType(0x5454534D);
         public static readonly RecordType MTNM = new RecordType(0x4D4E544D);
         public static readonly RecordType MTYP = new RecordType(0x5059544D);
@@ -393,6 +397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType SMEN = new RecordType(0x4E454D53);
         public static readonly RecordType SMQN = new RecordType(0x4E514D53);
         public static readonly RecordType SNAM = new RecordType(0x4D414E53);
+        public static readonly RecordType SNCT = new RecordType(0x54434E53);
         public static readonly RecordType SNDD = new RecordType(0x44444E53);
         public static readonly RecordType SNDR = new RecordType(0x52444E53);
         public static readonly RecordType SNMV = new RecordType(0x564D4E53);

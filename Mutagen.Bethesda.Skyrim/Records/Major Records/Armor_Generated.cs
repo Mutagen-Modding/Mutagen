@@ -1530,6 +1530,7 @@ namespace Mutagen.Bethesda.Skyrim
         IArmorGetter,
         ISkyrimMajorRecord,
         IItem,
+        IOutfitTarget,
         IObjectId,
         ITranslatedNamed,
         IObjectBounded,
@@ -1576,6 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
         IItemGetter,
+        IOutfitTargetGetter,
         IObjectIdGetter,
         ITranslatedNamedGetter,
         IObjectBoundedGetter,

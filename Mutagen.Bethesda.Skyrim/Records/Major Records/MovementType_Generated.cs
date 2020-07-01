@@ -49,6 +49,68 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IMovementTypeGetter.Name => this.Name;
+        #endregion
+        #region LeftWalk
+        public Single LeftWalk { get; set; } = default;
+        #endregion
+        #region LeftRun
+        public Single LeftRun { get; set; } = default;
+        #endregion
+        #region RightWalk
+        public Single RightWalk { get; set; } = default;
+        #endregion
+        #region RightRun
+        public Single RightRun { get; set; } = default;
+        #endregion
+        #region ForwardWalk
+        public Single ForwardWalk { get; set; } = default;
+        #endregion
+        #region ForwardRun
+        public Single ForwardRun { get; set; } = default;
+        #endregion
+        #region BackWalk
+        public Single BackWalk { get; set; } = default;
+        #endregion
+        #region BackRun
+        public Single BackRun { get; set; } = default;
+        #endregion
+        #region RotateInPlaceWalk
+        public Single RotateInPlaceWalk { get; set; } = default;
+        #endregion
+        #region RotateInPlaceRun
+        public Single RotateInPlaceRun { get; set; } = default;
+        #endregion
+        #region RotateWhileMovingRun
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Single _RotateWhileMovingRun;
+        public Single RotateWhileMovingRun
+        {
+            get => this._RotateWhileMovingRun;
+            set
+            {
+                this.SPEDDataTypeState &= ~SPEDDataType.Break0;
+                this._RotateWhileMovingRun = value;
+            }
+        }
+        #endregion
+        #region AnimationChangeThresholds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private AnimationChangeThresholds? _AnimationChangeThresholds;
+        public AnimationChangeThresholds? AnimationChangeThresholds
+        {
+            get => _AnimationChangeThresholds;
+            set => _AnimationChangeThresholds = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IAnimationChangeThresholdsGetter? IMovementTypeGetter.AnimationChangeThresholds => this.AnimationChangeThresholds;
+        #endregion
+        #region SPEDDataTypeState
+        public MovementType.SPEDDataType SPEDDataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +280,20 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.LeftWalk = initialValue;
+                this.LeftRun = initialValue;
+                this.RightWalk = initialValue;
+                this.RightRun = initialValue;
+                this.ForwardWalk = initialValue;
+                this.ForwardRun = initialValue;
+                this.BackWalk = initialValue;
+                this.BackRun = initialValue;
+                this.RotateInPlaceWalk = initialValue;
+                this.RotateInPlaceRun = initialValue;
+                this.RotateWhileMovingRun = initialValue;
+                this.AnimationChangeThresholds = new MaskItem<TItem, AnimationChangeThresholds.Mask<TItem>?>(initialValue, new AnimationChangeThresholds.Mask<TItem>(initialValue));
+                this.SPEDDataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +302,21 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Name,
+                TItem LeftWalk,
+                TItem LeftRun,
+                TItem RightWalk,
+                TItem RightRun,
+                TItem ForwardWalk,
+                TItem ForwardRun,
+                TItem BackWalk,
+                TItem BackRun,
+                TItem RotateInPlaceWalk,
+                TItem RotateInPlaceRun,
+                TItem RotateWhileMovingRun,
+                TItem AnimationChangeThresholds,
+                TItem SPEDDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +325,20 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Name = Name;
+                this.LeftWalk = LeftWalk;
+                this.LeftRun = LeftRun;
+                this.RightWalk = RightWalk;
+                this.RightRun = RightRun;
+                this.ForwardWalk = ForwardWalk;
+                this.ForwardRun = ForwardRun;
+                this.BackWalk = BackWalk;
+                this.BackRun = BackRun;
+                this.RotateInPlaceWalk = RotateInPlaceWalk;
+                this.RotateInPlaceRun = RotateInPlaceRun;
+                this.RotateWhileMovingRun = RotateWhileMovingRun;
+                this.AnimationChangeThresholds = new MaskItem<TItem, AnimationChangeThresholds.Mask<TItem>?>(AnimationChangeThresholds, new AnimationChangeThresholds.Mask<TItem>(AnimationChangeThresholds));
+                this.SPEDDataTypeState = SPEDDataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +347,23 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Name;
+            public TItem LeftWalk;
+            public TItem LeftRun;
+            public TItem RightWalk;
+            public TItem RightRun;
+            public TItem ForwardWalk;
+            public TItem ForwardRun;
+            public TItem BackWalk;
+            public TItem BackRun;
+            public TItem RotateInPlaceWalk;
+            public TItem RotateInPlaceRun;
+            public TItem RotateWhileMovingRun;
+            public MaskItem<TItem, AnimationChangeThresholds.Mask<TItem>?>? AnimationChangeThresholds { get; set; }
+            public TItem SPEDDataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +377,39 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.LeftWalk, rhs.LeftWalk)) return false;
+                if (!object.Equals(this.LeftRun, rhs.LeftRun)) return false;
+                if (!object.Equals(this.RightWalk, rhs.RightWalk)) return false;
+                if (!object.Equals(this.RightRun, rhs.RightRun)) return false;
+                if (!object.Equals(this.ForwardWalk, rhs.ForwardWalk)) return false;
+                if (!object.Equals(this.ForwardRun, rhs.ForwardRun)) return false;
+                if (!object.Equals(this.BackWalk, rhs.BackWalk)) return false;
+                if (!object.Equals(this.BackRun, rhs.BackRun)) return false;
+                if (!object.Equals(this.RotateInPlaceWalk, rhs.RotateInPlaceWalk)) return false;
+                if (!object.Equals(this.RotateInPlaceRun, rhs.RotateInPlaceRun)) return false;
+                if (!object.Equals(this.RotateWhileMovingRun, rhs.RotateWhileMovingRun)) return false;
+                if (!object.Equals(this.AnimationChangeThresholds, rhs.AnimationChangeThresholds)) return false;
+                if (!object.Equals(this.SPEDDataTypeState, rhs.SPEDDataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.LeftWalk);
+                hash.Add(this.LeftRun);
+                hash.Add(this.RightWalk);
+                hash.Add(this.RightRun);
+                hash.Add(this.ForwardWalk);
+                hash.Add(this.ForwardRun);
+                hash.Add(this.BackWalk);
+                hash.Add(this.BackRun);
+                hash.Add(this.RotateInPlaceWalk);
+                hash.Add(this.RotateInPlaceRun);
+                hash.Add(this.RotateWhileMovingRun);
+                hash.Add(this.AnimationChangeThresholds);
+                hash.Add(this.SPEDDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +420,24 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.LeftWalk)) return false;
+                if (!eval(this.LeftRun)) return false;
+                if (!eval(this.RightWalk)) return false;
+                if (!eval(this.RightRun)) return false;
+                if (!eval(this.ForwardWalk)) return false;
+                if (!eval(this.ForwardRun)) return false;
+                if (!eval(this.BackWalk)) return false;
+                if (!eval(this.BackRun)) return false;
+                if (!eval(this.RotateInPlaceWalk)) return false;
+                if (!eval(this.RotateInPlaceRun)) return false;
+                if (!eval(this.RotateWhileMovingRun)) return false;
+                if (AnimationChangeThresholds != null)
+                {
+                    if (!eval(this.AnimationChangeThresholds.Overall)) return false;
+                    if (this.AnimationChangeThresholds.Specific != null && !this.AnimationChangeThresholds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.SPEDDataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +446,24 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.LeftWalk)) return true;
+                if (eval(this.LeftRun)) return true;
+                if (eval(this.RightWalk)) return true;
+                if (eval(this.RightRun)) return true;
+                if (eval(this.ForwardWalk)) return true;
+                if (eval(this.ForwardRun)) return true;
+                if (eval(this.BackWalk)) return true;
+                if (eval(this.BackRun)) return true;
+                if (eval(this.RotateInPlaceWalk)) return true;
+                if (eval(this.RotateInPlaceRun)) return true;
+                if (eval(this.RotateWhileMovingRun)) return true;
+                if (AnimationChangeThresholds != null)
+                {
+                    if (eval(this.AnimationChangeThresholds.Overall)) return true;
+                    if (this.AnimationChangeThresholds.Specific != null && this.AnimationChangeThresholds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.SPEDDataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +479,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.LeftWalk = eval(this.LeftWalk);
+                obj.LeftRun = eval(this.LeftRun);
+                obj.RightWalk = eval(this.RightWalk);
+                obj.RightRun = eval(this.RightRun);
+                obj.ForwardWalk = eval(this.ForwardWalk);
+                obj.ForwardRun = eval(this.ForwardRun);
+                obj.BackWalk = eval(this.BackWalk);
+                obj.BackRun = eval(this.BackRun);
+                obj.RotateInPlaceWalk = eval(this.RotateInPlaceWalk);
+                obj.RotateInPlaceRun = eval(this.RotateInPlaceRun);
+                obj.RotateWhileMovingRun = eval(this.RotateWhileMovingRun);
+                obj.AnimationChangeThresholds = this.AnimationChangeThresholds == null ? null : new MaskItem<R, AnimationChangeThresholds.Mask<R>?>(eval(this.AnimationChangeThresholds.Overall), this.AnimationChangeThresholds.Specific?.Translate(eval));
+                obj.SPEDDataTypeState = eval(this.SPEDDataTypeState);
             }
             #endregion
 
@@ -316,6 +515,62 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.LeftWalk ?? true)
+                    {
+                        fg.AppendItem(LeftWalk, "LeftWalk");
+                    }
+                    if (printMask?.LeftRun ?? true)
+                    {
+                        fg.AppendItem(LeftRun, "LeftRun");
+                    }
+                    if (printMask?.RightWalk ?? true)
+                    {
+                        fg.AppendItem(RightWalk, "RightWalk");
+                    }
+                    if (printMask?.RightRun ?? true)
+                    {
+                        fg.AppendItem(RightRun, "RightRun");
+                    }
+                    if (printMask?.ForwardWalk ?? true)
+                    {
+                        fg.AppendItem(ForwardWalk, "ForwardWalk");
+                    }
+                    if (printMask?.ForwardRun ?? true)
+                    {
+                        fg.AppendItem(ForwardRun, "ForwardRun");
+                    }
+                    if (printMask?.BackWalk ?? true)
+                    {
+                        fg.AppendItem(BackWalk, "BackWalk");
+                    }
+                    if (printMask?.BackRun ?? true)
+                    {
+                        fg.AppendItem(BackRun, "BackRun");
+                    }
+                    if (printMask?.RotateInPlaceWalk ?? true)
+                    {
+                        fg.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
+                    }
+                    if (printMask?.RotateInPlaceRun ?? true)
+                    {
+                        fg.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
+                    }
+                    if (printMask?.RotateWhileMovingRun ?? true)
+                    {
+                        fg.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
+                    }
+                    if (printMask?.AnimationChangeThresholds?.Overall ?? true)
+                    {
+                        AnimationChangeThresholds?.ToString(fg);
+                    }
+                    if (printMask?.SPEDDataTypeState ?? true)
+                    {
+                        fg.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +582,57 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Name;
+            public Exception? LeftWalk;
+            public Exception? LeftRun;
+            public Exception? RightWalk;
+            public Exception? RightRun;
+            public Exception? ForwardWalk;
+            public Exception? ForwardRun;
+            public Exception? BackWalk;
+            public Exception? BackRun;
+            public Exception? RotateInPlaceWalk;
+            public Exception? RotateInPlaceRun;
+            public Exception? RotateWhileMovingRun;
+            public MaskItem<Exception?, AnimationChangeThresholds.ErrorMask?>? AnimationChangeThresholds;
+            public Exception? SPEDDataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        return Name;
+                    case MovementType_FieldIndex.LeftWalk:
+                        return LeftWalk;
+                    case MovementType_FieldIndex.LeftRun:
+                        return LeftRun;
+                    case MovementType_FieldIndex.RightWalk:
+                        return RightWalk;
+                    case MovementType_FieldIndex.RightRun:
+                        return RightRun;
+                    case MovementType_FieldIndex.ForwardWalk:
+                        return ForwardWalk;
+                    case MovementType_FieldIndex.ForwardRun:
+                        return ForwardRun;
+                    case MovementType_FieldIndex.BackWalk:
+                        return BackWalk;
+                    case MovementType_FieldIndex.BackRun:
+                        return BackRun;
+                    case MovementType_FieldIndex.RotateInPlaceWalk:
+                        return RotateInPlaceWalk;
+                    case MovementType_FieldIndex.RotateInPlaceRun:
+                        return RotateInPlaceRun;
+                    case MovementType_FieldIndex.RotateWhileMovingRun:
+                        return RotateWhileMovingRun;
+                    case MovementType_FieldIndex.AnimationChangeThresholds:
+                        return AnimationChangeThresholds;
+                    case MovementType_FieldIndex.SPEDDataTypeState:
+                        return SPEDDataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +643,48 @@ namespace Mutagen.Bethesda.Skyrim
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case MovementType_FieldIndex.LeftWalk:
+                        this.LeftWalk = ex;
+                        break;
+                    case MovementType_FieldIndex.LeftRun:
+                        this.LeftRun = ex;
+                        break;
+                    case MovementType_FieldIndex.RightWalk:
+                        this.RightWalk = ex;
+                        break;
+                    case MovementType_FieldIndex.RightRun:
+                        this.RightRun = ex;
+                        break;
+                    case MovementType_FieldIndex.ForwardWalk:
+                        this.ForwardWalk = ex;
+                        break;
+                    case MovementType_FieldIndex.ForwardRun:
+                        this.ForwardRun = ex;
+                        break;
+                    case MovementType_FieldIndex.BackWalk:
+                        this.BackWalk = ex;
+                        break;
+                    case MovementType_FieldIndex.BackRun:
+                        this.BackRun = ex;
+                        break;
+                    case MovementType_FieldIndex.RotateInPlaceWalk:
+                        this.RotateInPlaceWalk = ex;
+                        break;
+                    case MovementType_FieldIndex.RotateInPlaceRun:
+                        this.RotateInPlaceRun = ex;
+                        break;
+                    case MovementType_FieldIndex.RotateWhileMovingRun:
+                        this.RotateWhileMovingRun = ex;
+                        break;
+                    case MovementType_FieldIndex.AnimationChangeThresholds:
+                        this.AnimationChangeThresholds = new MaskItem<Exception?, AnimationChangeThresholds.ErrorMask?>(ex, null);
+                        break;
+                    case MovementType_FieldIndex.SPEDDataTypeState:
+                        this.SPEDDataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +696,48 @@ namespace Mutagen.Bethesda.Skyrim
                 MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
                 switch (enu)
                 {
+                    case MovementType_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.LeftWalk:
+                        this.LeftWalk = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.LeftRun:
+                        this.LeftRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.RightWalk:
+                        this.RightWalk = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.RightRun:
+                        this.RightRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.ForwardWalk:
+                        this.ForwardWalk = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.ForwardRun:
+                        this.ForwardRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.BackWalk:
+                        this.BackWalk = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.BackRun:
+                        this.BackRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.RotateInPlaceWalk:
+                        this.RotateInPlaceWalk = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.RotateInPlaceRun:
+                        this.RotateInPlaceRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.RotateWhileMovingRun:
+                        this.RotateWhileMovingRun = (Exception?)obj;
+                        break;
+                    case MovementType_FieldIndex.AnimationChangeThresholds:
+                        this.AnimationChangeThresholds = (MaskItem<Exception?, AnimationChangeThresholds.ErrorMask?>?)obj;
+                        break;
+                    case MovementType_FieldIndex.SPEDDataTypeState:
+                        this.SPEDDataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +747,20 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (LeftWalk != null) return true;
+                if (LeftRun != null) return true;
+                if (RightWalk != null) return true;
+                if (RightRun != null) return true;
+                if (ForwardWalk != null) return true;
+                if (ForwardRun != null) return true;
+                if (BackWalk != null) return true;
+                if (BackRun != null) return true;
+                if (RotateInPlaceWalk != null) return true;
+                if (RotateInPlaceRun != null) return true;
+                if (RotateWhileMovingRun != null) return true;
+                if (AnimationChangeThresholds != null) return true;
+                if (SPEDDataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +796,20 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(LeftWalk, "LeftWalk");
+                fg.AppendItem(LeftRun, "LeftRun");
+                fg.AppendItem(RightWalk, "RightWalk");
+                fg.AppendItem(RightRun, "RightRun");
+                fg.AppendItem(ForwardWalk, "ForwardWalk");
+                fg.AppendItem(ForwardRun, "ForwardRun");
+                fg.AppendItem(BackWalk, "BackWalk");
+                fg.AppendItem(BackRun, "BackRun");
+                fg.AppendItem(RotateInPlaceWalk, "RotateInPlaceWalk");
+                fg.AppendItem(RotateInPlaceRun, "RotateInPlaceRun");
+                fg.AppendItem(RotateWhileMovingRun, "RotateWhileMovingRun");
+                AnimationChangeThresholds?.ToString(fg);
+                fg.AppendItem(SPEDDataTypeState, "SPEDDataTypeState");
             }
             #endregion
 
@@ -406,6 +818,20 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.LeftWalk = this.LeftWalk.Combine(rhs.LeftWalk);
+                ret.LeftRun = this.LeftRun.Combine(rhs.LeftRun);
+                ret.RightWalk = this.RightWalk.Combine(rhs.RightWalk);
+                ret.RightRun = this.RightRun.Combine(rhs.RightRun);
+                ret.ForwardWalk = this.ForwardWalk.Combine(rhs.ForwardWalk);
+                ret.ForwardRun = this.ForwardRun.Combine(rhs.ForwardRun);
+                ret.BackWalk = this.BackWalk.Combine(rhs.BackWalk);
+                ret.BackRun = this.BackRun.Combine(rhs.BackRun);
+                ret.RotateInPlaceWalk = this.RotateInPlaceWalk.Combine(rhs.RotateInPlaceWalk);
+                ret.RotateInPlaceRun = this.RotateInPlaceRun.Combine(rhs.RotateInPlaceRun);
+                ret.RotateWhileMovingRun = this.RotateWhileMovingRun.Combine(rhs.RotateWhileMovingRun);
+                ret.AnimationChangeThresholds = this.AnimationChangeThresholds.Combine(rhs.AnimationChangeThresholds, (l, r) => l.Combine(r));
+                ret.SPEDDataTypeState = this.SPEDDataTypeState.Combine(rhs.SPEDDataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,14 +853,63 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Name;
+            public bool LeftWalk;
+            public bool LeftRun;
+            public bool RightWalk;
+            public bool RightRun;
+            public bool ForwardWalk;
+            public bool ForwardRun;
+            public bool BackWalk;
+            public bool BackRun;
+            public bool RotateInPlaceWalk;
+            public bool RotateInPlaceRun;
+            public bool RotateWhileMovingRun;
+            public MaskItem<bool, AnimationChangeThresholds.TranslationMask?> AnimationChangeThresholds;
+            public bool SPEDDataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Name = defaultOn;
+                this.LeftWalk = defaultOn;
+                this.LeftRun = defaultOn;
+                this.RightWalk = defaultOn;
+                this.RightRun = defaultOn;
+                this.ForwardWalk = defaultOn;
+                this.ForwardRun = defaultOn;
+                this.BackWalk = defaultOn;
+                this.BackRun = defaultOn;
+                this.RotateInPlaceWalk = defaultOn;
+                this.RotateInPlaceRun = defaultOn;
+                this.RotateWhileMovingRun = defaultOn;
+                this.AnimationChangeThresholds = new MaskItem<bool, AnimationChangeThresholds.TranslationMask?>(defaultOn, null);
+                this.SPEDDataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((LeftWalk, null));
+                ret.Add((LeftRun, null));
+                ret.Add((RightWalk, null));
+                ret.Add((RightRun, null));
+                ret.Add((ForwardWalk, null));
+                ret.Add((ForwardRun, null));
+                ret.Add((BackWalk, null));
+                ret.Add((BackRun, null));
+                ret.Add((RotateInPlaceWalk, null));
+                ret.Add((RotateInPlaceRun, null));
+                ret.Add((RotateWhileMovingRun, null));
+                ret.Add((AnimationChangeThresholds?.Overall ?? true, AnimationChangeThresholds?.Specific?.GetCrystal()));
+                ret.Add((SPEDDataTypeState, null));
+            }
         }
         #endregion
 
@@ -457,6 +932,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum SPEDDataType
+        {
+            Break0 = 1
+        }
         #endregion
 
         #region Binary Translation
@@ -528,6 +1008,20 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IMovementTypeInternal>
     {
+        new String? Name { get; set; }
+        new Single LeftWalk { get; set; }
+        new Single LeftRun { get; set; }
+        new Single RightWalk { get; set; }
+        new Single RightRun { get; set; }
+        new Single ForwardWalk { get; set; }
+        new Single ForwardRun { get; set; }
+        new Single BackWalk { get; set; }
+        new Single BackRun { get; set; }
+        new Single RotateInPlaceWalk { get; set; }
+        new Single RotateInPlaceRun { get; set; }
+        new Single RotateWhileMovingRun { get; set; }
+        new AnimationChangeThresholds? AnimationChangeThresholds { get; set; }
+        new MovementType.SPEDDataType SPEDDataTypeState { get; set; }
     }
 
     public partial interface IMovementTypeInternal :
@@ -544,6 +1038,20 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => MovementType_Registration.Instance;
+        String? Name { get; }
+        Single LeftWalk { get; }
+        Single LeftRun { get; }
+        Single RightWalk { get; }
+        Single RightRun { get; }
+        Single ForwardWalk { get; }
+        Single ForwardRun { get; }
+        Single BackWalk { get; }
+        Single BackRun { get; }
+        Single RotateInPlaceWalk { get; }
+        Single RotateInPlaceRun { get; }
+        Single RotateWhileMovingRun { get; }
+        IAnimationChangeThresholdsGetter? AnimationChangeThresholds { get; }
+        MovementType.SPEDDataType SPEDDataTypeState { get; }
 
     }
 
@@ -844,6 +1352,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Name = 6,
+        LeftWalk = 7,
+        LeftRun = 8,
+        RightWalk = 9,
+        RightRun = 10,
+        ForwardWalk = 11,
+        ForwardRun = 12,
+        BackWalk = 13,
+        BackRun = 14,
+        RotateInPlaceWalk = 15,
+        RotateInPlaceRun = 16,
+        RotateWhileMovingRun = 17,
+        AnimationChangeThresholds = 18,
+        SPEDDataTypeState = 19,
     }
     #endregion
 
@@ -861,9 +1383,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "d6455262-af10-48b1-acd1-01fbee5f3687";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 14;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 20;
 
         public static readonly Type MaskType = typeof(MovementType.Mask<>);
 
@@ -893,6 +1415,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)MovementType_FieldIndex.Name;
+                case "LEFTWALK":
+                    return (ushort)MovementType_FieldIndex.LeftWalk;
+                case "LEFTRUN":
+                    return (ushort)MovementType_FieldIndex.LeftRun;
+                case "RIGHTWALK":
+                    return (ushort)MovementType_FieldIndex.RightWalk;
+                case "RIGHTRUN":
+                    return (ushort)MovementType_FieldIndex.RightRun;
+                case "FORWARDWALK":
+                    return (ushort)MovementType_FieldIndex.ForwardWalk;
+                case "FORWARDRUN":
+                    return (ushort)MovementType_FieldIndex.ForwardRun;
+                case "BACKWALK":
+                    return (ushort)MovementType_FieldIndex.BackWalk;
+                case "BACKRUN":
+                    return (ushort)MovementType_FieldIndex.BackRun;
+                case "ROTATEINPLACEWALK":
+                    return (ushort)MovementType_FieldIndex.RotateInPlaceWalk;
+                case "ROTATEINPLACERUN":
+                    return (ushort)MovementType_FieldIndex.RotateInPlaceRun;
+                case "ROTATEWHILEMOVINGRUN":
+                    return (ushort)MovementType_FieldIndex.RotateWhileMovingRun;
+                case "ANIMATIONCHANGETHRESHOLDS":
+                    return (ushort)MovementType_FieldIndex.AnimationChangeThresholds;
+                case "SPEDDATATYPESTATE":
+                    return (ushort)MovementType_FieldIndex.SPEDDataTypeState;
                 default:
                     return null;
             }
@@ -903,6 +1453,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                case MovementType_FieldIndex.LeftWalk:
+                case MovementType_FieldIndex.LeftRun:
+                case MovementType_FieldIndex.RightWalk:
+                case MovementType_FieldIndex.RightRun:
+                case MovementType_FieldIndex.ForwardWalk:
+                case MovementType_FieldIndex.ForwardRun:
+                case MovementType_FieldIndex.BackWalk:
+                case MovementType_FieldIndex.BackRun:
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1478,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                    return true;
+                case MovementType_FieldIndex.Name:
+                case MovementType_FieldIndex.LeftWalk:
+                case MovementType_FieldIndex.LeftRun:
+                case MovementType_FieldIndex.RightWalk:
+                case MovementType_FieldIndex.RightRun:
+                case MovementType_FieldIndex.ForwardWalk:
+                case MovementType_FieldIndex.ForwardRun:
+                case MovementType_FieldIndex.BackWalk:
+                case MovementType_FieldIndex.BackRun:
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1504,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                case MovementType_FieldIndex.LeftWalk:
+                case MovementType_FieldIndex.LeftRun:
+                case MovementType_FieldIndex.RightWalk:
+                case MovementType_FieldIndex.RightRun:
+                case MovementType_FieldIndex.ForwardWalk:
+                case MovementType_FieldIndex.ForwardRun:
+                case MovementType_FieldIndex.BackWalk:
+                case MovementType_FieldIndex.BackRun:
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1529,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                    return "Name";
+                case MovementType_FieldIndex.LeftWalk:
+                    return "LeftWalk";
+                case MovementType_FieldIndex.LeftRun:
+                    return "LeftRun";
+                case MovementType_FieldIndex.RightWalk:
+                    return "RightWalk";
+                case MovementType_FieldIndex.RightRun:
+                    return "RightRun";
+                case MovementType_FieldIndex.ForwardWalk:
+                    return "ForwardWalk";
+                case MovementType_FieldIndex.ForwardRun:
+                    return "ForwardRun";
+                case MovementType_FieldIndex.BackWalk:
+                    return "BackWalk";
+                case MovementType_FieldIndex.BackRun:
+                    return "BackRun";
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                    return "RotateInPlaceWalk";
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                    return "RotateInPlaceRun";
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                    return "RotateWhileMovingRun";
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                    return "AnimationChangeThresholds";
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return "SPEDDataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1567,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                case MovementType_FieldIndex.LeftWalk:
+                case MovementType_FieldIndex.LeftRun:
+                case MovementType_FieldIndex.RightWalk:
+                case MovementType_FieldIndex.RightRun:
+                case MovementType_FieldIndex.ForwardWalk:
+                case MovementType_FieldIndex.ForwardRun:
+                case MovementType_FieldIndex.BackWalk:
+                case MovementType_FieldIndex.BackRun:
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1592,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                case MovementType_FieldIndex.LeftWalk:
+                case MovementType_FieldIndex.LeftRun:
+                case MovementType_FieldIndex.RightWalk:
+                case MovementType_FieldIndex.RightRun:
+                case MovementType_FieldIndex.ForwardWalk:
+                case MovementType_FieldIndex.ForwardRun:
+                case MovementType_FieldIndex.BackWalk:
+                case MovementType_FieldIndex.BackRun:
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1617,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MovementType_FieldIndex enu = (MovementType_FieldIndex)index;
             switch (enu)
             {
+                case MovementType_FieldIndex.Name:
+                    return typeof(String);
+                case MovementType_FieldIndex.LeftWalk:
+                    return typeof(Single);
+                case MovementType_FieldIndex.LeftRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.RightWalk:
+                    return typeof(Single);
+                case MovementType_FieldIndex.RightRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.ForwardWalk:
+                    return typeof(Single);
+                case MovementType_FieldIndex.ForwardRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.BackWalk:
+                    return typeof(Single);
+                case MovementType_FieldIndex.BackRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.RotateInPlaceWalk:
+                    return typeof(Single);
+                case MovementType_FieldIndex.RotateInPlaceRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.RotateWhileMovingRun:
+                    return typeof(Single);
+                case MovementType_FieldIndex.AnimationChangeThresholds:
+                    return typeof(AnimationChangeThresholds);
+                case MovementType_FieldIndex.SPEDDataTypeState:
+                    return typeof(MovementType.SPEDDataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1694,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IMovementTypeInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.LeftWalk = default;
+            item.LeftRun = default;
+            item.RightWalk = default;
+            item.RightRun = default;
+            item.ForwardWalk = default;
+            item.ForwardRun = default;
+            item.BackWalk = default;
+            item.BackRun = default;
+            item.RotateInPlaceWalk = default;
+            item.RotateInPlaceRun = default;
+            item.RotateWhileMovingRun = default;
+            item.AnimationChangeThresholds = null;
+            item.SPEDDataTypeState = default;
             base.Clear(item);
         }
         
@@ -1054,6 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             try
             {
+                item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
                 foreach (var elem in node.Elements())
                 {
                     FillPrivateElementXml(
@@ -1169,6 +1866,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.LeftWalk = item.LeftWalk.EqualsWithin(rhs.LeftWalk);
+            ret.LeftRun = item.LeftRun.EqualsWithin(rhs.LeftRun);
+            ret.RightWalk = item.RightWalk.EqualsWithin(rhs.RightWalk);
+            ret.RightRun = item.RightRun.EqualsWithin(rhs.RightRun);
+            ret.ForwardWalk = item.ForwardWalk.EqualsWithin(rhs.ForwardWalk);
+            ret.ForwardRun = item.ForwardRun.EqualsWithin(rhs.ForwardRun);
+            ret.BackWalk = item.BackWalk.EqualsWithin(rhs.BackWalk);
+            ret.BackRun = item.BackRun.EqualsWithin(rhs.BackRun);
+            ret.RotateInPlaceWalk = item.RotateInPlaceWalk.EqualsWithin(rhs.RotateInPlaceWalk);
+            ret.RotateInPlaceRun = item.RotateInPlaceRun.EqualsWithin(rhs.RotateInPlaceRun);
+            ret.RotateWhileMovingRun = item.RotateWhileMovingRun.EqualsWithin(rhs.RotateWhileMovingRun);
+            ret.AnimationChangeThresholds = EqualsMaskHelper.EqualsHelper(
+                item.AnimationChangeThresholds,
+                rhs.AnimationChangeThresholds,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.SPEDDataTypeState = item.SPEDDataTypeState == rhs.SPEDDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1935,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.LeftWalk ?? true)
+            {
+                fg.AppendItem(item.LeftWalk, "LeftWalk");
+            }
+            if (printMask?.LeftRun ?? true)
+            {
+                fg.AppendItem(item.LeftRun, "LeftRun");
+            }
+            if (printMask?.RightWalk ?? true)
+            {
+                fg.AppendItem(item.RightWalk, "RightWalk");
+            }
+            if (printMask?.RightRun ?? true)
+            {
+                fg.AppendItem(item.RightRun, "RightRun");
+            }
+            if (printMask?.ForwardWalk ?? true)
+            {
+                fg.AppendItem(item.ForwardWalk, "ForwardWalk");
+            }
+            if (printMask?.ForwardRun ?? true)
+            {
+                fg.AppendItem(item.ForwardRun, "ForwardRun");
+            }
+            if (printMask?.BackWalk ?? true)
+            {
+                fg.AppendItem(item.BackWalk, "BackWalk");
+            }
+            if (printMask?.BackRun ?? true)
+            {
+                fg.AppendItem(item.BackRun, "BackRun");
+            }
+            if (printMask?.RotateInPlaceWalk ?? true)
+            {
+                fg.AppendItem(item.RotateInPlaceWalk, "RotateInPlaceWalk");
+            }
+            if (printMask?.RotateInPlaceRun ?? true)
+            {
+                fg.AppendItem(item.RotateInPlaceRun, "RotateInPlaceRun");
+            }
+            if (printMask?.RotateWhileMovingRun ?? true)
+            {
+                fg.AppendItem(item.RotateWhileMovingRun, "RotateWhileMovingRun");
+            }
+            if ((printMask?.AnimationChangeThresholds?.Overall ?? true)
+                && item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
+            {
+                AnimationChangeThresholdsItem?.ToString(fg, "AnimationChangeThresholds");
+            }
+            if (printMask?.SPEDDataTypeState ?? true)
+            {
+                fg.AppendItem(item.SPEDDataTypeState, "SPEDDataTypeState");
+            }
         }
         
         public bool HasBeenSet(
             IMovementTypeGetter item,
             MovementType.Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.AnimationChangeThresholds?.Overall.HasValue ?? false && checkMask.AnimationChangeThresholds.Overall.Value != (item.AnimationChangeThresholds != null)) return false;
+            if (checkMask.AnimationChangeThresholds?.Specific != null && (item.AnimationChangeThresholds == null || !item.AnimationChangeThresholds.HasBeenSet(checkMask.AnimationChangeThresholds.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +2011,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMovementTypeGetter item,
             MovementType.Mask<bool> mask)
         {
+            mask.Name = (item.Name != null);
+            mask.LeftWalk = true;
+            mask.LeftRun = true;
+            mask.RightWalk = true;
+            mask.RightRun = true;
+            mask.ForwardWalk = true;
+            mask.ForwardRun = true;
+            mask.BackWalk = true;
+            mask.BackRun = true;
+            mask.RotateInPlaceWalk = true;
+            mask.RotateInPlaceRun = true;
+            mask.RotateWhileMovingRun = true;
+            var itemAnimationChangeThresholds = item.AnimationChangeThresholds;
+            mask.AnimationChangeThresholds = new MaskItem<bool, AnimationChangeThresholds.Mask<bool>?>(itemAnimationChangeThresholds != null, itemAnimationChangeThresholds?.GetHasBeenSetMask());
+            mask.SPEDDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +2077,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
+            if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
+            if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
+            if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
+            if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
+            if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
+            if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
+            if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
+            if (!lhs.RotateInPlaceWalk.EqualsWithin(rhs.RotateInPlaceWalk)) return false;
+            if (!lhs.RotateInPlaceRun.EqualsWithin(rhs.RotateInPlaceRun)) return false;
+            if (!lhs.RotateWhileMovingRun.EqualsWithin(rhs.RotateWhileMovingRun)) return false;
+            if (!object.Equals(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds)) return false;
+            if (lhs.SPEDDataTypeState != rhs.SPEDDataTypeState) return false;
             return true;
         }
         
@@ -1310,6 +2115,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IMovementTypeGetter item)
         {
             var hash = new HashCode();
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.LeftWalk);
+            hash.Add(item.LeftRun);
+            hash.Add(item.RightWalk);
+            hash.Add(item.RightRun);
+            hash.Add(item.ForwardWalk);
+            hash.Add(item.ForwardRun);
+            hash.Add(item.BackWalk);
+            hash.Add(item.BackRun);
+            hash.Add(item.RotateInPlaceWalk);
+            hash.Add(item.RotateInPlaceRun);
+            hash.Add(item.RotateWhileMovingRun);
+            if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsitem))
+            {
+                hash.Add(AnimationChangeThresholdsitem);
+            }
+            hash.Add(item.SPEDDataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +2211,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
+            {
+                item.LeftWalk = rhs.LeftWalk;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
+            {
+                item.LeftRun = rhs.LeftRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
+            {
+                item.RightWalk = rhs.RightWalk;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
+            {
+                item.RightRun = rhs.RightRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
+            {
+                item.ForwardWalk = rhs.ForwardWalk;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
+            {
+                item.ForwardRun = rhs.ForwardRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
+            {
+                item.BackWalk = rhs.BackWalk;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
+            {
+                item.BackRun = rhs.BackRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceWalk) ?? true))
+            {
+                item.RotateInPlaceWalk = rhs.RotateInPlaceWalk;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceRun) ?? true))
+            {
+                item.RotateInPlaceRun = rhs.RotateInPlaceRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateWhileMovingRun) ?? true))
+            {
+                item.RotateWhileMovingRun = rhs.RotateWhileMovingRun;
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
+            {
+                errorMask?.PushIndex((int)MovementType_FieldIndex.AnimationChangeThresholds);
+                try
+                {
+                    if(rhs.AnimationChangeThresholds.TryGet(out var rhsAnimationChangeThresholds))
+                    {
+                        item.AnimationChangeThresholds = rhsAnimationChangeThresholds.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds));
+                    }
+                    else
+                    {
+                        item.AnimationChangeThresholds = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
+            {
+                item.SPEDDataTypeState = rhs.SPEDDataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2431,145 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)MovementType_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LeftWalk),
+                    item: item.LeftWalk,
+                    fieldIndex: (int)MovementType_FieldIndex.LeftWalk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.LeftRun),
+                    item: item.LeftRun,
+                    fieldIndex: (int)MovementType_FieldIndex.LeftRun,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RightWalk),
+                    item: item.RightWalk,
+                    fieldIndex: (int)MovementType_FieldIndex.RightWalk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RightRun),
+                    item: item.RightRun,
+                    fieldIndex: (int)MovementType_FieldIndex.RightRun,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ForwardWalk),
+                    item: item.ForwardWalk,
+                    fieldIndex: (int)MovementType_FieldIndex.ForwardWalk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ForwardRun),
+                    item: item.ForwardRun,
+                    fieldIndex: (int)MovementType_FieldIndex.ForwardRun,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BackWalk),
+                    item: item.BackWalk,
+                    fieldIndex: (int)MovementType_FieldIndex.BackWalk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.BackRun),
+                    item: item.BackRun,
+                    fieldIndex: (int)MovementType_FieldIndex.BackRun,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceWalk) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RotateInPlaceWalk),
+                    item: item.RotateInPlaceWalk,
+                    fieldIndex: (int)MovementType_FieldIndex.RotateInPlaceWalk,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceRun) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RotateInPlaceRun),
+                    item: item.RotateInPlaceRun,
+                    fieldIndex: (int)MovementType_FieldIndex.RotateInPlaceRun,
+                    errorMask: errorMask);
+            }
+            if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
+            {
+                if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.RotateWhileMovingRun) ?? true))
+                {
+                    FloatXmlTranslation.Instance.Write(
+                        node: node,
+                        name: nameof(item.RotateWhileMovingRun),
+                        item: item.RotateWhileMovingRun,
+                        fieldIndex: (int)MovementType_FieldIndex.RotateWhileMovingRun,
+                        errorMask: errorMask);
+                }
+            }
+            else
+            {
+                node.Add(new XElement("HasSPEDDataType"));
+            }
+            if ((item.AnimationChangeThresholds != null)
+                && (translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
+            {
+                if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
+                {
+                    ((AnimationChangeThresholdsXmlWriteTranslation)((IXmlItem)AnimationChangeThresholdsItem).XmlWriteTranslator).Write(
+                        item: AnimationChangeThresholdsItem,
+                        node: node,
+                        name: nameof(item.AnimationChangeThresholds),
+                        fieldIndex: (int)MovementType_FieldIndex.AnimationChangeThresholds,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds));
+                }
+            }
+            if ((translationMask?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
+            {
+                EnumXmlTranslation<MovementType.SPEDDataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.SPEDDataTypeState),
+                    item: item.SPEDDataTypeState,
+                    fieldIndex: (int)MovementType_FieldIndex.SPEDDataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1635,6 +2677,260 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Name":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeftWalk":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.LeftWalk);
+                    try
+                    {
+                        item.LeftWalk = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "LeftRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.LeftRun);
+                    try
+                    {
+                        item.LeftRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RightWalk":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.RightWalk);
+                    try
+                    {
+                        item.RightWalk = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RightRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.RightRun);
+                    try
+                    {
+                        item.RightRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ForwardWalk":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.ForwardWalk);
+                    try
+                    {
+                        item.ForwardWalk = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ForwardRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.ForwardRun);
+                    try
+                    {
+                        item.ForwardRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BackWalk":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.BackWalk);
+                    try
+                    {
+                        item.BackWalk = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "BackRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.BackRun);
+                    try
+                    {
+                        item.BackRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RotateInPlaceWalk":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.RotateInPlaceWalk);
+                    try
+                    {
+                        item.RotateInPlaceWalk = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RotateInPlaceRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.RotateInPlaceRun);
+                    try
+                    {
+                        item.RotateInPlaceRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RotateWhileMovingRun":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.RotateWhileMovingRun);
+                    try
+                    {
+                        item.RotateWhileMovingRun = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    item.SPEDDataTypeState &= ~MovementType.SPEDDataType.Break0;
+                    break;
+                case "AnimationChangeThresholds":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.AnimationChangeThresholds);
+                    try
+                    {
+                        item.AnimationChangeThresholds = LoquiXmlTranslation<AnimationChangeThresholds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SPEDDataTypeState":
+                    errorMask?.PushIndex((int)MovementType_FieldIndex.SPEDDataTypeState);
+                    try
+                    {
+                        item.SPEDDataTypeState = EnumXmlTranslation<MovementType.SPEDDataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +3017,77 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MovementTypeBinaryWriteTranslation Instance = new MovementTypeBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IMovementTypeGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IMovementTypeGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.SPED)))
+            {
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.LeftWalk);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.LeftRun);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RightWalk);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RightRun);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ForwardWalk);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ForwardRun);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BackWalk);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.BackRun);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RotateInPlaceWalk);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RotateInPlaceRun);
+                if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.RotateWhileMovingRun);
+                }
+            }
+            if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
+            {
+                ((AnimationChangeThresholdsBinaryWriteTranslation)((IBinaryItem)AnimationChangeThresholdsItem).BinaryWriteTranslator).Write(
+                    item: AnimationChangeThresholdsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IMovementTypeGetter item,
@@ -1731,10 +3098,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.MOVT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1788,6 +3155,62 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IMovementTypeInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)MovementType_FieldIndex.Name;
+                }
+                case RecordTypeInts.SPED:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.LeftWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.LeftRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RightWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RightRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ForwardWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ForwardRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BackWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BackRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateInPlaceWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateInPlaceRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    if (dataFrame.Complete)
+                    {
+                        item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
+                        return (int)MovementType_FieldIndex.RotateInPlaceRun;
+                    }
+                    item.RotateWhileMovingRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    return (int)MovementType_FieldIndex.RotateWhileMovingRun;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    item.AnimationChangeThresholds = Mutagen.Bethesda.Skyrim.AnimationChangeThresholds.CreateFromBinary(frame: frame);
+                    return (int)MovementType_FieldIndex.AnimationChangeThresholds;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
         }
 
     }
@@ -1851,6 +3274,72 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        private int? _SPEDLocation;
+        public MovementType.SPEDDataType SPEDDataTypeState { get; private set; }
+        #region LeftWalk
+        private int _LeftWalkLocation => _SPEDLocation!.Value;
+        private bool _LeftWalk_IsSet => _SPEDLocation.HasValue;
+        public Single LeftWalk => _LeftWalk_IsSet ? SpanExt.GetFloat(_data.Slice(_LeftWalkLocation, 4)) : default;
+        #endregion
+        #region LeftRun
+        private int _LeftRunLocation => _SPEDLocation!.Value + 0x4;
+        private bool _LeftRun_IsSet => _SPEDLocation.HasValue;
+        public Single LeftRun => _LeftRun_IsSet ? SpanExt.GetFloat(_data.Slice(_LeftRunLocation, 4)) : default;
+        #endregion
+        #region RightWalk
+        private int _RightWalkLocation => _SPEDLocation!.Value + 0x8;
+        private bool _RightWalk_IsSet => _SPEDLocation.HasValue;
+        public Single RightWalk => _RightWalk_IsSet ? SpanExt.GetFloat(_data.Slice(_RightWalkLocation, 4)) : default;
+        #endregion
+        #region RightRun
+        private int _RightRunLocation => _SPEDLocation!.Value + 0xC;
+        private bool _RightRun_IsSet => _SPEDLocation.HasValue;
+        public Single RightRun => _RightRun_IsSet ? SpanExt.GetFloat(_data.Slice(_RightRunLocation, 4)) : default;
+        #endregion
+        #region ForwardWalk
+        private int _ForwardWalkLocation => _SPEDLocation!.Value + 0x10;
+        private bool _ForwardWalk_IsSet => _SPEDLocation.HasValue;
+        public Single ForwardWalk => _ForwardWalk_IsSet ? SpanExt.GetFloat(_data.Slice(_ForwardWalkLocation, 4)) : default;
+        #endregion
+        #region ForwardRun
+        private int _ForwardRunLocation => _SPEDLocation!.Value + 0x14;
+        private bool _ForwardRun_IsSet => _SPEDLocation.HasValue;
+        public Single ForwardRun => _ForwardRun_IsSet ? SpanExt.GetFloat(_data.Slice(_ForwardRunLocation, 4)) : default;
+        #endregion
+        #region BackWalk
+        private int _BackWalkLocation => _SPEDLocation!.Value + 0x18;
+        private bool _BackWalk_IsSet => _SPEDLocation.HasValue;
+        public Single BackWalk => _BackWalk_IsSet ? SpanExt.GetFloat(_data.Slice(_BackWalkLocation, 4)) : default;
+        #endregion
+        #region BackRun
+        private int _BackRunLocation => _SPEDLocation!.Value + 0x1C;
+        private bool _BackRun_IsSet => _SPEDLocation.HasValue;
+        public Single BackRun => _BackRun_IsSet ? SpanExt.GetFloat(_data.Slice(_BackRunLocation, 4)) : default;
+        #endregion
+        #region RotateInPlaceWalk
+        private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value + 0x20;
+        private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? SpanExt.GetFloat(_data.Slice(_RotateInPlaceWalkLocation, 4)) : default;
+        #endregion
+        #region RotateInPlaceRun
+        private int _RotateInPlaceRunLocation => _SPEDLocation!.Value + 0x24;
+        private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? SpanExt.GetFloat(_data.Slice(_RotateInPlaceRunLocation, 4)) : default;
+        #endregion
+        #region RotateWhileMovingRun
+        private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value + 0x28;
+        private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? SpanExt.GetFloat(_data.Slice(_RotateWhileMovingRunLocation, 4)) : default;
+        #endregion
+        #region AnimationChangeThresholds
+        private RangeInt32? _AnimationChangeThresholdsLocation;
+        public IAnimationChangeThresholdsGetter? AnimationChangeThresholds => _AnimationChangeThresholdsLocation.HasValue ? AnimationChangeThresholdsBinaryOverlay.AnimationChangeThresholdsFactory(new OverlayStream(_data.Slice(_AnimationChangeThresholdsLocation!.Value.Min), _package), _package) : default;
+        public bool AnimationChangeThresholds_IsSet => _AnimationChangeThresholdsLocation.HasValue;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +3392,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)MovementType_FieldIndex.Name;
+                }
+                case RecordTypeInts.SPED:
+                {
+                    _SPEDLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    var subLen = _package.MetaData.Constants.Subrecord(_data.Slice((stream.Position - offset))).ContentLength;
+                    if (subLen <= 0x28)
+                    {
+                        this.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
+                    }
+                    return (int)MovementType_FieldIndex.RotateWhileMovingRun;
+                }
+                case RecordTypeInts.INAM:
+                {
+                    _AnimationChangeThresholdsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)MovementType_FieldIndex.AnimationChangeThresholds;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

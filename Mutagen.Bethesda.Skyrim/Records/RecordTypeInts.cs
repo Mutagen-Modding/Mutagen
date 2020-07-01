@@ -151,6 +151,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int EXPL = 0x4C505845;
         public const int EYES = 0x53455945;
         public const int FACT = 0x54434146;
+        public const int FCHT = 0x54484346;
         public const int FIAD = 0x44414946;
         public const int FLMV = 0x564D4C46;
         public const int FLOR = 0x524F4C46;
@@ -159,6 +160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int FLTV = 0x56544C46;
         public const int FNAM = 0x4D414E46;
         public const int FNPR = 0x52504E46;
+        public const int FPRT = 0x54525046;
         public const int FSTP = 0x50545346;
         public const int FSTS = 0x53545346;
         public const int FTSM = 0x4D535446;
@@ -257,6 +259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int MAST = 0x5453414D;
         public const int MATO = 0x4F54414D;
         public const int MATT = 0x5454414D;
+        public const int MCHT = 0x5448434D;
         public const int MDOB = 0x424F444D;
         public const int MESG = 0x4753454D;
         public const int MGEF = 0x4645474D;
@@ -274,6 +277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int MODT = 0x54444F4D;
         public const int MOVT = 0x54564F4D;
         public const int MPAI = 0x4941504D;
+        public const int MPRT = 0x5452504D;
         public const int MSTT = 0x5454534D;
         public const int MTNM = 0x4D4E544D;
         public const int MTYP = 0x5059544D;
@@ -393,6 +397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int SMEN = 0x4E454D53;
         public const int SMQN = 0x4E514D53;
         public const int SNAM = 0x4D414E53;
+        public const int SNCT = 0x54434E53;
         public const int SNDD = 0x44444E53;
         public const int SNDR = 0x52444E53;
         public const int SNMV = 0x564D4E53;

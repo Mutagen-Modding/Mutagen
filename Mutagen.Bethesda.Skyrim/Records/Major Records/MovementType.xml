@@ -2,6 +2,31 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MovementType" recordType="MOVT" objType="Record" baseClass="SkyrimMajorRecord" GUID="d6455262-af10-48b1-acd1-01fbee5f3687" ID="81">
     <Fields>
+      <String name="Name" recordType="MNAM" />
+      <Data recordType="SPED">
+        <Fields>
+          <Float name="LeftWalk" />
+          <Float name="LeftRun" />
+          <Float name="RightWalk" />
+          <Float name="RightRun" />
+          <Float name="ForwardWalk" />
+          <Float name="ForwardRun" />
+          <Float name="BackWalk" />
+          <Float name="BackRun" />
+          <Float name="RotateInPlaceWalk" />
+          <Float name="RotateInPlaceRun" />
+          <Break />
+          <Float name="RotateWhileMovingRun" />
+        </Fields>
+      </Data>
+      <RefDirect name="AnimationChangeThresholds" refName="AnimationChangeThresholds" />
+    </Fields>
+  </Object>
+  <Object name="AnimationChangeThresholds" objType="Subrecord" recordType="INAM" GUID="e41a14ca-64d4-482f-8dd9-eff7d94adfa8" ID="472">
+    <Fields>
+      <Float name="Directional" />
+      <Float name="MovementSpeed" />
+      <Float name="RotationSpeed" />
     </Fields>
   </Object>
 </Loqui>

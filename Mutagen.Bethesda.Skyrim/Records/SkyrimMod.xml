@@ -107,6 +107,15 @@
       <Group name="EquipTypes" refName="EquipType" />
       <Group name="Relationships" refName="Relationship" />
       <Group name="Scenes" refName="Scene" />
+      <Group name="AssociationTypes" refName="AssociationType" />
+      <Group name="Outfits" refName="Outfit" />
+      <Group name="ArtObjects" refName="ArtObject" />
+      <Group name="MaterialObjects" refName="MaterialObject" />
+      <Group name="MovementTypes" refName="MovementType" />
+      <Group name="SoundDescriptors" refName="SoundDescriptor" />
+      <Group name="DualCastData" refName="DualCastData" />
+      <Group name="SoundCategories" refName="SoundCategory" />
+      <Group name="SoundOutputModels" refName="SoundOutputModel" />
     </Fields>
   </Object>
 </Loqui>

@@ -1020,7 +1020,8 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "LCTN", "FULL" },
                     new RecordType[] { "MESG", "FULL", "ITXT" },
                     new RecordType[] { "WOOP", "FULL", "TNAM" },
-                    new RecordType[] { "SHOU", "FULL" }
+                    new RecordType[] { "SHOU", "FULL" },
+                    new RecordType[] { "SNCT", "FULL" }
                 ));
             ProcessStringsFiles(
                 stringsFolder,

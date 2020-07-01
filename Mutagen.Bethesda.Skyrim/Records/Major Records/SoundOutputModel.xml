@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="SoundOutputModel" recordType="SOPM" objType="Record" baseClass="SkyrimMajorRecord" GUID="77db90e7-5e9c-488e-bd71-80dec6cd3265" ID="358">
+    <Fields>
+      <RefDirect name="Data" refName="SoundOutputData" />
+      <ByteArray name="FNAM" recordType="FNAM" />
+      <Enum name="Type" enumName="SoundOutputModel.TypeEnum" byteLength="4" recordType="MNAM" />
+      <ByteArray name="CNAM" recordType="CNAM" />
+      <ByteArray name="SNAM" recordType="SNAM" />
+      <RefDirect name="OutputChannels" refName="SoundOutputChannels" />
+      <RefDirect name="Attenuation" refName="SoundOutputAttenuation" />
+    </Fields>
+  </Object>
+  <Object name="SoundOutputData" objType="Subrecord" recordType="NAM1" GUID="3d608b50-4229-4d79-b5d6-397df5f04420" ID="478">
+    <Fields>
+      <Enum name="Flags" enumName="SoundOutputModel.Flag" byteLength="1" />
+      <UInt16 name="Unknown" />
+      <UInt8 name="ReverbSendPercent" />
+    </Fields>
+  </Object>
+  <Object name="SoundOutputChannels" objType="Subrecord" recordType="ONAM" GUID="a14115ea-3ea6-40f2-be75-453329caf57a" ID="475">
+    <Fields>
+      <RefDirect name="Channel0" refName="SoundOutputChannel" />
+      <RefDirect name="Channel1" refName="SoundOutputChannel" />
+      <RefDirect name="Channel2" refName="SoundOutputChannel" />
+    </Fields>
+  </Object>
+  <Object name="SoundOutputChannel" objType="Subrecord" GUID="3ab2f42e-9b99-4513-b8ed-86d9255d4c29" ID="476">
+    <Fields>
+      <UInt8 name="L" />
+      <UInt8 name="R" />
+      <UInt8 name="C" />
+      <UInt8 name="LFE" />
+      <UInt8 name="RL" />
+      <UInt8 name="RR" />
+      <UInt8 name="BL" />
+      <UInt8 name="BR" />
+    </Fields>
+  </Object>
+  <Object name="SoundOutputAttenuation" objType="Subrecord" recordType="ANAM" GUID="421ae9ea-44b0-4005-a8f9-8b12258cf8f3" ID="477">
+    <Fields>
+      <Int32 name="Unknown" />
+      <Float name="MinDistance" />
+      <Float name="MaxDistance" />
+      <ByteArray name="Curve" byteLength="5" hasBeenSet="False" />
+      <ByteArray name="Unknown2" byteLength="3" hasBeenSet="False" />
+    </Fields>
   </Object>
 </Loqui>

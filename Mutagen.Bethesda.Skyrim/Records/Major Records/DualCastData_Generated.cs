@@ -49,6 +49,42 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region ObjectBounds
+        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IObjectBoundsGetter IDualCastDataGetter.ObjectBounds => ObjectBounds;
+        #endregion
+        #region Projectile
+        public FormLink<Projectile> Projectile { get; set; } = new FormLink<Projectile>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IProjectileGetter> IDualCastDataGetter.Projectile => this.Projectile;
+        #endregion
+        #region Explosion
+        public FormLink<Explosion> Explosion { get; set; } = new FormLink<Explosion>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IExplosionGetter> IDualCastDataGetter.Explosion => this.Explosion;
+        #endregion
+        #region EffectShader
+        public FormLink<EffectShader> EffectShader { get; set; } = new FormLink<EffectShader>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IEffectShaderGetter> IDualCastDataGetter.EffectShader => this.EffectShader;
+        #endregion
+        #region HitEffectArt
+        public FormLink<ArtObject> HitEffectArt { get; set; } = new FormLink<ArtObject>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IArtObjectGetter> IDualCastDataGetter.HitEffectArt => this.HitEffectArt;
+        #endregion
+        #region ImpactDataSet
+        public FormLink<ImpactDataSet> ImpactDataSet { get; set; } = new FormLink<ImpactDataSet>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLink<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;
+        #endregion
+        #region InheritScale
+        public DualCastData.InheritScaleType InheritScale { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public DualCastData.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +254,14 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
+                this.Projectile = initialValue;
+                this.Explosion = initialValue;
+                this.EffectShader = initialValue;
+                this.HitEffectArt = initialValue;
+                this.ImpactDataSet = initialValue;
+                this.InheritScale = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +270,15 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem ObjectBounds,
+                TItem Projectile,
+                TItem Explosion,
+                TItem EffectShader,
+                TItem HitEffectArt,
+                TItem ImpactDataSet,
+                TItem InheritScale,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +287,14 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
+                this.Projectile = Projectile;
+                this.Explosion = Explosion;
+                this.EffectShader = EffectShader;
+                this.HitEffectArt = HitEffectArt;
+                this.ImpactDataSet = ImpactDataSet;
+                this.InheritScale = InheritScale;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +303,17 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
+            public TItem Projectile;
+            public TItem Explosion;
+            public TItem EffectShader;
+            public TItem HitEffectArt;
+            public TItem ImpactDataSet;
+            public TItem InheritScale;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +327,27 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (!object.Equals(this.Projectile, rhs.Projectile)) return false;
+                if (!object.Equals(this.Explosion, rhs.Explosion)) return false;
+                if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
+                if (!object.Equals(this.HitEffectArt, rhs.HitEffectArt)) return false;
+                if (!object.Equals(this.ImpactDataSet, rhs.ImpactDataSet)) return false;
+                if (!object.Equals(this.InheritScale, rhs.InheritScale)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.ObjectBounds);
+                hash.Add(this.Projectile);
+                hash.Add(this.Explosion);
+                hash.Add(this.EffectShader);
+                hash.Add(this.HitEffectArt);
+                hash.Add(this.ImpactDataSet);
+                hash.Add(this.InheritScale);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +358,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (ObjectBounds != null)
+                {
+                    if (!eval(this.ObjectBounds.Overall)) return false;
+                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
+                }
+                if (!eval(this.Projectile)) return false;
+                if (!eval(this.Explosion)) return false;
+                if (!eval(this.EffectShader)) return false;
+                if (!eval(this.HitEffectArt)) return false;
+                if (!eval(this.ImpactDataSet)) return false;
+                if (!eval(this.InheritScale)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +378,18 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (ObjectBounds != null)
+                {
+                    if (eval(this.ObjectBounds.Overall)) return true;
+                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
+                }
+                if (eval(this.Projectile)) return true;
+                if (eval(this.Explosion)) return true;
+                if (eval(this.EffectShader)) return true;
+                if (eval(this.HitEffectArt)) return true;
+                if (eval(this.ImpactDataSet)) return true;
+                if (eval(this.InheritScale)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +405,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
+                obj.Projectile = eval(this.Projectile);
+                obj.Explosion = eval(this.Explosion);
+                obj.EffectShader = eval(this.EffectShader);
+                obj.HitEffectArt = eval(this.HitEffectArt);
+                obj.ImpactDataSet = eval(this.ImpactDataSet);
+                obj.InheritScale = eval(this.InheritScale);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +435,38 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    {
+                        ObjectBounds?.ToString(fg);
+                    }
+                    if (printMask?.Projectile ?? true)
+                    {
+                        fg.AppendItem(Projectile, "Projectile");
+                    }
+                    if (printMask?.Explosion ?? true)
+                    {
+                        fg.AppendItem(Explosion, "Explosion");
+                    }
+                    if (printMask?.EffectShader ?? true)
+                    {
+                        fg.AppendItem(EffectShader, "EffectShader");
+                    }
+                    if (printMask?.HitEffectArt ?? true)
+                    {
+                        fg.AppendItem(HitEffectArt, "HitEffectArt");
+                    }
+                    if (printMask?.ImpactDataSet ?? true)
+                    {
+                        fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                    }
+                    if (printMask?.InheritScale ?? true)
+                    {
+                        fg.AppendItem(InheritScale, "InheritScale");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +478,39 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
+            public Exception? Projectile;
+            public Exception? Explosion;
+            public Exception? EffectShader;
+            public Exception? HitEffectArt;
+            public Exception? ImpactDataSet;
+            public Exception? InheritScale;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DualCastData_FieldIndex.ObjectBounds:
+                        return ObjectBounds;
+                    case DualCastData_FieldIndex.Projectile:
+                        return Projectile;
+                    case DualCastData_FieldIndex.Explosion:
+                        return Explosion;
+                    case DualCastData_FieldIndex.EffectShader:
+                        return EffectShader;
+                    case DualCastData_FieldIndex.HitEffectArt:
+                        return HitEffectArt;
+                    case DualCastData_FieldIndex.ImpactDataSet:
+                        return ImpactDataSet;
+                    case DualCastData_FieldIndex.InheritScale:
+                        return InheritScale;
+                    case DualCastData_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +521,30 @@ namespace Mutagen.Bethesda.Skyrim
                 DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DualCastData_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                        break;
+                    case DualCastData_FieldIndex.Projectile:
+                        this.Projectile = ex;
+                        break;
+                    case DualCastData_FieldIndex.Explosion:
+                        this.Explosion = ex;
+                        break;
+                    case DualCastData_FieldIndex.EffectShader:
+                        this.EffectShader = ex;
+                        break;
+                    case DualCastData_FieldIndex.HitEffectArt:
+                        this.HitEffectArt = ex;
+                        break;
+                    case DualCastData_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = ex;
+                        break;
+                    case DualCastData_FieldIndex.InheritScale:
+                        this.InheritScale = ex;
+                        break;
+                    case DualCastData_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +556,30 @@ namespace Mutagen.Bethesda.Skyrim
                 DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
                 switch (enu)
                 {
+                    case DualCastData_FieldIndex.ObjectBounds:
+                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                        break;
+                    case DualCastData_FieldIndex.Projectile:
+                        this.Projectile = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.Explosion:
+                        this.Explosion = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.EffectShader:
+                        this.EffectShader = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.HitEffectArt:
+                        this.HitEffectArt = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.ImpactDataSet:
+                        this.ImpactDataSet = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.InheritScale:
+                        this.InheritScale = (Exception?)obj;
+                        break;
+                    case DualCastData_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +589,14 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (ObjectBounds != null) return true;
+                if (Projectile != null) return true;
+                if (Explosion != null) return true;
+                if (EffectShader != null) return true;
+                if (HitEffectArt != null) return true;
+                if (ImpactDataSet != null) return true;
+                if (InheritScale != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +632,14 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                ObjectBounds?.ToString(fg);
+                fg.AppendItem(Projectile, "Projectile");
+                fg.AppendItem(Explosion, "Explosion");
+                fg.AppendItem(EffectShader, "EffectShader");
+                fg.AppendItem(HitEffectArt, "HitEffectArt");
+                fg.AppendItem(ImpactDataSet, "ImpactDataSet");
+                fg.AppendItem(InheritScale, "InheritScale");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +648,14 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
+                ret.Projectile = this.Projectile.Combine(rhs.Projectile);
+                ret.Explosion = this.Explosion.Combine(rhs.Explosion);
+                ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
+                ret.HitEffectArt = this.HitEffectArt.Combine(rhs.HitEffectArt);
+                ret.ImpactDataSet = this.ImpactDataSet.Combine(rhs.ImpactDataSet);
+                ret.InheritScale = this.InheritScale.Combine(rhs.InheritScale);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +677,56 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
+            public bool Projectile;
+            public bool Explosion;
+            public bool EffectShader;
+            public bool HitEffectArt;
+            public bool ImpactDataSet;
+            public bool InheritScale;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
+                this.Projectile = defaultOn;
+                this.Explosion = defaultOn;
+                this.EffectShader = defaultOn;
+                this.HitEffectArt = defaultOn;
+                this.ImpactDataSet = defaultOn;
+                this.InheritScale = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
+                ret.Add((Projectile, null));
+                ret.Add((Explosion, null));
+                ret.Add((EffectShader, null));
+                ret.Add((HitEffectArt, null));
+                ret.Add((ImpactDataSet, null));
+                ret.Add((InheritScale, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = DualCastData_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
         public DualCastData(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -457,6 +744,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -526,8 +817,17 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IDualCastData :
         IDualCastDataGetter,
         ISkyrimMajorRecord,
+        IObjectBounded,
         ILoquiObjectSetter<IDualCastDataInternal>
     {
+        new ObjectBounds ObjectBounds { get; set; }
+        new FormLink<Projectile> Projectile { get; set; }
+        new FormLink<Explosion> Explosion { get; set; }
+        new FormLink<EffectShader> EffectShader { get; set; }
+        new FormLink<ArtObject> HitEffectArt { get; set; }
+        new FormLink<ImpactDataSet> ImpactDataSet { get; set; }
+        new DualCastData.InheritScaleType InheritScale { get; set; }
+        new DualCastData.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IDualCastDataInternal :
@@ -539,11 +839,21 @@ namespace Mutagen.Bethesda.Skyrim
 
     public partial interface IDualCastDataGetter :
         ISkyrimMajorRecordGetter,
+        IObjectBoundedGetter,
         ILoquiObject<IDualCastDataGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => DualCastData_Registration.Instance;
+        IObjectBoundsGetter ObjectBounds { get; }
+        IFormLink<IProjectileGetter> Projectile { get; }
+        IFormLink<IExplosionGetter> Explosion { get; }
+        IFormLink<IEffectShaderGetter> EffectShader { get; }
+        IFormLink<IArtObjectGetter> HitEffectArt { get; }
+        IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        DualCastData.InheritScaleType InheritScale { get; }
+        DualCastData.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -844,6 +1154,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        ObjectBounds = 6,
+        Projectile = 7,
+        Explosion = 8,
+        EffectShader = 9,
+        HitEffectArt = 10,
+        ImpactDataSet = 11,
+        InheritScale = 12,
+        DATADataTypeState = 13,
     }
     #endregion
 
@@ -861,9 +1179,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "636155e6-228a-40cb-a05b-32afabd5966e";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(DualCastData.Mask<>);
 
@@ -893,6 +1211,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "OBJECTBOUNDS":
+                    return (ushort)DualCastData_FieldIndex.ObjectBounds;
+                case "PROJECTILE":
+                    return (ushort)DualCastData_FieldIndex.Projectile;
+                case "EXPLOSION":
+                    return (ushort)DualCastData_FieldIndex.Explosion;
+                case "EFFECTSHADER":
+                    return (ushort)DualCastData_FieldIndex.EffectShader;
+                case "HITEFFECTART":
+                    return (ushort)DualCastData_FieldIndex.HitEffectArt;
+                case "IMPACTDATASET":
+                    return (ushort)DualCastData_FieldIndex.ImpactDataSet;
+                case "INHERITSCALE":
+                    return (ushort)DualCastData_FieldIndex.InheritScale;
+                case "DATADATATYPESTATE":
+                    return (ushort)DualCastData_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -903,6 +1237,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                case DualCastData_FieldIndex.Projectile:
+                case DualCastData_FieldIndex.Explosion:
+                case DualCastData_FieldIndex.EffectShader:
+                case DualCastData_FieldIndex.HitEffectArt:
+                case DualCastData_FieldIndex.ImpactDataSet:
+                case DualCastData_FieldIndex.InheritScale:
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1256,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                    return true;
+                case DualCastData_FieldIndex.Projectile:
+                case DualCastData_FieldIndex.Explosion:
+                case DualCastData_FieldIndex.EffectShader:
+                case DualCastData_FieldIndex.HitEffectArt:
+                case DualCastData_FieldIndex.ImpactDataSet:
+                case DualCastData_FieldIndex.InheritScale:
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1276,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                case DualCastData_FieldIndex.Projectile:
+                case DualCastData_FieldIndex.Explosion:
+                case DualCastData_FieldIndex.EffectShader:
+                case DualCastData_FieldIndex.HitEffectArt:
+                case DualCastData_FieldIndex.ImpactDataSet:
+                case DualCastData_FieldIndex.InheritScale:
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1295,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                    return "ObjectBounds";
+                case DualCastData_FieldIndex.Projectile:
+                    return "Projectile";
+                case DualCastData_FieldIndex.Explosion:
+                    return "Explosion";
+                case DualCastData_FieldIndex.EffectShader:
+                    return "EffectShader";
+                case DualCastData_FieldIndex.HitEffectArt:
+                    return "HitEffectArt";
+                case DualCastData_FieldIndex.ImpactDataSet:
+                    return "ImpactDataSet";
+                case DualCastData_FieldIndex.InheritScale:
+                    return "InheritScale";
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1321,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                case DualCastData_FieldIndex.Projectile:
+                case DualCastData_FieldIndex.Explosion:
+                case DualCastData_FieldIndex.EffectShader:
+                case DualCastData_FieldIndex.HitEffectArt:
+                case DualCastData_FieldIndex.ImpactDataSet:
+                case DualCastData_FieldIndex.InheritScale:
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1340,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                case DualCastData_FieldIndex.Projectile:
+                case DualCastData_FieldIndex.Explosion:
+                case DualCastData_FieldIndex.EffectShader:
+                case DualCastData_FieldIndex.HitEffectArt:
+                case DualCastData_FieldIndex.ImpactDataSet:
+                case DualCastData_FieldIndex.InheritScale:
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1359,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             DualCastData_FieldIndex enu = (DualCastData_FieldIndex)index;
             switch (enu)
             {
+                case DualCastData_FieldIndex.ObjectBounds:
+                    return typeof(ObjectBounds);
+                case DualCastData_FieldIndex.Projectile:
+                    return typeof(FormLink<Projectile>);
+                case DualCastData_FieldIndex.Explosion:
+                    return typeof(FormLink<Explosion>);
+                case DualCastData_FieldIndex.EffectShader:
+                    return typeof(FormLink<EffectShader>);
+                case DualCastData_FieldIndex.HitEffectArt:
+                    return typeof(FormLink<ArtObject>);
+                case DualCastData_FieldIndex.ImpactDataSet:
+                    return typeof(FormLink<ImpactDataSet>);
+                case DualCastData_FieldIndex.InheritScale:
+                    return typeof(DualCastData.InheritScaleType);
+                case DualCastData_FieldIndex.DATADataTypeState:
+                    return typeof(DualCastData.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1424,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDualCastDataInternal item)
         {
             ClearPartial();
+            item.ObjectBounds.Clear();
+            item.Projectile = FormLink<Projectile>.Null;
+            item.Explosion = FormLink<Explosion>.Null;
+            item.EffectShader = FormLink<EffectShader>.Null;
+            item.HitEffectArt = FormLink<ArtObject>.Null;
+            item.ImpactDataSet = FormLink<ImpactDataSet>.Null;
+            item.InheritScale = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1169,6 +1589,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
+            ret.Projectile = object.Equals(item.Projectile, rhs.Projectile);
+            ret.Explosion = object.Equals(item.Explosion, rhs.Explosion);
+            ret.EffectShader = object.Equals(item.EffectShader, rhs.EffectShader);
+            ret.HitEffectArt = object.Equals(item.HitEffectArt, rhs.HitEffectArt);
+            ret.ImpactDataSet = object.Equals(item.ImpactDataSet, rhs.ImpactDataSet);
+            ret.InheritScale = item.InheritScale == rhs.InheritScale;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,6 +1648,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.ObjectBounds?.Overall ?? true)
+            {
+                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+            }
+            if (printMask?.Projectile ?? true)
+            {
+                fg.AppendItem(item.Projectile, "Projectile");
+            }
+            if (printMask?.Explosion ?? true)
+            {
+                fg.AppendItem(item.Explosion, "Explosion");
+            }
+            if (printMask?.EffectShader ?? true)
+            {
+                fg.AppendItem(item.EffectShader, "EffectShader");
+            }
+            if (printMask?.HitEffectArt ?? true)
+            {
+                fg.AppendItem(item.HitEffectArt, "HitEffectArt");
+            }
+            if (printMask?.ImpactDataSet ?? true)
+            {
+                fg.AppendItem(item.ImpactDataSet, "ImpactDataSet");
+            }
+            if (printMask?.InheritScale ?? true)
+            {
+                fg.AppendItem(item.InheritScale, "InheritScale");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -1235,6 +1695,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDualCastDataGetter item,
             DualCastData.Mask<bool> mask)
         {
+            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
+            mask.Projectile = true;
+            mask.Explosion = true;
+            mask.EffectShader = true;
+            mask.HitEffectArt = true;
+            mask.ImpactDataSet = true;
+            mask.InheritScale = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +1754,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
+            if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
+            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            if (lhs.InheritScale != rhs.InheritScale) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1310,6 +1786,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IDualCastDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.ObjectBounds);
+            hash.Add(item.Projectile);
+            hash.Add(item.Explosion);
+            hash.Add(item.EffectShader);
+            hash.Add(item.HitEffectArt);
+            hash.Add(item.ImpactDataSet);
+            hash.Add(item.InheritScale);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1339,6 +1823,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return item;
             }
+            yield return obj.Projectile.FormKey;
+            yield return obj.Explosion.FormKey;
+            yield return obj.EffectShader.FormKey;
+            yield return obj.HitEffectArt.FormKey;
+            yield return obj.ImpactDataSet.FormKey;
             yield break;
         }
         
@@ -1386,6 +1875,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ObjectBounds) ?? true))
+            {
+                errorMask?.PushIndex((int)DualCastData_FieldIndex.ObjectBounds);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ObjectBounds) ?? true))
+                    {
+                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)DualCastData_FieldIndex.ObjectBounds),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
+            {
+                item.Projectile = rhs.Projectile.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
+            {
+                item.Explosion = rhs.Explosion.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
+            {
+                item.EffectShader = rhs.EffectShader.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
+            {
+                item.HitEffectArt = rhs.HitEffectArt.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
+            {
+                item.ImpactDataSet = rhs.ImpactDataSet.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
+            {
+                item.InheritScale = rhs.InheritScale;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2067,80 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ObjectBounds) ?? true))
+            {
+                var ObjectBoundsItem = item.ObjectBounds;
+                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
+                    item: ObjectBoundsItem,
+                    node: node,
+                    name: nameof(item.ObjectBounds),
+                    fieldIndex: (int)DualCastData_FieldIndex.ObjectBounds,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)DualCastData_FieldIndex.ObjectBounds));
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Projectile),
+                    item: item.Projectile.FormKey,
+                    fieldIndex: (int)DualCastData_FieldIndex.Projectile,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Explosion),
+                    item: item.Explosion.FormKey,
+                    fieldIndex: (int)DualCastData_FieldIndex.Explosion,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.EffectShader),
+                    item: item.EffectShader.FormKey,
+                    fieldIndex: (int)DualCastData_FieldIndex.EffectShader,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HitEffectArt),
+                    item: item.HitEffectArt.FormKey,
+                    fieldIndex: (int)DualCastData_FieldIndex.HitEffectArt,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ImpactDataSet),
+                    item: item.ImpactDataSet.FormKey,
+                    fieldIndex: (int)DualCastData_FieldIndex.ImpactDataSet,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
+            {
+                EnumXmlTranslation<DualCastData.InheritScaleType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.InheritScale),
+                    item: item.InheritScale,
+                    fieldIndex: (int)DualCastData_FieldIndex.InheritScale,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DualCastData_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<DualCastData.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)DualCastData_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1635,6 +2248,151 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "ObjectBounds":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.ObjectBounds);
+                    try
+                    {
+                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)DualCastData_FieldIndex.ObjectBounds));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Projectile":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.Projectile);
+                    try
+                    {
+                        item.Projectile = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Explosion":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.Explosion);
+                    try
+                    {
+                        item.Explosion = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "EffectShader":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.EffectShader);
+                    try
+                    {
+                        item.EffectShader = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HitEffectArt":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.HitEffectArt);
+                    try
+                    {
+                        item.HitEffectArt = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ImpactDataSet":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.ImpactDataSet);
+                    try
+                    {
+                        item.ImpactDataSet = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "InheritScale":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.InheritScale);
+                    try
+                    {
+                        item.InheritScale = EnumXmlTranslation<DualCastData.InheritScaleType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)DualCastData_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<DualCastData.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2479,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DualCastDataBinaryWriteTranslation Instance = new DualCastDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IDualCastDataGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IDualCastDataGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            var ObjectBoundsItem = item.ObjectBounds;
+            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
+                item: ObjectBoundsItem,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Projectile);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Explosion);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EffectShader);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.HitEffectArt);
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.ImpactDataSet);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DualCastData.InheritScaleType>.Instance.Write(
+                    writer,
+                    item.InheritScale,
+                    length: 4);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IDualCastDataGetter item,
@@ -1731,10 +2536,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DUAL),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +2595,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            IDualCastDataInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
+                    return (int)DualCastData_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.EffectShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.HitEffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        defaultVal: FormKey.Null);
+                    item.InheritScale = EnumBinaryTranslation<DualCastData.InheritScaleType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    return (int)DualCastData_FieldIndex.InheritScale;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,6 +2678,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IDualCastDataGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => DualCastDataCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DualCastDataCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => DualCastDataXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +2710,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region ObjectBounds
+        private RangeInt32? _ObjectBoundsLocation;
+        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
+        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
+        #endregion
+        private int? _DATALocation;
+        public DualCastData.DATADataType DATADataTypeState { get; private set; }
+        #region Projectile
+        private int _ProjectileLocation => _DATALocation!.Value;
+        private bool _Projectile_IsSet => _DATALocation.HasValue;
+        public IFormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        #endregion
+        #region Explosion
+        private int _ExplosionLocation => _DATALocation!.Value + 0x4;
+        private bool _Explosion_IsSet => _DATALocation.HasValue;
+        public IFormLink<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        #endregion
+        #region EffectShader
+        private int _EffectShaderLocation => _DATALocation!.Value + 0x8;
+        private bool _EffectShader_IsSet => _DATALocation.HasValue;
+        public IFormLink<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        #endregion
+        #region HitEffectArt
+        private int _HitEffectArtLocation => _DATALocation!.Value + 0xC;
+        private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
+        public IFormLink<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        #endregion
+        #region ImpactDataSet
+        private int _ImpactDataSetLocation => _DATALocation!.Value + 0x10;
+        private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        #endregion
+        #region InheritScale
+        private int _InheritScaleLocation => _DATALocation!.Value + 0x14;
+        private bool _InheritScale_IsSet => _DATALocation.HasValue;
+        public DualCastData.InheritScaleType InheritScale => _InheritScale_IsSet ? (DualCastData.InheritScaleType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_InheritScaleLocation, 0x4)) : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +2799,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.OBND:
+                {
+                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)DualCastData_FieldIndex.ObjectBounds;
+                }
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return (int)DualCastData_FieldIndex.InheritScale;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

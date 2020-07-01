@@ -34,50 +34,45 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class LeveledItem :
+    public partial class SoundCategory :
         SkyrimMajorRecord,
-        ILeveledItemInternal,
-        ILoquiObjectSetter<LeveledItem>,
-        IEquatable<LeveledItem>,
+        ISoundCategoryInternal,
+        ILoquiObjectSetter<SoundCategory>,
+        IEquatable<SoundCategory>,
         IEqualsMask
     {
         #region Ctor
-        protected LeveledItem()
+        protected SoundCategory()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region ObjectBounds
-        public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
+        #region Name
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IObjectBoundsGetter ILeveledItemGetter.ObjectBounds => ObjectBounds;
-        #endregion
-        #region ChanceNone
-        public Byte ChanceNone { get; set; } = default;
+        TranslatedString? ISoundCategoryGetter.Name => this.Name;
         #endregion
         #region Flags
-        public LeveledItem.Flag Flags { get; set; } = default;
-        #endregion
-        #region Global
-        public FormLinkNullable<Global> Global { get; set; } = new FormLinkNullable<Global>();
+        public SoundCategory.Flag? Flags { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IGlobalGetter> ILeveledItemGetter.Global => this.Global;
+        SoundCategory.Flag? ISoundCategoryGetter.Flags => this.Flags;
         #endregion
-        #region Entries
+        #region Parent
+        public FormLinkNullable<SoundDescriptor> Parent { get; set; } = new FormLinkNullable<SoundDescriptor>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private IExtendedList<LeveledItemEntry>? _Entries;
-        public IExtendedList<LeveledItemEntry>? Entries
-        {
-            get => this._Entries;
-            set => this._Entries = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<ILeveledItemEntryGetter>? ILeveledItemGetter.Entries => _Entries;
+        IFormLinkNullable<ISoundDescriptorGetter> ISoundCategoryGetter.Parent => this.Parent;
         #endregion
-
+        #region StaticVolumeMultiplier
+        public Single? StaticVolumeMultiplier { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISoundCategoryGetter.StaticVolumeMultiplier => this.StaticVolumeMultiplier;
+        #endregion
+        #region DefaultMenuVolume
+        public Single? DefaultMenuVolume { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? ISoundCategoryGetter.DefaultMenuVolume => this.DefaultMenuVolume;
         #endregion
 
         #region To String
@@ -86,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            LeveledItemMixIn.ToString(
+            SoundCategoryMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -96,29 +91,29 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILeveledItemGetter rhs)) return false;
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ISoundCategoryGetter rhs)) return false;
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(LeveledItem? obj)
+        public bool Equals(SoundCategory? obj)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((LeveledItemCommon)((ILeveledItemGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SoundCategoryCommon)((ISoundCategoryGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
         #region Xml Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => SoundCategoryXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SoundCategoryXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -127,9 +122,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Xml Create
         [DebuggerStepThrough]
-        public static new LeveledItem CreateFromXml(
+        public static new SoundCategory CreateFromXml(
             XElement node,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             return CreateFromXml(
                 node: node,
@@ -138,27 +133,27 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         [DebuggerStepThrough]
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             var ret = CreateFromXml(
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundCategory.ErrorMask.Factory(errorMaskBuilder);
             return ret;
         }
 
-        public new static LeveledItem CreateFromXml(
+        public new static SoundCategory CreateFromXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            var ret = new LeveledItem();
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)ret).CommonSetterInstance()!).CopyInFromXml(
+            var ret = new SoundCategory();
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)ret).CommonSetterInstance()!).CopyInFromXml(
                 item: ret,
                 node: node,
                 errorMask: errorMask,
@@ -166,9 +161,9 @@ namespace Mutagen.Bethesda.Skyrim
             return ret;
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             string path,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -176,10 +171,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -188,10 +183,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             string path,
             ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             return CreateFromXml(
@@ -200,9 +195,9 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask?.GetCrystal());
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             Stream stream,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -210,10 +205,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -222,10 +217,10 @@ namespace Mutagen.Bethesda.Skyrim
                 translationMask: translationMask);
         }
 
-        public static LeveledItem CreateFromXml(
+        public static SoundCategory CreateFromXml(
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             return CreateFromXml(
@@ -248,11 +243,11 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
-                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(initialValue, new ObjectBounds.Mask<TItem>(initialValue));
-                this.ChanceNone = initialValue;
+                this.Name = initialValue;
                 this.Flags = initialValue;
-                this.Global = initialValue;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.Parent = initialValue;
+                this.StaticVolumeMultiplier = initialValue;
+                this.DefaultMenuVolume = initialValue;
             }
 
             public Mask(
@@ -262,11 +257,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
-                TItem ObjectBounds,
-                TItem ChanceNone,
+                TItem Name,
                 TItem Flags,
-                TItem Global,
-                TItem Entries)
+                TItem Parent,
+                TItem StaticVolumeMultiplier,
+                TItem DefaultMenuVolume)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -275,11 +270,11 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
-                this.ObjectBounds = new MaskItem<TItem, ObjectBounds.Mask<TItem>?>(ObjectBounds, new ObjectBounds.Mask<TItem>(ObjectBounds));
-                this.ChanceNone = ChanceNone;
+                this.Name = Name;
                 this.Flags = Flags;
-                this.Global = Global;
-                this.Entries = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>(Entries, Enumerable.Empty<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>());
+                this.Parent = Parent;
+                this.StaticVolumeMultiplier = StaticVolumeMultiplier;
+                this.DefaultMenuVolume = DefaultMenuVolume;
             }
 
             #pragma warning disable CS8618
@@ -291,11 +286,11 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, ObjectBounds.Mask<TItem>?>? ObjectBounds { get; set; }
-            public TItem ChanceNone;
+            public TItem Name;
             public TItem Flags;
-            public TItem Global;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, LeveledItemEntry.Mask<TItem>?>>?>? Entries;
+            public TItem Parent;
+            public TItem StaticVolumeMultiplier;
+            public TItem DefaultMenuVolume;
             #endregion
 
             #region Equals
@@ -309,21 +304,21 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
-                if (!object.Equals(this.ObjectBounds, rhs.ObjectBounds)) return false;
-                if (!object.Equals(this.ChanceNone, rhs.ChanceNone)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
-                if (!object.Equals(this.Global, rhs.Global)) return false;
-                if (!object.Equals(this.Entries, rhs.Entries)) return false;
+                if (!object.Equals(this.Parent, rhs.Parent)) return false;
+                if (!object.Equals(this.StaticVolumeMultiplier, rhs.StaticVolumeMultiplier)) return false;
+                if (!object.Equals(this.DefaultMenuVolume, rhs.DefaultMenuVolume)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ObjectBounds);
-                hash.Add(this.ChanceNone);
+                hash.Add(this.Name);
                 hash.Add(this.Flags);
-                hash.Add(this.Global);
-                hash.Add(this.Entries);
+                hash.Add(this.Parent);
+                hash.Add(this.StaticVolumeMultiplier);
+                hash.Add(this.DefaultMenuVolume);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -334,26 +329,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
-                if (ObjectBounds != null)
-                {
-                    if (!eval(this.ObjectBounds.Overall)) return false;
-                    if (this.ObjectBounds.Specific != null && !this.ObjectBounds.Specific.All(eval)) return false;
-                }
-                if (!eval(this.ChanceNone)) return false;
+                if (!eval(this.Name)) return false;
                 if (!eval(this.Flags)) return false;
-                if (!eval(this.Global)) return false;
-                if (this.Entries != null)
-                {
-                    if (!eval(this.Entries.Overall)) return false;
-                    if (this.Entries.Specific != null)
-                    {
-                        foreach (var item in this.Entries.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.Parent)) return false;
+                if (!eval(this.StaticVolumeMultiplier)) return false;
+                if (!eval(this.DefaultMenuVolume)) return false;
                 return true;
             }
             #endregion
@@ -362,26 +342,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
-                if (ObjectBounds != null)
-                {
-                    if (eval(this.ObjectBounds.Overall)) return true;
-                    if (this.ObjectBounds.Specific != null && this.ObjectBounds.Specific.Any(eval)) return true;
-                }
-                if (eval(this.ChanceNone)) return true;
+                if (eval(this.Name)) return true;
                 if (eval(this.Flags)) return true;
-                if (eval(this.Global)) return true;
-                if (this.Entries != null)
-                {
-                    if (eval(this.Entries.Overall)) return true;
-                    if (this.Entries.Specific != null)
-                    {
-                        foreach (var item in this.Entries.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (eval(this.Parent)) return true;
+                if (eval(this.StaticVolumeMultiplier)) return true;
+                if (eval(this.DefaultMenuVolume)) return true;
                 return false;
             }
             #endregion
@@ -389,7 +354,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public new Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new LeveledItem.Mask<R>();
+                var ret = new SoundCategory.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -397,25 +362,11 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
-                obj.ObjectBounds = this.ObjectBounds == null ? null : new MaskItem<R, ObjectBounds.Mask<R>?>(eval(this.ObjectBounds.Overall), this.ObjectBounds.Specific?.Translate(eval));
-                obj.ChanceNone = eval(this.ChanceNone);
+                obj.Name = eval(this.Name);
                 obj.Flags = eval(this.Flags);
-                obj.Global = eval(this.Global);
-                if (Entries != null)
-                {
-                    obj.Entries = new MaskItem<R, IEnumerable<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>?>(eval(this.Entries.Overall), Enumerable.Empty<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>());
-                    if (Entries.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>>();
-                        obj.Entries.Specific = l;
-                        foreach (var item in Entries.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, LeveledItemEntry.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.Parent = eval(this.Parent);
+                obj.StaticVolumeMultiplier = eval(this.StaticVolumeMultiplier);
+                obj.DefaultMenuVolume = eval(this.DefaultMenuVolume);
             }
             #endregion
 
@@ -425,57 +376,38 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(LeveledItem.Mask<bool>? printMask = null)
+            public string ToString(SoundCategory.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, LeveledItem.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SoundCategory.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(LeveledItem.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SoundCategory.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.ObjectBounds?.Overall ?? true)
+                    if (printMask?.Name ?? true)
                     {
-                        ObjectBounds?.ToString(fg);
-                    }
-                    if (printMask?.ChanceNone ?? true)
-                    {
-                        fg.AppendItem(ChanceNone, "ChanceNone");
+                        fg.AppendItem(Name, "Name");
                     }
                     if (printMask?.Flags ?? true)
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
-                    if (printMask?.Global ?? true)
+                    if (printMask?.Parent ?? true)
                     {
-                        fg.AppendItem(Global, "Global");
+                        fg.AppendItem(Parent, "Parent");
                     }
-                    if ((printMask?.Entries?.Overall ?? true)
-                        && Entries.TryGet(out var EntriesItem))
+                    if (printMask?.StaticVolumeMultiplier ?? true)
                     {
-                        fg.AppendLine("Entries =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(EntriesItem.Overall);
-                            if (EntriesItem.Specific != null)
-                            {
-                                foreach (var subItem in EntriesItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        fg.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
+                    }
+                    if (printMask?.DefaultMenuVolume ?? true)
+                    {
+                        fg.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
                     }
                 }
                 fg.AppendLine("]");
@@ -489,29 +421,29 @@ namespace Mutagen.Bethesda.Skyrim
             IErrorMask<ErrorMask>
         {
             #region Members
-            public MaskItem<Exception?, ObjectBounds.ErrorMask?>? ObjectBounds;
-            public Exception? ChanceNone;
+            public Exception? Name;
             public Exception? Flags;
-            public Exception? Global;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>? Entries;
+            public Exception? Parent;
+            public Exception? StaticVolumeMultiplier;
+            public Exception? DefaultMenuVolume;
             #endregion
 
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
-                LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+                SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
                 switch (enu)
                 {
-                    case LeveledItem_FieldIndex.ObjectBounds:
-                        return ObjectBounds;
-                    case LeveledItem_FieldIndex.ChanceNone:
-                        return ChanceNone;
-                    case LeveledItem_FieldIndex.Flags:
+                    case SoundCategory_FieldIndex.Name:
+                        return Name;
+                    case SoundCategory_FieldIndex.Flags:
                         return Flags;
-                    case LeveledItem_FieldIndex.Global:
-                        return Global;
-                    case LeveledItem_FieldIndex.Entries:
-                        return Entries;
+                    case SoundCategory_FieldIndex.Parent:
+                        return Parent;
+                    case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                        return StaticVolumeMultiplier;
+                    case SoundCategory_FieldIndex.DefaultMenuVolume:
+                        return DefaultMenuVolume;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -519,23 +451,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthException(int index, Exception ex)
             {
-                LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+                SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
                 switch (enu)
                 {
-                    case LeveledItem_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = new MaskItem<Exception?, ObjectBounds.ErrorMask?>(ex, null);
+                    case SoundCategory_FieldIndex.Name:
+                        this.Name = ex;
                         break;
-                    case LeveledItem_FieldIndex.ChanceNone:
-                        this.ChanceNone = ex;
-                        break;
-                    case LeveledItem_FieldIndex.Flags:
+                    case SoundCategory_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case LeveledItem_FieldIndex.Global:
-                        this.Global = ex;
+                    case SoundCategory_FieldIndex.Parent:
+                        this.Parent = ex;
                         break;
-                    case LeveledItem_FieldIndex.Entries:
-                        this.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ex, null);
+                    case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                        this.StaticVolumeMultiplier = ex;
+                        break;
+                    case SoundCategory_FieldIndex.DefaultMenuVolume:
+                        this.DefaultMenuVolume = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -545,23 +477,23 @@ namespace Mutagen.Bethesda.Skyrim
 
             public override void SetNthMask(int index, object obj)
             {
-                LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+                SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
                 switch (enu)
                 {
-                    case LeveledItem_FieldIndex.ObjectBounds:
-                        this.ObjectBounds = (MaskItem<Exception?, ObjectBounds.ErrorMask?>?)obj;
+                    case SoundCategory_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
                         break;
-                    case LeveledItem_FieldIndex.ChanceNone:
-                        this.ChanceNone = (Exception?)obj;
-                        break;
-                    case LeveledItem_FieldIndex.Flags:
+                    case SoundCategory_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case LeveledItem_FieldIndex.Global:
-                        this.Global = (Exception?)obj;
+                    case SoundCategory_FieldIndex.Parent:
+                        this.Parent = (Exception?)obj;
                         break;
-                    case LeveledItem_FieldIndex.Entries:
-                        this.Entries = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>)obj;
+                    case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                        this.StaticVolumeMultiplier = (Exception?)obj;
+                        break;
+                    case SoundCategory_FieldIndex.DefaultMenuVolume:
+                        this.DefaultMenuVolume = (Exception?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -572,11 +504,11 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ObjectBounds != null) return true;
-                if (ChanceNone != null) return true;
+                if (Name != null) return true;
                 if (Flags != null) return true;
-                if (Global != null) return true;
-                if (Entries != null) return true;
+                if (Parent != null) return true;
+                if (StaticVolumeMultiplier != null) return true;
+                if (DefaultMenuVolume != null) return true;
                 return false;
             }
             #endregion
@@ -612,32 +544,11 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
-                ObjectBounds?.ToString(fg);
-                fg.AppendItem(ChanceNone, "ChanceNone");
+                fg.AppendItem(Name, "Name");
                 fg.AppendItem(Flags, "Flags");
-                fg.AppendItem(Global, "Global");
-                if (Entries.TryGet(out var EntriesItem))
-                {
-                    fg.AppendLine("Entries =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(EntriesItem.Overall);
-                        if (EntriesItem.Specific != null)
-                        {
-                            foreach (var subItem in EntriesItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                fg.AppendItem(Parent, "Parent");
+                fg.AppendItem(StaticVolumeMultiplier, "StaticVolumeMultiplier");
+                fg.AppendItem(DefaultMenuVolume, "DefaultMenuVolume");
             }
             #endregion
 
@@ -646,11 +557,11 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ObjectBounds = this.ObjectBounds.Combine(rhs.ObjectBounds, (l, r) => l.Combine(r));
-                ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
-                ret.Global = this.Global.Combine(rhs.Global);
-                ret.Entries = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, LeveledItemEntry.ErrorMask?>>?>(ExceptionExt.Combine(this.Entries?.Overall, rhs.Entries?.Overall), ExceptionExt.Combine(this.Entries?.Specific, rhs.Entries?.Specific));
+                ret.Parent = this.Parent.Combine(rhs.Parent);
+                ret.StaticVolumeMultiplier = this.StaticVolumeMultiplier.Combine(rhs.StaticVolumeMultiplier);
+                ret.DefaultMenuVolume = this.DefaultMenuVolume.Combine(rhs.DefaultMenuVolume);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -673,22 +584,22 @@ namespace Mutagen.Bethesda.Skyrim
             ITranslationMask
         {
             #region Members
-            public MaskItem<bool, ObjectBounds.TranslationMask?> ObjectBounds;
-            public bool ChanceNone;
+            public bool Name;
             public bool Flags;
-            public bool Global;
-            public MaskItem<bool, LeveledItemEntry.TranslationMask?> Entries;
+            public bool Parent;
+            public bool StaticVolumeMultiplier;
+            public bool DefaultMenuVolume;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
-                this.ObjectBounds = new MaskItem<bool, ObjectBounds.TranslationMask?>(defaultOn, null);
-                this.ChanceNone = defaultOn;
+                this.Name = defaultOn;
                 this.Flags = defaultOn;
-                this.Global = defaultOn;
-                this.Entries = new MaskItem<bool, LeveledItemEntry.TranslationMask?>(defaultOn, null);
+                this.Parent = defaultOn;
+                this.StaticVolumeMultiplier = defaultOn;
+                this.DefaultMenuVolume = defaultOn;
             }
 
             #endregion
@@ -696,35 +607,35 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
-                ret.Add((ObjectBounds?.Overall ?? true, ObjectBounds?.Specific?.GetCrystal()));
-                ret.Add((ChanceNone, null));
+                ret.Add((Name, null));
                 ret.Add((Flags, null));
-                ret.Add((Global, null));
-                ret.Add((Entries?.Overall ?? true, Entries?.Specific?.GetCrystal()));
+                ret.Add((Parent, null));
+                ret.Add((StaticVolumeMultiplier, null));
+                ret.Add((DefaultMenuVolume, null));
             }
         }
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
+        public new static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        public LeveledItem(FormKey formKey)
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        public SoundCategory(FormKey formKey)
         {
             this.FormKey = formKey;
             CustomCtor();
         }
 
-        public LeveledItem(IMod mod)
+        public SoundCategory(IMod mod)
             : this(mod.GetNextFormKey())
         {
         }
 
-        public LeveledItem(IMod mod, string editorID)
+        public SoundCategory(IMod mod, string editorID)
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
@@ -734,31 +645,31 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LeveledItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static new LeveledItem CreateFromBinary(MutagenFrame frame)
+        public static new SoundCategory CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public new static LeveledItem CreateFromBinary(
+        public new static SoundCategory CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new LeveledItem();
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SoundCategory();
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -769,7 +680,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out LeveledItem item,
+            out SoundCategory item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -780,104 +691,98 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundCategoryGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static new LeveledItem GetNew()
+        internal static new SoundCategory GetNew()
         {
-            return new LeveledItem();
+            return new SoundCategory();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface ILeveledItem :
-        ILeveledItemGetter,
+    public partial interface ISoundCategory :
+        ISoundCategoryGetter,
         ISkyrimMajorRecord,
-        IItem,
-        IHarvestTarget,
-        IOutfitTarget,
-        IObjectBounded,
-        ILoquiObjectSetter<ILeveledItemInternal>
+        ITranslatedNamed,
+        ILoquiObjectSetter<ISoundCategoryInternal>
     {
-        new ObjectBounds ObjectBounds { get; set; }
-        new Byte ChanceNone { get; set; }
-        new LeveledItem.Flag Flags { get; set; }
-        new FormLinkNullable<Global> Global { get; set; }
-        new IExtendedList<LeveledItemEntry>? Entries { get; set; }
+        new TranslatedString? Name { get; set; }
+        new SoundCategory.Flag? Flags { get; set; }
+        new FormLinkNullable<SoundDescriptor> Parent { get; set; }
+        new Single? StaticVolumeMultiplier { get; set; }
+        new Single? DefaultMenuVolume { get; set; }
     }
 
-    public partial interface ILeveledItemInternal :
+    public partial interface ISoundCategoryInternal :
         ISkyrimMajorRecordInternal,
-        ILeveledItem,
-        ILeveledItemGetter
+        ISoundCategory,
+        ISoundCategoryGetter
     {
     }
 
-    public partial interface ILeveledItemGetter :
+    public partial interface ISoundCategoryGetter :
         ISkyrimMajorRecordGetter,
-        IItemGetter,
-        IHarvestTargetGetter,
-        IOutfitTargetGetter,
-        IObjectBoundedGetter,
-        ILoquiObject<ILeveledItemGetter>,
+        ITranslatedNamedGetter,
+        ILoquiObject<ISoundCategoryGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LeveledItem_Registration.Instance;
-        IObjectBoundsGetter ObjectBounds { get; }
-        Byte ChanceNone { get; }
-        LeveledItem.Flag Flags { get; }
-        IFormLinkNullable<IGlobalGetter> Global { get; }
-        IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; }
+        static ILoquiRegistration Registration => SoundCategory_Registration.Instance;
+        TranslatedString? Name { get; }
+        SoundCategory.Flag? Flags { get; }
+        IFormLinkNullable<ISoundDescriptorGetter> Parent { get; }
+        Single? StaticVolumeMultiplier { get; }
+        Single? DefaultMenuVolume { get; }
 
     }
 
     #endregion
 
     #region Common MixIn
-    public static partial class LeveledItemMixIn
+    public static partial class SoundCategoryMixIn
     {
-        public static void Clear(this ILeveledItemInternal item)
+        public static void Clear(this ISoundCategoryInternal item)
         {
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static LeveledItem.Mask<bool> GetEqualsMask(
-            this ILeveledItemGetter item,
-            ILeveledItemGetter rhs,
+        public static SoundCategory.Mask<bool> GetEqualsMask(
+            this ISoundCategoryGetter item,
+            ISoundCategoryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this ILeveledItemGetter item,
+            this ISoundCategoryGetter item,
             string? name = null,
-            LeveledItem.Mask<bool>? printMask = null)
+            SoundCategory.Mask<bool>? printMask = null)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).ToString(
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this ILeveledItemGetter item,
+            this ISoundCategoryGetter item,
             FileGeneration fg,
             string? name = null,
-            LeveledItem.Mask<bool>? printMask = null)
+            SoundCategory.Mask<bool>? printMask = null)
         {
-            ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).ToString(
+            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -885,86 +790,86 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
+            this ISoundCategoryGetter item,
+            SoundCategory.Mask<bool?> checkMask)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).HasBeenSet(
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static LeveledItem.Mask<bool> GetHasBeenSetMask(this ILeveledItemGetter item)
+        public static SoundCategory.Mask<bool> GetHasBeenSetMask(this ISoundCategoryGetter item)
         {
-            var ret = new LeveledItem.Mask<bool>(false);
-            ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new SoundCategory.Mask<bool>(false);
+            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this ILeveledItemGetter item,
-            ILeveledItemGetter rhs)
+            this ISoundCategoryGetter item,
+            ISoundCategoryGetter rhs)
         {
-            return ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).Equals(
+            return ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this ILeveledItemInternal lhs,
-            ILeveledItemGetter rhs,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? copyMask = null)
+            this ISoundCategoryInternal lhs,
+            ISoundCategoryGetter rhs,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SoundCategorySetterTranslationCommon)((ISoundCategoryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundCategory.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this ILeveledItemInternal lhs,
-            ILeveledItemGetter rhs,
+            this ISoundCategoryInternal lhs,
+            ISoundCategoryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SoundCategorySetterTranslationCommon)((ISoundCategoryGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static LeveledItem DeepCopy(
-            this ILeveledItemGetter item,
-            LeveledItem.TranslationMask? copyMask = null)
+        public static SoundCategory DeepCopy(
+            this ISoundCategoryGetter item,
+            SoundCategory.TranslationMask? copyMask = null)
         {
-            return ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SoundCategorySetterTranslationCommon)((ISoundCategoryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static LeveledItem DeepCopy(
-            this ILeveledItemGetter item,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? copyMask = null)
+        public static SoundCategory DeepCopy(
+            this ISoundCategoryGetter item,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? copyMask = null)
         {
-            return ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SoundCategorySetterTranslationCommon)((ISoundCategoryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static LeveledItem DeepCopy(
-            this ILeveledItemGetter item,
+        public static SoundCategory DeepCopy(
+            this ISoundCategoryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((LeveledItemSetterTranslationCommon)((ILeveledItemGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SoundCategorySetterTranslationCommon)((ISoundCategoryGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -973,9 +878,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Xml Translation
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             XElement node,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             CopyInFromXml(
                 item: item,
@@ -986,10 +891,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         [DebuggerStepThrough]
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
             CopyInFromXml(
@@ -997,16 +902,16 @@ namespace Mutagen.Bethesda.Skyrim
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundCategory.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()!).CopyInFromXml(
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)item).CommonSetterInstance()!).CopyInFromXml(
                 item: item,
                 node: node,
                 errorMask: errorMask,
@@ -1014,9 +919,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             string path,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1026,10 +931,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1040,10 +945,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             string path,
             ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(path).Root;
             CopyInFromXml(
@@ -1054,9 +959,9 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             Stream stream,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1066,10 +971,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1080,10 +985,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromXml(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             Stream stream,
             ErrorMaskBuilder? errorMask,
-            LeveledItem.TranslationMask? translationMask = null)
+            SoundCategory.TranslationMask? translationMask = null)
         {
             var node = XDocument.Load(stream).Root;
             CopyInFromXml(
@@ -1098,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1108,11 +1013,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this ILeveledItemInternal item,
+            this ISoundCategoryInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LeveledItemSetterCommon)((ILeveledItemGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SoundCategorySetterCommon)((ISoundCategoryGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1128,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum LeveledItem_FieldIndex
+    public enum SoundCategory_FieldIndex
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
@@ -1136,49 +1041,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
-        ObjectBounds = 6,
-        ChanceNone = 7,
-        Flags = 8,
-        Global = 9,
-        Entries = 10,
+        Name = 6,
+        Flags = 7,
+        Parent = 8,
+        StaticVolumeMultiplier = 9,
+        DefaultMenuVolume = 10,
     }
     #endregion
 
     #region Registration
-    public partial class LeveledItem_Registration : ILoquiRegistration
+    public partial class SoundCategory_Registration : ILoquiRegistration
     {
-        public static readonly LeveledItem_Registration Instance = new LeveledItem_Registration();
+        public static readonly SoundCategory_Registration Instance = new SoundCategory_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 166,
+            msgID: 473,
             version: 0);
 
-        public const string GUID = "dbc7006d-3752-43d0-9e4f-95268f3353ab";
+        public const string GUID = "d8233f0e-3b58-4f2a-b259-5eba0478da71";
 
         public const ushort AdditionalFieldCount = 5;
 
         public const ushort FieldCount = 11;
 
-        public static readonly Type MaskType = typeof(LeveledItem.Mask<>);
+        public static readonly Type MaskType = typeof(SoundCategory.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(LeveledItem.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SoundCategory.ErrorMask);
 
-        public static readonly Type ClassType = typeof(LeveledItem);
+        public static readonly Type ClassType = typeof(SoundCategory);
 
-        public static readonly Type GetterType = typeof(ILeveledItemGetter);
+        public static readonly Type GetterType = typeof(ISoundCategoryGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(ILeveledItem);
+        public static readonly Type SetterType = typeof(ISoundCategory);
 
-        public static readonly Type? InternalSetterType = typeof(ILeveledItemInternal);
+        public static readonly Type? InternalSetterType = typeof(ISoundCategoryInternal);
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.LeveledItem";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.SoundCategory";
 
-        public const string Name = "LeveledItem";
+        public const string Name = "SoundCategory";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1190,16 +1095,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "OBJECTBOUNDS":
-                    return (ushort)LeveledItem_FieldIndex.ObjectBounds;
-                case "CHANCENONE":
-                    return (ushort)LeveledItem_FieldIndex.ChanceNone;
+                case "NAME":
+                    return (ushort)SoundCategory_FieldIndex.Name;
                 case "FLAGS":
-                    return (ushort)LeveledItem_FieldIndex.Flags;
-                case "GLOBAL":
-                    return (ushort)LeveledItem_FieldIndex.Global;
-                case "ENTRIES":
-                    return (ushort)LeveledItem_FieldIndex.Entries;
+                    return (ushort)SoundCategory_FieldIndex.Flags;
+                case "PARENT":
+                    return (ushort)SoundCategory_FieldIndex.Parent;
+                case "STATICVOLUMEMULTIPLIER":
+                    return (ushort)SoundCategory_FieldIndex.StaticVolumeMultiplier;
+                case "DEFAULTMENUVOLUME":
+                    return (ushort)SoundCategory_FieldIndex.DefaultMenuVolume;
                 default:
                     return null;
             }
@@ -1207,15 +1112,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.Entries:
-                    return true;
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
+                case SoundCategory_FieldIndex.Name:
+                case SoundCategory_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Parent:
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1224,15 +1128,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.Entries:
-                    return true;
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
+                case SoundCategory_FieldIndex.Name:
+                case SoundCategory_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Parent:
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1241,14 +1144,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
+                case SoundCategory_FieldIndex.Name:
+                case SoundCategory_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Parent:
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1257,19 +1160,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                    return "ObjectBounds";
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return "ChanceNone";
-                case LeveledItem_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Name:
+                    return "Name";
+                case SoundCategory_FieldIndex.Flags:
                     return "Flags";
-                case LeveledItem_FieldIndex.Global:
-                    return "Global";
-                case LeveledItem_FieldIndex.Entries:
-                    return "Entries";
+                case SoundCategory_FieldIndex.Parent:
+                    return "Parent";
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                    return "StaticVolumeMultiplier";
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
+                    return "DefaultMenuVolume";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -1277,14 +1180,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
+                case SoundCategory_FieldIndex.Name:
+                case SoundCategory_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Parent:
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -1293,14 +1196,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                case LeveledItem_FieldIndex.ChanceNone:
-                case LeveledItem_FieldIndex.Flags:
-                case LeveledItem_FieldIndex.Global:
-                case LeveledItem_FieldIndex.Entries:
+                case SoundCategory_FieldIndex.Name:
+                case SoundCategory_FieldIndex.Flags:
+                case SoundCategory_FieldIndex.Parent:
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -1309,27 +1212,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            LeveledItem_FieldIndex enu = (LeveledItem_FieldIndex)index;
+            SoundCategory_FieldIndex enu = (SoundCategory_FieldIndex)index;
             switch (enu)
             {
-                case LeveledItem_FieldIndex.ObjectBounds:
-                    return typeof(ObjectBounds);
-                case LeveledItem_FieldIndex.ChanceNone:
-                    return typeof(Byte);
-                case LeveledItem_FieldIndex.Flags:
-                    return typeof(LeveledItem.Flag);
-                case LeveledItem_FieldIndex.Global:
-                    return typeof(FormLinkNullable<Global>);
-                case LeveledItem_FieldIndex.Entries:
-                    return typeof(IExtendedList<LeveledItemEntry>);
+                case SoundCategory_FieldIndex.Name:
+                    return typeof(TranslatedString);
+                case SoundCategory_FieldIndex.Flags:
+                    return typeof(SoundCategory.Flag);
+                case SoundCategory_FieldIndex.Parent:
+                    return typeof(FormLinkNullable<SoundDescriptor>);
+                case SoundCategory_FieldIndex.StaticVolumeMultiplier:
+                    return typeof(Single);
+                case SoundCategory_FieldIndex.DefaultMenuVolume:
+                    return typeof(Single);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly Type XmlWriteTranslation = typeof(LeveledItemXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.LVLI;
-        public static readonly Type BinaryWriteTranslation = typeof(LeveledItemBinaryWriteTranslation);
+        public static readonly Type XmlWriteTranslation = typeof(SoundCategoryXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.SNCT;
+        public static readonly Type BinaryWriteTranslation = typeof(SoundCategoryBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1362,36 +1265,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class LeveledItemSetterCommon : SkyrimMajorRecordSetterCommon
+    public partial class SoundCategorySetterCommon : SkyrimMajorRecordSetterCommon
     {
-        public new static readonly LeveledItemSetterCommon Instance = new LeveledItemSetterCommon();
+        public new static readonly SoundCategorySetterCommon Instance = new SoundCategorySetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(ILeveledItemInternal item)
+        public void Clear(ISoundCategoryInternal item)
         {
             ClearPartial();
-            item.ObjectBounds.Clear();
-            item.ChanceNone = default;
+            item.Name = default;
             item.Flags = default;
-            item.Global = FormLinkNullable<Global>.Null;
-            item.Entries = null;
+            item.Parent = FormLinkNullable<SoundDescriptor>.Null;
+            item.StaticVolumeMultiplier = default;
+            item.DefaultMenuVolume = default;
             base.Clear(item);
         }
         
         public override void Clear(ISkyrimMajorRecordInternal item)
         {
-            Clear(item: (ILeveledItemInternal)item);
+            Clear(item: (ISoundCategoryInternal)item);
         }
         
         public override void Clear(IMajorRecordInternal item)
         {
-            Clear(item: (ILeveledItemInternal)item);
+            Clear(item: (ISoundCategoryInternal)item);
         }
         
         #region Xml Translation
         protected static void FillPrivateElementXml(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -1411,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public virtual void CopyInFromXml(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -1426,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         name: elem.Name.LocalName,
                         errorMask: errorMask,
                         translationMask: translationMask);
-                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
+                    SoundCategoryXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -1448,7 +1351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (LeveledItem)item,
+                item: (SoundCategory)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1461,7 +1364,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? translationMask)
         {
             CopyInFromXml(
-                item: (LeveledItem)item,
+                item: (SoundCategory)item,
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
@@ -1471,16 +1374,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
+            UtilityTranslation.MajorRecordParse<ISoundCategoryInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: LeveledItemBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: LeveledItemBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: SoundCategoryBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SoundCategoryBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         public override void CopyInFromBinary(
@@ -1489,7 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (LeveledItem)item,
+                item: (SoundCategory)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1500,7 +1403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             CopyInFromBinary(
-                item: (LeveledItem)item,
+                item: (SoundCategory)item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -1508,17 +1411,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         
     }
-    public partial class LeveledItemCommon : SkyrimMajorRecordCommon
+    public partial class SoundCategoryCommon : SkyrimMajorRecordCommon
     {
-        public new static readonly LeveledItemCommon Instance = new LeveledItemCommon();
+        public new static readonly SoundCategoryCommon Instance = new SoundCategoryCommon();
 
-        public LeveledItem.Mask<bool> GetEqualsMask(
-            ILeveledItemGetter item,
-            ILeveledItemGetter rhs,
+        public SoundCategory.Mask<bool> GetEqualsMask(
+            ISoundCategoryGetter item,
+            ISoundCategoryGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new LeveledItem.Mask<bool>(false);
-            ((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SoundCategory.Mask<bool>(false);
+            ((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1527,27 +1430,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            ILeveledItemGetter item,
-            ILeveledItemGetter rhs,
-            LeveledItem.Mask<bool> ret,
+            ISoundCategoryGetter item,
+            ISoundCategoryGetter rhs,
+            SoundCategory.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ObjectBounds = MaskItemExt.Factory(item.ObjectBounds.GetEqualsMask(rhs.ObjectBounds, include), include);
-            ret.ChanceNone = item.ChanceNone == rhs.ChanceNone;
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Global = object.Equals(item.Global, rhs.Global);
-            ret.Entries = item.Entries.CollectionEqualsHelper(
-                rhs.Entries,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.Parent = object.Equals(item.Parent, rhs.Parent);
+            ret.StaticVolumeMultiplier = item.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier);
+            ret.DefaultMenuVolume = item.DefaultMenuVolume.EqualsWithin(rhs.DefaultMenuVolume);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
         public string ToString(
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             string? name = null,
-            LeveledItem.Mask<bool>? printMask = null)
+            SoundCategory.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1559,18 +1459,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             FileGeneration fg,
             string? name = null,
-            LeveledItem.Mask<bool>? printMask = null)
+            SoundCategory.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"LeveledItem =>");
+                fg.AppendLine($"SoundCategory =>");
             }
             else
             {
-                fg.AppendLine($"{name} (LeveledItem) =>");
+                fg.AppendLine($"{name} (SoundCategory) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1584,113 +1484,102 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             FileGeneration fg,
-            LeveledItem.Mask<bool>? printMask = null)
+            SoundCategory.Mask<bool>? printMask = null)
         {
             SkyrimMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
-            if (printMask?.ObjectBounds?.Overall ?? true)
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
             {
-                item.ObjectBounds?.ToString(fg, "ObjectBounds");
+                fg.AppendItem(NameItem, "Name");
             }
-            if (printMask?.ChanceNone ?? true)
+            if ((printMask?.Flags ?? true)
+                && item.Flags.TryGet(out var FlagsItem))
             {
-                fg.AppendItem(item.ChanceNone, "ChanceNone");
+                fg.AppendItem(FlagsItem, "Flags");
             }
-            if (printMask?.Flags ?? true)
+            if ((printMask?.Parent ?? true)
+                && item.Parent.TryGet(out var ParentItem))
             {
-                fg.AppendItem(item.Flags, "Flags");
+                fg.AppendItem(ParentItem, "Parent");
             }
-            if ((printMask?.Global ?? true)
-                && item.Global.TryGet(out var GlobalItem))
+            if ((printMask?.StaticVolumeMultiplier ?? true)
+                && item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplierItem))
             {
-                fg.AppendItem(GlobalItem, "Global");
+                fg.AppendItem(StaticVolumeMultiplierItem, "StaticVolumeMultiplier");
             }
-            if ((printMask?.Entries?.Overall ?? true)
-                && item.Entries.TryGet(out var EntriesItem))
+            if ((printMask?.DefaultMenuVolume ?? true)
+                && item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeItem))
             {
-                fg.AppendLine("Entries =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in EntriesItem)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                fg.AppendItem(DefaultMenuVolumeItem, "DefaultMenuVolume");
             }
         }
         
         public bool HasBeenSet(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool?> checkMask)
+            ISoundCategoryGetter item,
+            SoundCategory.Mask<bool?> checkMask)
         {
-            if (checkMask.Global.HasValue && checkMask.Global.Value != (item.Global.FormKey != null)) return false;
-            if (checkMask.Entries?.Overall.HasValue ?? false && checkMask.Entries!.Overall.Value != (item.Entries != null)) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != (item.Name != null)) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != (item.Flags != null)) return false;
+            if (checkMask.Parent.HasValue && checkMask.Parent.Value != (item.Parent.FormKey != null)) return false;
+            if (checkMask.StaticVolumeMultiplier.HasValue && checkMask.StaticVolumeMultiplier.Value != (item.StaticVolumeMultiplier != null)) return false;
+            if (checkMask.DefaultMenuVolume.HasValue && checkMask.DefaultMenuVolume.Value != (item.DefaultMenuVolume != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
         
         public void FillHasBeenSetMask(
-            ILeveledItemGetter item,
-            LeveledItem.Mask<bool> mask)
+            ISoundCategoryGetter item,
+            SoundCategory.Mask<bool> mask)
         {
-            mask.ObjectBounds = new MaskItem<bool, ObjectBounds.Mask<bool>?>(true, item.ObjectBounds?.GetHasBeenSetMask());
-            mask.ChanceNone = true;
-            mask.Flags = true;
-            mask.Global = (item.Global.FormKey != null);
-            if (item.Entries.TryGet(out var EntriesItem))
-            {
-                mask.Entries = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, LeveledItemEntry.Mask<bool>?>>?>(true, EntriesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, LeveledItemEntry.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            }
+            mask.Name = (item.Name != null);
+            mask.Flags = (item.Flags != null);
+            mask.Parent = (item.Parent.FormKey != null);
+            mask.StaticVolumeMultiplier = (item.StaticVolumeMultiplier != null);
+            mask.DefaultMenuVolume = (item.DefaultMenuVolume != null);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
         }
         
-        public static LeveledItem_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
+        public static SoundCategory_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case SkyrimMajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormVersion:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.Version2:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
         
-        public static new LeveledItem_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static new SoundCategory_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (LeveledItem_FieldIndex)((int)index);
+                    return (SoundCategory_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1698,17 +1587,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            ILeveledItemGetter? lhs,
-            ILeveledItemGetter? rhs)
+            ISoundCategoryGetter? lhs,
+            ISoundCategoryGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Global.Equals(rhs.Global)) return false;
-            if (!lhs.Entries.SequenceEqual(rhs.Entries)) return false;
+            if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            if (!lhs.StaticVolumeMultiplier.EqualsWithin(rhs.StaticVolumeMultiplier)) return false;
+            if (!lhs.DefaultMenuVolume.EqualsWithin(rhs.DefaultMenuVolume)) return false;
             return true;
         }
         
@@ -1717,8 +1606,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILeveledItemGetter?)lhs,
-                rhs: rhs as ILeveledItemGetter);
+                lhs: (ISoundCategoryGetter?)lhs,
+                rhs: rhs as ISoundCategoryGetter);
         }
         
         public override bool Equals(
@@ -1726,33 +1615,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMajorRecordGetter? rhs)
         {
             return Equals(
-                lhs: (ILeveledItemGetter?)lhs,
-                rhs: rhs as ILeveledItemGetter);
+                lhs: (ISoundCategoryGetter?)lhs,
+                rhs: rhs as ISoundCategoryGetter);
         }
         
-        public virtual int GetHashCode(ILeveledItemGetter item)
+        public virtual int GetHashCode(ISoundCategoryGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ObjectBounds);
-            hash.Add(item.ChanceNone);
-            hash.Add(item.Flags);
-            if (item.Global.TryGet(out var Globalitem))
+            if (item.Name.TryGet(out var Nameitem))
             {
-                hash.Add(Globalitem);
+                hash.Add(Nameitem);
             }
-            hash.Add(item.Entries);
+            if (item.Flags.TryGet(out var Flagsitem))
+            {
+                hash.Add(Flagsitem);
+            }
+            if (item.Parent.TryGet(out var Parentitem))
+            {
+                hash.Add(Parentitem);
+            }
+            if (item.StaticVolumeMultiplier.TryGet(out var StaticVolumeMultiplieritem))
+            {
+                hash.Add(StaticVolumeMultiplieritem);
+            }
+            if (item.DefaultMenuVolume.TryGet(out var DefaultMenuVolumeitem))
+            {
+                hash.Add(DefaultMenuVolumeitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
         
         public override int GetHashCode(ISkyrimMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILeveledItemGetter)item);
+            return GetHashCode(item: (ISoundCategoryGetter)item);
         }
         
         public override int GetHashCode(IMajorRecordGetter item)
         {
-            return GetHashCode(item: (ILeveledItemGetter)item);
+            return GetHashCode(item: (ISoundCategoryGetter)item);
         }
         
         #endregion
@@ -1760,54 +1661,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override object GetNew()
         {
-            return LeveledItem.GetNew();
+            return SoundCategory.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(ILeveledItemGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ISoundCategoryGetter obj)
         {
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
             }
-            if (obj.Global.FormKey.TryGet(out var GlobalKey))
+            if (obj.Parent.FormKey.TryGet(out var ParentKey))
             {
-                yield return GlobalKey;
-            }
-            if (obj.Entries.TryGet(out var EntriesItem))
-            {
-                foreach (var item in EntriesItem.WhereCastable<ILeveledItemEntryGetter, ILinkedFormKeyContainer> ()
-                    .SelectMany((f) => f.LinkFormKeys))
-                {
-                    yield return item;
-                }
+                yield return ParentKey;
             }
             yield break;
         }
         
-        public void RemapLinks(ILeveledItemGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
-        partial void PostDuplicate(LeveledItem obj, LeveledItem rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
+        public void RemapLinks(ISoundCategoryGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        partial void PostDuplicate(SoundCategory obj, SoundCategory rhs, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords);
         
         public override IMajorRecordCommon Duplicate(IMajorRecordCommonGetter item, Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecords)
         {
-            var ret = new LeveledItem(getNextFormKey());
-            ret.DeepCopyIn((LeveledItem)item);
+            var ret = new SoundCategory(getNextFormKey());
+            ret.DeepCopyIn((SoundCategory)item);
             duplicatedRecords?.Add((ret, item.FormKey));
-            PostDuplicate(ret, (LeveledItem)item, getNextFormKey, duplicatedRecords);
+            PostDuplicate(ret, (SoundCategory)item, getNextFormKey, duplicatedRecords);
             return ret;
         }
         
         #endregion
         
     }
-    public partial class LeveledItemSetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
+    public partial class SoundCategorySetterTranslationCommon : SkyrimMajorRecordSetterTranslationCommon
     {
-        public new static readonly LeveledItemSetterTranslationCommon Instance = new LeveledItemSetterTranslationCommon();
+        public new static readonly SoundCategorySetterTranslationCommon Instance = new SoundCategorySetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            ILeveledItemInternal item,
-            ILeveledItemGetter rhs,
+            ISoundCategoryInternal item,
+            ISoundCategoryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1819,8 +1712,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void DeepCopyIn(
-            ILeveledItem item,
-            ILeveledItemGetter rhs,
+            ISoundCategory item,
+            ISoundCategoryGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
@@ -1829,71 +1722,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Name) ?? true))
             {
-                errorMask?.PushIndex((int)LeveledItem_FieldIndex.ObjectBounds);
-                try
-                {
-                    if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
-                    {
-                        item.ObjectBounds = rhs.ObjectBounds.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds),
-                            errorMask: errorMask);
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.Name = rhs.Name;
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
-            {
-                item.ChanceNone = rhs.ChanceNone;
-            }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
-                item.Global = rhs.Global.FormKey;
+                item.Parent = rhs.Parent.FormKey;
             }
-            if ((copyMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {
-                errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
-                try
-                {
-                    if ((rhs.Entries != null))
-                    {
-                        item.Entries = 
-                            rhs.Entries
-                            .Select(r =>
-                            {
-                                return r.DeepCopy(
-                                    errorMask: errorMask,
-                                    default(TranslationCrystal));
-                            })
-                            .ToExtendedList<LeveledItemEntry>();
-                    }
-                    else
-                    {
-                        item.Entries = null;
-                    }
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.StaticVolumeMultiplier = rhs.StaticVolumeMultiplier;
+            }
+            if ((copyMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.DefaultMenuVolume) ?? true))
+            {
+                item.DefaultMenuVolume = rhs.DefaultMenuVolume;
             }
         }
         
@@ -1904,8 +1751,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ILeveledItemInternal)item,
-                rhs: (ILeveledItemGetter)rhs,
+                item: (ISoundCategoryInternal)item,
+                rhs: (ISoundCategoryGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1917,8 +1764,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ILeveledItem)item,
-                rhs: (ILeveledItemGetter)rhs,
+                item: (ISoundCategory)item,
+                rhs: (ISoundCategoryGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1930,8 +1777,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ILeveledItemInternal)item,
-                rhs: (ILeveledItemGetter)rhs,
+                item: (ISoundCategoryInternal)item,
+                rhs: (ISoundCategoryGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
@@ -1943,31 +1790,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             this.DeepCopyIn(
-                item: (ILeveledItem)item,
-                rhs: (ILeveledItemGetter)rhs,
+                item: (ISoundCategory)item,
+                rhs: (ISoundCategoryGetter)rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
         
         #endregion
         
-        public LeveledItem DeepCopy(
-            ILeveledItemGetter item,
-            LeveledItem.TranslationMask? copyMask = null)
+        public SoundCategory DeepCopy(
+            ISoundCategoryGetter item,
+            SoundCategory.TranslationMask? copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).GetNew();
+            SoundCategory ret = (SoundCategory)((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public LeveledItem DeepCopy(
-            ILeveledItemGetter item,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? copyMask = null)
+        public SoundCategory DeepCopy(
+            ISoundCategoryGetter item,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).GetNew();
+            SoundCategory ret = (SoundCategory)((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -1975,12 +1822,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public LeveledItem DeepCopy(
-            ILeveledItemGetter item,
+        public SoundCategory DeepCopy(
+            ISoundCategoryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            LeveledItem ret = (LeveledItem)((LeveledItemCommon)((ILeveledItemGetter)item).CommonInstance()!).GetNew();
+            SoundCategory ret = (SoundCategory)((SoundCategoryCommon)((ISoundCategoryGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -1995,21 +1842,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class LeveledItem
+    public partial class SoundCategory
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
+        public new static SoundCategory_Registration Registration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LeveledItemCommon.Instance;
+        protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]
         protected override object CommonSetterInstance()
         {
-            return LeveledItemSetterCommon.Instance;
+            return SoundCategorySetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LeveledItemSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SoundCategorySetterTranslationCommon.Instance;
 
         #endregion
 
@@ -2020,14 +1867,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Xml Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class LeveledItemXmlWriteTranslation :
+    public partial class SoundCategoryXmlWriteTranslation :
         SkyrimMajorRecordXmlWriteTranslation,
         IXmlWriteTranslator
     {
-        public new readonly static LeveledItemXmlWriteTranslation Instance = new LeveledItemXmlWriteTranslation();
+        public new readonly static SoundCategoryXmlWriteTranslation Instance = new SoundCategoryXmlWriteTranslation();
 
         public static void WriteToNodeXml(
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2037,80 +1884,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
-            if ((translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ObjectBounds) ?? true))
+            if ((item.Name != null)
+                && (translationMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Name) ?? true))
             {
-                var ObjectBoundsItem = item.ObjectBounds;
-                ((ObjectBoundsXmlWriteTranslation)((IXmlItem)ObjectBoundsItem).XmlWriteTranslator).Write(
-                    item: ObjectBoundsItem,
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.ObjectBounds),
-                    fieldIndex: (int)LeveledItem_FieldIndex.ObjectBounds,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds));
-            }
-            if ((translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.ChanceNone) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ChanceNone),
-                    item: item.ChanceNone,
-                    fieldIndex: (int)LeveledItem_FieldIndex.ChanceNone,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)SoundCategory_FieldIndex.Name,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Flags) ?? true))
+            if ((item.Flags != null)
+                && (translationMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Flags) ?? true))
             {
-                EnumXmlTranslation<LeveledItem.Flag>.Instance.Write(
+                EnumXmlTranslation<SoundCategory.Flag>.Instance.Write(
                     node: node,
                     name: nameof(item.Flags),
                     item: item.Flags,
-                    fieldIndex: (int)LeveledItem_FieldIndex.Flags,
+                    fieldIndex: (int)SoundCategory_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((item.Global.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Global) ?? true))
+            if ((item.Parent.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.Parent) ?? true))
             {
                 FormKeyXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Global),
-                    item: item.Global.FormKey,
-                    fieldIndex: (int)LeveledItem_FieldIndex.Global,
+                    name: nameof(item.Parent),
+                    item: item.Parent.FormKey,
+                    fieldIndex: (int)SoundCategory_FieldIndex.Parent,
                     errorMask: errorMask);
             }
-            if ((item.Entries != null)
-                && (translationMask?.GetShouldTranslate((int)LeveledItem_FieldIndex.Entries) ?? true))
+            if ((item.StaticVolumeMultiplier != null)
+                && (translationMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.StaticVolumeMultiplier) ?? true))
             {
-                ListXmlTranslation<ILeveledItemEntryGetter>.Instance.Write(
+                FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Entries),
-                    item: item.Entries,
-                    fieldIndex: (int)LeveledItem_FieldIndex.Entries,
-                    errorMask: errorMask,
-                    translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.Entries),
-                    transl: (XElement subNode, ILeveledItemEntryGetter subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
-                    {
-                        var Item = subItem;
-                        ((LeveledItemEntryXmlWriteTranslation)((IXmlItem)Item).XmlWriteTranslator).Write(
-                            item: Item,
-                            node: subNode,
-                            name: null,
-                            errorMask: listSubMask,
-                            translationMask: listTranslMask);
-                    });
+                    name: nameof(item.StaticVolumeMultiplier),
+                    item: item.StaticVolumeMultiplier.Value,
+                    fieldIndex: (int)SoundCategory_FieldIndex.StaticVolumeMultiplier,
+                    errorMask: errorMask);
+            }
+            if ((item.DefaultMenuVolume != null)
+                && (translationMask?.GetShouldTranslate((int)SoundCategory_FieldIndex.DefaultMenuVolume) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DefaultMenuVolume),
+                    item: item.DefaultMenuVolume.Value,
+                    fieldIndex: (int)SoundCategory_FieldIndex.DefaultMenuVolume,
+                    errorMask: errorMask);
             }
         }
 
         public void Write(
             XElement node,
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.LeveledItem");
+            var elem = new XElement(name ?? "Mutagen.Bethesda.Skyrim.SoundCategory");
             node.Add(elem);
             if (name != null)
             {
-                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.LeveledItem");
+                elem.SetAttributeValue("type", "Mutagen.Bethesda.Skyrim.SoundCategory");
             }
             WriteToNodeXml(
                 item: item,
@@ -2127,7 +1964,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2142,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2157,7 +1994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             string? name = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 name: name,
                 node: node,
                 errorMask: errorMask,
@@ -2166,12 +2003,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     }
 
-    public partial class LeveledItemXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
+    public partial class SoundCategoryXmlCreateTranslation : SkyrimMajorRecordXmlCreateTranslation
     {
-        public new readonly static LeveledItemXmlCreateTranslation Instance = new LeveledItemXmlCreateTranslation();
+        public new readonly static SoundCategoryXmlCreateTranslation Instance = new SoundCategoryXmlCreateTranslation();
 
         public static void FillPublicXml(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
@@ -2180,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 foreach (var elem in node.Elements())
                 {
-                    LeveledItemXmlCreateTranslation.FillPublicElementXml(
+                    SoundCategoryXmlCreateTranslation.FillPublicElementXml(
                         item: item,
                         node: elem,
                         name: elem.Name.LocalName,
@@ -2196,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void FillPublicElementXml(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             XElement node,
             string name,
             ErrorMaskBuilder? errorMask,
@@ -2204,30 +2041,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "ObjectBounds":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.ObjectBounds);
+                case "Name":
+                    errorMask?.PushIndex((int)SoundCategory_FieldIndex.Name);
                     try
                     {
-                        item.ObjectBounds = LoquiXmlTranslation<ObjectBounds>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask,
-                            translationMask: translationMask?.GetSubCrystal((int)LeveledItem_FieldIndex.ObjectBounds));
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ChanceNone":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.ChanceNone);
-                    try
-                    {
-                        item.ChanceNone = ByteXmlTranslation.Instance.Parse(
+                        item.Name = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2242,10 +2060,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.Flags);
+                    errorMask?.PushIndex((int)SoundCategory_FieldIndex.Flags);
                     try
                     {
-                        item.Flags = EnumXmlTranslation<LeveledItem.Flag>.Instance.Parse(
+                        item.Flags = EnumXmlTranslation<SoundCategory.Flag>.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2259,11 +2077,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Global":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.Global);
+                case "Parent":
+                    errorMask?.PushIndex((int)SoundCategory_FieldIndex.Parent);
                     try
                     {
-                        item.Global = FormKeyXmlTranslation.Instance.Parse(
+                        item.Parent = FormKeyXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2277,23 +2095,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Entries":
-                    errorMask?.PushIndex((int)LeveledItem_FieldIndex.Entries);
+                case "StaticVolumeMultiplier":
+                    errorMask?.PushIndex((int)SoundCategory_FieldIndex.StaticVolumeMultiplier);
                     try
                     {
-                        if (ListXmlTranslation<LeveledItemEntry>.Instance.Parse(
+                        item.StaticVolumeMultiplier = FloatXmlTranslation.Instance.Parse(
                             node: node,
-                            enumer: out var EntriesItem,
-                            transl: LoquiXmlTranslation<LeveledItemEntry>.Instance.Parse,
-                            errorMask: errorMask,
-                            translationMask: translationMask))
-                        {
-                            item.Entries = EntriesItem.ToExtendedList();
-                        }
-                        else
-                        {
-                            item.Entries = null;
-                        }
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DefaultMenuVolume":
+                    errorMask?.PushIndex((int)SoundCategory_FieldIndex.DefaultMenuVolume);
+                    try
+                    {
+                        item.DefaultMenuVolume = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -2322,30 +2148,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Xml Write Mixins
-    public static class LeveledItemXmlTranslationMixIn
+    public static class SoundCategoryXmlTranslationMixIn
     {
         public static void WriteToXml(
-            this ILeveledItemGetter item,
+            this ISoundCategoryGetter item,
             XElement node,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null,
             string? name = null)
         {
             ErrorMaskBuilder errorMaskBuilder = new ErrorMaskBuilder();
-            ((LeveledItemXmlWriteTranslation)item.XmlWriteTranslator).Write(
+            ((SoundCategoryXmlWriteTranslation)item.XmlWriteTranslator).Write(
                 item: item,
                 name: name,
                 node: node,
                 errorMask: errorMaskBuilder,
                 translationMask: translationMask?.GetCrystal());
-            errorMask = LeveledItem.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SoundCategory.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void WriteToXml(
-            this ILeveledItemGetter item,
+            this ISoundCategoryGetter item,
             string path,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2359,10 +2185,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void WriteToXml(
-            this ILeveledItemGetter item,
+            this ISoundCategoryGetter item,
             Stream stream,
-            out LeveledItem.ErrorMask errorMask,
-            LeveledItem.TranslationMask? translationMask = null,
+            out SoundCategory.ErrorMask errorMask,
+            SoundCategory.TranslationMask? translationMask = null,
             string? name = null)
         {
             var node = new XElement("topnode");
@@ -2385,14 +2211,14 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class LeveledItemBinaryWriteTranslation :
+    public partial class SoundCategoryBinaryWriteTranslation :
         SkyrimMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
-        public new readonly static LeveledItemBinaryWriteTranslation Instance = new LeveledItemBinaryWriteTranslation();
+        public new readonly static SoundCategoryBinaryWriteTranslation Instance = new SoundCategoryBinaryWriteTranslation();
 
         public static void WriteRecordTypes(
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2400,47 +2226,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            var ObjectBoundsItem = item.ObjectBounds;
-            ((ObjectBoundsBinaryWriteTranslation)((IBinaryItem)ObjectBoundsItem).BinaryWriteTranslator).Write(
-                item: ObjectBoundsItem,
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ChanceNone,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledItem.Flag>.Instance.Write(
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundCategory.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
-                length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
-                item: item.Global,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLG));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.WriteWithCounter(
+                item: item.Parent,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
+            FloatBinaryTranslation.Write(
                 writer: writer,
-                items: item.Entries,
-                counterType: RecordTypes.LLCT,
-                counterLength: 1,
-                transl: (MutagenWriter subWriter, ILeveledItemEntryGetter subItem, RecordTypeConverter? conv) =>
-                {
-                    var Item = subItem;
-                    ((LeveledItemEntryBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        recordTypeConverter: conv);
-                });
+                item: item.StaticVolumeMultiplier,
+                integerType: FloatIntegerType.UShort,
+                multiplier: 1.5259021896696422E-05,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
+            FloatBinaryTranslation.Write(
+                writer: writer,
+                item: item.DefaultMenuVolume,
+                integerType: FloatIntegerType.UShort,
+                multiplier: 1.5259021896696422E-05,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM));
         }
 
         public void Write(
             MutagenWriter writer,
-            ILeveledItemGetter item,
+            ISoundCategoryGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLI),
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.SNCT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
@@ -2459,7 +2281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2470,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
@@ -2481,20 +2303,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (ILeveledItemGetter)item,
+                item: (ISoundCategoryGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class LeveledItemBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
+    public partial class SoundCategoryBinaryCreateTranslation : SkyrimMajorRecordBinaryCreateTranslation
     {
-        public new readonly static LeveledItemBinaryCreateTranslation Instance = new LeveledItemBinaryCreateTranslation();
+        public new readonly static SoundCategoryBinaryCreateTranslation Instance = new SoundCategoryBinaryCreateTranslation();
 
-        public override RecordType RecordType => RecordTypes.LVLI;
+        public override RecordType RecordType => RecordTypes.SNCT;
         public static void FillBinaryStructs(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             MutagenFrame frame)
         {
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
@@ -2503,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            ILeveledItemInternal item,
+            ISoundCategoryInternal item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -2513,45 +2335,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
-                case RecordTypeInts.OBND:
-                {
-                    item.ObjectBounds = Mutagen.Bethesda.Skyrim.ObjectBounds.CreateFromBinary(frame: frame);
-                    return (int)LeveledItem_FieldIndex.ObjectBounds;
-                }
-                case RecordTypeInts.LVLD:
+                case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ChanceNone = frame.ReadUInt8();
-                    return (int)LeveledItem_FieldIndex.ChanceNone;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)SoundCategory_FieldIndex.Name;
                 }
-                case RecordTypeInts.LVLF:
+                case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return (int)LeveledItem_FieldIndex.Flags;
+                    item.Flags = EnumBinaryTranslation<SoundCategory.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)SoundCategory_FieldIndex.Flags;
                 }
-                case RecordTypeInts.LVLG:
+                case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         defaultVal: FormKey.Null);
-                    return (int)LeveledItem_FieldIndex.Global;
+                    return (int)SoundCategory_FieldIndex.Parent;
                 }
-                case RecordTypeInts.LVLO:
-                case RecordTypeInts.COED:
-                case RecordTypeInts.LLCT:
+                case RecordTypeInts.VNAM:
                 {
-                    item.Entries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.ParsePerItem(
-                            frame: frame,
-                            countLengthLength: 1,
-                            countRecord: RecordTypes.LLCT,
-                            triggeringRecord: LeveledItemEntry_Registration.TriggeringRecordTypes,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: LeveledItemEntry.TryCreateFromBinary)
-                        .ToExtendedList<LeveledItemEntry>();
-                    return (int)LeveledItem_FieldIndex.Entries;
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.StaticVolumeMultiplier = FloatBinaryTranslation.Parse(
+                        frame: frame,
+                        integerType: FloatIntegerType.UShort,
+                        multiplier: 1.5259021896696422E-05);
+                    return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DefaultMenuVolume = FloatBinaryTranslation.Parse(
+                        frame: frame,
+                        integerType: FloatIntegerType.UShort,
+                        multiplier: 1.5259021896696422E-05);
+                    return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -2569,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class LeveledItemBinaryTranslationMixIn
+    public static class SoundCategoryBinaryTranslationMixIn
     {
     }
     #endregion
@@ -2578,40 +2401,40 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class LeveledItemBinaryOverlay :
+    public partial class SoundCategoryBinaryOverlay :
         SkyrimMajorRecordBinaryOverlay,
-        ILeveledItemGetter
+        ISoundCategoryGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => LeveledItem_Registration.Instance;
-        public new static LeveledItem_Registration Registration => LeveledItem_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SoundCategory_Registration.Instance;
+        public new static SoundCategory_Registration Registration => SoundCategory_Registration.Instance;
         [DebuggerStepThrough]
-        protected override object CommonInstance() => LeveledItemCommon.Instance;
+        protected override object CommonInstance() => SoundCategoryCommon.Instance;
         [DebuggerStepThrough]
-        protected override object CommonSetterTranslationInstance() => LeveledItemSetterTranslationCommon.Instance;
+        protected override object CommonSetterTranslationInstance() => SoundCategorySetterTranslationCommon.Instance;
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ILeveledItemGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISoundCategoryGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
+        protected override IEnumerable<FormKey> LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
-        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SoundCategoryCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object XmlWriteTranslator => LeveledItemXmlWriteTranslation.Instance;
+        protected override object XmlWriteTranslator => SoundCategoryXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask,
             string? name = null)
         {
-            ((LeveledItemXmlWriteTranslation)this.XmlWriteTranslator).Write(
+            ((SoundCategoryXmlWriteTranslation)this.XmlWriteTranslator).Write(
                 item: this,
                 name: name,
                 node: node,
@@ -2619,43 +2442,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 translationMask: translationMask);
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
+        protected override object BinaryWriteTranslator => SoundCategoryBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((LeveledItemBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SoundCategoryBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        #region ObjectBounds
-        private RangeInt32? _ObjectBoundsLocation;
-        private IObjectBoundsGetter? _ObjectBounds => _ObjectBoundsLocation.HasValue ? ObjectBoundsBinaryOverlay.ObjectBoundsFactory(new OverlayStream(_data.Slice(_ObjectBoundsLocation!.Value.Min), _package), _package) : default;
-        public IObjectBoundsGetter ObjectBounds => _ObjectBounds ?? new ObjectBounds();
-        #endregion
-        #region ChanceNone
-        private int? _ChanceNoneLocation;
-        public Byte ChanceNone => _ChanceNoneLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _ChanceNoneLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        #region Name
+        private int? _NameLocation;
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public LeveledItem.Flag Flags => _FlagsLocation.HasValue ? (LeveledItem.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(LeveledItem.Flag);
+        public SoundCategory.Flag? Flags => _FlagsLocation.HasValue ? (SoundCategory.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SoundCategory.Flag?);
         #endregion
-        #region Global
-        private int? _GlobalLocation;
-        public bool Global_IsSet => _GlobalLocation.HasValue;
-        public IFormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        #region Parent
+        private int? _ParentLocation;
+        public bool Parent_IsSet => _ParentLocation.HasValue;
+        public IFormLinkNullable<ISoundDescriptorGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
-        public IReadOnlyList<ILeveledItemEntryGetter>? Entries { get; private set; }
+        #region StaticVolumeMultiplier
+        private int? _StaticVolumeMultiplierLocation;
+        public Single? StaticVolumeMultiplier => _StaticVolumeMultiplierLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _StaticVolumeMultiplierLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        #endregion
+        #region DefaultMenuVolume
+        private int? _DefaultMenuVolumeLocation;
+        public Single? DefaultMenuVolume => _DefaultMenuVolumeLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultMenuVolumeLocation.Value, _package.MetaData.Constants), FloatIntegerType.UShort, 1.5259021896696422E-05) : default(Single?);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
             int offset);
 
         partial void CustomCtor();
-        protected LeveledItemBinaryOverlay(
+        protected SoundCategoryBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2665,13 +2490,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static SoundCategoryBinaryOverlay SoundCategoryFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
             stream = UtilityTranslation.DecompressStream(stream);
-            var ret = new LeveledItemBinaryOverlay(
+            var ret = new SoundCategoryBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
@@ -2690,12 +2515,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static LeveledItemBinaryOverlay LeveledItemFactory(
+        public static SoundCategoryBinaryOverlay SoundCategoryFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return LeveledItemFactory(
+            return SoundCategoryFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2713,40 +2538,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
-                case RecordTypeInts.OBND:
+                case RecordTypeInts.FULL:
                 {
-                    _ObjectBoundsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return (int)LeveledItem_FieldIndex.ObjectBounds;
+                    _NameLocation = (stream.Position - offset);
+                    return (int)SoundCategory_FieldIndex.Name;
                 }
-                case RecordTypeInts.LVLD:
-                {
-                    _ChanceNoneLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.ChanceNone;
-                }
-                case RecordTypeInts.LVLF:
+                case RecordTypeInts.FNAM:
                 {
                     _FlagsLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.Flags;
+                    return (int)SoundCategory_FieldIndex.Flags;
                 }
-                case RecordTypeInts.LVLG:
+                case RecordTypeInts.PNAM:
                 {
-                    _GlobalLocation = (stream.Position - offset);
-                    return (int)LeveledItem_FieldIndex.Global;
+                    _ParentLocation = (stream.Position - offset);
+                    return (int)SoundCategory_FieldIndex.Parent;
                 }
-                case RecordTypeInts.LVLO:
-                case RecordTypeInts.COED:
-                case RecordTypeInts.LLCT:
+                case RecordTypeInts.VNAM:
                 {
-                    this.Entries = BinaryOverlayList<LeveledItemEntryBinaryOverlay>.FactoryByCountPerItem(
-                        stream: stream,
-                        package: _package,
-                        countLength: 1,
-                        subrecordType: LeveledItemEntry_Registration.TriggeringRecordTypes,
-                        countType: RecordTypes.LLCT,
-                        recordTypeConverter: recordTypeConverter,
-                        getter: (s, p, recConv) => LeveledItemEntryBinaryOverlay.LeveledItemEntryFactory(new OverlayStream(s, p), p, recConv),
-                        skipHeader: false);
-                    return (int)LeveledItem_FieldIndex.Entries;
+                    _StaticVolumeMultiplierLocation = (stream.Position - offset);
+                    return (int)SoundCategory_FieldIndex.StaticVolumeMultiplier;
+                }
+                case RecordTypeInts.UNAM:
+                {
+                    _DefaultMenuVolumeLocation = (stream.Position - offset);
+                    return (int)SoundCategory_FieldIndex.DefaultMenuVolume;
                 }
                 default:
                     return base.FillRecordType(
@@ -2764,7 +2579,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            LeveledItemMixIn.ToString(
+            SoundCategoryMixIn.ToString(
                 item: this,
                 name: name);
         }

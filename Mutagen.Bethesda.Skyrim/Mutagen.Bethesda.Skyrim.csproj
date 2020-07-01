@@ -174,6 +174,12 @@
     <Compile Include="Records\Major Records\ArmorModel.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ArtObject.cs">
+      <DependentUpon>ArtObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AssociationType.cs">
+      <DependentUpon>AssociationType.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\AStoryManagerNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
@@ -263,6 +269,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DualCastData.cs">
+      <DependentUpon>DualCastData.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\EffectShader.cs">
       <DependentUpon>EffectShader.xml</DependentUpon>
@@ -422,6 +431,9 @@
     </Compile>
     <Compile Include="Records\Major Records\MapMarker.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialObject.cs">
+      <DependentUpon>MaterialObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MaterialType.cs">
       <DependentUpon>MaterialType.xml</DependentUpon>
@@ -654,11 +666,17 @@
     <Compile Include="Records\Major Records\SoulGem.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundCategory.cs">
+      <DependentUpon>SoundCategory.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\SoundDescriptor.cs">
       <DependentUpon>SoundDescriptor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SoundMarker.cs">
       <DependentUpon>SoundMarker.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputModel.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
@@ -2044,6 +2062,28 @@
     </Compile>
     <Compile Include="Records\Major Records\SceneScriptFragments_Generated.cs">
       <DependentUpon>Scene.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IOutfitTarget_Generated.cs" />
+    <Compile Include="Records\Major Records\AnimationChangeThresholds_Generated.cs">
+      <DependentUpon>MovementType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundCategory_Generated.cs">
+      <DependentUpon>SoundCategory.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundLoopAndRumble_Generated.cs">
+      <DependentUpon>SoundDescriptor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputChannels_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputChannel_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputAttenuation_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundOutputData_Generated.cs">
+      <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
