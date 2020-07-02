@@ -834,9 +834,19 @@ namespace Mutagen.Bethesda.Binary
             RecordType counterType,
             RecordType recordType,
             BinarySubWriteDelegate<T> transl,
-            byte counterLength)
-        {
-            if (items == null) return;
+            byte counterLength,
+            bool writeCounterIfNull = false)        {
+            if (items == null)
+            {
+                if (writeCounterIfNull)
+                {
+                    using (HeaderExport.Subrecord(writer, counterType))
+                    {
+                        writer.Write(0, counterLength);
+                    }
+                }
+                return;
+            }
             using (HeaderExport.Subrecord(writer, counterType))
             {
                 writer.Write(items.Count, counterLength);
@@ -858,9 +868,20 @@ namespace Mutagen.Bethesda.Binary
             BinaryMasterWriteDelegate<T> transl,
             byte counterLength,
             bool subRecordPerItem = false,
+            bool writeCounterIfNull = false,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            if (items == null) return;
+            if (items == null)
+            {
+                if (writeCounterIfNull)
+                {
+                    using (HeaderExport.Subrecord(writer, counterType))
+                    {
+                        writer.Write(0, counterLength);
+                    }
+                }
+                return;
+            }
             using (HeaderExport.Subrecord(writer, counterType))
             {
                 writer.Write(items.Count, counterLength);

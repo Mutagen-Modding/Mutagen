@@ -112,6 +112,46 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public static IReadOnlyList<T>? FactoryByCountNullIfZero(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            int itemLength,
+            int countLength,
+            RecordType subrecordType,
+            RecordType countType,
+            BinaryOverlay.SpanFactory<T> getter)
+        {
+            var mem = stream.RemainingMemory;
+            var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
+            var recType = initialHeader.Header.RecordType;
+            if (recType == countType)
+            {
+                var count = countLength switch
+                {
+                    1 => initialHeader.Content[0],
+                    2 => (int)BinaryPrimitives.ReadUInt16LittleEndian(initialHeader.Content),
+                    4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(initialHeader.Content)),
+                    _ => throw new NotImplementedException(),
+                };
+                stream.Position += initialHeader.TotalLength;
+                if (count == 0) return null;
+                var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
+                return new BinaryOverlayListByStartIndex(
+                    contentFrame.Content,
+                    package,
+                    getter,
+                    itemLength);
+            }
+            else
+            {
+                return FactoryByStartIndex(
+                    mem: stream.RemainingMemory,
+                    package: package,
+                    getter: getter,
+                    itemLength: itemLength);
+            }
+        }
+
         public static IReadOnlyList<T> FactoryByCountPerItem(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,

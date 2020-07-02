@@ -152,6 +152,9 @@ namespace Mutagen.Bethesda.Skyrim
             _DualCastData_Object = new Group<DualCastData>(this);
             _SoundCategories_Object = new Group<SoundCategory>(this);
             _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Group<CollisionLayer>(this);
+            _Colors_Object = new Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Group<ReverbParameters>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -927,6 +930,27 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<ISoundOutputModelGetter> ISkyrimModGetter.SoundOutputModels => _SoundOutputModels_Object;
         #endregion
+        #region CollisionLayers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<CollisionLayer> _CollisionLayers_Object;
+        public Group<CollisionLayer> CollisionLayers => _CollisionLayers_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<ICollisionLayerGetter> ISkyrimModGetter.CollisionLayers => _CollisionLayers_Object;
+        #endregion
+        #region Colors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ColorRecord> _Colors_Object;
+        public Group<ColorRecord> Colors => _Colors_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IColorRecordGetter> ISkyrimModGetter.Colors => _Colors_Object;
+        #endregion
+        #region ReverbParameters
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<ReverbParameters> _ReverbParameters_Object;
+        public Group<ReverbParameters> ReverbParameters => _ReverbParameters_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IReverbParametersGetter> ISkyrimModGetter.ReverbParameters => _ReverbParameters_Object;
+        #endregion
 
         #region To String
 
@@ -1206,6 +1230,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1318,7 +1345,10 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SoundDescriptors,
                 TItem DualCastData,
                 TItem SoundCategories,
-                TItem SoundOutputModels)
+                TItem SoundOutputModels,
+                TItem CollisionLayers,
+                TItem Colors,
+                TItem ReverbParameters)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1430,6 +1460,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastData = new MaskItem<TItem, Group.Mask<TItem>?>(DualCastData, new Group.Mask<TItem>(DualCastData));
                 this.SoundCategories = new MaskItem<TItem, Group.Mask<TItem>?>(SoundCategories, new Group.Mask<TItem>(SoundCategories));
                 this.SoundOutputModels = new MaskItem<TItem, Group.Mask<TItem>?>(SoundOutputModels, new Group.Mask<TItem>(SoundOutputModels));
+                this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(CollisionLayers, new Group.Mask<TItem>(CollisionLayers));
+                this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(Colors, new Group.Mask<TItem>(Colors));
+                this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(ReverbParameters, new Group.Mask<TItem>(ReverbParameters));
             }
 
             #pragma warning disable CS8618
@@ -1551,6 +1584,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? DualCastData { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? SoundCategories { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? SoundOutputModels { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? CollisionLayers { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? Colors { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? ReverbParameters { get; set; }
             #endregion
 
             #region Equals
@@ -1673,6 +1709,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DualCastData, rhs.DualCastData)) return false;
                 if (!object.Equals(this.SoundCategories, rhs.SoundCategories)) return false;
                 if (!object.Equals(this.SoundOutputModels, rhs.SoundOutputModels)) return false;
+                if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
+                if (!object.Equals(this.Colors, rhs.Colors)) return false;
+                if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1788,6 +1827,9 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DualCastData);
                 hash.Add(this.SoundCategories);
                 hash.Add(this.SoundOutputModels);
+                hash.Add(this.CollisionLayers);
+                hash.Add(this.Colors);
+                hash.Add(this.ReverbParameters);
                 return hash.ToHashCode();
             }
 
@@ -2346,6 +2388,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.SoundOutputModels.Overall)) return false;
                     if (this.SoundOutputModels.Specific != null && !this.SoundOutputModels.Specific.All(eval)) return false;
                 }
+                if (CollisionLayers != null)
+                {
+                    if (!eval(this.CollisionLayers.Overall)) return false;
+                    if (this.CollisionLayers.Specific != null && !this.CollisionLayers.Specific.All(eval)) return false;
+                }
+                if (Colors != null)
+                {
+                    if (!eval(this.Colors.Overall)) return false;
+                    if (this.Colors.Specific != null && !this.Colors.Specific.All(eval)) return false;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (!eval(this.ReverbParameters.Overall)) return false;
+                    if (this.ReverbParameters.Specific != null && !this.ReverbParameters.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2903,6 +2960,21 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.SoundOutputModels.Overall)) return true;
                     if (this.SoundOutputModels.Specific != null && this.SoundOutputModels.Specific.Any(eval)) return true;
                 }
+                if (CollisionLayers != null)
+                {
+                    if (eval(this.CollisionLayers.Overall)) return true;
+                    if (this.CollisionLayers.Specific != null && this.CollisionLayers.Specific.Any(eval)) return true;
+                }
+                if (Colors != null)
+                {
+                    if (eval(this.Colors.Overall)) return true;
+                    if (this.Colors.Specific != null && this.Colors.Specific.Any(eval)) return true;
+                }
+                if (ReverbParameters != null)
+                {
+                    if (eval(this.ReverbParameters.Overall)) return true;
+                    if (this.ReverbParameters.Specific != null && this.ReverbParameters.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3027,6 +3099,9 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DualCastData = this.DualCastData == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.DualCastData.Overall), this.DualCastData.Specific?.Translate(eval));
                 obj.SoundCategories = this.SoundCategories == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundCategories.Overall), this.SoundCategories.Specific?.Translate(eval));
                 obj.SoundOutputModels = this.SoundOutputModels == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.SoundOutputModels.Overall), this.SoundOutputModels.Specific?.Translate(eval));
+                obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
+                obj.Colors = this.Colors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
+                obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3489,6 +3564,18 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         SoundOutputModels?.ToString(fg);
                     }
+                    if (printMask?.CollisionLayers?.Overall ?? true)
+                    {
+                        CollisionLayers?.ToString(fg);
+                    }
+                    if (printMask?.Colors?.Overall ?? true)
+                    {
+                        Colors?.ToString(fg);
+                    }
+                    if (printMask?.ReverbParameters?.Overall ?? true)
+                    {
+                        ReverbParameters?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3624,6 +3711,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<DualCastData.ErrorMask>?>? DualCastData;
             public MaskItem<Exception?, Group.ErrorMask<SoundCategory.ErrorMask>?>? SoundCategories;
             public MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>? SoundOutputModels;
+            public MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
+            public MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
+            public MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
             #endregion
 
             #region IErrorMask
@@ -3852,6 +3942,12 @@ namespace Mutagen.Bethesda.Skyrim
                         return SoundCategories;
                     case SkyrimMod_FieldIndex.SoundOutputModels:
                         return SoundOutputModels;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        return CollisionLayers;
+                    case SkyrimMod_FieldIndex.Colors:
+                        return Colors;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        return ReverbParameters;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4191,6 +4287,15 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.SoundOutputModels:
                         this.SoundOutputModels = new MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = new MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.Colors:
+                        this.Colors = new MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = new MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4532,6 +4637,15 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.SoundOutputModels:
                         this.SoundOutputModels = (MaskItem<Exception?, Group.ErrorMask<SoundOutputModel.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.CollisionLayers:
+                        this.CollisionLayers = (MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.Colors:
+                        this.Colors = (MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>?)obj;
+                        break;
+                    case SkyrimMod_FieldIndex.ReverbParameters:
+                        this.ReverbParameters = (MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4650,6 +4764,9 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DualCastData != null) return true;
                 if (SoundCategories != null) return true;
                 if (SoundOutputModels != null) return true;
+                if (CollisionLayers != null) return true;
+                if (Colors != null) return true;
+                if (ReverbParameters != null) return true;
                 return false;
             }
             #endregion
@@ -4794,6 +4911,9 @@ namespace Mutagen.Bethesda.Skyrim
                 DualCastData?.ToString(fg);
                 SoundCategories?.ToString(fg);
                 SoundOutputModels?.ToString(fg);
+                CollisionLayers?.ToString(fg);
+                Colors?.ToString(fg);
+                ReverbParameters?.ToString(fg);
             }
             #endregion
 
@@ -4912,6 +5032,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DualCastData = this.DualCastData.Combine(rhs.DualCastData, (l, r) => l.Combine(r));
                 ret.SoundCategories = this.SoundCategories.Combine(rhs.SoundCategories, (l, r) => l.Combine(r));
                 ret.SoundOutputModels = this.SoundOutputModels.Combine(rhs.SoundOutputModels, (l, r) => l.Combine(r));
+                ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
+                ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
+                ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5043,6 +5166,9 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<DualCastData.TranslationMask>?> DualCastData;
             public MaskItem<bool, Group.TranslationMask<SoundCategory.TranslationMask>?> SoundCategories;
             public MaskItem<bool, Group.TranslationMask<SoundOutputModel.TranslationMask>?> SoundOutputModels;
+            public MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?> CollisionLayers;
+            public MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?> Colors;
+            public MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?> ReverbParameters;
             #endregion
 
             #region Ctors
@@ -5158,6 +5284,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DualCastData = new MaskItem<bool, Group.TranslationMask<DualCastData.TranslationMask>?>(defaultOn, null);
                 this.SoundCategories = new MaskItem<bool, Group.TranslationMask<SoundCategory.TranslationMask>?>(defaultOn, null);
                 this.SoundOutputModels = new MaskItem<bool, Group.TranslationMask<SoundOutputModel.TranslationMask>?>(defaultOn, null);
+                this.CollisionLayers = new MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?>(defaultOn, null);
+                this.Colors = new MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?>(defaultOn, null);
+                this.ReverbParameters = new MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -5283,6 +5412,9 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DualCastData?.Overall ?? true, DualCastData?.Specific?.GetCrystal()));
                 ret.Add((SoundCategories?.Overall ?? true, SoundCategories?.Specific?.GetCrystal()));
                 ret.Add((SoundOutputModels?.Overall ?? true, SoundOutputModels?.Specific?.GetCrystal()));
+                ret.Add((CollisionLayers?.Overall ?? true, CollisionLayers?.Specific?.GetCrystal()));
+                ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
+                ret.Add((ReverbParameters?.Overall ?? true, ReverbParameters?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -5417,6 +5549,9 @@ namespace Mutagen.Bethesda.Skyrim
             _DualCastData_Object = new Group<DualCastData>(this);
             _SoundCategories_Object = new Group<SoundCategory>(this);
             _SoundOutputModels_Object = new Group<SoundOutputModel>(this);
+            _CollisionLayers_Object = new Group<CollisionLayer>(this);
+            _Colors_Object = new Group<ColorRecord>(this);
+            _ReverbParameters_Object = new Group<ReverbParameters>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -5860,6 +5995,18 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.SoundOutputModels ?? true)
             {
                 this.SoundOutputModels.RecordCache.Set(rhsMod.SoundOutputModels.RecordCache.Items);
+            }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(rhsMod.CollisionLayers.RecordCache.Items);
+            }
+            if (mask?.Colors ?? true)
+            {
+                this.Colors.RecordCache.Set(rhsMod.Colors.RecordCache.Items);
+            }
+            if (mask?.ReverbParameters ?? true)
+            {
+                this.ReverbParameters.RecordCache.Set(rhsMod.ReverbParameters.RecordCache.Items);
             }
         }
 
@@ -6631,6 +6778,27 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<SoundOutputModel>());
             }
+            if (mask?.CollisionLayers ?? true)
+            {
+                this.CollisionLayers.RecordCache.Set(
+                    rhs.CollisionLayers.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<CollisionLayer>());
+            }
+            if (mask?.Colors ?? true)
+            {
+                this.Colors.RecordCache.Set(
+                    rhs.Colors.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ColorRecord>());
+            }
+            if (mask?.ReverbParameters ?? true)
+            {
+                this.ReverbParameters.RecordCache.Set(
+                    rhs.ReverbParameters.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<ReverbParameters>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -6759,6 +6927,9 @@ namespace Mutagen.Bethesda.Skyrim
             count += DualCastData.RecordCache.Count > 0 ? 1 : 0;
             count += SoundCategories.RecordCache.Count > 0 ? 1 : 0;
             count += SoundOutputModels.RecordCache.Count > 0 ? 1 : 0;
+            count += CollisionLayers.RecordCache.Count > 0 ? 1 : 0;
+            count += Colors.RecordCache.Count > 0 ? 1 : 0;
+            count += ReverbParameters.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -7091,6 +7262,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<DualCastData> DualCastData { get; }
         new Group<SoundCategory> SoundCategories { get; }
         new Group<SoundOutputModel> SoundOutputModels { get; }
+        new Group<CollisionLayer> CollisionLayers { get; }
+        new Group<ColorRecord> Colors { get; }
+        new Group<ReverbParameters> ReverbParameters { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -7218,6 +7392,9 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<IDualCastDataGetter> DualCastData { get; }
         IGroupGetter<ISoundCategoryGetter> SoundCategories { get; }
         IGroupGetter<ISoundOutputModelGetter> SoundOutputModels { get; }
+        IGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
+        IGroupGetter<IColorRecordGetter> Colors { get; }
+        IGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
 
     }
 
@@ -7817,6 +7994,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         DualCastData = 107,
         SoundCategories = 108,
         SoundOutputModels = 109,
+        CollisionLayers = 110,
+        Colors = 111,
+        ReverbParameters = 112,
     }
     #endregion
 
@@ -7834,9 +8014,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 110;
+        public const ushort AdditionalFieldCount = 113;
 
-        public const ushort FieldCount = 110;
+        public const ushort FieldCount = 113;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -8086,6 +8266,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.SoundCategories;
                 case "SOUNDOUTPUTMODELS":
                     return (ushort)SkyrimMod_FieldIndex.SoundOutputModels;
+                case "COLLISIONLAYERS":
+                    return (ushort)SkyrimMod_FieldIndex.CollisionLayers;
+                case "COLORS":
+                    return (ushort)SkyrimMod_FieldIndex.Colors;
+                case "REVERBPARAMETERS":
+                    return (ushort)SkyrimMod_FieldIndex.ReverbParameters;
                 default:
                     return null;
             }
@@ -8206,6 +8392,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DualCastData:
                 case SkyrimMod_FieldIndex.SoundCategories:
                 case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8327,6 +8516,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DualCastData:
                 case SkyrimMod_FieldIndex.SoundCategories:
                 case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8448,6 +8640,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DualCastData:
                 case SkyrimMod_FieldIndex.SoundCategories:
                 case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8679,6 +8874,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "SoundCategories";
                 case SkyrimMod_FieldIndex.SoundOutputModels:
                     return "SoundOutputModels";
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                    return "CollisionLayers";
+                case SkyrimMod_FieldIndex.Colors:
+                    return "Colors";
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                    return "ReverbParameters";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -8799,6 +9000,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DualCastData:
                 case SkyrimMod_FieldIndex.SoundCategories:
                 case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8921,6 +9125,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.DualCastData:
                 case SkyrimMod_FieldIndex.SoundCategories:
                 case SkyrimMod_FieldIndex.SoundOutputModels:
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                case SkyrimMod_FieldIndex.Colors:
+                case SkyrimMod_FieldIndex.ReverbParameters:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -9152,6 +9359,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<SoundCategory>);
                 case SkyrimMod_FieldIndex.SoundOutputModels:
                     return typeof(Group<SoundOutputModel>);
+                case SkyrimMod_FieldIndex.CollisionLayers:
+                    return typeof(Group<CollisionLayer>);
+                case SkyrimMod_FieldIndex.Colors:
+                    return typeof(Group<ColorRecord>);
+                case SkyrimMod_FieldIndex.ReverbParameters:
+                    return typeof(Group<ReverbParameters>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -9309,6 +9522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DualCastData.Clear();
             item.SoundCategories.Clear();
             item.SoundOutputModels.Clear();
+            item.CollisionLayers.Clear();
+            item.Colors.Clear();
+            item.ReverbParameters.Clear();
         }
         
         #region Xml Translation
@@ -9575,6 +9791,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DualCastData = MaskItemExt.Factory(item.DualCastData.GetEqualsMask(rhs.DualCastData, include), include);
             ret.SoundCategories = MaskItemExt.Factory(item.SoundCategories.GetEqualsMask(rhs.SoundCategories, include), include);
             ret.SoundOutputModels = MaskItemExt.Factory(item.SoundOutputModels.GetEqualsMask(rhs.SoundOutputModels, include), include);
+            ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
+            ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
+            ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
         }
         
         public string ToString(
@@ -10061,6 +10280,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SoundOutputModels?.ToString(fg, "SoundOutputModels");
             }
+            if (printMask?.CollisionLayers?.Overall ?? true)
+            {
+                item.CollisionLayers?.ToString(fg, "CollisionLayers");
+            }
+            if (printMask?.Colors?.Overall ?? true)
+            {
+                item.Colors?.ToString(fg, "Colors");
+            }
+            if (printMask?.ReverbParameters?.Overall ?? true)
+            {
+                item.ReverbParameters?.ToString(fg, "ReverbParameters");
+            }
         }
         
         public bool HasBeenSet(
@@ -10184,6 +10415,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.DualCastData = new MaskItem<bool, Group.Mask<bool>?>(true, item.DualCastData?.GetHasBeenSetMask());
             mask.SoundCategories = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundCategories?.GetHasBeenSetMask());
             mask.SoundOutputModels = new MaskItem<bool, Group.Mask<bool>?>(true, item.SoundOutputModels?.GetHasBeenSetMask());
+            mask.CollisionLayers = new MaskItem<bool, Group.Mask<bool>?>(true, item.CollisionLayers?.GetHasBeenSetMask());
+            mask.Colors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Colors?.GetHasBeenSetMask());
+            mask.ReverbParameters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ReverbParameters?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -10303,6 +10537,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.DualCastData, rhs.DualCastData)) return false;
             if (!object.Equals(lhs.SoundCategories, rhs.SoundCategories)) return false;
             if (!object.Equals(lhs.SoundOutputModels, rhs.SoundOutputModels)) return false;
+            if (!object.Equals(lhs.CollisionLayers, rhs.CollisionLayers)) return false;
+            if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
+            if (!object.Equals(lhs.ReverbParameters, rhs.ReverbParameters)) return false;
             return true;
         }
         
@@ -10419,6 +10656,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DualCastData);
             hash.Add(item.SoundCategories);
             hash.Add(item.SoundOutputModels);
+            hash.Add(item.CollisionLayers);
+            hash.Add(item.Colors);
+            hash.Add(item.ReverbParameters);
             return hash.ToHashCode();
         }
         
@@ -10980,6 +11220,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
                     return obj.SoundOutputModels.RecordCache;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    return obj.CollisionLayers.RecordCache;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    return obj.Colors.RecordCache;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    return obj.ReverbParameters.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -10999,7 +11254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[109];
+            Stream[] outputStreams = new Stream[112];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
@@ -11110,6 +11365,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11923,6 +12181,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.CollisionLayers is ILinkedFormKeyContainer CollisionLayerslinkCont)
+            {
+                foreach (var item in CollisionLayerslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.Colors is ILinkedFormKeyContainer ColorslinkCont)
+            {
+                foreach (var item in ColorslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
+            if (obj.ReverbParameters is ILinkedFormKeyContainer ReverbParameterslinkCont)
+            {
+                foreach (var item in ReverbParameterslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -12362,6 +12641,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.CollisionLayers.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.Colors.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.ReverbParameters.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13361,6 +13652,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
                     foreach (var item in obj.SoundOutputModels.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "CollisionLayer":
+                case "ICollisionLayerGetter":
+                case "ICollisionLayer":
+                case "ICollisionLayerInternal":
+                    foreach (var item in obj.CollisionLayers.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ColorRecord":
+                case "IColorRecordGetter":
+                case "IColorRecord":
+                case "IColorRecordInternal":
+                    foreach (var item in obj.Colors.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "ReverbParameters":
+                case "IReverbParametersGetter":
+                case "IReverbParameters":
+                case "IReverbParametersInternal":
+                    foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -16053,6 +16371,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CollisionLayers);
+                try
+                {
+                    item.CollisionLayers.DeepCopyIn(
+                        rhs: rhs.CollisionLayers,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CollisionLayers));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Colors) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Colors);
+                try
+                {
+                    item.Colors.DeepCopyIn(
+                        rhs: rhs.Colors,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Colors));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ReverbParameters) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ReverbParameters);
+                try
+                {
+                    item.ReverbParameters.DeepCopyIn(
+                        rhs: rhs.ReverbParameters,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ReverbParameters));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17351,6 +17729,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.SoundOutputModels,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.SoundOutputModels));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                var CollisionLayersItem = item.CollisionLayers;
+                ((GroupXmlWriteTranslation)((IXmlItem)CollisionLayersItem).XmlWriteTranslator).Write<ICollisionLayerGetter>(
+                    item: CollisionLayersItem,
+                    node: node,
+                    name: nameof(item.CollisionLayers),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.CollisionLayers,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.CollisionLayers));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Colors) ?? true))
+            {
+                var ColorsItem = item.Colors;
+                ((GroupXmlWriteTranslation)((IXmlItem)ColorsItem).XmlWriteTranslator).Write<IColorRecordGetter>(
+                    item: ColorsItem,
+                    node: node,
+                    name: nameof(item.Colors),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.Colors,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.Colors));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ReverbParameters) ?? true))
+            {
+                var ReverbParametersItem = item.ReverbParameters;
+                ((GroupXmlWriteTranslation)((IXmlItem)ReverbParametersItem).XmlWriteTranslator).Write<IReverbParametersGetter>(
+                    item: ReverbParametersItem,
+                    node: node,
+                    name: nameof(item.ReverbParameters),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.ReverbParameters,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ReverbParameters));
             }
         }
 
@@ -19510,6 +19921,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "CollisionLayers":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.CollisionLayers);
+                    try
+                    {
+                        item.CollisionLayers.CopyInFromXml<CollisionLayer>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Colors":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.Colors);
+                    try
+                    {
+                        item.Colors.CopyInFromXml<ColorRecord>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReverbParameters":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.ReverbParameters);
+                    try
+                    {
+                        item.ReverbParameters.CopyInFromXml<ReverbParameters>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -19788,6 +20256,9 @@ namespace Mutagen.Bethesda.Skyrim
         public bool DualCastData;
         public bool SoundCategories;
         public bool SoundOutputModels;
+        public bool CollisionLayers;
+        public bool Colors;
+        public bool ReverbParameters;
         public GroupMask()
         {
         }
@@ -19902,6 +20373,9 @@ namespace Mutagen.Bethesda.Skyrim
             DualCastData = defaultValue;
             SoundCategories = defaultValue;
             SoundOutputModels = defaultValue;
+            CollisionLayers = defaultValue;
+            Colors = defaultValue;
+            ReverbParameters = defaultValue;
         }
     }
 
@@ -21125,6 +21599,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)SoundOutputModelsItem).BinaryWriteTranslator).Write<ISoundOutputModelGetter>(
                         item: SoundOutputModelsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.CollisionLayers ?? true)
+            {
+                var CollisionLayersItem = item.CollisionLayers;
+                if (CollisionLayersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)CollisionLayersItem).BinaryWriteTranslator).Write<ICollisionLayerGetter>(
+                        item: CollisionLayersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.Colors ?? true)
+            {
+                var ColorsItem = item.Colors;
+                if (ColorsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ColorsItem).BinaryWriteTranslator).Write<IColorRecordGetter>(
+                        item: ColorsItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.ReverbParameters ?? true)
+            {
+                var ReverbParametersItem = item.ReverbParameters;
+                if (ReverbParametersItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
+                        item: ReverbParametersItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -22724,6 +23231,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return (int)SkyrimMod_FieldIndex.SoundOutputModels;
                 }
+                case RecordTypeInts.COLL:
+                {
+                    if (importMask?.CollisionLayers ?? true)
+                    {
+                        item.CollisionLayers.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.CollisionLayers;
+                }
+                case RecordTypeInts.CLFM:
+                {
+                    if (importMask?.Colors ?? true)
+                    {
+                        item.Colors.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    if (importMask?.ReverbParameters ?? true)
+                    {
+                        item.ReverbParameters.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.ReverbParameters;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -23442,6 +23991,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<ISoundOutputModelGetter>? _SoundOutputModels => _SoundOutputModelsLocation.HasValue ? GroupBinaryOverlay<ISoundOutputModelGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _SoundOutputModelsLocation!.Value.Min, _SoundOutputModelsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<ISoundOutputModelGetter> SoundOutputModels => _SoundOutputModels ?? new Group<SoundOutputModel>(this);
         #endregion
+        #region CollisionLayers
+        private RangeInt64? _CollisionLayersLocation;
+        private IGroupGetter<ICollisionLayerGetter>? _CollisionLayers => _CollisionLayersLocation.HasValue ? GroupBinaryOverlay<ICollisionLayerGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _CollisionLayersLocation!.Value.Min, _CollisionLayersLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<ICollisionLayerGetter> CollisionLayers => _CollisionLayers ?? new Group<CollisionLayer>(this);
+        #endregion
+        #region Colors
+        private RangeInt64? _ColorsLocation;
+        private IGroupGetter<IColorRecordGetter>? _Colors => _ColorsLocation.HasValue ? GroupBinaryOverlay<IColorRecordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ColorsLocation!.Value.Min, _ColorsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IColorRecordGetter> Colors => _Colors ?? new Group<ColorRecord>(this);
+        #endregion
+        #region ReverbParameters
+        private RangeInt64? _ReverbParametersLocation;
+        private IGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocation.HasValue ? GroupBinaryOverlay<IReverbParametersGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ReverbParametersLocation!.Value.Min, _ReverbParametersLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Group<ReverbParameters>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -24081,6 +24645,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _SoundOutputModelsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)SkyrimMod_FieldIndex.SoundOutputModels;
+                }
+                case RecordTypeInts.COLL:
+                {
+                    _CollisionLayersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.CollisionLayers;
+                }
+                case RecordTypeInts.CLFM:
+                {
+                    _ColorsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.Colors;
+                }
+                case RecordTypeInts.REVB:
+                {
+                    _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.ReverbParameters;
                 }
                 default:
                     return default(int?);

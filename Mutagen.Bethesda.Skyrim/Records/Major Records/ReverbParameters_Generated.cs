@@ -49,6 +49,45 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region DecayMilliseconds
+        public UInt16 DecayMilliseconds { get; set; } = default;
+        #endregion
+        #region HfReferenceHertz
+        public UInt16 HfReferenceHertz { get; set; } = default;
+        #endregion
+        #region RoomFilter
+        public SByte RoomFilter { get; set; } = default;
+        #endregion
+        #region RoomHfFilter
+        public SByte RoomHfFilter { get; set; } = default;
+        #endregion
+        #region Reflections
+        public SByte Reflections { get; set; } = default;
+        #endregion
+        #region ReverbAmp
+        public SByte ReverbAmp { get; set; } = default;
+        #endregion
+        #region DecayHfRatio
+        public Single DecayHfRatio { get; set; } = default;
+        #endregion
+        #region ReflectDelayMS
+        public Byte ReflectDelayMS { get; set; } = default;
+        #endregion
+        #region ReverbDelayMS
+        public Byte ReverbDelayMS { get; set; } = default;
+        #endregion
+        #region DiffusionPercent
+        public Byte DiffusionPercent { get; set; } = default;
+        #endregion
+        #region DensityPercent
+        public Byte DensityPercent { get; set; } = default;
+        #endregion
+        #region Unknown
+        public Byte Unknown { get; set; } = default;
+        #endregion
+        #region DATADataTypeState
+        public ReverbParameters.DATADataType DATADataTypeState { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -218,6 +257,19 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.DecayMilliseconds = initialValue;
+                this.HfReferenceHertz = initialValue;
+                this.RoomFilter = initialValue;
+                this.RoomHfFilter = initialValue;
+                this.Reflections = initialValue;
+                this.ReverbAmp = initialValue;
+                this.DecayHfRatio = initialValue;
+                this.ReflectDelayMS = initialValue;
+                this.ReverbDelayMS = initialValue;
+                this.DiffusionPercent = initialValue;
+                this.DensityPercent = initialValue;
+                this.Unknown = initialValue;
+                this.DATADataTypeState = initialValue;
             }
 
             public Mask(
@@ -226,7 +278,20 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem DecayMilliseconds,
+                TItem HfReferenceHertz,
+                TItem RoomFilter,
+                TItem RoomHfFilter,
+                TItem Reflections,
+                TItem ReverbAmp,
+                TItem DecayHfRatio,
+                TItem ReflectDelayMS,
+                TItem ReverbDelayMS,
+                TItem DiffusionPercent,
+                TItem DensityPercent,
+                TItem Unknown,
+                TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +300,19 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.DecayMilliseconds = DecayMilliseconds;
+                this.HfReferenceHertz = HfReferenceHertz;
+                this.RoomFilter = RoomFilter;
+                this.RoomHfFilter = RoomHfFilter;
+                this.Reflections = Reflections;
+                this.ReverbAmp = ReverbAmp;
+                this.DecayHfRatio = DecayHfRatio;
+                this.ReflectDelayMS = ReflectDelayMS;
+                this.ReverbDelayMS = ReverbDelayMS;
+                this.DiffusionPercent = DiffusionPercent;
+                this.DensityPercent = DensityPercent;
+                this.Unknown = Unknown;
+                this.DATADataTypeState = DATADataTypeState;
             }
 
             #pragma warning disable CS8618
@@ -243,6 +321,22 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem DecayMilliseconds;
+            public TItem HfReferenceHertz;
+            public TItem RoomFilter;
+            public TItem RoomHfFilter;
+            public TItem Reflections;
+            public TItem ReverbAmp;
+            public TItem DecayHfRatio;
+            public TItem ReflectDelayMS;
+            public TItem ReverbDelayMS;
+            public TItem DiffusionPercent;
+            public TItem DensityPercent;
+            public TItem Unknown;
+            public TItem DATADataTypeState;
             #endregion
 
             #region Equals
@@ -256,11 +350,37 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.DecayMilliseconds, rhs.DecayMilliseconds)) return false;
+                if (!object.Equals(this.HfReferenceHertz, rhs.HfReferenceHertz)) return false;
+                if (!object.Equals(this.RoomFilter, rhs.RoomFilter)) return false;
+                if (!object.Equals(this.RoomHfFilter, rhs.RoomHfFilter)) return false;
+                if (!object.Equals(this.Reflections, rhs.Reflections)) return false;
+                if (!object.Equals(this.ReverbAmp, rhs.ReverbAmp)) return false;
+                if (!object.Equals(this.DecayHfRatio, rhs.DecayHfRatio)) return false;
+                if (!object.Equals(this.ReflectDelayMS, rhs.ReflectDelayMS)) return false;
+                if (!object.Equals(this.ReverbDelayMS, rhs.ReverbDelayMS)) return false;
+                if (!object.Equals(this.DiffusionPercent, rhs.DiffusionPercent)) return false;
+                if (!object.Equals(this.DensityPercent, rhs.DensityPercent)) return false;
+                if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
+                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.DecayMilliseconds);
+                hash.Add(this.HfReferenceHertz);
+                hash.Add(this.RoomFilter);
+                hash.Add(this.RoomHfFilter);
+                hash.Add(this.Reflections);
+                hash.Add(this.ReverbAmp);
+                hash.Add(this.DecayHfRatio);
+                hash.Add(this.ReflectDelayMS);
+                hash.Add(this.ReverbDelayMS);
+                hash.Add(this.DiffusionPercent);
+                hash.Add(this.DensityPercent);
+                hash.Add(this.Unknown);
+                hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +391,19 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.DecayMilliseconds)) return false;
+                if (!eval(this.HfReferenceHertz)) return false;
+                if (!eval(this.RoomFilter)) return false;
+                if (!eval(this.RoomHfFilter)) return false;
+                if (!eval(this.Reflections)) return false;
+                if (!eval(this.ReverbAmp)) return false;
+                if (!eval(this.DecayHfRatio)) return false;
+                if (!eval(this.ReflectDelayMS)) return false;
+                if (!eval(this.ReverbDelayMS)) return false;
+                if (!eval(this.DiffusionPercent)) return false;
+                if (!eval(this.DensityPercent)) return false;
+                if (!eval(this.Unknown)) return false;
+                if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
             #endregion
@@ -279,6 +412,19 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.DecayMilliseconds)) return true;
+                if (eval(this.HfReferenceHertz)) return true;
+                if (eval(this.RoomFilter)) return true;
+                if (eval(this.RoomHfFilter)) return true;
+                if (eval(this.Reflections)) return true;
+                if (eval(this.ReverbAmp)) return true;
+                if (eval(this.DecayHfRatio)) return true;
+                if (eval(this.ReflectDelayMS)) return true;
+                if (eval(this.ReverbDelayMS)) return true;
+                if (eval(this.DiffusionPercent)) return true;
+                if (eval(this.DensityPercent)) return true;
+                if (eval(this.Unknown)) return true;
+                if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
             #endregion
@@ -294,6 +440,19 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.DecayMilliseconds = eval(this.DecayMilliseconds);
+                obj.HfReferenceHertz = eval(this.HfReferenceHertz);
+                obj.RoomFilter = eval(this.RoomFilter);
+                obj.RoomHfFilter = eval(this.RoomHfFilter);
+                obj.Reflections = eval(this.Reflections);
+                obj.ReverbAmp = eval(this.ReverbAmp);
+                obj.DecayHfRatio = eval(this.DecayHfRatio);
+                obj.ReflectDelayMS = eval(this.ReflectDelayMS);
+                obj.ReverbDelayMS = eval(this.ReverbDelayMS);
+                obj.DiffusionPercent = eval(this.DiffusionPercent);
+                obj.DensityPercent = eval(this.DensityPercent);
+                obj.Unknown = eval(this.Unknown);
+                obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
 
@@ -316,6 +475,58 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.DecayMilliseconds ?? true)
+                    {
+                        fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                    }
+                    if (printMask?.HfReferenceHertz ?? true)
+                    {
+                        fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                    }
+                    if (printMask?.RoomFilter ?? true)
+                    {
+                        fg.AppendItem(RoomFilter, "RoomFilter");
+                    }
+                    if (printMask?.RoomHfFilter ?? true)
+                    {
+                        fg.AppendItem(RoomHfFilter, "RoomHfFilter");
+                    }
+                    if (printMask?.Reflections ?? true)
+                    {
+                        fg.AppendItem(Reflections, "Reflections");
+                    }
+                    if (printMask?.ReverbAmp ?? true)
+                    {
+                        fg.AppendItem(ReverbAmp, "ReverbAmp");
+                    }
+                    if (printMask?.DecayHfRatio ?? true)
+                    {
+                        fg.AppendItem(DecayHfRatio, "DecayHfRatio");
+                    }
+                    if (printMask?.ReflectDelayMS ?? true)
+                    {
+                        fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                    }
+                    if (printMask?.ReverbDelayMS ?? true)
+                    {
+                        fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                    }
+                    if (printMask?.DiffusionPercent ?? true)
+                    {
+                        fg.AppendItem(DiffusionPercent, "DiffusionPercent");
+                    }
+                    if (printMask?.DensityPercent ?? true)
+                    {
+                        fg.AppendItem(DensityPercent, "DensityPercent");
+                    }
+                    if (printMask?.Unknown ?? true)
+                    {
+                        fg.AppendItem(Unknown, "Unknown");
+                    }
+                    if (printMask?.DATADataTypeState ?? true)
+                    {
+                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +538,54 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? DecayMilliseconds;
+            public Exception? HfReferenceHertz;
+            public Exception? RoomFilter;
+            public Exception? RoomHfFilter;
+            public Exception? Reflections;
+            public Exception? ReverbAmp;
+            public Exception? DecayHfRatio;
+            public Exception? ReflectDelayMS;
+            public Exception? ReverbDelayMS;
+            public Exception? DiffusionPercent;
+            public Exception? DensityPercent;
+            public Exception? Unknown;
+            public Exception? DATADataTypeState;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.DecayMilliseconds:
+                        return DecayMilliseconds;
+                    case ReverbParameters_FieldIndex.HfReferenceHertz:
+                        return HfReferenceHertz;
+                    case ReverbParameters_FieldIndex.RoomFilter:
+                        return RoomFilter;
+                    case ReverbParameters_FieldIndex.RoomHfFilter:
+                        return RoomHfFilter;
+                    case ReverbParameters_FieldIndex.Reflections:
+                        return Reflections;
+                    case ReverbParameters_FieldIndex.ReverbAmp:
+                        return ReverbAmp;
+                    case ReverbParameters_FieldIndex.DecayHfRatio:
+                        return DecayHfRatio;
+                    case ReverbParameters_FieldIndex.ReflectDelayMS:
+                        return ReflectDelayMS;
+                    case ReverbParameters_FieldIndex.ReverbDelayMS:
+                        return ReverbDelayMS;
+                    case ReverbParameters_FieldIndex.DiffusionPercent:
+                        return DiffusionPercent;
+                    case ReverbParameters_FieldIndex.DensityPercent:
+                        return DensityPercent;
+                    case ReverbParameters_FieldIndex.Unknown:
+                        return Unknown;
+                    case ReverbParameters_FieldIndex.DATADataTypeState:
+                        return DATADataTypeState;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +596,45 @@ namespace Mutagen.Bethesda.Skyrim
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.DecayMilliseconds:
+                        this.DecayMilliseconds = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.HfReferenceHertz:
+                        this.HfReferenceHertz = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.RoomFilter:
+                        this.RoomFilter = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.RoomHfFilter:
+                        this.RoomHfFilter = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.Reflections:
+                        this.Reflections = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.ReverbAmp:
+                        this.ReverbAmp = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.DecayHfRatio:
+                        this.DecayHfRatio = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.ReflectDelayMS:
+                        this.ReflectDelayMS = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.ReverbDelayMS:
+                        this.ReverbDelayMS = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.DiffusionPercent:
+                        this.DiffusionPercent = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.DensityPercent:
+                        this.DensityPercent = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.Unknown:
+                        this.Unknown = ex;
+                        break;
+                    case ReverbParameters_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = ex;
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +646,45 @@ namespace Mutagen.Bethesda.Skyrim
                 ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
                 switch (enu)
                 {
+                    case ReverbParameters_FieldIndex.DecayMilliseconds:
+                        this.DecayMilliseconds = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.HfReferenceHertz:
+                        this.HfReferenceHertz = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.RoomFilter:
+                        this.RoomFilter = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.RoomHfFilter:
+                        this.RoomHfFilter = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.Reflections:
+                        this.Reflections = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.ReverbAmp:
+                        this.ReverbAmp = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.DecayHfRatio:
+                        this.DecayHfRatio = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.ReflectDelayMS:
+                        this.ReflectDelayMS = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.ReverbDelayMS:
+                        this.ReverbDelayMS = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.DiffusionPercent:
+                        this.DiffusionPercent = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.DensityPercent:
+                        this.DensityPercent = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.Unknown:
+                        this.Unknown = (Exception?)obj;
+                        break;
+                    case ReverbParameters_FieldIndex.DATADataTypeState:
+                        this.DATADataTypeState = (Exception?)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +694,19 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (DecayMilliseconds != null) return true;
+                if (HfReferenceHertz != null) return true;
+                if (RoomFilter != null) return true;
+                if (RoomHfFilter != null) return true;
+                if (Reflections != null) return true;
+                if (ReverbAmp != null) return true;
+                if (DecayHfRatio != null) return true;
+                if (ReflectDelayMS != null) return true;
+                if (ReverbDelayMS != null) return true;
+                if (DiffusionPercent != null) return true;
+                if (DensityPercent != null) return true;
+                if (Unknown != null) return true;
+                if (DATADataTypeState != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +742,19 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(DecayMilliseconds, "DecayMilliseconds");
+                fg.AppendItem(HfReferenceHertz, "HfReferenceHertz");
+                fg.AppendItem(RoomFilter, "RoomFilter");
+                fg.AppendItem(RoomHfFilter, "RoomHfFilter");
+                fg.AppendItem(Reflections, "Reflections");
+                fg.AppendItem(ReverbAmp, "ReverbAmp");
+                fg.AppendItem(DecayHfRatio, "DecayHfRatio");
+                fg.AppendItem(ReflectDelayMS, "ReflectDelayMS");
+                fg.AppendItem(ReverbDelayMS, "ReverbDelayMS");
+                fg.AppendItem(DiffusionPercent, "DiffusionPercent");
+                fg.AppendItem(DensityPercent, "DensityPercent");
+                fg.AppendItem(Unknown, "Unknown");
+                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
 
@@ -406,6 +763,19 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.DecayMilliseconds = this.DecayMilliseconds.Combine(rhs.DecayMilliseconds);
+                ret.HfReferenceHertz = this.HfReferenceHertz.Combine(rhs.HfReferenceHertz);
+                ret.RoomFilter = this.RoomFilter.Combine(rhs.RoomFilter);
+                ret.RoomHfFilter = this.RoomHfFilter.Combine(rhs.RoomHfFilter);
+                ret.Reflections = this.Reflections.Combine(rhs.Reflections);
+                ret.ReverbAmp = this.ReverbAmp.Combine(rhs.ReverbAmp);
+                ret.DecayHfRatio = this.DecayHfRatio.Combine(rhs.DecayHfRatio);
+                ret.ReflectDelayMS = this.ReflectDelayMS.Combine(rhs.ReflectDelayMS);
+                ret.ReverbDelayMS = this.ReverbDelayMS.Combine(rhs.ReverbDelayMS);
+                ret.DiffusionPercent = this.DiffusionPercent.Combine(rhs.DiffusionPercent);
+                ret.DensityPercent = this.DensityPercent.Combine(rhs.DensityPercent);
+                ret.Unknown = this.Unknown.Combine(rhs.Unknown);
+                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,14 +797,60 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool DecayMilliseconds;
+            public bool HfReferenceHertz;
+            public bool RoomFilter;
+            public bool RoomHfFilter;
+            public bool Reflections;
+            public bool ReverbAmp;
+            public bool DecayHfRatio;
+            public bool ReflectDelayMS;
+            public bool ReverbDelayMS;
+            public bool DiffusionPercent;
+            public bool DensityPercent;
+            public bool Unknown;
+            public bool DATADataTypeState;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.DecayMilliseconds = defaultOn;
+                this.HfReferenceHertz = defaultOn;
+                this.RoomFilter = defaultOn;
+                this.RoomHfFilter = defaultOn;
+                this.Reflections = defaultOn;
+                this.ReverbAmp = defaultOn;
+                this.DecayHfRatio = defaultOn;
+                this.ReflectDelayMS = defaultOn;
+                this.ReverbDelayMS = defaultOn;
+                this.DiffusionPercent = defaultOn;
+                this.DensityPercent = defaultOn;
+                this.Unknown = defaultOn;
+                this.DATADataTypeState = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((DecayMilliseconds, null));
+                ret.Add((HfReferenceHertz, null));
+                ret.Add((RoomFilter, null));
+                ret.Add((RoomHfFilter, null));
+                ret.Add((Reflections, null));
+                ret.Add((ReverbAmp, null));
+                ret.Add((DecayHfRatio, null));
+                ret.Add((ReflectDelayMS, null));
+                ret.Add((ReverbDelayMS, null));
+                ret.Add((DiffusionPercent, null));
+                ret.Add((DensityPercent, null));
+                ret.Add((Unknown, null));
+                ret.Add((DATADataTypeState, null));
+            }
         }
         #endregion
 
@@ -457,6 +873,10 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        [Flags]
+        public enum DATADataType
+        {
+        }
         #endregion
 
         #region Binary Translation
@@ -528,6 +948,19 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<IReverbParametersInternal>
     {
+        new UInt16 DecayMilliseconds { get; set; }
+        new UInt16 HfReferenceHertz { get; set; }
+        new SByte RoomFilter { get; set; }
+        new SByte RoomHfFilter { get; set; }
+        new SByte Reflections { get; set; }
+        new SByte ReverbAmp { get; set; }
+        new Single DecayHfRatio { get; set; }
+        new Byte ReflectDelayMS { get; set; }
+        new Byte ReverbDelayMS { get; set; }
+        new Byte DiffusionPercent { get; set; }
+        new Byte DensityPercent { get; set; }
+        new Byte Unknown { get; set; }
+        new ReverbParameters.DATADataType DATADataTypeState { get; set; }
     }
 
     public partial interface IReverbParametersInternal :
@@ -544,6 +977,19 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
+        UInt16 DecayMilliseconds { get; }
+        UInt16 HfReferenceHertz { get; }
+        SByte RoomFilter { get; }
+        SByte RoomHfFilter { get; }
+        SByte Reflections { get; }
+        SByte ReverbAmp { get; }
+        Single DecayHfRatio { get; }
+        Byte ReflectDelayMS { get; }
+        Byte ReverbDelayMS { get; }
+        Byte DiffusionPercent { get; }
+        Byte DensityPercent { get; }
+        Byte Unknown { get; }
+        ReverbParameters.DATADataType DATADataTypeState { get; }
 
     }
 
@@ -844,6 +1290,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        DecayMilliseconds = 6,
+        HfReferenceHertz = 7,
+        RoomFilter = 8,
+        RoomHfFilter = 9,
+        Reflections = 10,
+        ReverbAmp = 11,
+        DecayHfRatio = 12,
+        ReflectDelayMS = 13,
+        ReverbDelayMS = 14,
+        DiffusionPercent = 15,
+        DensityPercent = 16,
+        Unknown = 17,
+        DATADataTypeState = 18,
     }
     #endregion
 
@@ -861,9 +1320,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "17f23f33-dc99-49b9-a085-54538d98e9f4";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 19;
 
         public static readonly Type MaskType = typeof(ReverbParameters.Mask<>);
 
@@ -893,6 +1352,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "DECAYMILLISECONDS":
+                    return (ushort)ReverbParameters_FieldIndex.DecayMilliseconds;
+                case "HFREFERENCEHERTZ":
+                    return (ushort)ReverbParameters_FieldIndex.HfReferenceHertz;
+                case "ROOMFILTER":
+                    return (ushort)ReverbParameters_FieldIndex.RoomFilter;
+                case "ROOMHFFILTER":
+                    return (ushort)ReverbParameters_FieldIndex.RoomHfFilter;
+                case "REFLECTIONS":
+                    return (ushort)ReverbParameters_FieldIndex.Reflections;
+                case "REVERBAMP":
+                    return (ushort)ReverbParameters_FieldIndex.ReverbAmp;
+                case "DECAYHFRATIO":
+                    return (ushort)ReverbParameters_FieldIndex.DecayHfRatio;
+                case "REFLECTDELAYMS":
+                    return (ushort)ReverbParameters_FieldIndex.ReflectDelayMS;
+                case "REVERBDELAYMS":
+                    return (ushort)ReverbParameters_FieldIndex.ReverbDelayMS;
+                case "DIFFUSIONPERCENT":
+                    return (ushort)ReverbParameters_FieldIndex.DiffusionPercent;
+                case "DENSITYPERCENT":
+                    return (ushort)ReverbParameters_FieldIndex.DensityPercent;
+                case "UNKNOWN":
+                    return (ushort)ReverbParameters_FieldIndex.Unknown;
+                case "DATADATATYPESTATE":
+                    return (ushort)ReverbParameters_FieldIndex.DATADataTypeState;
                 default:
                     return null;
             }
@@ -903,6 +1388,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                case ReverbParameters_FieldIndex.RoomFilter:
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                case ReverbParameters_FieldIndex.Reflections:
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                case ReverbParameters_FieldIndex.DensityPercent:
+                case ReverbParameters_FieldIndex.Unknown:
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1412,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                case ReverbParameters_FieldIndex.RoomFilter:
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                case ReverbParameters_FieldIndex.Reflections:
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                case ReverbParameters_FieldIndex.DensityPercent:
+                case ReverbParameters_FieldIndex.Unknown:
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1436,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                case ReverbParameters_FieldIndex.RoomFilter:
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                case ReverbParameters_FieldIndex.Reflections:
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                case ReverbParameters_FieldIndex.DensityPercent:
+                case ReverbParameters_FieldIndex.Unknown:
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1460,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                    return "DecayMilliseconds";
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                    return "HfReferenceHertz";
+                case ReverbParameters_FieldIndex.RoomFilter:
+                    return "RoomFilter";
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                    return "RoomHfFilter";
+                case ReverbParameters_FieldIndex.Reflections:
+                    return "Reflections";
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                    return "ReverbAmp";
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                    return "DecayHfRatio";
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                    return "ReflectDelayMS";
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                    return "ReverbDelayMS";
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                    return "DiffusionPercent";
+                case ReverbParameters_FieldIndex.DensityPercent:
+                    return "DensityPercent";
+                case ReverbParameters_FieldIndex.Unknown:
+                    return "Unknown";
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return "DATADataTypeState";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1496,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                case ReverbParameters_FieldIndex.RoomFilter:
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                case ReverbParameters_FieldIndex.Reflections:
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                case ReverbParameters_FieldIndex.DensityPercent:
+                case ReverbParameters_FieldIndex.Unknown:
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1520,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                case ReverbParameters_FieldIndex.RoomFilter:
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                case ReverbParameters_FieldIndex.Reflections:
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                case ReverbParameters_FieldIndex.DensityPercent:
+                case ReverbParameters_FieldIndex.Unknown:
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1544,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ReverbParameters_FieldIndex enu = (ReverbParameters_FieldIndex)index;
             switch (enu)
             {
+                case ReverbParameters_FieldIndex.DecayMilliseconds:
+                    return typeof(UInt16);
+                case ReverbParameters_FieldIndex.HfReferenceHertz:
+                    return typeof(UInt16);
+                case ReverbParameters_FieldIndex.RoomFilter:
+                    return typeof(SByte);
+                case ReverbParameters_FieldIndex.RoomHfFilter:
+                    return typeof(SByte);
+                case ReverbParameters_FieldIndex.Reflections:
+                    return typeof(SByte);
+                case ReverbParameters_FieldIndex.ReverbAmp:
+                    return typeof(SByte);
+                case ReverbParameters_FieldIndex.DecayHfRatio:
+                    return typeof(Single);
+                case ReverbParameters_FieldIndex.ReflectDelayMS:
+                    return typeof(Byte);
+                case ReverbParameters_FieldIndex.ReverbDelayMS:
+                    return typeof(Byte);
+                case ReverbParameters_FieldIndex.DiffusionPercent:
+                    return typeof(Byte);
+                case ReverbParameters_FieldIndex.DensityPercent:
+                    return typeof(Byte);
+                case ReverbParameters_FieldIndex.Unknown:
+                    return typeof(Byte);
+                case ReverbParameters_FieldIndex.DATADataTypeState:
+                    return typeof(ReverbParameters.DATADataType);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1619,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IReverbParametersInternal item)
         {
             ClearPartial();
+            item.DecayMilliseconds = default;
+            item.HfReferenceHertz = default;
+            item.RoomFilter = default;
+            item.RoomHfFilter = default;
+            item.Reflections = default;
+            item.ReverbAmp = default;
+            item.DecayHfRatio = default;
+            item.ReflectDelayMS = default;
+            item.ReverbDelayMS = default;
+            item.DiffusionPercent = default;
+            item.DensityPercent = default;
+            item.Unknown = default;
+            item.DATADataTypeState = default;
             base.Clear(item);
         }
         
@@ -1169,6 +1789,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.DecayMilliseconds = item.DecayMilliseconds == rhs.DecayMilliseconds;
+            ret.HfReferenceHertz = item.HfReferenceHertz == rhs.HfReferenceHertz;
+            ret.RoomFilter = item.RoomFilter == rhs.RoomFilter;
+            ret.RoomHfFilter = item.RoomHfFilter == rhs.RoomHfFilter;
+            ret.Reflections = item.Reflections == rhs.Reflections;
+            ret.ReverbAmp = item.ReverbAmp == rhs.ReverbAmp;
+            ret.DecayHfRatio = item.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio);
+            ret.ReflectDelayMS = item.ReflectDelayMS == rhs.ReflectDelayMS;
+            ret.ReverbDelayMS = item.ReverbDelayMS == rhs.ReverbDelayMS;
+            ret.DiffusionPercent = item.DiffusionPercent == rhs.DiffusionPercent;
+            ret.DensityPercent = item.DensityPercent == rhs.DensityPercent;
+            ret.Unknown = item.Unknown == rhs.Unknown;
+            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,6 +1853,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.DecayMilliseconds ?? true)
+            {
+                fg.AppendItem(item.DecayMilliseconds, "DecayMilliseconds");
+            }
+            if (printMask?.HfReferenceHertz ?? true)
+            {
+                fg.AppendItem(item.HfReferenceHertz, "HfReferenceHertz");
+            }
+            if (printMask?.RoomFilter ?? true)
+            {
+                fg.AppendItem(item.RoomFilter, "RoomFilter");
+            }
+            if (printMask?.RoomHfFilter ?? true)
+            {
+                fg.AppendItem(item.RoomHfFilter, "RoomHfFilter");
+            }
+            if (printMask?.Reflections ?? true)
+            {
+                fg.AppendItem(item.Reflections, "Reflections");
+            }
+            if (printMask?.ReverbAmp ?? true)
+            {
+                fg.AppendItem(item.ReverbAmp, "ReverbAmp");
+            }
+            if (printMask?.DecayHfRatio ?? true)
+            {
+                fg.AppendItem(item.DecayHfRatio, "DecayHfRatio");
+            }
+            if (printMask?.ReflectDelayMS ?? true)
+            {
+                fg.AppendItem(item.ReflectDelayMS, "ReflectDelayMS");
+            }
+            if (printMask?.ReverbDelayMS ?? true)
+            {
+                fg.AppendItem(item.ReverbDelayMS, "ReverbDelayMS");
+            }
+            if (printMask?.DiffusionPercent ?? true)
+            {
+                fg.AppendItem(item.DiffusionPercent, "DiffusionPercent");
+            }
+            if (printMask?.DensityPercent ?? true)
+            {
+                fg.AppendItem(item.DensityPercent, "DensityPercent");
+            }
+            if (printMask?.Unknown ?? true)
+            {
+                fg.AppendItem(item.Unknown, "Unknown");
+            }
+            if (printMask?.DATADataTypeState ?? true)
+            {
+                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+            }
         }
         
         public bool HasBeenSet(
@@ -1235,6 +1920,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IReverbParametersGetter item,
             ReverbParameters.Mask<bool> mask)
         {
+            mask.DecayMilliseconds = true;
+            mask.HfReferenceHertz = true;
+            mask.RoomFilter = true;
+            mask.RoomHfFilter = true;
+            mask.Reflections = true;
+            mask.ReverbAmp = true;
+            mask.DecayHfRatio = true;
+            mask.ReflectDelayMS = true;
+            mask.ReverbDelayMS = true;
+            mask.DiffusionPercent = true;
+            mask.DensityPercent = true;
+            mask.Unknown = true;
+            mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +1984,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (lhs.DecayMilliseconds != rhs.DecayMilliseconds) return false;
+            if (lhs.HfReferenceHertz != rhs.HfReferenceHertz) return false;
+            if (lhs.RoomFilter != rhs.RoomFilter) return false;
+            if (lhs.RoomHfFilter != rhs.RoomHfFilter) return false;
+            if (lhs.Reflections != rhs.Reflections) return false;
+            if (lhs.ReverbAmp != rhs.ReverbAmp) return false;
+            if (!lhs.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio)) return false;
+            if (lhs.ReflectDelayMS != rhs.ReflectDelayMS) return false;
+            if (lhs.ReverbDelayMS != rhs.ReverbDelayMS) return false;
+            if (lhs.DiffusionPercent != rhs.DiffusionPercent) return false;
+            if (lhs.DensityPercent != rhs.DensityPercent) return false;
+            if (lhs.Unknown != rhs.Unknown) return false;
+            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
         
@@ -1310,6 +2021,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IReverbParametersGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.DecayMilliseconds);
+            hash.Add(item.HfReferenceHertz);
+            hash.Add(item.RoomFilter);
+            hash.Add(item.RoomHfFilter);
+            hash.Add(item.Reflections);
+            hash.Add(item.ReverbAmp);
+            hash.Add(item.DecayHfRatio);
+            hash.Add(item.ReflectDelayMS);
+            hash.Add(item.ReverbDelayMS);
+            hash.Add(item.DiffusionPercent);
+            hash.Add(item.DensityPercent);
+            hash.Add(item.Unknown);
+            hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1386,6 +2110,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayMilliseconds) ?? true))
+            {
+                item.DecayMilliseconds = rhs.DecayMilliseconds;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.HfReferenceHertz) ?? true))
+            {
+                item.HfReferenceHertz = rhs.HfReferenceHertz;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomFilter) ?? true))
+            {
+                item.RoomFilter = rhs.RoomFilter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomHfFilter) ?? true))
+            {
+                item.RoomHfFilter = rhs.RoomHfFilter;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Reflections) ?? true))
+            {
+                item.Reflections = rhs.Reflections;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbAmp) ?? true))
+            {
+                item.ReverbAmp = rhs.ReverbAmp;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayHfRatio) ?? true))
+            {
+                item.DecayHfRatio = rhs.DecayHfRatio;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReflectDelayMS) ?? true))
+            {
+                item.ReflectDelayMS = rhs.ReflectDelayMS;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbDelayMS) ?? true))
+            {
+                item.ReverbDelayMS = rhs.ReverbDelayMS;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
+            {
+                item.DiffusionPercent = rhs.DiffusionPercent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
+            {
+                item.DensityPercent = rhs.DensityPercent;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
+            {
+                item.Unknown = rhs.Unknown;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
+            {
+                item.DATADataTypeState = rhs.DATADataTypeState;
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2304,123 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayMilliseconds) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DecayMilliseconds),
+                    item: item.DecayMilliseconds,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.DecayMilliseconds,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.HfReferenceHertz) ?? true))
+            {
+                UInt16XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.HfReferenceHertz),
+                    item: item.HfReferenceHertz,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.HfReferenceHertz,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomFilter) ?? true))
+            {
+                Int8XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RoomFilter),
+                    item: item.RoomFilter,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.RoomFilter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomHfFilter) ?? true))
+            {
+                Int8XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.RoomHfFilter),
+                    item: item.RoomHfFilter,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.RoomHfFilter,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Reflections) ?? true))
+            {
+                Int8XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Reflections),
+                    item: item.Reflections,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.Reflections,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbAmp) ?? true))
+            {
+                Int8XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReverbAmp),
+                    item: item.ReverbAmp,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.ReverbAmp,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayHfRatio) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DecayHfRatio),
+                    item: item.DecayHfRatio,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.DecayHfRatio,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReflectDelayMS) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReflectDelayMS),
+                    item: item.ReflectDelayMS,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.ReflectDelayMS,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbDelayMS) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ReverbDelayMS),
+                    item: item.ReverbDelayMS,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.ReverbDelayMS,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DiffusionPercent),
+                    item: item.DiffusionPercent,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.DiffusionPercent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DensityPercent),
+                    item: item.DensityPercent,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.DensityPercent,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
+            {
+                ByteXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unknown),
+                    item: item.Unknown,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.Unknown,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
+            {
+                EnumXmlTranslation<ReverbParameters.DATADataType>.Instance.Write(
+                    node: node,
+                    name: nameof(item.DATADataTypeState),
+                    item: item.DATADataTypeState,
+                    fieldIndex: (int)ReverbParameters_FieldIndex.DATADataTypeState,
+                    errorMask: errorMask);
+            }
         }
 
         public void Write(
@@ -1635,6 +2528,240 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "DecayMilliseconds":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.DecayMilliseconds);
+                    try
+                    {
+                        item.DecayMilliseconds = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "HfReferenceHertz":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.HfReferenceHertz);
+                    try
+                    {
+                        item.HfReferenceHertz = UInt16XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RoomFilter":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.RoomFilter);
+                    try
+                    {
+                        item.RoomFilter = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "RoomHfFilter":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.RoomHfFilter);
+                    try
+                    {
+                        item.RoomHfFilter = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Reflections":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.Reflections);
+                    try
+                    {
+                        item.Reflections = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReverbAmp":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.ReverbAmp);
+                    try
+                    {
+                        item.ReverbAmp = Int8XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DecayHfRatio":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.DecayHfRatio);
+                    try
+                    {
+                        item.DecayHfRatio = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReflectDelayMS":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.ReflectDelayMS);
+                    try
+                    {
+                        item.ReflectDelayMS = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ReverbDelayMS":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.ReverbDelayMS);
+                    try
+                    {
+                        item.ReverbDelayMS = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DiffusionPercent":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.DiffusionPercent);
+                    try
+                    {
+                        item.DiffusionPercent = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DensityPercent":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.DensityPercent);
+                    try
+                    {
+                        item.DensityPercent = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unknown":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.Unknown);
+                    try
+                    {
+                        item.Unknown = ByteXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DATADataTypeState":
+                    errorMask?.PushIndex((int)ReverbParameters_FieldIndex.DATADataTypeState);
+                    try
+                    {
+                        item.DATADataTypeState = EnumXmlTranslation<ReverbParameters.DATADataType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2848,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ReverbParametersBinaryWriteTranslation Instance = new ReverbParametersBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IReverbParametersGetter item,
+            MutagenWriter writer)
+        {
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+        }
+
+        public static void WriteRecordTypes(
+            IReverbParametersGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            {
+                writer.Write(item.DecayMilliseconds);
+                writer.Write(item.HfReferenceHertz);
+                writer.Write(item.RoomFilter);
+                writer.Write(item.RoomHfFilter);
+                writer.Write(item.Reflections);
+                writer.Write(item.ReverbAmp);
+                FloatBinaryTranslation.Write(
+                    writer: writer,
+                    item: item.DecayHfRatio,
+                    integerType: FloatIntegerType.Byte,
+                    multiplier: 0.01);
+                writer.Write(item.ReflectDelayMS);
+                writer.Write(item.ReverbDelayMS);
+                writer.Write(item.DiffusionPercent);
+                writer.Write(item.DensityPercent);
+                writer.Write(item.Unknown);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             IReverbParametersGetter item,
@@ -1731,10 +2897,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.REVB),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
+                WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1788,6 +2954,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
+        }
+
+        public static ParseResult FillBinaryRecordTypes(
+            IReverbParametersInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    var dataFrame = frame.SpawnWithLength(contentLength);
+                    item.DecayMilliseconds = dataFrame.ReadUInt16();
+                    item.HfReferenceHertz = dataFrame.ReadUInt16();
+                    item.RoomFilter = dataFrame.ReadInt8();
+                    item.RoomHfFilter = dataFrame.ReadInt8();
+                    item.Reflections = dataFrame.ReadInt8();
+                    item.ReverbAmp = dataFrame.ReadInt8();
+                    item.DecayHfRatio = FloatBinaryTranslation.Parse(
+                        frame: dataFrame,
+                        integerType: FloatIntegerType.Byte,
+                        multiplier: 0.01);
+                    item.ReflectDelayMS = dataFrame.ReadUInt8();
+                    item.ReverbDelayMS = dataFrame.ReadUInt8();
+                    item.DiffusionPercent = dataFrame.ReadUInt8();
+                    item.DensityPercent = dataFrame.ReadUInt8();
+                    item.Unknown = dataFrame.ReadUInt8();
+                    return (int)ReverbParameters_FieldIndex.Unknown;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
         }
 
     }
@@ -1851,6 +3059,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        private int? _DATALocation;
+        public ReverbParameters.DATADataType DATADataTypeState { get; private set; }
+        #region DecayMilliseconds
+        private int _DecayMillisecondsLocation => _DATALocation!.Value;
+        private bool _DecayMilliseconds_IsSet => _DATALocation.HasValue;
+        public UInt16 DecayMilliseconds => _DecayMilliseconds_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_DecayMillisecondsLocation, 2)) : default;
+        #endregion
+        #region HfReferenceHertz
+        private int _HfReferenceHertzLocation => _DATALocation!.Value + 0x2;
+        private bool _HfReferenceHertz_IsSet => _DATALocation.HasValue;
+        public UInt16 HfReferenceHertz => _HfReferenceHertz_IsSet ? BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(_HfReferenceHertzLocation, 2)) : default;
+        #endregion
+        #region RoomFilter
+        private int _RoomFilterLocation => _DATALocation!.Value + 0x4;
+        private bool _RoomFilter_IsSet => _DATALocation.HasValue;
+        public SByte RoomFilter => _RoomFilter_IsSet ? (sbyte)_data.Slice(_RoomFilterLocation, 1)[0] : default;
+        #endregion
+        #region RoomHfFilter
+        private int _RoomHfFilterLocation => _DATALocation!.Value + 0x5;
+        private bool _RoomHfFilter_IsSet => _DATALocation.HasValue;
+        public SByte RoomHfFilter => _RoomHfFilter_IsSet ? (sbyte)_data.Slice(_RoomHfFilterLocation, 1)[0] : default;
+        #endregion
+        #region Reflections
+        private int _ReflectionsLocation => _DATALocation!.Value + 0x6;
+        private bool _Reflections_IsSet => _DATALocation.HasValue;
+        public SByte Reflections => _Reflections_IsSet ? (sbyte)_data.Slice(_ReflectionsLocation, 1)[0] : default;
+        #endregion
+        #region ReverbAmp
+        private int _ReverbAmpLocation => _DATALocation!.Value + 0x7;
+        private bool _ReverbAmp_IsSet => _DATALocation.HasValue;
+        public SByte ReverbAmp => _ReverbAmp_IsSet ? (sbyte)_data.Slice(_ReverbAmpLocation, 1)[0] : default;
+        #endregion
+        #region DecayHfRatio
+        private int _DecayHfRatioLocation => _DATALocation!.Value + 0x8;
+        private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        #endregion
+        #region ReflectDelayMS
+        private int _ReflectDelayMSLocation => _DATALocation!.Value + 0x9;
+        private bool _ReflectDelayMS_IsSet => _DATALocation.HasValue;
+        public Byte ReflectDelayMS => _ReflectDelayMS_IsSet ? _data.Span[_ReflectDelayMSLocation] : default;
+        #endregion
+        #region ReverbDelayMS
+        private int _ReverbDelayMSLocation => _DATALocation!.Value + 0xA;
+        private bool _ReverbDelayMS_IsSet => _DATALocation.HasValue;
+        public Byte ReverbDelayMS => _ReverbDelayMS_IsSet ? _data.Span[_ReverbDelayMSLocation] : default;
+        #endregion
+        #region DiffusionPercent
+        private int _DiffusionPercentLocation => _DATALocation!.Value + 0xB;
+        private bool _DiffusionPercent_IsSet => _DATALocation.HasValue;
+        public Byte DiffusionPercent => _DiffusionPercent_IsSet ? _data.Span[_DiffusionPercentLocation] : default;
+        #endregion
+        #region DensityPercent
+        private int _DensityPercentLocation => _DATALocation!.Value + 0xC;
+        private bool _DensityPercent_IsSet => _DATALocation.HasValue;
+        public Byte DensityPercent => _DensityPercent_IsSet ? _data.Span[_DensityPercentLocation] : default;
+        #endregion
+        #region Unknown
+        private int _UnknownLocation => _DATALocation!.Value + 0xD;
+        private bool _Unknown_IsSet => _DATALocation.HasValue;
+        public Byte Unknown => _Unknown_IsSet ? _data.Span[_UnknownLocation] : default;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +3173,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DATA:
+                {
+                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+                    return (int)ReverbParameters_FieldIndex.Unknown;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

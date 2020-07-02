@@ -227,6 +227,11 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"translationMask: {translationMaskAccessor}");
                 }
+                if (list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf)
+                    && (bool)nullIf)
+                {
+                    args.Add("writeCounterIfNull: true");
+                }
                 if (allowDirectWrite)
                 {
                     args.Add($"transl: {subTransl.GetTranslatorInstance(list.SubTypeGeneration, getter: true)}.Write");
@@ -927,8 +932,9 @@ namespace Mutagen.Bethesda.Generation
                     var counterLen = (byte)list.CustomData[CounterByteLength];
                     if (expectedLen.HasValue)
                     {
+                        var nullIfEmpty = list.CustomData.TryGetValue(NullIfCounterZero, out var nullIf) && (bool)nullIf;
                         using (var args = new ArgsWrapper(fg,
-                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount{(subData.HasTrigger ? "PerItem" : null)}"))
+                            $"this.{typeGen.Name} = BinaryOverlayList<{typeName}>.FactoryByCount{(subData.HasTrigger ? "PerItem" : null)}{(nullIfEmpty ? "NullIfZero" : null)}"))
                         {
                             args.AddPassArg($"stream");
                             args.Add($"package: _package");

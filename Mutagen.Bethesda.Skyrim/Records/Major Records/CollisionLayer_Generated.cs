@@ -15,6 +15,7 @@ using Noggog;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Drawing;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
@@ -49,6 +50,35 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Description
+        public TranslatedString Description { get; set; } = string.Empty;
+        #endregion
+        #region Index
+        public UInt32 Index { get; set; } = default;
+        #endregion
+        #region DebugColor
+        public Color DebugColor { get; set; } = default;
+        #endregion
+        #region Flags
+        public CollisionLayer.Flag Flags { get; set; } = default;
+        #endregion
+        #region Name
+        public String Name { get; set; } = string.Empty;
+        #endregion
+        #region CollidesWith
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private IExtendedList<IFormLink<CollisionLayer>>? _CollidesWith;
+        public IExtendedList<IFormLink<CollisionLayer>>? CollidesWith
+        {
+            get => this._CollidesWith;
+            set => this._CollidesWith = value;
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IReadOnlyList<IFormLink<ICollisionLayerGetter>>? ICollisionLayerGetter.CollidesWith => _CollidesWith;
+        #endregion
+
+        #endregion
 
         #region To String
 
@@ -218,6 +248,12 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Description = initialValue;
+                this.Index = initialValue;
+                this.DebugColor = initialValue;
+                this.Flags = initialValue;
+                this.Name = initialValue;
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             public Mask(
@@ -226,7 +262,13 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Version,
                 TItem EditorID,
                 TItem FormVersion,
-                TItem Version2)
+                TItem Version2,
+                TItem Description,
+                TItem Index,
+                TItem DebugColor,
+                TItem Flags,
+                TItem Name,
+                TItem CollidesWith)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -235,6 +277,12 @@ namespace Mutagen.Bethesda.Skyrim
                 FormVersion: FormVersion,
                 Version2: Version2)
             {
+                this.Description = Description;
+                this.Index = Index;
+                this.DebugColor = DebugColor;
+                this.Flags = Flags;
+                this.Name = Name;
+                this.CollidesWith = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(CollidesWith, Enumerable.Empty<(int Index, TItem Value)>());
             }
 
             #pragma warning disable CS8618
@@ -243,6 +291,15 @@ namespace Mutagen.Bethesda.Skyrim
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Description;
+            public TItem Index;
+            public TItem DebugColor;
+            public TItem Flags;
+            public TItem Name;
+            public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? CollidesWith;
             #endregion
 
             #region Equals
@@ -256,11 +313,23 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Description, rhs.Description)) return false;
+                if (!object.Equals(this.Index, rhs.Index)) return false;
+                if (!object.Equals(this.DebugColor, rhs.DebugColor)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.CollidesWith, rhs.CollidesWith)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Description);
+                hash.Add(this.Index);
+                hash.Add(this.DebugColor);
+                hash.Add(this.Flags);
+                hash.Add(this.Name);
+                hash.Add(this.CollidesWith);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -271,6 +340,22 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Description)) return false;
+                if (!eval(this.Index)) return false;
+                if (!eval(this.DebugColor)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Name)) return false;
+                if (this.CollidesWith != null)
+                {
+                    if (!eval(this.CollidesWith.Overall)) return false;
+                    if (this.CollidesWith.Specific != null)
+                    {
+                        foreach (var item in this.CollidesWith.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return true;
             }
             #endregion
@@ -279,6 +364,22 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Description)) return true;
+                if (eval(this.Index)) return true;
+                if (eval(this.DebugColor)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Name)) return true;
+                if (this.CollidesWith != null)
+                {
+                    if (eval(this.CollidesWith.Overall)) return true;
+                    if (this.CollidesWith.Specific != null)
+                    {
+                        foreach (var item in this.CollidesWith.Specific)
+                        {
+                            if (!eval(item.Value)) return false;
+                        }
+                    }
+                }
                 return false;
             }
             #endregion
@@ -294,6 +395,25 @@ namespace Mutagen.Bethesda.Skyrim
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Description = eval(this.Description);
+                obj.Index = eval(this.Index);
+                obj.DebugColor = eval(this.DebugColor);
+                obj.Flags = eval(this.Flags);
+                obj.Name = eval(this.Name);
+                if (CollidesWith != null)
+                {
+                    obj.CollidesWith = new MaskItem<R, IEnumerable<(int Index, R Value)>?>(eval(this.CollidesWith.Overall), Enumerable.Empty<(int Index, R Value)>());
+                    if (CollidesWith.Specific != null)
+                    {
+                        var l = new List<(int Index, R Item)>();
+                        obj.CollidesWith.Specific = l;
+                        foreach (var item in CollidesWith.Specific.WithIndex())
+                        {
+                            R mask = eval(item.Item.Value);
+                            l.Add((item.Index, mask));
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -316,6 +436,49 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Description ?? true)
+                    {
+                        fg.AppendItem(Description, "Description");
+                    }
+                    if (printMask?.Index ?? true)
+                    {
+                        fg.AppendItem(Index, "Index");
+                    }
+                    if (printMask?.DebugColor ?? true)
+                    {
+                        fg.AppendItem(DebugColor, "DebugColor");
+                    }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if ((printMask?.CollidesWith?.Overall ?? true)
+                        && CollidesWith.TryGet(out var CollidesWithItem))
+                    {
+                        fg.AppendLine("CollidesWith =>");
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(CollidesWithItem.Overall);
+                            if (CollidesWithItem.Specific != null)
+                            {
+                                foreach (var subItem in CollidesWithItem.Specific)
+                                {
+                                    fg.AppendLine("[");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendItem(subItem);
+                                    }
+                                    fg.AppendLine("]");
+                                }
+                            }
+                        }
+                        fg.AppendLine("]");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -327,12 +490,33 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
+            #region Members
+            public Exception? Description;
+            public Exception? Index;
+            public Exception? DebugColor;
+            public Exception? Flags;
+            public Exception? Name;
+            public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? CollidesWith;
+            #endregion
+
             #region IErrorMask
             public override object? GetNthMask(int index)
             {
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        return Description;
+                    case CollisionLayer_FieldIndex.Index:
+                        return Index;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        return DebugColor;
+                    case CollisionLayer_FieldIndex.Flags:
+                        return Flags;
+                    case CollisionLayer_FieldIndex.Name:
+                        return Name;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        return CollidesWith;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -343,6 +527,24 @@ namespace Mutagen.Bethesda.Skyrim
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        this.Description = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Index:
+                        this.Index = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        this.DebugColor = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        this.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
+                        break;
                     default:
                         base.SetNthException(index, ex);
                         break;
@@ -354,6 +556,24 @@ namespace Mutagen.Bethesda.Skyrim
                 CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
                 switch (enu)
                 {
+                    case CollisionLayer_FieldIndex.Description:
+                        this.Description = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Index:
+                        this.Index = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.DebugColor:
+                        this.DebugColor = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case CollisionLayer_FieldIndex.CollidesWith:
+                        this.CollidesWith = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
+                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -363,6 +583,12 @@ namespace Mutagen.Bethesda.Skyrim
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Description != null) return true;
+                if (Index != null) return true;
+                if (DebugColor != null) return true;
+                if (Flags != null) return true;
+                if (Name != null) return true;
+                if (CollidesWith != null) return true;
                 return false;
             }
             #endregion
@@ -398,6 +624,33 @@ namespace Mutagen.Bethesda.Skyrim
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Description, "Description");
+                fg.AppendItem(Index, "Index");
+                fg.AppendItem(DebugColor, "DebugColor");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Name, "Name");
+                if (CollidesWith.TryGet(out var CollidesWithItem))
+                {
+                    fg.AppendLine("CollidesWith =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendItem(CollidesWithItem.Overall);
+                        if (CollidesWithItem.Specific != null)
+                        {
+                            foreach (var subItem in CollidesWithItem.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendItem(subItem);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             #endregion
 
@@ -406,6 +659,12 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Description = this.Description.Combine(rhs.Description);
+                ret.Index = this.Index.Combine(rhs.Index);
+                ret.DebugColor = this.DebugColor.Combine(rhs.DebugColor);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.CollidesWith = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.CollidesWith?.Overall, rhs.CollidesWith?.Overall), ExceptionExt.Combine(this.CollidesWith?.Specific, rhs.CollidesWith?.Specific));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -427,19 +686,50 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimMajorRecord.TranslationMask,
             ITranslationMask
         {
+            #region Members
+            public bool Description;
+            public bool Index;
+            public bool DebugColor;
+            public bool Flags;
+            public bool Name;
+            public bool CollidesWith;
+            #endregion
+
             #region Ctors
             public TranslationMask(bool defaultOn)
                 : base(defaultOn)
             {
+                this.Description = defaultOn;
+                this.Index = defaultOn;
+                this.DebugColor = defaultOn;
+                this.Flags = defaultOn;
+                this.Name = defaultOn;
+                this.CollidesWith = defaultOn;
             }
 
             #endregion
 
+            protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            {
+                base.GetCrystal(ret);
+                ret.Add((Description, null));
+                ret.Add((Index, null));
+                ret.Add((DebugColor, null));
+                ret.Add((Flags, null));
+                ret.Add((Name, null));
+                ret.Add((CollidesWith, null));
+            }
         }
         #endregion
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = CollisionLayer_Registration.TriggeringRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
         public CollisionLayer(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -528,6 +818,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecord,
         ILoquiObjectSetter<ICollisionLayerInternal>
     {
+        new TranslatedString Description { get; set; }
+        new UInt32 Index { get; set; }
+        new Color DebugColor { get; set; }
+        new CollisionLayer.Flag Flags { get; set; }
+        new String Name { get; set; }
+        new IExtendedList<IFormLink<CollisionLayer>>? CollidesWith { get; set; }
     }
 
     public partial interface ICollisionLayerInternal :
@@ -541,9 +837,16 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordGetter,
         ILoquiObject<ICollisionLayerGetter>,
         IXmlItem,
+        ILinkedFormKeyContainer,
         IBinaryItem
     {
         static ILoquiRegistration Registration => CollisionLayer_Registration.Instance;
+        TranslatedString Description { get; }
+        UInt32 Index { get; }
+        Color DebugColor { get; }
+        CollisionLayer.Flag Flags { get; }
+        String Name { get; }
+        IReadOnlyList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; }
 
     }
 
@@ -844,6 +1147,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
+        Description = 6,
+        Index = 7,
+        DebugColor = 8,
+        Flags = 9,
+        Name = 10,
+        CollidesWith = 11,
     }
     #endregion
 
@@ -861,9 +1170,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "20096909-ee8d-4c38-9022-999ed7e75418";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 6;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(CollisionLayer.Mask<>);
 
@@ -893,6 +1202,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "DESCRIPTION":
+                    return (ushort)CollisionLayer_FieldIndex.Description;
+                case "INDEX":
+                    return (ushort)CollisionLayer_FieldIndex.Index;
+                case "DEBUGCOLOR":
+                    return (ushort)CollisionLayer_FieldIndex.DebugColor;
+                case "FLAGS":
+                    return (ushort)CollisionLayer_FieldIndex.Flags;
+                case "NAME":
+                    return (ushort)CollisionLayer_FieldIndex.Name;
+                case "COLLIDESWITH":
+                    return (ushort)CollisionLayer_FieldIndex.CollidesWith;
                 default:
                     return null;
             }
@@ -903,6 +1224,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return true;
+                case CollisionLayer_FieldIndex.Description:
+                case CollisionLayer_FieldIndex.Index:
+                case CollisionLayer_FieldIndex.DebugColor:
+                case CollisionLayer_FieldIndex.Flags:
+                case CollisionLayer_FieldIndex.Name:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -913,6 +1242,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                case CollisionLayer_FieldIndex.Index:
+                case CollisionLayer_FieldIndex.DebugColor:
+                case CollisionLayer_FieldIndex.Flags:
+                case CollisionLayer_FieldIndex.Name:
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -923,6 +1259,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                case CollisionLayer_FieldIndex.Index:
+                case CollisionLayer_FieldIndex.DebugColor:
+                case CollisionLayer_FieldIndex.Flags:
+                case CollisionLayer_FieldIndex.Name:
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -933,6 +1276,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                    return "Description";
+                case CollisionLayer_FieldIndex.Index:
+                    return "Index";
+                case CollisionLayer_FieldIndex.DebugColor:
+                    return "DebugColor";
+                case CollisionLayer_FieldIndex.Flags:
+                    return "Flags";
+                case CollisionLayer_FieldIndex.Name:
+                    return "Name";
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return "CollidesWith";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -943,6 +1298,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                case CollisionLayer_FieldIndex.Index:
+                case CollisionLayer_FieldIndex.DebugColor:
+                case CollisionLayer_FieldIndex.Flags:
+                case CollisionLayer_FieldIndex.Name:
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -953,6 +1315,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                case CollisionLayer_FieldIndex.Index:
+                case CollisionLayer_FieldIndex.DebugColor:
+                case CollisionLayer_FieldIndex.Flags:
+                case CollisionLayer_FieldIndex.Name:
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
             }
@@ -963,6 +1332,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             CollisionLayer_FieldIndex enu = (CollisionLayer_FieldIndex)index;
             switch (enu)
             {
+                case CollisionLayer_FieldIndex.Description:
+                    return typeof(TranslatedString);
+                case CollisionLayer_FieldIndex.Index:
+                    return typeof(UInt32);
+                case CollisionLayer_FieldIndex.DebugColor:
+                    return typeof(Color);
+                case CollisionLayer_FieldIndex.Flags:
+                    return typeof(CollisionLayer.Flag);
+                case CollisionLayer_FieldIndex.Name:
+                    return typeof(String);
+                case CollisionLayer_FieldIndex.CollidesWith:
+                    return typeof(IExtendedList<IFormLink<CollisionLayer>>);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -1012,6 +1393,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ICollisionLayerInternal item)
         {
             ClearPartial();
+            item.Description.Clear();
+            item.Index = default;
+            item.DebugColor = default;
+            item.Flags = default;
+            item.Name = string.Empty;
+            item.CollidesWith = null;
             base.Clear(item);
         }
         
@@ -1169,6 +1556,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Description = string.Equals(item.Description, rhs.Description);
+            ret.Index = item.Index == rhs.Index;
+            ret.DebugColor = item.DebugColor.ColorOnlyEquals(rhs.DebugColor);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.CollidesWith = item.CollidesWith.CollectionEqualsHelper(
+                rhs.CollidesWith,
+                (l, r) => object.Equals(l, r),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1220,12 +1616,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if (printMask?.Description ?? true)
+            {
+                fg.AppendItem(item.Description, "Description");
+            }
+            if (printMask?.Index ?? true)
+            {
+                fg.AppendItem(item.Index, "Index");
+            }
+            if (printMask?.DebugColor ?? true)
+            {
+                fg.AppendItem(item.DebugColor, "DebugColor");
+            }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendItem(item.Name, "Name");
+            }
+            if ((printMask?.CollidesWith?.Overall ?? true)
+                && item.CollidesWith.TryGet(out var CollidesWithItem))
+            {
+                fg.AppendLine("CollidesWith =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    foreach (var subItem in CollidesWithItem)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendItem(subItem);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         
         public bool HasBeenSet(
             ICollisionLayerGetter item,
             CollisionLayer.Mask<bool?> checkMask)
         {
+            if (checkMask.CollidesWith?.Overall.HasValue ?? false && checkMask.CollidesWith!.Overall.Value != (item.CollidesWith != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -1235,6 +1671,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICollisionLayerGetter item,
             CollisionLayer.Mask<bool> mask)
         {
+            mask.Description = true;
+            mask.Index = true;
+            mask.DebugColor = true;
+            mask.Flags = true;
+            mask.Name = true;
+            mask.CollidesWith = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>((item.CollidesWith != null), default);
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -1286,6 +1728,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            if (lhs.Index != rhs.Index) return false;
+            if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!lhs.CollidesWith.SequenceEqual(rhs.CollidesWith)) return false;
             return true;
         }
         
@@ -1310,6 +1758,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(ICollisionLayerGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Description);
+            hash.Add(item.Index);
+            hash.Add(item.DebugColor);
+            hash.Add(item.Flags);
+            hash.Add(item.Name);
+            hash.Add(item.CollidesWith);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1338,6 +1792,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             foreach (var item in base.GetLinkFormKeys(obj))
             {
                 yield return item;
+            }
+            if (obj.CollidesWith.TryGet(out var CollidesWithItem))
+            {
+                foreach (var item in CollidesWithItem.Select(f => f.FormKey))
+                {
+                    yield return item;
+                }
             }
             yield break;
         }
@@ -1386,6 +1847,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 (ISkyrimMajorRecordGetter)rhs,
                 errorMask,
                 copyMask);
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            {
+                item.Description = rhs.Description;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            {
+                item.Index = rhs.Index;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            {
+                item.DebugColor = rhs.DebugColor;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            {
+                errorMask?.PushIndex((int)CollisionLayer_FieldIndex.CollidesWith);
+                try
+                {
+                    if ((rhs.CollidesWith != null))
+                    {
+                        item.CollidesWith = 
+                            rhs.CollidesWith
+                            .Select(r => (IFormLink<CollisionLayer>)new FormLink<CollisionLayer>(r.FormKey))
+                            .ToExtendedList<IFormLink<CollisionLayer>>();
+                    }
+                    else
+                    {
+                        item.CollidesWith = null;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         public override void DeepCopyIn(
@@ -1528,6 +2036,70 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 node: node,
                 errorMask: errorMask,
                 translationMask: translationMask);
+            if ((translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            {
+                Mutagen.Bethesda.Xml.TranslatedStringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Description),
+                    item: item.Description,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.Description,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            {
+                UInt32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Index),
+                    item: item.Index,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.Index,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            {
+                ColorXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.DebugColor),
+                    item: item.DebugColor,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.DebugColor,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<CollisionLayer.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
+            if ((item.CollidesWith != null)
+                && (translationMask?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            {
+                ListXmlTranslation<IFormLink<ICollisionLayerGetter>>.Instance.Write(
+                    node: node,
+                    name: nameof(item.CollidesWith),
+                    item: item.CollidesWith,
+                    fieldIndex: (int)CollisionLayer_FieldIndex.CollidesWith,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)CollisionLayer_FieldIndex.CollidesWith),
+                    transl: (XElement subNode, IFormLink<ICollisionLayerGetter> subItem, ErrorMaskBuilder? listSubMask, TranslationCrystal? listTranslMask) =>
+                    {
+                        FormKeyXmlTranslation.Instance.Write(
+                            node: subNode,
+                            name: null,
+                            item: subItem.FormKey,
+                            errorMask: listSubMask);
+                    });
+            }
         }
 
         public void Write(
@@ -1635,6 +2207,124 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Description":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.Description);
+                    try
+                    {
+                        item.Description = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Index":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.Index);
+                    try
+                    {
+                        item.Index = UInt32XmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "DebugColor":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.DebugColor);
+                    try
+                    {
+                        item.DebugColor = ColorXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Flags":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<CollisionLayer.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Name":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "CollidesWith":
+                    errorMask?.PushIndex((int)CollisionLayer_FieldIndex.CollidesWith);
+                    try
+                    {
+                        if (ListXmlTranslation<IFormLink<CollisionLayer>>.Instance.Parse(
+                            node: node,
+                            enumer: out var CollidesWithItem,
+                            transl: FormKeyXmlTranslation.Instance.Parse,
+                            errorMask: errorMask,
+                            translationMask: translationMask))
+                        {
+                            item.CollidesWith = CollidesWithItem.ToExtendedList();
+                        }
+                        else
+                        {
+                            item.CollidesWith = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     SkyrimMajorRecordXmlCreateTranslation.FillPublicElementXml(
                         item: item,
@@ -1721,6 +2411,54 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CollisionLayerBinaryWriteTranslation Instance = new CollisionLayerBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            ICollisionLayerGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Index,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
+            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.DebugColor,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CollisionLayer.Flag>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ICollisionLayerGetter>>.Instance.WriteWithCounter(
+                writer: writer,
+                items: item.CollidesWith,
+                counterType: RecordTypes.INTV,
+                counterLength: 4,
+                recordType: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                writeCounterIfNull: true,
+                transl: (MutagenWriter subWriter, IFormLink<ICollisionLayerGetter> subItem, RecordTypeConverter? conv) =>
+                {
+                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        writer: subWriter,
+                        item: subItem);
+                });
+        }
+
         public void Write(
             MutagenWriter writer,
             ICollisionLayerGetter item,
@@ -1734,7 +2472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
-                MajorRecordBinaryWriteTranslation.WriteRecordTypes(
+                WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
@@ -1790,6 +2528,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
         }
 
+        public static ParseResult FillBinaryRecordTypes(
+            ICollisionLayerInternal item,
+            MutagenFrame frame,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordType nextRecordType,
+            int contentLength,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
+            switch (nextRecordType.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CollisionLayer_FieldIndex.Description;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Index = frame.ReadUInt32();
+                    return (int)CollisionLayer_FieldIndex.Index;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.DebugColor = frame.ReadColor(ColorBinaryType.Alpha);
+                    return (int)CollisionLayer_FieldIndex.DebugColor;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Flags = EnumBinaryTranslation<CollisionLayer.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    return (int)CollisionLayer_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)CollisionLayer_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INTV:
+                {
+                    item.CollidesWith = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<CollisionLayer>>.Instance.Parse(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
+                            triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
+                            transl: FormLinkBinaryTranslation.Instance.Parse)
+                        .CastExtendedListIfAny<IFormLink<CollisionLayer>>();
+                    return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                default:
+                    return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
+                        item: item,
+                        frame: frame,
+                        recordParseCount: recordParseCount,
+                        nextRecordType: nextRecordType,
+                        contentLength: contentLength);
+            }
+        }
+
     }
 
 }
@@ -1825,6 +2632,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ICollisionLayerGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        protected override IEnumerable<FormKey> LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => CollisionLayerCommon.Instance.GetLinkFormKeys(this);
+        protected override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CollisionLayerCommon.Instance.RemapLinks(this, mapping);
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object XmlWriteTranslator => CollisionLayerXmlWriteTranslation.Instance;
         void IXmlItem.WriteToXml(
             XElement node,
@@ -1851,6 +2664,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Description
+        private int? _DescriptionLocation;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
+        #endregion
+        #region Index
+        private int? _IndexLocation;
+        public UInt32 Index => _IndexLocation.HasValue ? BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation.Value, _package.MetaData.Constants)) : default;
+        #endregion
+        #region DebugColor
+        private int? _DebugColorLocation;
+        public Color DebugColor => _DebugColorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DebugColorLocation.Value, _package.MetaData.Constants).ReadColor(ColorBinaryType.Alpha) : default;
+        #endregion
+        #region Flags
+        private int? _FlagsLocation;
+        public CollisionLayer.Flag Flags => _FlagsLocation.HasValue ? (CollisionLayer.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(CollisionLayer.Flag);
+        #endregion
+        #region Name
+        private int? _NameLocation;
+        public String Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        #endregion
+        public IReadOnlyList<IFormLink<ICollisionLayerGetter>>? CollidesWith { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1903,6 +2737,66 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public override ParseResult FillRecordType(
+            OverlayStream stream,
+            int finalPos,
+            int offset,
+            RecordType type,
+            int? lastParsed,
+            Dictionary<RecordType, int>? recordParseCount,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            type = recordTypeConverter.ConvertToStandard(type);
+            switch (type.TypeInt)
+            {
+                case RecordTypeInts.DESC:
+                {
+                    _DescriptionLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Description;
+                }
+                case RecordTypeInts.BNAM:
+                {
+                    _IndexLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Index;
+                }
+                case RecordTypeInts.FNAM:
+                {
+                    _DebugColorLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.DebugColor;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _FlagsLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Flags;
+                }
+                case RecordTypeInts.MNAM:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)CollisionLayer_FieldIndex.Name;
+                }
+                case RecordTypeInts.CNAM:
+                case RecordTypeInts.INTV:
+                {
+                    this.CollidesWith = BinaryOverlayList<IFormLink<ICollisionLayerGetter>>.FactoryByCountNullIfZero(
+                        stream: stream,
+                        package: _package,
+                        itemLength: 0x4,
+                        countLength: 4,
+                        countType: RecordTypes.INTV,
+                        subrecordType: RecordTypes.CNAM,
+                        getter: (s, p) => new FormLink<ICollisionLayerGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                    return (int)CollisionLayer_FieldIndex.CollidesWith;
+                }
+                default:
+                    return base.FillRecordType(
+                        stream: stream,
+                        finalPos: finalPos,
+                        offset: offset,
+                        type: type,
+                        lastParsed: lastParsed,
+                        recordParseCount: recordParseCount);
+            }
+        }
         #region To String
 
         public override void ToString(

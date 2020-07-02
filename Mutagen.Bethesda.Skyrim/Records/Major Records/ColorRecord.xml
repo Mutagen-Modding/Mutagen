@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="ColorRecord" recordType="CLFM" objType="Record" baseClass="SkyrimMajorRecord" GUID="2aebdb48-cb97-47d6-89e6-208bb68a5f6d" ID="56">
+    <Interface>ITranslatedNamed</Interface>
     <Fields>
+      <String name="Name" recordType="FULL" translated="Normal" />
+      <Color name="Color" recordType="CNAM" hasBeenSet="False" binaryType="Alpha" />
+      <Bool name="Playable" recordType="FNAM" byteLength="4" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

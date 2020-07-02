@@ -116,6 +116,9 @@
       <Group name="DualCastData" refName="DualCastData" />
       <Group name="SoundCategories" refName="SoundCategory" />
       <Group name="SoundOutputModels" refName="SoundOutputModel" />
+      <Group name="CollisionLayers" refName="CollisionLayer" />
+      <Group name="Colors" refName="ColorRecord" />
+      <Group name="ReverbParameters" refName="ReverbParameters" />
     </Fields>
   </Object>
 </Loqui>
