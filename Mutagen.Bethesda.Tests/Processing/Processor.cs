@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Tests
 
         public abstract class AStringsAlignment
         {
-            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.Config instr, List<KeyValuePair<uint, uint>> processedStrings, StringsLookupOverlay overlay, ref uint newIndex);
+            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.Config instr, List<KeyValuePair<uint, uint>> processedStrings, IStringsLookup overlay, ref uint newIndex);
 
             public RecordType MajorType;
 
@@ -342,7 +342,7 @@ namespace Mutagen.Bethesda.Tests
                 IMutagenReadStream stream,
                 BinaryFileProcessor.Config instr,
                 List<KeyValuePair<uint, uint>> processedStrings,
-                StringsLookupOverlay overlay,
+                IStringsLookup overlay,
                 ref uint newIndex)
             {
                 var sub = stream.ReadSubrecord();
@@ -391,11 +391,11 @@ namespace Mutagen.Bethesda.Tests
             public override AStringsAlignment.Handle Handler => Handle;
 
             private void Handle(
-                IMutagenReadStream stream, 
+                IMutagenReadStream stream,
                 MajorRecordHeader major,
                 BinaryFileProcessor.Config instr,
                 List<KeyValuePair<uint, uint>> processedStrings,
-                StringsLookupOverlay overlay,
+                IStringsLookup overlay,
                 ref uint newIndex)
             {
                 var majorCompletePos = stream.Position + major.ContentLength;
@@ -412,14 +412,15 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public IReadOnlyList<KeyValuePair<uint, uint>> RenumberStringsFileEntries(
+            ModKey modKey,
             IMutagenReadStream stream,
+            DirectoryInfo dataFolder,
             Language language,
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var overlay = new StringsLookupOverlay(
-                Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings", StringsUtility.GetFileName(ModKey, language, source)),
-                StringsUtility.GetFormat(source));
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
+            var overlay = folderOverlay.Get(source)[language].Value;
             var ret = new List<KeyValuePair<uint, uint>>();
             var dict = new Dictionary<RecordType, AStringsAlignment>();
             foreach (var item in recordTypes)
@@ -452,32 +453,30 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void ProcessStringsFiles(
-            DirectoryInfo stringsFolder,
+            ModKey modKey,
+            DirectoryInfo dataFolder,
             Language language,
             StringsSource source,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
 
-            var modName = Path.GetFileName(this.SourcePath).SubstringFromEnd(".");
-
-            foreach (var f in stringsFolder.EnumerateFiles($"*{StringsUtility.StringsFileExtension}"))
+            var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(dataFolder.FullName, null, modKey);
+            using var writer = new StringsWriter(ModKey.Factory(Path.GetFileName(this.SourcePath)), outFolder);
+            var dict = stringsOverlay.Get(source);
+            foreach (var lang in dict)
             {
-                if (!StringsUtility.TryRetrieveInfoFromString(f.Name, out var fileSrc, out var fileLanguage, out var fileModName)) continue;
-                if (fileSrc != source) continue;
-                if (fileLanguage != language) continue;
-                if (!fileModName.Equals(modName, StringComparison.OrdinalIgnoreCase)) continue;
-
-                var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-                using var writer = new StringsWriter(ModKey.Factory(Path.GetFileName(this.SourcePath)), outFolder);
-                var overlay = new StringsLookupOverlay(f.FullName, StringsUtility.GetFormat(source));
+                if (lang.Key != language) continue;
+                var overlay = lang.Value.Value;
                 foreach (var item in reindexing)
                 {
                     if (!overlay.TryLookup(item.Key, out var str))
                     {
                         throw new ArgumentException();
                     }
-                    if (item.Value != writer.Register(str, language, source))
+                    var regis = writer.Register(str, lang.Key, source);
+                    if (item.Value != regis)
                     {
                         throw new ArgumentException();
                     }

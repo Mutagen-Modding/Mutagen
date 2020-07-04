@@ -921,7 +921,7 @@ namespace Mutagen.Bethesda.Tests
         protected override void PreProcessorJobs(IMutagenReadStream stream)
         {
             base.PreProcessorJobs(stream);
-            ProcessStringsFilesIndices(stream, Language.English);
+            ProcessStringsFilesIndices(stream, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, ModKey.Factory(Path.GetFileName(this.SourcePath)));
         }
 
         public void PerkStringHandler(
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordHeader major, 
             BinaryFileProcessor.Config instr, 
             List<KeyValuePair<uint, uint>> processedStrings,
-            StringsLookupOverlay overlay, 
+            IStringsLookup overlay, 
             ref uint newIndex)
         {
             var majorCompletePos = stream.Position + major.ContentLength;
@@ -964,15 +964,17 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private void ProcessStringsFilesIndices(IMutagenReadStream stream, Language language)
+        private void ProcessStringsFilesIndices(IMutagenReadStream stream, DirectoryInfo dataFolder, Language language, ModKey modKey)
         {
-            var stringsFolder = new DirectoryInfo(Path.Combine(Path.GetDirectoryName(this.SourcePath), "Strings"));
             ProcessStringsFiles(
-                stringsFolder,
+                modKey,
+                dataFolder,
                 language,
                 StringsSource.Normal,
                 RenumberStringsFileEntries(
+                    modKey,
                     stream,
+                    dataFolder,
                     language,
                     StringsSource.Normal,
                     new RecordType[] { "ACTI", "FULL" },
@@ -1025,11 +1027,14 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "CLFM", "FULL" }
                 ));
             ProcessStringsFiles(
-                stringsFolder,
+                modKey,
+                dataFolder,
                 language,
                 StringsSource.DL,
                 RenumberStringsFileEntries(
+                    modKey,
                     stream,
+                    dataFolder,
                     language,
                     StringsSource.DL,
                     new RecordType[] { "SCRL", "DESC" },
@@ -1048,11 +1053,14 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType[] { "COLL", "DESC" }
                 ));
             ProcessStringsFiles(
-                stringsFolder,
+                modKey,
+                dataFolder,
                 language,
                 StringsSource.IL,
                 RenumberStringsFileEntries(
+                    modKey,
                     stream,
+                    dataFolder,
                     language,
                     StringsSource.IL,
                     new RecordType[] { "DIAL" },
