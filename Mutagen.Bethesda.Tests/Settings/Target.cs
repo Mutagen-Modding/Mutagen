@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public FilePath GetFilePath(DataFolderLocations locs)
         {
-            return new FilePath(System.IO.Path.Combine(locs.Get(this.GameMode), this.Path));
+            return new FilePath(System.IO.Path.Combine(locs.Get(this.GameRelease), this.Path));
         }
     }
 }

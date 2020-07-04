@@ -33,9 +33,9 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <summary>
-        /// GameMode associated with header
+        /// Game release associated with header
         /// </summary>
-        public GameMode GameMode => Meta.GameMode;
+        public GameRelease Release => Meta.Release;
         
         /// <summary>
         /// The length that the header itself takes

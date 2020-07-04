@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Tests
 
         public static async Task<(string TestName, Exception ex)> RunTest(string name, Target target, Func<Task> toDo)
         {
-            return await RunTest($"{target.GameMode} => {target.Path}\n" +
+            return await RunTest($"{target.GameRelease} => {target.Path}\n" +
                 $"{name}",
                 toDo);
         }
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Tests
             var oblivPassthrough = new Target()
             {
                 Do = true,
-                GameMode = GameMode.Oblivion,
+                GameRelease = GameRelease.Oblivion,
                 Path = "Oblivion.esm"
             };
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)

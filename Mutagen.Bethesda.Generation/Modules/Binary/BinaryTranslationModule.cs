@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Generation
                 semiColon: false))
             {
                 args.AddPassArg("stream");
-                args.Add($"new {nameof(WritingBundle)}(item.GameMode)");
+                args.Add($"new {nameof(WritingBundle)}(item.GameRelease)");
                 args.Add("dispose: false");
             }
             using (new BraceWrapper(fg))
@@ -282,7 +282,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease});");
                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
                 if (objData.UsesStringFiles)
                 {
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
                 fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
-            fg.AppendLine($"var bundle = new {nameof(WritingBundle)}(item.GameMode)");
+            fg.AppendLine($"var bundle = new {nameof(WritingBundle)}(item.GameRelease)");
             using (var prop = new PropertyCtorWrapper(fg))
             {
                 if (obj.GetObjectData().UsesStringFiles)
@@ -1272,12 +1272,12 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}));");
+                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}));");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Generation
                 obj.GenerateGetterInterfaceImplementations(fg);
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    fg.AppendLine($"public {nameof(GameMode)} GameMode => {nameof(GameMode)}.{obj.GetObjectData().GameMode};");
+                    fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameRelease};");
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
                     fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
@@ -2188,7 +2188,7 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameMode)}.{obj.GetObjectData().GameMode});");
+                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease});");
                                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
                                 if (objData.UsesStringFiles)
                                 {
@@ -2221,10 +2221,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameMode)}.{obj.GetObjectData().GameMode})");
+                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease})");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameMode)}.{obj.GetObjectData().GameMode}))");
+                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"var stream = new {nameof(MutagenBinaryReadStream)}"))

@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
 
         private readonly LoadOrder<TMod> _loadOrder;
         private readonly bool _hasAny;
-        private readonly GameMode _gameMode;
+        private readonly GameRelease _gameMode;
 
         private int _processedUntypedDepth = 0;
         private readonly Cache<IMajorRecordCommonGetter, FormKey> _loadOrderUntypedMajorRecords;
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
             this._loadOrderMajorRecords = new Dictionary<Type, InternalTypedCache>();
             var firstMod = _loadOrder.FirstOrDefault(m => m.Mod != null);
             this._hasAny = firstMod?.Mod != null;
-            this._gameMode = firstMod?.Mod?.GameMode ?? GameMode.Oblivion;
+            this._gameMode = firstMod?.Mod?.GameRelease ?? GameRelease.Oblivion;
         }
 
         /// <summary>

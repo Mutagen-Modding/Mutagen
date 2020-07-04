@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 {
                     Path = $"Oblivion.esm",
                     Do = true,
-                    GameMode = GameMode.Oblivion,
+                    GameRelease = GameRelease.Oblivion,
                 });
 
             ProcessedFilesFolder = await passthrough.SetupProcessedFiles();
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
                 stream.Position = 0xCF614B;
                 PathGridBytes = stream.ReadBytes(0x14C7);
             }
-            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, new ParsingBundle(GameMode.Oblivion));
+            PathGridReader = new MutagenMemoryReadStream(PathGridBytes, new ParsingBundle(GameRelease.Oblivion));
         }
 
         [GlobalCleanup]

@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class OblivionPassthroughTest : PassthroughTest
     {
-        public override GameMode GameMode => GameMode.Oblivion;
+        public override GameRelease GameRelease => GameRelease.Oblivion;
 
         protected override Processor ProcessorFactory() => new OblivionProcessor();
 

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public abstract class Processor
     {
-        public abstract GameMode GameMode { get; }
+        public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected RecordLocator.FileLocations _SourceFileLocs;
         protected RecordLocator.FileLocations _AlignedFileLocs;
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Tests
 
         public Processor()
         {
-            this.Meta = GameConstants.Get(this.GameMode);
+            this.Meta = GameConstants.Get(this.GameRelease);
         }
 
         public void Process(
@@ -40,10 +40,10 @@ namespace Mutagen.Bethesda.Tests
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
             this._NumMasters = numMasters;
-            this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameMode);
-            this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameMode);
+            this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameRelease);
+            this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
 
-            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
             {
                 foreach (var grup in this._AlignedFileLocs.GrupLocations.And(this._AlignedFileLocs.ListedRecords.Keys))
                 {
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
             {
                 this.PreProcessorJobs(stream);
                 foreach (var rec in this._SourceFileLocs.ListedRecords)
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameMode))
+            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
             {
                 foreach (var grup in this._LengthTracker)
                 {

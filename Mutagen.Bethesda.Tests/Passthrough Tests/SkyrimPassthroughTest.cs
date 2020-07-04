@@ -12,12 +12,12 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimPassthroughTest : PassthroughTest
     {
-        public override GameMode GameMode { get; }
+        public override GameRelease GameRelease { get; }
 
-        public SkyrimPassthroughTest(TestingSettings settings, TargetGroup group, Target target, GameMode mode)
+        public SkyrimPassthroughTest(TestingSettings settings, TargetGroup group, Target target, GameRelease mode)
             : base(settings, group, target)
         {
-            GameMode = mode;
+            GameRelease = mode;
         }
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()

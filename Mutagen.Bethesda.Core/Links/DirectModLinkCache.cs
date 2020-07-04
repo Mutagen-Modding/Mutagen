@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda
                 }
                 else
                 {
-                    var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(GameMode.Skyrim);
+                    var interfaceMappings = LinkInterfaceMapping.InterfaceToObjectTypes(GameRelease.Skyrim);
                     if (!interfaceMappings.TryGetValue(type, out var objs))
                     {
                         throw new ArgumentException($"A lookup was queried for an unregistered type: {type.Name}");

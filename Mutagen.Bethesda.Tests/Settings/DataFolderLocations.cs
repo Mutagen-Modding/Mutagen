@@ -6,15 +6,15 @@ namespace Mutagen.Bethesda.Tests
 {
     public partial class DataFolderLocations
     {
-        public string Get(GameMode mode)
+        public string Get(GameRelease mode)
         {
             switch (mode)
             {
-                case GameMode.Oblivion:
+                case GameRelease.Oblivion:
                     return this.Oblivion;
-                case GameMode.Skyrim:
+                case GameRelease.Skyrim:
                     return this.Skyrim;
-                case GameMode.SkyrimSpecialEdition:
+                case GameRelease.SkyrimSpecialEdition:
                     return this.SkyrimSpecialEdition;
                 default:
                     throw new NotImplementedException();

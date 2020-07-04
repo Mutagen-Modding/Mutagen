@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Mutagen.Bethesda
+{
+    /// <summary>
+    /// Game categories that generally have similar or the same formats
+    /// </summary>
+    public enum GameCategory
+    {
+        Oblivion,
+        Skyrim,
+    }
+}

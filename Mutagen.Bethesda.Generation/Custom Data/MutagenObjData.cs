@@ -30,11 +30,11 @@ namespace Mutagen.Bethesda.Generation
         public RecordTypeConverter BaseRecordTypeConverter;
         public RecordType? EndMarkerType;
         public bool MajorRecordFlags;
-        public GameMode? GameMode
+        public GameRelease? GameRelease
         {
             get
             {
-                if (Enum.TryParse<Bethesda.GameMode>(ObjGen.Namespace.Split('.').Last(), out var mode))
+                if (Enum.TryParse<Bethesda.GameRelease>(ObjGen.Namespace.Split('.').Last(), out var mode))
                 {
                     return mode;
                 }

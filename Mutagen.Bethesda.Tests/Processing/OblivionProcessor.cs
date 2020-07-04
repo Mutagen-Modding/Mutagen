@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class OblivionProcessor : Processor
     {
-        public override GameMode GameMode => GameMode.Oblivion;
+        public override GameRelease GameRelease => GameRelease.Oblivion;
         private HashSet<string> magicEffectEDIDs = new HashSet<string>();
 
         #region Dynamic Processing
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Tests
                 stream.Position = loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength;
                 var existingLen = stream.ReadUInt16();
                 byte[] lenData = new byte[2];
-                using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameMode))
+                using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameRelease))
                 {
                     writer.Write((ushort)(existingLen - 7));
                 }
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Tests
 
                 // Get icon bytes
                 MemoryStream memStream = new MemoryStream();
-                using (var writer = new MutagenWriter(memStream, this.GameMode))
+                using (var writer = new MutagenWriter(memStream, this.GameRelease))
                 {
                     using (HeaderExport.Header(
                         writer,

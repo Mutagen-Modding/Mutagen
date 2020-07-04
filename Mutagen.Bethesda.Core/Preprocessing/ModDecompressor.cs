@@ -26,10 +26,10 @@ namespace Mutagen.Bethesda.Preprocessing
         public static void Decompress(
             Func<Stream> streamCreator,
             Stream outputStream,
-            GameMode gameMode,
+            GameRelease release,
             RecordInterest? interest = null)
         {
-            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            var meta = new ParsingBundle(GameConstants.Get(release));
             using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
             using var inputStreamJumpback = new MutagenBinaryReadStream(streamCreator(), meta);
             using var writer = new System.IO.BinaryWriter(outputStream, Encoding.Default, leaveOpen: true);

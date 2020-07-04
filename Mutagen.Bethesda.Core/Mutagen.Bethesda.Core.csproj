@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Enums\ColorBinaryType.cs" />
     <Compile Include="Enums\FloatIntegerType.cs" />
+    <Compile Include="Enums\GameCategory.cs" />
     <Compile Include="Enums\Language.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Preprocessing\ModRecordAligner.cs" />
     <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Enums\GameMode.cs" />
+    <Compile Include="Enums\GameRelease.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Structs\FormID.cs" />

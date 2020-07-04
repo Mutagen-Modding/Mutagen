@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
 
-        public GameMode GameMode => GameMode.Skyrim;
+        public GameRelease GameRelease => GameRelease.Skyrim;
 
         public LinkInterfaceMapping()
         {

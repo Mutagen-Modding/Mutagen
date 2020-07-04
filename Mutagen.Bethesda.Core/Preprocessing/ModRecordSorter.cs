@@ -16,12 +16,12 @@ namespace Mutagen.Bethesda.Preprocessing
         public static void Sort(
             Func<Stream> streamCreator,
             Stream outputStream,
-            GameMode gameMode)
+            GameRelease release)
         {
-            var meta = new ParsingBundle(GameConstants.Get(gameMode));
+            var meta = new ParsingBundle(GameConstants.Get(release));
             using var inputStream = new MutagenBinaryReadStream(streamCreator(), meta);
             using var locatorStream = new MutagenBinaryReadStream(streamCreator(), meta);
-            using var writer = new MutagenWriter(outputStream, gameMode, dispose: false);
+            using var writer = new MutagenWriter(outputStream, release, dispose: false);
             while (!inputStream.Complete)
             {
                 long noRecordLength;

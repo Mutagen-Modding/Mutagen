@@ -26,20 +26,19 @@ namespace Mutagen.Bethesda.Tests
         public string OrderedFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Ordered");
         public string ProcessedPath(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_Processed");
         public ModKey ModKey => ModKey.Factory(this.FilePath.Name);
-
-        public abstract GameMode GameMode { get; }
+        public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
 
         public PassthroughTest(TestingSettings settings, TargetGroup group, Target target)
         {
-            var path = Path.Combine(settings.DataFolderLocations.Get(target.GameMode), target.Path);
+            var path = Path.Combine(settings.DataFolderLocations.Get(target.GameRelease), target.Path);
             this.FilePath = path;
             this.Nickname = $"{target.Path}{group.NicknameSuffix}";
             this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
             this.Target = target;
-            this.Meta = GameConstants.Get(this.GameMode);
+            this.Meta = GameConstants.Get(this.GameRelease);
         }
 
         public abstract ModRecordAligner.AlignmentRules GetAlignmentRules();
@@ -73,7 +72,7 @@ namespace Mutagen.Bethesda.Tests
                     using var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write);
                     ModDecompressor.Decompress(
                         streamCreator: () => File.OpenRead(this.FilePath.Path),
-                        gameMode: this.GameMode,
+                        release: this.GameRelease,
                         outputStream: outStream,
                         interest: interest);
                 }
@@ -95,7 +94,7 @@ namespace Mutagen.Bethesda.Tests
                     ModRecordSorter.Sort(
                         streamCreator: () => File.OpenRead(uncompressedPath),
                         outputStream: outStream,
-                        gameMode: this.Target.GameMode);
+                        release: this.Target.GameRelease);
                 }
                 catch (Exception)
                 {
@@ -112,7 +111,7 @@ namespace Mutagen.Bethesda.Tests
                 ModRecordAligner.Align(
                     inputPath: Settings.ReorderRecords ? orderedPath : uncompressedPath,
                     outputPath: alignedPath,
-                    gameMode: this.GameMode,
+                    gameMode: this.GameRelease,
                     alignmentRules: GetAlignmentRules(),
                     temp: tmp);
             }
@@ -183,7 +182,7 @@ namespace Mutagen.Bethesda.Tests
                         mod.WriteToBinary(outputPath, writeParams);
                         GC.Collect();
 
-                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
 
                         AssertFilesEqual(
                             stream,
@@ -219,7 +218,7 @@ namespace Mutagen.Bethesda.Tests
                             wrapper.WriteToBinary(binaryOverlayPath, writeParams);
                         }
 
-                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
 
                         PassthroughTest.AssertFilesEqual(
                             stream,
@@ -252,7 +251,7 @@ namespace Mutagen.Bethesda.Tests
                         writeParams.StringsWriter = stringsWriter;
                         copyIn.WriteToBinary(copyInPath, writeParams);
 
-                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameMode);
+                        using var stream = new MutagenBinaryReadStream(processedPath, this.GameRelease);
 
                         PassthroughTest.AssertFilesEqual(
                             stream,
@@ -318,11 +317,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)
         {
-            return target.GameMode switch
+            return target.GameRelease switch
             {
-                GameMode.Oblivion => new OblivionPassthroughTest(settings, group, target),
-                GameMode.Skyrim => new SkyrimPassthroughTest(settings, group, target, GameMode.Skyrim),
-                GameMode.SkyrimSpecialEdition => new SkyrimPassthroughTest(settings, group, target, GameMode.SkyrimSpecialEdition),
+                GameRelease.Oblivion => new OblivionPassthroughTest(settings, group, target),
+                GameRelease.Skyrim => new SkyrimPassthroughTest(settings, group, target, GameRelease.Skyrim),
+                GameRelease.SkyrimSpecialEdition => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimSpecialEdition),
                 _ => throw new NotImplementedException(),
             };
         }

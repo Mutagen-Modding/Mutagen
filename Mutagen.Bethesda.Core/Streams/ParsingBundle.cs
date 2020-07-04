@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Binary
             this.Constants = constants;
         }
 
-        public ParsingBundle Spawn(GameMode mode)
+        public ParsingBundle Spawn(GameRelease mode)
         {
             return new ParsingBundle(mode)
             {

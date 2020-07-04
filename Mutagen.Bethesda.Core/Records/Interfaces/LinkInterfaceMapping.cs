@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Core
 {
     internal static class LinkInterfaceMappingInternal
     {
-        public static Dictionary<GameMode, IReadOnlyDictionary<Type, Type[]>> Mappings = new Dictionary<GameMode, IReadOnlyDictionary<Type, Type[]>>();
+        public static Dictionary<GameRelease, IReadOnlyDictionary<Type, Type[]>> Mappings = new Dictionary<GameRelease, IReadOnlyDictionary<Type, Type[]>>();
 
         static LinkInterfaceMappingInternal()
         {
@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Core
                 loadAssemblies: true))
             {
                 ILinkInterfaceMapping? mapping = Activator.CreateInstance(interf) as ILinkInterfaceMapping;
-                Mappings[mapping!.GameMode] = mapping!.InterfaceToObjectTypes;
+                Mappings[mapping!.GameRelease] = mapping!.InterfaceToObjectTypes;
             }
         }
     }
@@ -25,14 +25,14 @@ namespace Mutagen.Bethesda.Core
     {
         public static bool AutomaticRegistration = true;
 
-        public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameMode mode)
+        public static IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes(GameRelease mode)
         {
             return LinkInterfaceMappingInternal.Mappings[mode];
         }
 
         public static void Register(ILinkInterfaceMapping mapping)
         {
-            LinkInterfaceMappingInternal.Mappings[mapping!.GameMode] = mapping!.InterfaceToObjectTypes;
+            LinkInterfaceMappingInternal.Mappings[mapping!.GameRelease] = mapping!.InterfaceToObjectTypes;
         }
     }
 }

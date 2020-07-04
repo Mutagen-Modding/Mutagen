@@ -771,7 +771,6 @@
     <Compile Include="Records\SkyrimMod.cs">
       <DependentUpon>SkyrimMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
     <Compile Include="Records\Group_Generated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -2091,6 +2090,7 @@
     <Compile Include="Records\Major Records\SoundOutputData_Generated.cs">
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.16" />

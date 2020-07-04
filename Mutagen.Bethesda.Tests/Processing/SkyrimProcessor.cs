@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimProcessor : Processor
     {
-        public override GameMode GameMode => GameMode.Skyrim;
+        public override GameRelease GameRelease => GameRelease.Skyrim;
 
         protected override void AddDynamicProcessorInstructions(IMutagenReadStream stream, FormID formID, RecordType recType)
         {
@@ -357,8 +357,8 @@ namespace Mutagen.Bethesda.Tests
             {
                 var vmadFrame = Meta.SubrecordMemoryFrame(majorFrame.Content.Slice(vmadPos.Value));
                 stream = new MutagenInterfaceReadStream(
-                    new MutagenMemoryReadStream(vmadFrame.Content, new ParsingBundle(GameMode)),
-                    new ParsingBundle(GameMode))
+                    new MutagenMemoryReadStream(vmadFrame.Content, new ParsingBundle(GameRelease)),
+                    new ParsingBundle(GameRelease))
                 {
                     Position = processedLen - vmadFrame.Header.HeaderLength
                 };
@@ -410,8 +410,8 @@ namespace Mutagen.Bethesda.Tests
                 return;
             }
             var stream = new MutagenInterfaceReadStream(
-                new MutagenMemoryReadStream(frame.Content.Slice(vmadPos.Value), new ParsingBundle(GameMode)),
-                new ParsingBundle(GameMode));
+                new MutagenMemoryReadStream(frame.Content.Slice(vmadPos.Value), new ParsingBundle(GameRelease)),
+                new ParsingBundle(GameRelease));
             stream.Position += Meta.SubConstants.HeaderLength;
             // Skip version
             stream.Position += 2;

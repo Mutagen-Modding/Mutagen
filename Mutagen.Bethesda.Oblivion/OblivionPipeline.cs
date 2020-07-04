@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask? importMask = null,
             bool allowMissingMods = false)
         {
-            var loadOrderList = LoadOrder.GetUsualLoadOrder(GameMode.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
+            var loadOrderList = LoadOrder.GetUsualLoadOrder(GameRelease.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
             Pipeline.TypicalPatch(
                 dataFolder: dataFolder,
                 outModKey: outModKey,
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
             ModKey? modKeyExclusionHint = null,
             bool allowMissingMods = false)
         {
-            var loadOrderListing = LoadOrder.GetUsualLoadOrder(GameMode.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
+            var loadOrderListing = LoadOrder.GetUsualLoadOrder(GameRelease.Oblivion, dataFolder, allowMissingMods: allowMissingMods);
             if (modKeyExclusionHint != null)
             {
                 loadOrderListing.Remove(modKeyExclusionHint.Value);

@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda
     public interface IModGetter : IMajorRecordGetterEnumerable, ILinkedFormKeyContainer
     {
         /// <summary>
-        /// The associated game type
+        /// The associated game release
         /// </summary>
-        GameMode GameMode { get; }
+        GameRelease GameRelease { get; }
 
         /// <summary>
         /// Read only list of master reference getters.

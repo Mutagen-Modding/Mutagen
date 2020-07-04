@@ -15,10 +15,11 @@ namespace Mutagen.Bethesda
         /// The key associated with the mod 
         /// </summary> 
         public ModKey ModKey { get; }
+
         /// <summary> 
-        /// The game associated with the mod 
+        /// The game release associated with the mod 
         /// </summary> 
-        public abstract GameMode GameMode { get; }
+        public abstract GameRelease GameRelease { get; }
 
         private readonly IFormKeyAllocator _allocator;
 

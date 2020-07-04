@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Core
 {
     public interface ILinkInterfaceMapping
     {
-        GameMode GameMode { get; }
+        GameRelease GameRelease { get; }
         IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; } 
     }
 }

@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Tests
         public static void Align(
             FilePath inputPath,
             FilePath outputPath,
-            GameMode gameMode,
+            GameRelease gameMode,
             AlignmentRules alignmentRules,
             TempFolder temp = null)
         {
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Tests
             temp ??= new TempFolder();
             using (temp)
             {
-                if (gameMode == GameMode.Oblivion)
+                if (gameMode == GameRelease.Oblivion)
                 {
                     var alignedMajorRecordsFile = Path.Combine(temp.Dir.Path, "alignedRules");
                     using (var inputStream = new MutagenBinaryReadStream(inputPath.Path, gameMode))

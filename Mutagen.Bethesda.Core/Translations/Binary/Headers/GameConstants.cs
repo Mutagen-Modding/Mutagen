@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Associated game type
         /// </summary>
-        public GameMode GameMode { get; }
+        public GameRelease Release { get; }
         
         /// <summary>
         /// Length of the Mod header's metadata, excluding content
@@ -45,21 +45,21 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="gameMode">GameMode to associate with the constants</param>
+        /// <param name="release">Game Release to associate with the constants</param>
         /// <param name="modHeaderLength">Length of the ModHeader</param>
         /// <param name="modHeaderFluffLength">Length of the ModHeader excluding initial recordtype and length bytes.</param>
         /// <param name="groupConstants">Constants defining Groups</param>
         /// <param name="majorConstants">Constants defining Major Records</param>
         /// <param name="subConstants">Constants defining Sub Records</param>
         public GameConstants(
-            GameMode gameMode,
+            GameRelease release,
             sbyte modHeaderLength,
             sbyte modHeaderFluffLength,
             RecordHeaderConstants groupConstants,
             MajorRecordConstants majorConstants,
             RecordHeaderConstants subConstants)
         {
-            GameMode = gameMode;
+            Release = release;
             ModHeaderLength = modHeaderLength;
             ModHeaderFluffLength = modHeaderFluffLength;
             GroupConstants = groupConstants;
@@ -71,22 +71,22 @@ namespace Mutagen.Bethesda.Binary
         /// Readonly singleton of Oblivion game constants
         /// </summary>
         public static readonly GameConstants Oblivion = new GameConstants(
-            gameMode: GameMode.Oblivion,
+            release: GameRelease.Oblivion,
             modHeaderLength: 20,
             modHeaderFluffLength: 12,
             groupConstants: new RecordHeaderConstants(
-                GameMode.Oblivion,
+                GameRelease.Oblivion,
                 ObjectType.Group,
                 headerLength: 20,
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
-                GameMode.Oblivion,
+                GameRelease.Oblivion,
                 headerLength: 20,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
             subConstants: new RecordHeaderConstants(
-                GameMode.Oblivion,
+                GameRelease.Oblivion,
                 ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2));
@@ -95,22 +95,22 @@ namespace Mutagen.Bethesda.Binary
         /// Readonly singleton of Skyrim LE game constants
         /// </summary>
         public static readonly GameConstants Skyrim = new GameConstants(
-            gameMode: GameMode.Skyrim,
+            release: GameRelease.Skyrim,
             modHeaderLength: 24,
             modHeaderFluffLength: 16,
             groupConstants: new RecordHeaderConstants(
-                GameMode.Skyrim,
+                GameRelease.Skyrim,
                 ObjectType.Group,
                 headerLength: 24,
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
-                GameMode.Skyrim,
+                GameRelease.Skyrim,
                 headerLength: 24,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
             subConstants: new RecordHeaderConstants(
-                GameMode.Skyrim,
+                GameRelease.Skyrim,
                 ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2));
@@ -494,40 +494,35 @@ namespace Mutagen.Bethesda.Binary
         /// <returns>Record Constants associated with type</returns>
         public RecordHeaderConstants Constants(ObjectType type)
         {
-            switch (type)
+            return type switch
             {
-                case ObjectType.Subrecord:
-                    return SubConstants;
-                case ObjectType.Record:
-                    return MajorConstants;
-                case ObjectType.Group:
-                    return GroupConstants;
-                case ObjectType.Mod:
-                default:
-                    throw new NotImplementedException();
-            }
+                ObjectType.Subrecord => SubConstants,
+                ObjectType.Record => MajorConstants,
+                ObjectType.Group => GroupConstants,
+                _ => throw new NotImplementedException(),
+            };
         }
 
         /// <summary>
-        /// Returns GameConstant readonly singleton associated with a GameMode 
+        /// Returns GameConstant readonly singleton associated with a game release 
         /// </summary>
-        /// <param name="mode">GameMode to query</param>
+        /// <param name="release">Game Release to query</param>
         /// <returns>GameConstant readonly singleton associated with mode</returns>
-        public static GameConstants Get(GameMode mode)
+        public static GameConstants Get(GameRelease release)
         {
-            switch (mode)
+            switch (release)
             {
-                case GameMode.Oblivion:
+                case GameRelease.Oblivion:
                     return Oblivion;
-                case GameMode.Skyrim:
-                case GameMode.SkyrimSpecialEdition:
+                case GameRelease.Skyrim:
+                case GameRelease.SkyrimSpecialEdition:
                     return Skyrim;
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        public static implicit operator GameConstants(GameMode mode)
+        public static implicit operator GameConstants(GameRelease mode)
         {
             return Get(mode);
         }
