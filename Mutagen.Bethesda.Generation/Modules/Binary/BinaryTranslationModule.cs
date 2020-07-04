@@ -1290,7 +1290,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);");
+                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");
                     }
                 }
                 internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
@@ -2243,7 +2243,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))");
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);");
+                                    fg.AppendLine($"meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);");
                                 }
                             }
 

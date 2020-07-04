@@ -7007,7 +7007,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -7037,7 +7037,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
                     importMask: importMask,
@@ -7841,7 +7841,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var flags = reader.GetInt32(offset: 8);
                 if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
                 {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 CopyInFromBinary(
                     item: item,
@@ -24053,7 +24053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var flags = stream.GetInt32(offset: 8);
             if (EnumExt.HasFlag(flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag))
             {
-                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(path, stringsParam, modKey);
+                meta.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
             }
             return SkyrimModFactory(
                 stream: stream,

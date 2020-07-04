@@ -26,14 +26,13 @@ namespace Mutagen.Bethesda
         {
         }
 
-        public static StringsFolderLookupOverlay? TypicalFactory(string referenceModPath, StringsReadParameters? instructions, ModKey modKey)
+        public static StringsFolderLookupOverlay TypicalFactory(string dataPath, StringsReadParameters? instructions, ModKey modKey)
         {
             var ret = new StringsFolderLookupOverlay();
             var stringsFolderPath = instructions?.StringsFolderOverride;
-            var dir = Path.GetDirectoryName(referenceModPath);
             if (stringsFolderPath == null)
             {
-                stringsFolderPath = Path.Combine(dir, "Strings");
+                stringsFolderPath = Path.Combine(dataPath, "Strings");
             }
             if (stringsFolderPath.Value.Exists)
             {
@@ -44,7 +43,7 @@ namespace Mutagen.Bethesda
                     dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                 }
             }
-            foreach (var bsaFile in Directory.EnumerateFiles(dir, "*.bsa"))
+            foreach (var bsaFile in Directory.EnumerateFiles(dataPath, "*.bsa"))
             {
                 var bsaReader = BSAReader.Load(new AbsolutePath(bsaFile, skipValidation: true));
                 foreach (var item in bsaReader.Files)
@@ -77,7 +76,7 @@ namespace Mutagen.Bethesda
             return lookup.Value.TryLookup(key, out str);
         }
 
-        private Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
+        public Dictionary<Language, Lazy<IStringsLookup>> Get(StringsSource source)
         {
             return source switch
             {
