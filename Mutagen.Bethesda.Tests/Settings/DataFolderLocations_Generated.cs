@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Tests
         #region Skyrim
         public String Skyrim { get; set; } = string.Empty;
         #endregion
+        #region SkyrimSpecialEdition
+        public String SkyrimSpecialEdition { get; set; } = string.Empty;
+        #endregion
 
         #region To String
         public override string ToString()
@@ -91,14 +94,17 @@ namespace Mutagen.Bethesda.Tests
             {
                 this.Oblivion = initialValue;
                 this.Skyrim = initialValue;
+                this.SkyrimSpecialEdition = initialValue;
             }
 
             public Mask(
                 TItem Oblivion,
-                TItem Skyrim)
+                TItem Skyrim,
+                TItem SkyrimSpecialEdition)
             {
                 this.Oblivion = Oblivion;
                 this.Skyrim = Skyrim;
+                this.SkyrimSpecialEdition = SkyrimSpecialEdition;
             }
 
             #pragma warning disable CS8618
@@ -112,6 +118,7 @@ namespace Mutagen.Bethesda.Tests
             #region Members
             public TItem Oblivion;
             public TItem Skyrim;
+            public TItem SkyrimSpecialEdition;
             #endregion
 
             #region Equals
@@ -126,6 +133,7 @@ namespace Mutagen.Bethesda.Tests
                 if (rhs == null) return false;
                 if (!object.Equals(this.Oblivion, rhs.Oblivion)) return false;
                 if (!object.Equals(this.Skyrim, rhs.Skyrim)) return false;
+                if (!object.Equals(this.SkyrimSpecialEdition, rhs.SkyrimSpecialEdition)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -133,6 +141,7 @@ namespace Mutagen.Bethesda.Tests
                 var hash = new HashCode();
                 hash.Add(this.Oblivion);
                 hash.Add(this.Skyrim);
+                hash.Add(this.SkyrimSpecialEdition);
                 return hash.ToHashCode();
             }
 
@@ -143,6 +152,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (!eval(this.Oblivion)) return false;
                 if (!eval(this.Skyrim)) return false;
+                if (!eval(this.SkyrimSpecialEdition)) return false;
                 return true;
             }
             #endregion
@@ -152,6 +162,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (eval(this.Oblivion)) return true;
                 if (eval(this.Skyrim)) return true;
+                if (eval(this.SkyrimSpecialEdition)) return true;
                 return false;
             }
             #endregion
@@ -168,6 +179,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 obj.Oblivion = eval(this.Oblivion);
                 obj.Skyrim = eval(this.Skyrim);
+                obj.SkyrimSpecialEdition = eval(this.SkyrimSpecialEdition);
             }
             #endregion
 
@@ -198,6 +210,10 @@ namespace Mutagen.Bethesda.Tests
                     {
                         fg.AppendItem(Skyrim, "Skyrim");
                     }
+                    if (printMask?.SkyrimSpecialEdition ?? true)
+                    {
+                        fg.AppendItem(SkyrimSpecialEdition, "SkyrimSpecialEdition");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -225,6 +241,7 @@ namespace Mutagen.Bethesda.Tests
             }
             public Exception? Oblivion;
             public Exception? Skyrim;
+            public Exception? SkyrimSpecialEdition;
             #endregion
 
             #region IErrorMask
@@ -237,6 +254,8 @@ namespace Mutagen.Bethesda.Tests
                         return Oblivion;
                     case DataFolderLocations_FieldIndex.Skyrim:
                         return Skyrim;
+                    case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
+                        return SkyrimSpecialEdition;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -252,6 +271,9 @@ namespace Mutagen.Bethesda.Tests
                         break;
                     case DataFolderLocations_FieldIndex.Skyrim:
                         this.Skyrim = ex;
+                        break;
+                    case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
+                        this.SkyrimSpecialEdition = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -269,6 +291,9 @@ namespace Mutagen.Bethesda.Tests
                     case DataFolderLocations_FieldIndex.Skyrim:
                         this.Skyrim = (Exception?)obj;
                         break;
+                    case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
+                        this.SkyrimSpecialEdition = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -279,6 +304,7 @@ namespace Mutagen.Bethesda.Tests
                 if (Overall != null) return true;
                 if (Oblivion != null) return true;
                 if (Skyrim != null) return true;
+                if (SkyrimSpecialEdition != null) return true;
                 return false;
             }
             #endregion
@@ -315,6 +341,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 fg.AppendItem(Oblivion, "Oblivion");
                 fg.AppendItem(Skyrim, "Skyrim");
+                fg.AppendItem(SkyrimSpecialEdition, "SkyrimSpecialEdition");
             }
             #endregion
 
@@ -325,6 +352,7 @@ namespace Mutagen.Bethesda.Tests
                 var ret = new ErrorMask();
                 ret.Oblivion = this.Oblivion.Combine(rhs.Oblivion);
                 ret.Skyrim = this.Skyrim.Combine(rhs.Skyrim);
+                ret.SkyrimSpecialEdition = this.SkyrimSpecialEdition.Combine(rhs.SkyrimSpecialEdition);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -348,6 +376,7 @@ namespace Mutagen.Bethesda.Tests
             private TranslationCrystal? _crystal;
             public bool Oblivion;
             public bool Skyrim;
+            public bool SkyrimSpecialEdition;
             #endregion
 
             #region Ctors
@@ -355,6 +384,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 this.Oblivion = defaultOn;
                 this.Skyrim = defaultOn;
+                this.SkyrimSpecialEdition = defaultOn;
             }
 
             #endregion
@@ -372,6 +402,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 ret.Add((Oblivion, null));
                 ret.Add((Skyrim, null));
+                ret.Add((SkyrimSpecialEdition, null));
             }
         }
         #endregion
@@ -531,6 +562,7 @@ namespace Mutagen.Bethesda.Tests
     {
         new String Oblivion { get; set; }
         new String Skyrim { get; set; }
+        new String SkyrimSpecialEdition { get; set; }
     }
 
     public partial interface IDataFolderLocationsGetter :
@@ -547,6 +579,7 @@ namespace Mutagen.Bethesda.Tests
         static ILoquiRegistration Registration => DataFolderLocations_Registration.Instance;
         String Oblivion { get; }
         String Skyrim { get; }
+        String SkyrimSpecialEdition { get; }
 
     }
 
@@ -841,6 +874,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         Oblivion = 0,
         Skyrim = 1,
+        SkyrimSpecialEdition = 2,
     }
     #endregion
 
@@ -858,9 +892,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "352acadd-2222-4274-a2a2-5678a465527e";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(DataFolderLocations.Mask<>);
 
@@ -894,6 +928,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)DataFolderLocations_FieldIndex.Oblivion;
                 case "SKYRIM":
                     return (ushort)DataFolderLocations_FieldIndex.Skyrim;
+                case "SKYRIMSPECIALEDITION":
+                    return (ushort)DataFolderLocations_FieldIndex.SkyrimSpecialEdition;
                 default:
                     return null;
             }
@@ -906,6 +942,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case DataFolderLocations_FieldIndex.Oblivion:
                 case DataFolderLocations_FieldIndex.Skyrim:
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -919,6 +956,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case DataFolderLocations_FieldIndex.Oblivion:
                 case DataFolderLocations_FieldIndex.Skyrim:
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -932,6 +970,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case DataFolderLocations_FieldIndex.Oblivion:
                 case DataFolderLocations_FieldIndex.Skyrim:
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -947,6 +986,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "Oblivion";
                 case DataFolderLocations_FieldIndex.Skyrim:
                     return "Skyrim";
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
+                    return "SkyrimSpecialEdition";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -959,6 +1000,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case DataFolderLocations_FieldIndex.Oblivion:
                 case DataFolderLocations_FieldIndex.Skyrim:
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -972,6 +1014,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case DataFolderLocations_FieldIndex.Oblivion:
                 case DataFolderLocations_FieldIndex.Skyrim:
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -986,6 +1029,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case DataFolderLocations_FieldIndex.Oblivion:
                     return typeof(String);
                 case DataFolderLocations_FieldIndex.Skyrim:
+                    return typeof(String);
+                case DataFolderLocations_FieldIndex.SkyrimSpecialEdition:
                     return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1036,6 +1081,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ClearPartial();
             item.Oblivion = string.Empty;
             item.Skyrim = string.Empty;
+            item.SkyrimSpecialEdition = string.Empty;
         }
         
         #region Xml Translation
@@ -1094,6 +1140,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return;
             ret.Oblivion = string.Equals(item.Oblivion, rhs.Oblivion);
             ret.Skyrim = string.Equals(item.Skyrim, rhs.Skyrim);
+            ret.SkyrimSpecialEdition = string.Equals(item.SkyrimSpecialEdition, rhs.SkyrimSpecialEdition);
         }
         
         public string ToString(
@@ -1148,6 +1195,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendItem(item.Skyrim, "Skyrim");
             }
+            if (printMask?.SkyrimSpecialEdition ?? true)
+            {
+                fg.AppendItem(item.SkyrimSpecialEdition, "SkyrimSpecialEdition");
+            }
         }
         
         public bool HasBeenSet(
@@ -1163,6 +1214,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             mask.Oblivion = true;
             mask.Skyrim = true;
+            mask.SkyrimSpecialEdition = true;
         }
         
         #region Equals and Hash
@@ -1174,6 +1226,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs == null || rhs == null) return false;
             if (!string.Equals(lhs.Oblivion, rhs.Oblivion)) return false;
             if (!string.Equals(lhs.Skyrim, rhs.Skyrim)) return false;
+            if (!string.Equals(lhs.SkyrimSpecialEdition, rhs.SkyrimSpecialEdition)) return false;
             return true;
         }
         
@@ -1182,6 +1235,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var hash = new HashCode();
             hash.Add(item.Oblivion);
             hash.Add(item.Skyrim);
+            hash.Add(item.SkyrimSpecialEdition);
             return hash.ToHashCode();
         }
         
@@ -1212,6 +1266,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((copyMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.Skyrim) ?? true))
             {
                 item.Skyrim = rhs.Skyrim;
+            }
+            if ((copyMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.SkyrimSpecialEdition) ?? true))
+            {
+                item.SkyrimSpecialEdition = rhs.SkyrimSpecialEdition;
             }
         }
         
@@ -1318,6 +1376,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.Skyrim),
                     item: item.Skyrim,
                     fieldIndex: (int)DataFolderLocations_FieldIndex.Skyrim,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.SkyrimSpecialEdition) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SkyrimSpecialEdition),
+                    item: item.SkyrimSpecialEdition,
+                    fieldIndex: (int)DataFolderLocations_FieldIndex.SkyrimSpecialEdition,
                     errorMask: errorMask);
             }
         }
@@ -1454,6 +1521,27 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             item.Skyrim = StringXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
+                case "SkyrimSpecialEdition":
+                    if ((translationMask?.GetShouldTranslate((int)DataFolderLocations_FieldIndex.SkyrimSpecialEdition) ?? true))
+                    {
+                        errorMask?.PushIndex((int)DataFolderLocations_FieldIndex.SkyrimSpecialEdition);
+                        try
+                        {
+                            item.SkyrimSpecialEdition = StringXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
                         }

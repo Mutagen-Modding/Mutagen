@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Tests
                 foreach (var target in targetGroup.Targets)
                 {
                     if (!target.Do) continue;
-                    PassthroughTest passthroughTest = PassthroughTest.Factory(settings, target);
+                    PassthroughTest passthroughTest = PassthroughTest.Factory(settings, targetGroup, target);
                     if (passthroughTests)
                     {
                         await foreach (var result in passthroughTest.BinaryPassthroughTest())

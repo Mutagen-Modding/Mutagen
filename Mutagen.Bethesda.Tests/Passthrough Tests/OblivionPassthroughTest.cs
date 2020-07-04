@@ -20,8 +20,8 @@ namespace Mutagen.Bethesda.Tests
 
         protected override Processor ProcessorFactory() => new OblivionProcessor();
 
-        public OblivionPassthroughTest(TestingSettings settings, Target target)
-            : base(settings, target)
+        public OblivionPassthroughTest(TestingSettings settings, TargetGroup group, Target target)
+            : base(settings, group, target)
         {
         }
 

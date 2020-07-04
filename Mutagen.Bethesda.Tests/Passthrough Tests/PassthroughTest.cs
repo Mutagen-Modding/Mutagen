@@ -1,18 +1,14 @@
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Preprocessing;
 using Noggog;
+using Noggog.Extensions;
 using Noggog.Streams.Binary;
 using Noggog.Utility;
 using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -35,10 +31,11 @@ namespace Mutagen.Bethesda.Tests
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
 
-        public PassthroughTest(TestingSettings settings, Target target)
+        public PassthroughTest(TestingSettings settings, TargetGroup group, Target target)
         {
-            this.FilePath = Path.Combine(settings.DataFolderLocations.Get(target.GameMode), target.Path);
-            this.Nickname = target.Path;
+            var path = Path.Combine(settings.DataFolderLocations.Get(target.GameMode), target.Path);
+            this.FilePath = path;
+            this.Nickname = $"{target.Path}{group.NicknameSuffix}";
             this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
             this.Target = target;
@@ -319,12 +316,13 @@ namespace Mutagen.Bethesda.Tests
             await ImportBinary(this.FilePath.Path);
         }
 
-        public static PassthroughTest Factory(TestingSettings settings, Target target)
+        public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)
         {
             return target.GameMode switch
             {
-                GameMode.Oblivion => new OblivionPassthroughTest(settings, target),
-                GameMode.Skyrim => new SkyrimPassthroughTest(settings, target),
+                GameMode.Oblivion => new OblivionPassthroughTest(settings, group, target),
+                GameMode.Skyrim => new SkyrimPassthroughTest(settings, group, target, GameMode.Skyrim),
+                GameMode.SkyrimSpecialEdition => new SkyrimPassthroughTest(settings, group, target, GameMode.SkyrimSpecialEdition),
                 _ => throw new NotImplementedException(),
             };
         }

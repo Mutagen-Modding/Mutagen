@@ -29,11 +29,13 @@
     <Fields>
       <String name="Oblivion" />
       <String name="Skyrim" />
+      <String name="SkyrimSpecialEdition" />
     </Fields>
   </Object>
   <Object name="TargetGroup" GUID="7c60c735-e67c-498a-9d99-80aa1c1277a9" ID="5">
     <Fields>
       <Bool name="Do" />
+      <String name="NicknameSuffix" />
       <RefList name="Targets" refName="Target" />
     </Fields>
   </Object>
@@ -44,6 +46,7 @@
       <UInt8 name="NumMasters" />
       <Enum name="GameMode" enumName="Mutagen.Bethesda.GameMode" />
       <UInt8 name="ExpectedBaseGroupCount" hasBeenSet="True" />
+      <String name="Nickname" />
       <RefDirect name="Interest" refName="RecordInterest" />
     </Fields>
   </Object>

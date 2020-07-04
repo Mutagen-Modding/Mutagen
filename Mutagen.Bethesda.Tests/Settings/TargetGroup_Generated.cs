@@ -44,6 +44,9 @@ namespace Mutagen.Bethesda.Tests
         #region Do
         public Boolean Do { get; set; } = default;
         #endregion
+        #region NicknameSuffix
+        public String NicknameSuffix { get; set; } = string.Empty;
+        #endregion
         #region Targets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private IExtendedList<Target> _Targets = new ExtendedList<Target>();
@@ -102,14 +105,17 @@ namespace Mutagen.Bethesda.Tests
             public Mask(TItem initialValue)
             {
                 this.Do = initialValue;
+                this.NicknameSuffix = initialValue;
                 this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
             }
 
             public Mask(
                 TItem Do,
+                TItem NicknameSuffix,
                 TItem Targets)
             {
                 this.Do = Do;
+                this.NicknameSuffix = NicknameSuffix;
                 this.Targets = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>(Targets, Enumerable.Empty<MaskItemIndexed<TItem, Target.Mask<TItem>?>>());
             }
 
@@ -123,6 +129,7 @@ namespace Mutagen.Bethesda.Tests
 
             #region Members
             public TItem Do;
+            public TItem NicknameSuffix;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Target.Mask<TItem>?>>?>? Targets;
             #endregion
 
@@ -137,6 +144,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (rhs == null) return false;
                 if (!object.Equals(this.Do, rhs.Do)) return false;
+                if (!object.Equals(this.NicknameSuffix, rhs.NicknameSuffix)) return false;
                 if (!object.Equals(this.Targets, rhs.Targets)) return false;
                 return true;
             }
@@ -144,6 +152,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 var hash = new HashCode();
                 hash.Add(this.Do);
+                hash.Add(this.NicknameSuffix);
                 hash.Add(this.Targets);
                 return hash.ToHashCode();
             }
@@ -154,6 +163,7 @@ namespace Mutagen.Bethesda.Tests
             public bool All(Func<TItem, bool> eval)
             {
                 if (!eval(this.Do)) return false;
+                if (!eval(this.NicknameSuffix)) return false;
                 if (this.Targets != null)
                 {
                     if (!eval(this.Targets.Overall)) return false;
@@ -174,6 +184,7 @@ namespace Mutagen.Bethesda.Tests
             public bool Any(Func<TItem, bool> eval)
             {
                 if (eval(this.Do)) return true;
+                if (eval(this.NicknameSuffix)) return true;
                 if (this.Targets != null)
                 {
                     if (eval(this.Targets.Overall)) return true;
@@ -201,6 +212,7 @@ namespace Mutagen.Bethesda.Tests
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 obj.Do = eval(this.Do);
+                obj.NicknameSuffix = eval(this.NicknameSuffix);
                 if (Targets != null)
                 {
                     obj.Targets = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Target.Mask<R>?>>?>(eval(this.Targets.Overall), Enumerable.Empty<MaskItemIndexed<R, Target.Mask<R>?>>());
@@ -241,6 +253,10 @@ namespace Mutagen.Bethesda.Tests
                     if (printMask?.Do ?? true)
                     {
                         fg.AppendItem(Do, "Do");
+                    }
+                    if (printMask?.NicknameSuffix ?? true)
+                    {
+                        fg.AppendItem(NicknameSuffix, "NicknameSuffix");
                     }
                     if ((printMask?.Targets?.Overall ?? true)
                         && Targets.TryGet(out var TargetsItem))
@@ -291,6 +307,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
             public Exception? Do;
+            public Exception? NicknameSuffix;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Target.ErrorMask?>>?>? Targets;
             #endregion
 
@@ -302,6 +319,8 @@ namespace Mutagen.Bethesda.Tests
                 {
                     case TargetGroup_FieldIndex.Do:
                         return Do;
+                    case TargetGroup_FieldIndex.NicknameSuffix:
+                        return NicknameSuffix;
                     case TargetGroup_FieldIndex.Targets:
                         return Targets;
                     default:
@@ -316,6 +335,9 @@ namespace Mutagen.Bethesda.Tests
                 {
                     case TargetGroup_FieldIndex.Do:
                         this.Do = ex;
+                        break;
+                    case TargetGroup_FieldIndex.NicknameSuffix:
+                        this.NicknameSuffix = ex;
                         break;
                     case TargetGroup_FieldIndex.Targets:
                         this.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Target.ErrorMask?>>?>(ex, null);
@@ -333,6 +355,9 @@ namespace Mutagen.Bethesda.Tests
                     case TargetGroup_FieldIndex.Do:
                         this.Do = (Exception?)obj;
                         break;
+                    case TargetGroup_FieldIndex.NicknameSuffix:
+                        this.NicknameSuffix = (Exception?)obj;
+                        break;
                     case TargetGroup_FieldIndex.Targets:
                         this.Targets = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Target.ErrorMask?>>?>)obj;
                         break;
@@ -345,6 +370,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (Overall != null) return true;
                 if (Do != null) return true;
+                if (NicknameSuffix != null) return true;
                 if (Targets != null) return true;
                 return false;
             }
@@ -381,6 +407,7 @@ namespace Mutagen.Bethesda.Tests
             protected void ToString_FillInternal(FileGeneration fg)
             {
                 fg.AppendItem(Do, "Do");
+                fg.AppendItem(NicknameSuffix, "NicknameSuffix");
                 if (Targets.TryGet(out var TargetsItem))
                 {
                     fg.AppendLine("Targets =>");
@@ -412,6 +439,7 @@ namespace Mutagen.Bethesda.Tests
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
                 ret.Do = this.Do.Combine(rhs.Do);
+                ret.NicknameSuffix = this.NicknameSuffix.Combine(rhs.NicknameSuffix);
                 ret.Targets = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Target.ErrorMask?>>?>(ExceptionExt.Combine(this.Targets?.Overall, rhs.Targets?.Overall), ExceptionExt.Combine(this.Targets?.Specific, rhs.Targets?.Specific));
                 return ret;
             }
@@ -435,6 +463,7 @@ namespace Mutagen.Bethesda.Tests
             #region Members
             private TranslationCrystal? _crystal;
             public bool Do;
+            public bool NicknameSuffix;
             public MaskItem<bool, Target.TranslationMask?> Targets;
             #endregion
 
@@ -442,6 +471,7 @@ namespace Mutagen.Bethesda.Tests
             public TranslationMask(bool defaultOn)
             {
                 this.Do = defaultOn;
+                this.NicknameSuffix = defaultOn;
                 this.Targets = new MaskItem<bool, Target.TranslationMask?>(defaultOn, null);
             }
 
@@ -459,6 +489,7 @@ namespace Mutagen.Bethesda.Tests
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 ret.Add((Do, null));
+                ret.Add((NicknameSuffix, null));
                 ret.Add((Targets?.Overall ?? true, Targets?.Specific?.GetCrystal()));
             }
         }
@@ -618,6 +649,7 @@ namespace Mutagen.Bethesda.Tests
         ILoquiObjectSetter<ITargetGroup>
     {
         new Boolean Do { get; set; }
+        new String NicknameSuffix { get; set; }
         new IExtendedList<Target> Targets { get; }
     }
 
@@ -634,6 +666,7 @@ namespace Mutagen.Bethesda.Tests
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TargetGroup_Registration.Instance;
         Boolean Do { get; }
+        String NicknameSuffix { get; }
         IReadOnlyList<ITargetGetter> Targets { get; }
 
     }
@@ -928,7 +961,8 @@ namespace Mutagen.Bethesda.Tests.Internals
     public enum TargetGroup_FieldIndex
     {
         Do = 0,
-        Targets = 1,
+        NicknameSuffix = 1,
+        Targets = 2,
     }
     #endregion
 
@@ -946,9 +980,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "7c60c735-e67c-498a-9d99-80aa1c1277a9";
 
-        public const ushort AdditionalFieldCount = 2;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(TargetGroup.Mask<>);
 
@@ -980,6 +1014,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case "DO":
                     return (ushort)TargetGroup_FieldIndex.Do;
+                case "NICKNAMESUFFIX":
+                    return (ushort)TargetGroup_FieldIndex.NicknameSuffix;
                 case "TARGETS":
                     return (ushort)TargetGroup_FieldIndex.Targets;
                 default:
@@ -995,6 +1031,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Targets:
                     return true;
                 case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.NicknameSuffix:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1009,6 +1046,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case TargetGroup_FieldIndex.Targets:
                     return true;
                 case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.NicknameSuffix:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1021,6 +1059,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.NicknameSuffix:
                 case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
@@ -1035,6 +1074,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TargetGroup_FieldIndex.Do:
                     return "Do";
+                case TargetGroup_FieldIndex.NicknameSuffix:
+                    return "NicknameSuffix";
                 case TargetGroup_FieldIndex.Targets:
                     return "Targets";
                 default:
@@ -1048,6 +1089,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.NicknameSuffix:
                 case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
@@ -1061,6 +1103,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case TargetGroup_FieldIndex.Do:
+                case TargetGroup_FieldIndex.NicknameSuffix:
                 case TargetGroup_FieldIndex.Targets:
                     return false;
                 default:
@@ -1075,6 +1118,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case TargetGroup_FieldIndex.Do:
                     return typeof(Boolean);
+                case TargetGroup_FieldIndex.NicknameSuffix:
+                    return typeof(String);
                 case TargetGroup_FieldIndex.Targets:
                     return typeof(IExtendedList<Target>);
                 default:
@@ -1125,6 +1170,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             ClearPartial();
             item.Do = default;
+            item.NicknameSuffix = string.Empty;
             item.Targets.Clear();
         }
         
@@ -1183,6 +1229,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
+            ret.NicknameSuffix = string.Equals(item.NicknameSuffix, rhs.NicknameSuffix);
             ret.Targets = item.Targets.CollectionEqualsHelper(
                 rhs.Targets,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
@@ -1237,6 +1284,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendItem(item.Do, "Do");
             }
+            if (printMask?.NicknameSuffix ?? true)
+            {
+                fg.AppendItem(item.NicknameSuffix, "NicknameSuffix");
+            }
             if (printMask?.Targets?.Overall ?? true)
             {
                 fg.AppendLine("Targets =>");
@@ -1269,6 +1320,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             TargetGroup.Mask<bool> mask)
         {
             mask.Do = true;
+            mask.NicknameSuffix = true;
             var TargetsItem = item.Targets;
             mask.Targets = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Target.Mask<bool>?>>?>(true, TargetsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Target.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
         }
@@ -1281,6 +1333,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
             if (lhs.Do != rhs.Do) return false;
+            if (!string.Equals(lhs.NicknameSuffix, rhs.NicknameSuffix)) return false;
             if (!lhs.Targets.SequenceEqual(rhs.Targets)) return false;
             return true;
         }
@@ -1289,6 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Do);
+            hash.Add(item.NicknameSuffix);
             hash.Add(item.Targets);
             return hash.ToHashCode();
         }
@@ -1316,6 +1370,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if ((copyMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Do) ?? true))
             {
                 item.Do = rhs.Do;
+            }
+            if ((copyMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.NicknameSuffix) ?? true))
+            {
+                item.NicknameSuffix = rhs.NicknameSuffix;
             }
             if ((copyMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
             {
@@ -1437,6 +1495,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.Do),
                     item: item.Do,
                     fieldIndex: (int)TargetGroup_FieldIndex.Do,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.NicknameSuffix) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NicknameSuffix),
+                    item: item.NicknameSuffix,
+                    fieldIndex: (int)TargetGroup_FieldIndex.NicknameSuffix,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.Targets) ?? true))
@@ -1572,6 +1639,27 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             item.Do = BooleanXmlTranslation.Instance.Parse(
+                                node: node,
+                                errorMask: errorMask);
+                        }
+                        catch (Exception ex)
+                        when (errorMask != null)
+                        {
+                            errorMask.ReportException(ex);
+                        }
+                        finally
+                        {
+                            errorMask?.PopIndex();
+                        }
+                    }
+                    break;
+                case "NicknameSuffix":
+                    if ((translationMask?.GetShouldTranslate((int)TargetGroup_FieldIndex.NicknameSuffix) ?? true))
+                    {
+                        errorMask?.PushIndex((int)TargetGroup_FieldIndex.NicknameSuffix);
+                        try
+                        {
+                            item.NicknameSuffix = StringXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
                         }

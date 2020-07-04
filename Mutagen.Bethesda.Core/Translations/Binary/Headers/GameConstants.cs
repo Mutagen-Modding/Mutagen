@@ -520,6 +520,7 @@ namespace Mutagen.Bethesda.Binary
                 case GameMode.Oblivion:
                     return Oblivion;
                 case GameMode.Skyrim:
+                case GameMode.SkyrimSpecialEdition:
                     return Skyrim;
                 default:
                     throw new NotImplementedException();

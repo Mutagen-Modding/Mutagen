@@ -14,6 +14,8 @@ namespace Mutagen.Bethesda.Tests
                     return this.Oblivion;
                 case GameMode.Skyrim:
                     return this.Skyrim;
+                case GameMode.SkyrimSpecialEdition:
+                    return this.SkyrimSpecialEdition;
                 default:
                     throw new NotImplementedException();
             }

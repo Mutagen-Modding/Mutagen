@@ -6,6 +6,7 @@
    <xs:complexType name="TargetGroupType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element name="Do" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="NicknameSuffix" type="NullableValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="Targets" type="TargetsType" minOccurs="0" maxOccurs="1" />
       </xs:choice>
    </xs:complexType>
