@@ -2122,10 +2122,12 @@ namespace Mutagen.Bethesda.Internals
             WriteEmbedded(
                 item: item,
                 writer: writer);
+            writer.MetaData.FormVersion = item.FormVersion;
             WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+            writer.MetaData.FormVersion = null;
         }
 
         public virtual void Write(

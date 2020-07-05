@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda
                 targetFrame = frame.Decompress();
             }
             Dictionary<RecordType, int>? recordParseCount = null;
+            frame.MetaData.FormVersion = record.FormVersion;
             while (!targetFrame.Complete)
             {
                 var subMeta = targetFrame.GetSubrecord();
@@ -116,6 +117,7 @@ namespace Mutagen.Bethesda
                 }
             }
             frame.SetToFinalPosition();
+            frame.MetaData.FormVersion = null;
             return record;
         }
 

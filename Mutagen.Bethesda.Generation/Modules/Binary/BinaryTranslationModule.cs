@@ -1517,7 +1517,7 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
+        protected override async Task GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
         {
             var data = obj.GetObjectData();
             var hasRecType = obj.TryGetRecordType(out var recType);
@@ -1564,6 +1564,10 @@ namespace Mutagen.Bethesda.Generation
                 }
                 if (HasRecordTypeFields(obj))
                 {
+                    if (await obj.IsMajorRecord())
+                    {
+                        fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                    }
                     using (var args = new ArgsWrapper(fg,
                         $"WriteRecordTypes"))
                     {
@@ -1576,6 +1580,10 @@ namespace Mutagen.Bethesda.Generation
                             args.AddPassArg($"param");
                         }
                         args.AddPassArg($"recordTypeConverter");
+                    }
+                    if (await obj.IsMajorRecord())
+                    {
+                        fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
                     }
                 }
                 else

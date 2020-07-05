@@ -40,21 +40,14 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public bool InWorldspace { get; set; }
 
+        /// <summary>
+        /// Tracker of current major record version
+        /// </summary>
+        public ushort? FormVersion { get; set; }
+
         public ParsingBundle(GameConstants constants)
         {
             this.Constants = constants;
-        }
-
-        public ParsingBundle Spawn(GameRelease mode)
-        {
-            return new ParsingBundle(mode)
-            {
-                MasterReferences = this.MasterReferences,
-                RecordInfoCache = this.RecordInfoCache,
-                StringsLookup = this.StringsLookup,
-                Parallel = this.Parallel,
-                InWorldspace = this.InWorldspace,
-            };
         }
     }
 }

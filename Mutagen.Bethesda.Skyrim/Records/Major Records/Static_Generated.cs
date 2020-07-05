@@ -2500,10 +2500,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 WriteEmbedded(
                     item: item,
                     writer: writer);
+                writer.MetaData.FormVersion = item.FormVersion;
                 WriteRecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+                writer.MetaData.FormVersion = null;
             }
         }
 

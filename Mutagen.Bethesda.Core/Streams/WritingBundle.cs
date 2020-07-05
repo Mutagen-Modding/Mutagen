@@ -30,6 +30,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordInfoCache? RecordInfoCache { get; set; }
 
+        /// <summary>
+        /// Tracker of current major record version
+        /// </summary>
+        public ushort? FormVersion { get; set; }
+
         public WritingBundle(GameConstants constants)
         {
             this.Constants = constants;
