@@ -8,11 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Wabbajack.Common;
 
 namespace Mutagen.Bethesda.Generation
 {
     public class ModModule : GenerationModule
     {
+        public const string GameReleaseOptions = "GameReleaseOptions";
+
         public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
             if (obj.GetObjectData().ObjectType == ObjectType.Mod)
@@ -33,9 +37,18 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
+            var objData = obj.GetObjectData();
 
-            // Gamemode member
-            fg.AppendLine($"public override {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameRelease};");
+            // Game release member
+            if (objData.GameReleaseOptions != null)
+            {
+                fg.AppendLine($"public {ReleaseEnumName(obj)} {ReleaseEnumName(obj)} {{ get; }}");
+                fg.AppendLine($"public override {nameof(GameRelease)} GameRelease => {ReleaseEnumName(obj)}.ToGameRelease();");
+            }
+            else
+            {
+                fg.AppendLine($"public override {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
+            }
 
             // Interfaces
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetGroupGetter)}<T>() => this.GetGroupGetter<T>();");
@@ -61,7 +74,15 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"set => this.ModHeader.Stats.NextObjectID = value;");
             }
 
-            fg.AppendLine($"public {obj.Name}({nameof(ModKey)} modKey)");
+            using (var args = new FunctionWrapper(fg,
+                $"public {obj.Name}"))
+            {
+                args.Add($"{nameof(ModKey)} modKey");
+                if (objData.GameReleaseOptions != null)
+                {
+                    args.Add($"{ReleaseEnumName(obj)} release");
+                }
+            }
             using (new DepthWrapper(fg))
             {
                 fg.AppendLine(": base(modKey)");
@@ -69,6 +90,10 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();");
+                if (objData.GameReleaseOptions != null)
+                {
+                    fg.AppendLine($"this.{ReleaseEnumName(obj)} = release;");
+                }
                 await obj.GenerateInitializer(fg);
             }
 
@@ -193,11 +218,22 @@ namespace Mutagen.Bethesda.Generation
             await base.GenerateInCtor(obj, fg);
         }
 
+        public static string ReleaseEnumName(ObjectGeneration obj)
+        {
+            return $"{ModName(obj)}Release";
+        }
+
+        public static string ModName(ObjectGeneration obj)
+        {
+            return obj.Name.TrimEnd("Mod");
+        }
+
         public override async Task GenerateInVoid(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (new NamespaceWrapper(fg, obj.Namespace))
             {
+                var objData = obj.GetObjectData();
                 fg.AppendLine("public class GroupMask");
                 using (new BraceWrapper(fg))
                 {
@@ -231,6 +267,77 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"public interface I{obj.Name}DisposableGetter : {obj.Interface(getter: true, internalInterface: true)}, IModDisposeGetter");
                 using (new BraceWrapper(fg))
                 {
+                }
+                fg.AppendLine();
+
+                if (objData.GameReleaseOptions != null)
+                {
+                    using (var comment = new CommentWrapper(fg))
+                    {
+                        comment.Summary.AppendLine($"Different game release versions a {ModName(obj)} mod can have");
+                    }
+                    fg.AppendLine($"public enum {ReleaseEnumName(obj)}");
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var comma = new CommaWrapper(fg))
+                        {
+                            foreach (var opt in objData.GameReleaseOptions)
+                            {
+                                comma.Add(opt.ToString());
+                            }
+                        }
+                    }
+                    fg.AppendLine();
+
+                    using (var c = new ClassWrapper(fg, $"{ReleaseEnumName(obj)}Ext"))
+                    {
+                        c.Static = true;
+                    }
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new FunctionWrapper(fg,
+                            $"public static {nameof(GameRelease)} ToGameRelease"))
+                        {
+                            args.Add($"this {ReleaseEnumName(obj)} release");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("return release switch");
+                            using (new BraceWrapper(fg) { AppendSemicolon = true })
+                            {
+                                using (var comma = new CommaWrapper(fg))
+                                {
+                                    foreach (var item in objData.GameReleaseOptions)
+                                    {
+                                        comma.Add($"{ReleaseEnumName(obj)}.{item} => {nameof(GameRelease)}.{item}");
+                                    }
+                                    comma.Add("_ => throw new ArgumentException()");
+                                }
+                            }
+                        }
+                        fg.AppendLine();
+
+                        using (var args = new FunctionWrapper(fg,
+                            $"public static {ReleaseEnumName(obj)} To{ReleaseEnumName(obj)}"))
+                        {
+                            args.Add($"this {nameof(GameRelease)} release");
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("return release switch");
+                            using (new BraceWrapper(fg) { AppendSemicolon = true })
+                            {
+                                using (var comma = new CommaWrapper(fg))
+                                {
+                                    foreach (var item in objData.GameReleaseOptions)
+                                    {
+                                        comma.Add($"{nameof(GameRelease)}.{item} => {ReleaseEnumName(obj)}.{item}");
+                                    }
+                                    comma.Add("_ => throw new ArgumentException()");
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -418,7 +525,17 @@ namespace Mutagen.Bethesda.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);");
-                fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({nameof(GameConstants)}.{obj.GetObjectData().GameRelease});");
+                string gameConstantsStr;
+                if (objData.GameReleaseOptions == null)
+                {
+                    gameConstantsStr = $"{nameof(GameConstants)}.{obj.GetObjectData().GameCategory}";
+                }
+                else
+                {
+                    fg.AppendLine($"var gameConstants = {nameof(GameConstants)}.Get(item.{ReleaseEnumName(obj)}.ToGameRelease());");
+                    gameConstantsStr = $"gameConstants";
+                }
+                fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr});");
                 fg.AppendLine($"bundle.{nameof(WritingBundle.MasterReferences)} = masterRefs;");
                 using (var args = new ArgsWrapper(fg,
                     $"{obj.ObjectName}BinaryWriteTranslation.WriteModHeader"))
@@ -452,11 +569,11 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
                         && loqui.TargetObjectGeneration.Name != "ListGroup")
                     {
-                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
                     else
                     {
-                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, masterRefs, {i}, outputStreams));");
+                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams));");
                     }
                     i++;
                 }
@@ -478,6 +595,10 @@ namespace Mutagen.Bethesda.Generation
                     args.Add("IGroupGetter<T> group");
                     args.Add($"{nameof(MasterReferenceReader)} masters");
                     args.Add("int targetIndex");
+                    if (objData.GameReleaseOptions != null)
+                    {
+                        args.Add($"{nameof(GameConstants)} gameConstants");
+                    }
                     args.Add("Stream[] streamDepositArray");
                     if (objData.UsesStringFiles)
                     {
@@ -487,13 +608,22 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
+                    string gameConstantsStr;
+                    if (objData.GameReleaseOptions == null)
+                    {
+                        gameConstantsStr = $"{nameof(GameConstants)}.{obj.GetObjectData().GameCategory}";
+                    }
+                    else
+                    {
+                        gameConstantsStr = "gameConstants";
+                    }
                     fg.AppendLine("if (group.RecordCache.Count == 0) return;");
                     fg.AppendLine($"var cuts = group.Records.Cut(CutCount).ToArray();");
                     fg.AppendLine($"Stream[] subStreams = new Stream[cuts.Length + 1];");
-                    fg.AppendLine($"byte[] groupBytes = new byte[{nameof(GameConstants)}.{obj.GetObjectData().GameRelease}.GroupConstants.HeaderLength];");
+                    fg.AppendLine($"byte[] groupBytes = new byte[{gameConstantsStr}.GroupConstants.HeaderLength];");
                     fg.AppendLine($"BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);");
                     fg.AppendLine($"var groupByteStream = new MemoryStream(groupBytes);");
-                    fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({nameof(GameConstants)}.{obj.GetObjectData().GameRelease})");
+                    fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr})");
                     using (var prop = new PropertyCtorWrapper(fg))
                     {
                         prop.Add($"{nameof(WritingBundle.MasterReferences)} = masters");
@@ -502,7 +632,7 @@ namespace Mutagen.Bethesda.Generation
                             prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
                         }
                     }
-                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {nameof(GameConstants)}.{obj.GetObjectData().GameRelease}, dispose: false))");
+                    fg.AppendLine($"using (var stream = new MutagenWriter(groupByteStream, {gameConstantsStr}, dispose: false))");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine($"stream.Position += 8;");
@@ -529,6 +659,24 @@ namespace Mutagen.Bethesda.Generation
                 }
                 fg.AppendLine();
             }
+        }
+
+        public override async Task PreLoad(ObjectGeneration obj)
+        {
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            var elems = obj.Node.Elements(XName.Get(GameReleaseOptions, LoquiGenerator.Namespace));
+            if (!elems.Any()) return;
+            var objData = obj.GetObjectData();
+            objData.GameReleaseOptions = elems.Select(el => Enum.Parse<GameRelease>(el.Value)).ToHashSet();
+        }
+
+        public override async Task GenerateInInterface(ObjectGeneration obj, FileGeneration fg, bool internalInterface, bool getter)
+        {
+            await base.GenerateInInterface(obj, fg, internalInterface, getter);
+            if (obj.GetObjectType() != ObjectType.Mod) return;
+            if (!getter) return;
+            if (obj.GetObjectData().GameReleaseOptions == null) return;
+            fg.AppendLine($"{ReleaseEnumName(obj)} {ReleaseEnumName(obj)} {{ get; }}");
         }
     }
 }

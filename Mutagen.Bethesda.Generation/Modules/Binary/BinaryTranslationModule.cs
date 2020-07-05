@@ -2,14 +2,10 @@ using Loqui.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Bethesda.Binary;
-using System.IO;
 using Noggog;
-using Loqui.Internal;
-using System.Xml.Linq;
 using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Generation
@@ -170,6 +166,15 @@ namespace Mutagen.Bethesda.Generation
                     if (dir == TranslationDirection.Writer) return false;
                     return obj.GetObjectType() == ObjectType.Mod;
                 });
+            var gameRelease = new APILine(
+                nicknameKey: "GameRelease",
+                resolver: (obj) => $"{ModModule.ReleaseEnumName(obj)} release",
+                when: (obj, dir) =>
+                {
+                    if (dir == TranslationDirection.Writer) return false;
+                    if (obj.GetObjectType() != ObjectType.Mod) return false;
+                    return obj.GetObjectData().GameReleaseOptions != null;
+                });
             var recTypeConverter = new APILine(
                 "RecordTypeConverter",
                 $"{nameof(RecordTypeConverter)}? recordTypeConverter = null");
@@ -189,6 +194,7 @@ namespace Mutagen.Bethesda.Generation
                     optionalAPI: modAPILines,
                     customAPI: new CustomMethodAPI[]
                     {
+                        CustomMethodAPI.FactoryPublic(gameRelease),
                         CustomMethodAPI.FactoryPublic(modKey),
                         CustomMethodAPI.FactoryPrivate(modKeyWriter, "modKey"),
                         CustomMethodAPI.FactoryPrivate(recTypeConverter, "null"),
@@ -200,6 +206,7 @@ namespace Mutagen.Bethesda.Generation
                         majorAPI: new APILine[] { new APILine("Path", "string path") },
                         customAPI: new CustomMethodAPI[]
                         {
+                            CustomMethodAPI.FactoryPublic(gameRelease)
                         },
                         optionalAPI: modKeyOptional
                             .AndSingle(writeParamOptional)
@@ -221,6 +228,7 @@ namespace Mutagen.Bethesda.Generation
                         customAPI: new CustomMethodAPI[]
                         {
                             CustomMethodAPI.FactoryPublic(modKey),
+                            CustomMethodAPI.FactoryPublic(gameRelease),
                             CustomMethodAPI.FactoryPublic(recordInfoCache),
                             CustomMethodAPI.FactoryPublic(writeParamOptional),
                         },
@@ -264,6 +272,16 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
+            var objData = obj.GetObjectData();
+            string gameReleaseStr;
+            if (objData.GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{objData.GameCategory}";
+            }
+            else
+            {
+                gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
+            }
             fg.AppendLine("var modKey = item.ModKey;");
             using (var args = new ArgsWrapper(fg,
                 $"using (var writer = new MutagenWriter",
@@ -271,7 +289,7 @@ namespace Mutagen.Bethesda.Generation
                 semiColon: false))
             {
                 args.AddPassArg("stream");
-                args.Add($"new {nameof(WritingBundle)}(item.GameRelease)");
+                args.Add($"new {nameof(WritingBundle)}({gameReleaseStr})");
                 args.Add("dispose: false");
             }
             using (new BraceWrapper(fg))
@@ -282,7 +300,16 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
+            string gameReleaseStr;
+            if (obj.GetObjectData().GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+            }
+            else
+            {
+                gameReleaseStr = $"release.ToGameRelease()";
+            }
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, {gameReleaseStr}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
@@ -603,7 +630,7 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
                                     {
-                                        // Means we handled earlier, break out
+                                        // Means we handled earlier, break out 
                                         if (doubles.Count == 0) continue;
                                     }
                                 }
@@ -711,7 +738,7 @@ namespace Mutagen.Bethesda.Generation
                         using (new DepthWrapper(fg))
                         {
                             bool first = true;
-                            // Generic options
+                            // Generic options 
                             foreach (var field in obj.IterateFieldIndices())
                             {
                                 var fieldData = field.Field.GetFieldData();
@@ -742,7 +769,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
 
-                            // Default case
+                            // Default case 
                             if (obj.GetObjectData().CustomRecordFallback)
                             {
                                 using (var args = new ArgsWrapper(fg,
@@ -848,6 +875,10 @@ namespace Mutagen.Bethesda.Generation
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"ReadOnlyMemorySlice<byte> bytes");
+                if (objData.GameReleaseOptions != null)
+                {
+                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                }
                 args.Add($"ModKey modKey");
                 if (objData.UsesStringFiles)
                 {
@@ -856,7 +887,16 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease});");
+                string gameReleaseStr;
+                if (objData.GameReleaseOptions == null)
+                {
+                    gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+                }
+                else
+                {
+                    gameReleaseStr = $"release.ToGameRelease()";
+                }
+                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr});");
                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
                 if (objData.UsesStringFiles)
                 {
@@ -874,6 +914,10 @@ namespace Mutagen.Bethesda.Generation
                             subArgs.Add($"metaData: meta");
                         }
                     });
+                    if (objData.GameReleaseOptions != null)
+                    {
+                        args.AddPassArg("release");
+                    }
                     args.AddPassArg("modKey");
                     args.Add("shouldDispose: false");
                 }
@@ -884,6 +928,10 @@ namespace Mutagen.Bethesda.Generation
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"string path");
+                if (objData.GameReleaseOptions != null)
+                {
+                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                }
                 args.Add($"ModKey? modKeyOverride = null");
                 if (objData.UsesStringFiles)
                 {
@@ -901,6 +949,10 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.AddPassArg("stringsParam");
                     }
+                    if (objData.GameReleaseOptions != null)
+                    {
+                        args.AddPassArg("release");
+                    }
                 }
             }
             fg.AppendLine();
@@ -909,6 +961,10 @@ namespace Mutagen.Bethesda.Generation
                 $"public{obj.NewOverride()}static I{obj.Name}DisposableGetter {CreateFromPrefix}{ModuleNickname}Overlay"))
             {
                 args.Add($"{nameof(IMutagenReadStream)} stream");
+                if (objData.GameReleaseOptions != null)
+                {
+                    args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                }
                 args.Add($"ModKey modKey");
             }
             using (new BraceWrapper(fg))
@@ -918,6 +974,10 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.AddPassArg($"stream");
                     args.AddPassArg("modKey");
+                    if (objData.GameReleaseOptions != null)
+                    {
+                        args.AddPassArg("release");
+                    }
                     args.Add("shouldDispose: false");
                 }
             }
@@ -1187,11 +1247,11 @@ namespace Mutagen.Bethesda.Generation
 
             if (data.MarkerType != null && data.RecordType != null)
             {
-                // Skip marker
+                // Skip marker 
                 fg.AppendLine("frame.Position += frame.MetaData.SubConstants.HeaderLength + contentLength;");
-                // read in target record type.
+                // read in target record type. 
                 fg.AppendLine("var nextRec = frame.MetaData.GetSubrecord(frame);");
-                // Return if it's not there
+                // Return if it's not there 
                 fg.AppendLine($"if (nextRec.RecordType != {obj.RecordTypeHeaderName(data.RecordType.Value)}) throw new ArgumentException(\"Marker was read but not followed by expected subrecord.\");");
                 fg.AppendLine("contentLength = nextRec.RecordLength;");
             }
@@ -1218,6 +1278,7 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
+            var objData = obj.GetObjectData();
             fg.AppendLine($"param ??= {nameof(BinaryWriteParameters)}.{nameof(BinaryWriteParameters.Default)};");
             using (var args = new ArgsWrapper(fg,
                 $"var modKey = param.{nameof(BinaryWriteParameters.RunMasterMatch)}"))
@@ -1225,15 +1286,24 @@ namespace Mutagen.Bethesda.Generation
                 args.Add("mod: item");
                 args.AddPassArg("path");
             }
-            if (obj.GetObjectData().UsesStringFiles)
+            if (objData.UsesStringFiles)
             {
                 fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
                 fg.AppendLine("var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), \"Strings\")) : null);");
             }
-            fg.AppendLine($"var bundle = new {nameof(WritingBundle)}(item.GameRelease)");
+            string gameReleaseStr;
+            if (objData.GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{objData.GameCategory}";
+            }
+            else
+            {
+                gameReleaseStr = $"item.{ModModule.ReleaseEnumName(obj)}.ToGameRelease()";
+            }
+            fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameReleaseStr})");
             using (var prop = new PropertyCtorWrapper(fg))
             {
-                if (obj.GetObjectData().UsesStringFiles)
+                if (objData.UsesStringFiles)
                 {
                     prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
                 }
@@ -1260,7 +1330,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"memStream.Position = 0;");
                 fg.AppendLine($"memStream.CopyTo(fs);");
             }
-            if (obj.GetObjectData().UsesStringFiles)
+            if (objData.UsesStringFiles)
             {
                 fg.AppendLine("if (disposeStrings)");
                 using (new BraceWrapper(fg))
@@ -1272,12 +1342,22 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
+            string gameReleaseStr;
+            if (obj.GetObjectData().GameReleaseOptions == null)
+            {
+                gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+            }
+            else
+            {
+                fg.AppendLine($"var gameRelease = release.ToGameRelease();");
+                gameReleaseStr = $"gameRelease";
+            }
+            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));");
                 fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}));");
+                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
                 fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                 if (obj.GetObjectData().UsesStringFiles)
                 {
@@ -1344,15 +1424,25 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
-                if (obj.GetObjectType() == ObjectType.Mod)
+                using (var args = new ArgsWrapper(fg,
+                    $"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
                 {
-                    fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}(modKey);");
-                }
-                else
-                {
-                    fg.AppendLine($"var ret = new {obj.Name}{obj.GetGenericTypes(MaskType.Normal)}();");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.AddPassArg("modKey");
+                    }
+                    if (obj.GetObjectData().GameReleaseOptions != null)
+                    {
+                        args.AddPassArg("release");
+                    }
                 }
             }
+        }
+
+        private string GetRecordTypeString(ObjectGeneration obj)
+        {
+            var data = obj.GetObjectData();
+            return $"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
         }
 
         protected override async Task GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, Accessor accessor)
@@ -1412,7 +1502,7 @@ namespace Mutagen.Bethesda.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame.Reader");
-                                        args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
+                                        args.Add(GetRecordTypeString(obj));
                                     }
                                 }
                             }
@@ -1423,7 +1513,7 @@ namespace Mutagen.Bethesda.Generation
                                 suffixLine: ")"))
                             {
                                 args.Add("frame.Reader");
-                                args.Add($"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
+                                args.Add(GetRecordTypeString(obj));
                             }
                             break;
                         case ObjectType.Group:
@@ -1529,7 +1619,7 @@ namespace Mutagen.Bethesda.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})");
+                    args.Add($"record: {GetRecordTypeString(obj)}");
                     args.Add($"type: Mutagen.Bethesda.Binary.{nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
@@ -1861,7 +1951,7 @@ namespace Mutagen.Bethesda.Generation
 
                                 var loqui = field as LoquiType;
 
-                                // Custom Modheader insert
+                                // Custom Modheader insert 
                                 if (loqui != null
                                     && loqui.Name == "ModHeader")
                                 {
@@ -1982,7 +2072,15 @@ namespace Mutagen.Bethesda.Generation
                 obj.GenerateGetterInterfaceImplementations(fg);
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameRelease};");
+                    if (objData.GameReleaseOptions != null)
+                    {
+                        fg.AppendLine($"public {ModModule.ReleaseEnumName(obj)} {ModModule.ReleaseEnumName(obj)} {{ get; }}");
+                        fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {ModModule.ReleaseEnumName(obj)}.ToGameRelease();");
+                    }
+                    else
+                    {
+                        fg.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{obj.GetObjectData().GameCategory};");
+                    }
                     fg.AppendLine($"IReadOnlyCache<T, FormKey> {nameof(IModGetter)}.GetGroupGetter<T>() => this.GetGroupGetter<T>();");
                     fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
                     fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param: param);");
@@ -2124,6 +2222,10 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{nameof(IMutagenReadStream)} stream");
                         args.Add("ModKey modKey");
                         args.Add($"bool shouldDispose");
+                        if (objData.GameReleaseOptions != null)
+                        {
+                            args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                        }
                     }
                     else
                     {
@@ -2148,6 +2250,10 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         fg.AppendLine("this.ModKey = modKey;");
+                        if (objData.GameReleaseOptions != null)
+                        {
+                            fg.AppendLine($"this.{ModModule.ReleaseEnumName(obj)} = release;");
+                        }
                         fg.AppendLine("this._data = stream;");
                         using (var args = new ArgsWrapper(fg,
                             $"this._package = new {nameof(BinaryOverlayFactoryPackage)}"))
@@ -2181,11 +2287,24 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
+                        string gameReleaseStr;
+                        if (obj.GetObjectData().GameReleaseOptions == null)
+                        {
+                            gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+                        }
+                        else
+                        {
+                            gameReleaseStr = "release.ToGameRelease()";
+                        }
                         using (var args = new FunctionWrapper(fg,
                             $"public static {this.BinaryOverlayClass(obj)} {obj.Name}Factory"))
                         {
                             args.Add($"ReadOnlyMemorySlice<byte> data");
                             args.Add("ModKey modKey");
+                            if (objData.GameReleaseOptions != null)
+                            {
+                                args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                            }
                             if (objData.UsesStringFiles)
                             {
                                 args.Add($"{nameof(IStringsFolderLookup)}? stringsLookup = null");
@@ -2196,11 +2315,15 @@ namespace Mutagen.Bethesda.Generation
                             using (var args = new ArgsWrapper(fg,
                                 $"return {obj.Name}Factory"))
                             {
-                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease});");
+                                fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr});");
                                 fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
                                 if (objData.UsesStringFiles)
                                 {
                                     fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
+                                }
+                                if (objData.GameReleaseOptions != null)
+                                {
+                                    args.AddPassArg("release");
                                 }
                                 args.Add(subFg =>
                                 {
@@ -2222,6 +2345,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"string path");
                             args.Add("ModKey modKey");
+                            if (objData.GameReleaseOptions != null)
+                            {
+                                args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                            }
                             if (objData.UsesStringFiles)
                             {
                                 args.Add($"{nameof(StringsReadParameters)}? stringsParam = null");
@@ -2229,10 +2356,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({nameof(GameRelease)}.{obj.GetObjectData().GameRelease})");
+                            fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr})");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {nameof(GameRelease)}.{obj.GetObjectData().GameRelease}))");
+                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"var stream = new {nameof(MutagenBinaryReadStream)}"))
@@ -2260,6 +2387,10 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.AddPassArg("stream");
                                 args.AddPassArg("modKey");
+                                if (objData.GameReleaseOptions != null)
+                                {
+                                    args.AddPassArg("release");
+                                }
                                 args.Add("shouldDispose: true");
                             }
                         }
@@ -2273,6 +2404,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"{nameof(IMutagenReadStream)} stream");
                             args.Add("ModKey modKey");
+                            if (objData.GameReleaseOptions != null)
+                            {
+                                args.Add($"{ModModule.ReleaseEnumName(obj)} release");
+                            }
                             args.Add("bool shouldDispose");
                         }
                         else
@@ -2359,6 +2494,10 @@ namespace Mutagen.Bethesda.Generation
                                         break;
                                     case ObjectType.Mod:
                                         args.AddPassArg($"stream");
+                                        if (objData.GameReleaseOptions != null)
+                                        {
+                                            args.AddPassArg($"release");
+                                        }
                                         break;
                                     default:
                                         throw new NotImplementedException();
@@ -2401,7 +2540,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        // Parse struct section ending positions
+                        // Parse struct section ending positions 
                         string structPassedAccessor = null;
                         int? structPassedLen = 0;
                         await foreach (var lengths in IteratePassedLengths(
@@ -2428,7 +2567,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        // Parse ending positions 
+                        // Parse ending positions  
                         await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
                         {
                             if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
@@ -2574,8 +2713,8 @@ namespace Mutagen.Bethesda.Generation
                                             }
                                         }
                                     }
-                                    // Not advancing stream position, but only because breaks only occur in situations
-                                    // that stream position doesn't matter
+                                    // Not advancing stream position, but only because breaks only occur in situations 
+                                    // that stream position doesn't matter 
                                 }
                                 else if (structPassedAccessor != null)
                                 {
@@ -2619,8 +2758,8 @@ namespace Mutagen.Bethesda.Generation
                                             }
                                         }
                                     }
-                                    // Not advancing stream position, but only because breaks only occur in situations
-                                    // that stream position doesn't matter
+                                    // Not advancing stream position, but only because breaks only occur in situations 
+                                    // that stream position doesn't matter 
                                 }
                                 else if (totalPassedLength != null)
                                 {
@@ -2636,7 +2775,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        // Parse ending positions 
+                        // Parse ending positions  
                         await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true, passedLenPrefix: "ret."))
                         {
                             if (!this.TryGetTypeGeneration(lengths.Field.GetType(), out var typeGen)) continue;
@@ -2802,7 +2941,7 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         if (doubleUsages.TryGetValue(gen.Key.First(), out doubles))
                                         {
-                                            // Means we handled earlier, break out
+                                            // Means we handled earlier, break out 
                                             if (doubles.Count == 0) continue;
                                         }
                                     }

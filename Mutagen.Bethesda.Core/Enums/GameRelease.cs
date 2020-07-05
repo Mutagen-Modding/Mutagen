@@ -10,8 +10,8 @@ namespace Mutagen.Bethesda
     public enum GameRelease
     {
         Oblivion,
-        Skyrim,
-        SkyrimSpecialEdition
+        SkyrimLE,
+        SkyrimSE
     }
 
     public static class GameReleaseExt
@@ -21,8 +21,8 @@ namespace Mutagen.Bethesda
             return release switch
             {
                 GameRelease.Oblivion => GameCategory.Oblivion,
-                GameRelease.Skyrim => GameCategory.Skyrim,
-                GameRelease.SkyrimSpecialEdition => GameCategory.Skyrim,
+                GameRelease.SkyrimLE => GameCategory.Skyrim,
+                GameRelease.SkyrimSE => GameCategory.Skyrim,
                 _ => throw new NotImplementedException(),
             };
         }

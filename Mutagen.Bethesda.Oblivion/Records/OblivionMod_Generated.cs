@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            var ret = new OblivionMod(modKey);
+            var ret = new OblivionMod(modKey: modKey);
             ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 importMask: importMask,
@@ -11136,6 +11136,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IOblivionModDisposableGetter : IOblivionModGetter, IModDisposeGetter
     {
     }
+
 }
 #endregion
 
@@ -12667,7 +12668,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = param.RunMasterMatch(
                 mod: item,
                 path: path);
-            var bundle = new WritingBundle(item.GameRelease)
+            var bundle = new WritingBundle(GameRelease.Oblivion)
             {
             };
             using var memStream = new MemoryTributary();
@@ -12700,7 +12701,7 @@ namespace Mutagen.Bethesda.Oblivion
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.GameRelease),
+                new WritingBundle(GameRelease.Oblivion),
                 dispose: false))
             {
                 OblivionModBinaryWriteTranslation.Instance.Write(

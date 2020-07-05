@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimProcessor : Processor
     {
-        public override GameRelease GameRelease => GameRelease.Skyrim;
+        public override GameRelease GameRelease => GameRelease.SkyrimLE;
 
         protected override void AddDynamicProcessorInstructions(IMutagenReadStream stream, FormID formID, RecordType recType)
         {

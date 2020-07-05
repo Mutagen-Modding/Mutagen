@@ -219,21 +219,23 @@ namespace Mutagen.Bethesda.Tests
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 this.FilePath.Path,
-                this.ModKey);
+                this.ModKey,
+                GameRelease.ToSkyrimRelease());
         }
 
         protected override async Task<IMod> ImportBinary(FilePath path)
         {
             return SkyrimMod.CreateFromBinary(
                 path.Path,
+                GameRelease.ToSkyrimRelease(),
                 this.ModKey,
                 parallel: this.Settings.Parallel);
         }
 
         protected override async Task<IMod> ImportCopyIn(FilePath file)
         {
-            var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path);
-            var ret = new SkyrimMod(this.ModKey);
+            var wrapper = SkyrimMod.CreateFromBinaryOverlay(file.Path, GameRelease.ToSkyrimRelease());
+            var ret = new SkyrimMod(this.ModKey, GameRelease.ToSkyrimRelease());
             ret.DeepCopyIn(wrapper);
             return ret;
         }

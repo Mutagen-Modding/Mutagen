@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Skyrim
                     locs: ParseRecordLocations(
                         stream: new OverlayStream(contentSpan, _package),
                         trigger: DialogResponses_Registration.TriggeringRecordType,
-                        constants: GameConstants.Skyrim.MajorConstants,
+                        constants: stream.MetaData.Constants.MajorConstants,
                         skipHeader: false));
             }
         }

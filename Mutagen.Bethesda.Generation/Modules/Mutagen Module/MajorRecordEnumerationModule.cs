@@ -611,12 +611,12 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case \"{nameof(IMajorRecordCommon)}\":");
                         fg.AppendLine($"case \"{nameof(IMajorRecordCommonGetter)}\":");
                         fg.AppendLine($"case \"{nameof(MajorRecord)}\":");
-                        var gameMode = obj.GetObjectData().GameRelease;
-                        if (gameMode != null)
+                        var gameCategory = obj.GetObjectData().GameCategory;
+                        if (gameCategory != null)
                         {
-                            fg.AppendLine($"case \"I{gameMode}MajorRecord\":");
-                            fg.AppendLine($"case \"I{gameMode}MajorRecordGetter\":");
-                            fg.AppendLine($"case \"{gameMode}MajorRecord\":");
+                            fg.AppendLine($"case \"I{gameCategory}MajorRecord\":");
+                            fg.AppendLine($"case \"I{gameCategory}MajorRecordGetter\":");
+                            fg.AppendLine($"case \"{gameCategory}MajorRecord\":");
                         }
                         using (new DepthWrapper(fg))
                         {

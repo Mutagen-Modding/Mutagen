@@ -17,11 +17,6 @@ namespace Mutagen.Bethesda.Binary
         public ObjectType ObjectType { get; }
         
         /// <summary>
-        /// Game release associated with the constants
-        /// </summary>
-        public GameRelease Release { get; }
-        
-        /// <summary>
         /// The length that the header itself takes
         /// </summary>
         public sbyte HeaderLength { get; }
@@ -54,17 +49,14 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="release">Game release to associate with the constants</param>
         /// <param name="type">Type of object to associate the constants with</param>
         /// <param name="headerLength">Length of the header</param>
         /// <param name="lengthLength">Number of bytes containing content length information</param>
         public RecordHeaderConstants(
-            GameRelease release,
             ObjectType type,
             sbyte headerLength,
             sbyte lengthLength)
         {
-            this.Release = release;
             this.ObjectType = type;
             this.HeaderLength = headerLength;
             this.LengthLength = lengthLength;

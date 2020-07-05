@@ -27,8 +27,8 @@ namespace Mutagen.Bethesda
             string pluginPath = game switch
             {
                 GameRelease.Oblivion => "Oblivion/Plugins.txt",
-                GameRelease.Skyrim => "Skyrim/Plugins.txt",
-                GameRelease.SkyrimSpecialEdition => "Skyrim Special Edition/Plugins.txt",
+                GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
+                GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
                 _ => throw new NotImplementedException()
             };
             path = new FilePath(

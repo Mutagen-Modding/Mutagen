@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void BasicWrite()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             var weap = mod.Weapons.AddNew();
             mod.WriteToBinary(
                 tmp.File.Path,
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void BasicParallelWrite()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             var weap = mod.Weapons.AddNew();
             mod.WriteToBinaryParallel(
                 tmp.File.Path,
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void ParallelWrite_MasterFlagSync_Throw()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(BadWriteKey);
+            var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
             var weap = mod.Weapons.AddNew();
             Assert.Throws<ArgumentException>(
                 () => mod.WriteToBinaryParallel(
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Write_MasterFlagSync_Throw()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(BadWriteKey);
+            var mod = new SkyrimMod(BadWriteKey, SkyrimRelease.SkyrimLE);
             var weap = mod.Weapons.AddNew();
             Assert.Throws<ArgumentException>(
                 () => mod.WriteToBinaryParallel(
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void ParallelWrite_MasterListSync_Throw()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm")));
             Assert.Throws<AggregateException>(
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Write_MasterListSync_Throw()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm")));
             Assert.Throws<ArgumentException>(
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void ParallelWrite_MasterListSync()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm")));
             mod.WriteToBinaryParallel(
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void Write_MasterListSync()
         {
             using var tmp = GetFile();
-            var mod = new SkyrimMod(WriteKey);
+            var mod = new SkyrimMod(WriteKey, SkyrimRelease.SkyrimLE);
             mod.Weapons.RecordCache.Set(
                 new Weapon(FormKey.Factory("012345:Skyrim.esm")));
             mod.WriteToBinary(

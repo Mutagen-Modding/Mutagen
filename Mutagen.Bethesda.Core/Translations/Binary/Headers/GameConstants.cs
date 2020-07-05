@@ -67,6 +67,18 @@ namespace Mutagen.Bethesda.Binary
             SubConstants = subConstants;
         }
 
+        public GameConstants(
+            GameConstants rhs, 
+            GameRelease releaseOverride)
+        {
+            Release = releaseOverride;
+            ModHeaderLength = rhs.ModHeaderLength;
+            ModHeaderFluffLength = rhs.ModHeaderFluffLength;
+            GroupConstants = rhs.GroupConstants;
+            MajorConstants = rhs.MajorConstants;
+            SubConstants = rhs.SubConstants;
+        }
+
         /// <summary>
         /// Readonly singleton of Oblivion game constants
         /// </summary>
@@ -75,18 +87,15 @@ namespace Mutagen.Bethesda.Binary
             modHeaderLength: 20,
             modHeaderFluffLength: 12,
             groupConstants: new RecordHeaderConstants(
-                GameRelease.Oblivion,
                 ObjectType.Group,
                 headerLength: 20,
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
-                GameRelease.Oblivion,
                 headerLength: 20,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
             subConstants: new RecordHeaderConstants(
-                GameRelease.Oblivion,
                 ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2));
@@ -94,26 +103,28 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Readonly singleton of Skyrim LE game constants
         /// </summary>
-        public static readonly GameConstants Skyrim = new GameConstants(
-            release: GameRelease.Skyrim,
+        public static readonly GameConstants SkyrimLE = new GameConstants(
+            release: GameRelease.SkyrimLE,
             modHeaderLength: 24,
             modHeaderFluffLength: 16,
             groupConstants: new RecordHeaderConstants(
-                GameRelease.Skyrim,
                 ObjectType.Group,
                 headerLength: 24,
                 lengthLength: 4),
             majorConstants: new MajorRecordConstants(
-                GameRelease.Skyrim,
                 headerLength: 24,
                 lengthLength: 4,
                 flagsLoc: 8,
                 formIDloc: 12),
             subConstants: new RecordHeaderConstants(
-                GameRelease.Skyrim,
                 ObjectType.Subrecord,
                 headerLength: 6,
                 lengthLength: 2));
+
+        /// <summary>
+        /// Readonly singleton of Skyrim SE game constants
+        /// </summary>
+        public static readonly GameConstants SkyrimSE = new GameConstants(SkyrimLE, GameRelease.SkyrimSE);
 
         #region Header Factories
         public ModHeader Mod(ReadOnlySpan<byte> span) => new ModHeader(this, span);
@@ -514,9 +525,10 @@ namespace Mutagen.Bethesda.Binary
             {
                 case GameRelease.Oblivion:
                     return Oblivion;
-                case GameRelease.Skyrim:
-                case GameRelease.SkyrimSpecialEdition:
-                    return Skyrim;
+                case GameRelease.SkyrimLE:
+                    return SkyrimLE;
+                case GameRelease.SkyrimSE:
+                    return SkyrimSE;
                 default:
                     throw new NotImplementedException();
             }

@@ -5421,7 +5421,8 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public new static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
-        public override GameRelease GameRelease => GameRelease.Skyrim;
+        public SkyrimRelease SkyrimRelease { get; }
+        public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
@@ -5437,10 +5438,13 @@ namespace Mutagen.Bethesda.Skyrim
             get => this.ModHeader.Stats.NextObjectID;
             set => this.ModHeader.Stats.NextObjectID = value;
         }
-        public SkyrimMod(ModKey modKey)
+        public SkyrimMod(
+            ModKey modKey,
+            SkyrimRelease release)
             : base(modKey)
         {
             this.ModHeader.Stats.NextObjectID = GetDefaultInitialNextObjectID();
+            this.SkyrimRelease = release;
             _GameSettings_Object = new Group<GameSetting>(this);
             _Keywords_Object = new Group<Keyword>(this);
             _LocationReferenceTypes_Object = new Group<LocationReferenceType>(this);
@@ -6961,10 +6965,12 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
             return CreateFromBinary(
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -6973,13 +6979,17 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            var ret = new SkyrimMod(modKey);
+            var ret = new SkyrimMod(
+                modKey: modKey,
+                release: release);
             ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -6989,16 +6999,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -7010,6 +7022,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -7018,17 +7031,19 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static SkyrimMod CreateFromBinary(
             string path,
+            SkyrimRelease release,
             ErrorMaskBuilder? errorMask,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -7040,6 +7055,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(Path.GetDirectoryName(path), stringsParam, modKey);
                 }
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -7050,16 +7066,18 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameRelease.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -7069,17 +7087,19 @@ namespace Mutagen.Bethesda.Skyrim
         public static SkyrimMod CreateFromBinary(
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameRelease.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 return CreateFromBinary(
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame,
@@ -7091,38 +7111,44 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
+            SkyrimRelease release,
             ModKey modKey,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(GameRelease.Skyrim);
+            var meta = new ParsingBundle(release.ToGameRelease());
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: new MutagenMemoryReadStream(
                     data: bytes,
                     metaData: meta),
+                release: release,
                 modKey: modKey,
                 shouldDispose: false);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             StringsReadParameters? stringsParam = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
                 modKeyOverride ?? ModKey.Factory(Path.GetFileName(path)),
-                stringsParam: stringsParam);
+                stringsParam: stringsParam,
+                release: release);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             IMutagenReadStream stream,
+            SkyrimRelease release,
             ModKey modKey)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 stream: stream,
                 modKey: modKey,
+                release: release,
                 shouldDispose: false);
         }
 
@@ -7395,6 +7421,10 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
         IGroupGetter<IColorRecordGetter> Colors { get; }
         IGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+
+        #region Mutagen
+        SkyrimRelease SkyrimRelease { get; }
+        #endregion
 
     }
 
@@ -7794,11 +7824,13 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
             CopyInFromBinary(
                 item: item,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -7808,12 +7840,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
             ((SkyrimModSetterCommon)((ISkyrimModGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
+                release: release,
                 importMask: importMask,
                 modKey: modKey,
                 frame: frame,
@@ -7823,16 +7857,18 @@ namespace Mutagen.Bethesda.Skyrim
         public static void CopyInFromBinary(
             this ISkyrimMod item,
             string path,
+            SkyrimRelease release,
             ModKey? modKeyOverride = null,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Skyrim))
+            var gameRelease = release.ToGameRelease();
+            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
             {
                 var modKey = modKeyOverride ?? ModKey.Factory(Path.GetFileName(path));
                 var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Skyrim));
+                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
                 frame.MetaData.Parallel = parallel;
                 if (reader.Remaining < 12)
                 {
@@ -7845,6 +7881,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 CopyInFromBinary(
                     item: item,
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -7855,17 +7892,19 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimMod item,
             Stream stream,
             ModKey modKey,
+            SkyrimRelease release,
             RecordInfoCache infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, GameRelease.Skyrim))
+            using (var reader = new MutagenBinaryReadStream(stream, release.ToGameRelease()))
             {
                 var frame = new MutagenFrame(reader);
                 frame.MetaData.RecordInfoCache = infoCache;
                 frame.MetaData.Parallel = parallel;
                 CopyInFromBinary(
                     item: item,
+                    release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
@@ -9639,6 +9678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void CopyInFromBinary(
             ISkyrimMod item,
             MutagenFrame frame,
+            SkyrimRelease release,
             ModKey modKey,
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
@@ -11248,7 +11288,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey)
         {
             var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
-            var bundle = new WritingBundle(GameConstants.Skyrim);
+            var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
+            var bundle = new WritingBundle(gameConstants);
             bundle.MasterReferences = masterRefs;
             SkyrimModBinaryWriteTranslation.WriteModHeader(
                 item,
@@ -11256,118 +11297,118 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 modKey);
             Stream[] outputStreams = new Stream[112];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, masterRefs, 100, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, masterRefs, 101, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArtObjects, masterRefs, 102, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, masterRefs, 103, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MovementTypes, masterRefs, 104, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, masterRefs, 105, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, gameConstants, outputStreams));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, gameConstants, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, gameConstants, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, masterRefs, 100, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, masterRefs, 101, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, masterRefs, 102, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, masterRefs, 103, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, masterRefs, 104, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, masterRefs, 105, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -11378,6 +11419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGroupGetter<T> group,
             MasterReferenceReader masters,
             int targetIndex,
+            GameConstants gameConstants,
             Stream[] streamDepositArray,
             StringsWriter? stringsWriter)
             where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
@@ -11385,15 +11427,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (group.RecordCache.Count == 0) return;
             var cuts = group.Records.Cut(CutCount).ToArray();
             Stream[] subStreams = new Stream[cuts.Length + 1];
-            byte[] groupBytes = new byte[GameConstants.Skyrim.GroupConstants.HeaderLength];
+            byte[] groupBytes = new byte[gameConstants.GroupConstants.HeaderLength];
             BinaryPrimitives.WriteInt32LittleEndian(groupBytes.AsSpan(), RecordTypes.GRUP.TypeInt);
             var groupByteStream = new MemoryStream(groupBytes);
-            var bundle = new WritingBundle(GameConstants.Skyrim)
+            var bundle = new WritingBundle(gameConstants)
             {
                 MasterReferences = masters,
                 StringsWriter = stringsWriter
             };
-            using (var stream = new MutagenWriter(groupByteStream, GameConstants.Skyrim, dispose: false))
+            using (var stream = new MutagenWriter(groupByteStream, gameConstants, dispose: false))
             {
                 stream.Position += 8;
                 GroupBinaryWriteTranslation.WriteEmbedded<T>(group, stream);
@@ -20382,6 +20424,38 @@ namespace Mutagen.Bethesda.Skyrim
     public interface ISkyrimModDisposableGetter : ISkyrimModGetter, IModDisposeGetter
     {
     }
+
+    /// <summary>
+    /// Different game release versions a Skyrim mod can have
+    /// </summary>
+    public enum SkyrimRelease
+    {
+        SkyrimLE,
+        SkyrimSE
+    }
+
+    public static class SkyrimReleaseExt
+    {
+        public static GameRelease ToGameRelease(this SkyrimRelease release)
+        {
+            return release switch
+            {
+                SkyrimRelease.SkyrimLE => GameRelease.SkyrimLE,
+                SkyrimRelease.SkyrimSE => GameRelease.SkyrimSE,
+                _ => throw new ArgumentException()
+            };
+        }
+
+        public static SkyrimRelease ToSkyrimRelease(this GameRelease release)
+        {
+            return release switch
+            {
+                GameRelease.SkyrimLE => SkyrimRelease.SkyrimLE,
+                GameRelease.SkyrimSE => SkyrimRelease.SkyrimSE,
+                _ => throw new ArgumentException()
+            };
+        }
+    }
 }
 #endregion
 
@@ -23315,7 +23389,7 @@ namespace Mutagen.Bethesda.Skyrim
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, Mutagen.Bethesda.Internals.Constants.LocalizedFlag) ? new StringsWriter(modKey, Path.Combine(Path.GetDirectoryName(path), "Strings")) : null);
-            var bundle = new WritingBundle(item.GameRelease)
+            var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
                 StringsWriter = stringsWriter
             };
@@ -23353,7 +23427,7 @@ namespace Mutagen.Bethesda.Skyrim
             var modKey = item.ModKey;
             using (var writer = new MutagenWriter(
                 stream: stream,
-                new WritingBundle(item.GameRelease),
+                new WritingBundle(item.SkyrimRelease.ToGameRelease()),
                 dispose: false))
             {
                 SkyrimModBinaryWriteTranslation.Instance.Write(
@@ -23396,7 +23470,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
         IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModGetter)rhs, include);
 
-        public GameRelease GameRelease => GameRelease.Skyrim;
+        public SkyrimRelease SkyrimRelease { get; }
+        public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
         void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
@@ -24009,9 +24084,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
-            bool shouldDispose)
+            bool shouldDispose,
+            SkyrimRelease release)
         {
             this.ModKey = modKey;
+            this.SkyrimRelease = release;
             this._data = stream;
             this._package = new BinaryOverlayFactoryPackage(stream.MetaData);
             this._package.MetaData.MasterReferences = new MasterReferenceReader(modKey);
@@ -24021,12 +24098,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ReadOnlyMemorySlice<byte> data,
             ModKey modKey,
+            SkyrimRelease release,
             IStringsFolderLookup? stringsLookup = null)
         {
-            var meta = new ParsingBundle(GameRelease.Skyrim);
+            var meta = new ParsingBundle(release.ToGameRelease());
             meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
             meta.StringsLookup = stringsLookup;
             return SkyrimModFactory(
+                release: release,
                 stream: new MutagenMemoryReadStream(
                     data: data,
                     metaData: meta),
@@ -24037,11 +24116,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             string path,
             ModKey modKey,
+            SkyrimRelease release,
             StringsReadParameters? stringsParam = null)
         {
-            var meta = new ParsingBundle(GameRelease.Skyrim)
+            var meta = new ParsingBundle(release.ToGameRelease())
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Skyrim))
+                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, release.ToGameRelease()))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path,
@@ -24058,16 +24138,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return SkyrimModFactory(
                 stream: stream,
                 modKey: modKey,
+                release: release,
                 shouldDispose: true);
         }
 
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             IMutagenReadStream stream,
             ModKey modKey,
+            SkyrimRelease release,
             bool shouldDispose)
         {
             var ret = new SkyrimModBinaryOverlay(
                 stream: stream,
+                release: release,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
             BinaryOverlay.FillModTypes(

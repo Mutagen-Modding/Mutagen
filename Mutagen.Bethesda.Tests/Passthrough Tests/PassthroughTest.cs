@@ -320,8 +320,8 @@ namespace Mutagen.Bethesda.Tests
             return target.GameRelease switch
             {
                 GameRelease.Oblivion => new OblivionPassthroughTest(settings, group, target),
-                GameRelease.Skyrim => new SkyrimPassthroughTest(settings, group, target, GameRelease.Skyrim),
-                GameRelease.SkyrimSpecialEdition => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimSpecialEdition),
+                GameRelease.SkyrimLE => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimLE),
+                GameRelease.SkyrimSE => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimSE),
                 _ => throw new NotImplementedException(),
             };
         }

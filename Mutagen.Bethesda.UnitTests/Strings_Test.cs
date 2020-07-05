@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests
             _stringsFormat = new byte[100];
             MutagenWriter writer = new MutagenWriter(
                 new BinaryWriter(new MemoryStream(_stringsFormat)),
-                GameConstants.Skyrim);
+                GameConstants.SkyrimLE);
             writer.Write((uint)_strs.Count);
             writer.Write((uint)_strs.Sum(s => s.Length + 1));
             int sum = 0;
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.UnitTests
             _ILstringsFormat = new byte[100];
             writer = new MutagenWriter(
                 new BinaryWriter(new MemoryStream(_ILstringsFormat)),
-                GameConstants.Skyrim);
+                GameConstants.SkyrimLE);
             writer.Write((uint)_strs.Count);
             writer.Write((uint)_strs.Sum(s => s.Length + 5));
             sum = 0;

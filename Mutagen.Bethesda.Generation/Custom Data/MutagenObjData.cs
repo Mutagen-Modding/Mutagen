@@ -28,13 +28,14 @@ namespace Mutagen.Bethesda.Generation
         public TaskCompletionSource WiringComplete = new TaskCompletionSource();
         public TaskCompletionSource DataTypeModuleComplete = new TaskCompletionSource();
         public RecordTypeConverter BaseRecordTypeConverter;
+        public HashSet<GameRelease> GameReleaseOptions;
         public RecordType? EndMarkerType;
         public bool MajorRecordFlags;
-        public GameRelease? GameRelease
+        public GameCategory? GameCategory
         {
             get
             {
-                if (Enum.TryParse<Bethesda.GameRelease>(ObjGen.Namespace.Split('.').Last(), out var mode))
+                if (Enum.TryParse<Bethesda.GameCategory>(ObjGen.Namespace.Split('.').Last(), out var mode))
                 {
                     return mode;
                 }

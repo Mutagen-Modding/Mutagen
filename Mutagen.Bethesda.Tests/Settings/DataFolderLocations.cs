@@ -12,9 +12,9 @@ namespace Mutagen.Bethesda.Tests
             {
                 case GameRelease.Oblivion:
                     return this.Oblivion;
-                case GameRelease.Skyrim:
+                case GameRelease.SkyrimLE:
                     return this.Skyrim;
-                case GameRelease.SkyrimSpecialEdition:
+                case GameRelease.SkyrimSE:
                     return this.SkyrimSpecialEdition;
                 default:
                     throw new NotImplementedException();

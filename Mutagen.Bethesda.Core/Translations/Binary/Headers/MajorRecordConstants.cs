@@ -22,18 +22,16 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="release">Game release to associate with the constants</param>
         /// <param name="headerLength">Length of a Major Record header</param>
         /// <param name="lengthLength">Number of bytes representing the content length</param>
         /// <param name="flagsLoc">Offset in the header where flags are located</param>
         /// <param name="formIDloc">Offset in the header where the FormID is located</param>
         public MajorRecordConstants(
-            GameRelease release,
             sbyte headerLength,
             sbyte lengthLength,
             sbyte flagsLoc,
             sbyte formIDloc)
-            : base(release, ObjectType.Record, headerLength, lengthLength)
+            : base(ObjectType.Record, headerLength, lengthLength)
         {
             this.FlagLocationOffset = flagsLoc;
             this.FormIDLocationOffset = formIDloc;
