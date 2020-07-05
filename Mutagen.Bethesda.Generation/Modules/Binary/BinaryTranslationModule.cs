@@ -1439,9 +1439,17 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private string GetRecordTypeString(ObjectGeneration obj)
+        private string GetRecordTypeString(ObjectGeneration obj, Accessor gameReleaseAccessor, Accessor versionAccessor)
         {
             var data = obj.GetObjectData();
+            if (data.GameReleaseConverters != null)
+            {
+                return $"recordTypeConverter.Combine({obj.RegistrationName}.Get({gameReleaseAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
+            }
+            if (data.VersionConverters != null)
+            {
+                return $"recordTypeConverter.Combine({obj.RegistrationName}.Get({versionAccessor})).ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
+            }
             return $"recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(obj.GetRecordType())})";
         }
 
@@ -1502,7 +1510,7 @@ namespace Mutagen.Bethesda.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame.Reader");
-                                        args.Add(GetRecordTypeString(obj));
+                                        args.Add(GetRecordTypeString(obj, "frame.MetaData.Constants.Release", "frame.MetaData.FormVersion"));
                                     }
                                 }
                             }
@@ -1513,7 +1521,7 @@ namespace Mutagen.Bethesda.Generation
                                 suffixLine: ")"))
                             {
                                 args.Add("frame.Reader");
-                                args.Add(GetRecordTypeString(obj));
+                                args.Add(GetRecordTypeString(obj, "frame.MetaData.Constants.Release", "frame.MetaData.FormVersion"));
                             }
                             break;
                         case ObjectType.Group:
@@ -1619,7 +1627,7 @@ namespace Mutagen.Bethesda.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: {GetRecordTypeString(obj)}");
+                    args.Add($"record: {GetRecordTypeString(obj, "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
                     args.Add($"type: Mutagen.Bethesda.Binary.{nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }

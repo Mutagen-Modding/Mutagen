@@ -7,5 +7,8 @@
       <Break />
       <Enum name="ArmorType" enumName="ArmorType" byteLength="4" />
     </Fields>
+    <VersionOverride version="44">
+      <Mapping From="BODT" To="BOD2" />
+    </VersionOverride>
   </Object>
 </Loqui>

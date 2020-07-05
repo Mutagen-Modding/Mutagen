@@ -3825,6 +3825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (nextRecordType.TypeInt)
             {
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
                     item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
@@ -4146,6 +4147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (type.TypeInt)
             {
                 case RecordTypeInts.BODT:
+                case RecordTypeInts.BOD2:
                 {
                     _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;

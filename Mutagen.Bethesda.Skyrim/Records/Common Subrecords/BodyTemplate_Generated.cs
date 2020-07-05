@@ -571,7 +571,6 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = BodyTemplate_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -1167,7 +1166,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly Type XmlWriteTranslation = typeof(BodyTemplateXmlWriteTranslation);
-        public static readonly RecordType TriggeringRecordType = RecordTypes.BODT;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        RecordTypes.BODT,
+                        RecordTypes.BOD2
+                    })
+            );
+        });
+        public static RecordTypeConverter Version44Converter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("BODT"),
+                new RecordType("BOD2")));
+        public static RecordTypeConverter? Get(int? version)
+        {
+            if (version == null) return default(RecordTypeConverter);
+            if (version.Value >= 44)
+            {
+                return Version44Converter;
+            }
+            return default(RecordTypeConverter);
+        }
         public static readonly Type BinaryWriteTranslation = typeof(BodyTemplateBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1252,7 +1275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
-                recordTypeConverter.ConvertToCustom(RecordTypes.BODT)));
+                recordTypeConverter.Combine(BodyTemplate_Registration.Get(frame.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1945,7 +1968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             using (HeaderExport.Header(
                 writer: writer,
-                record: recordTypeConverter.ConvertToCustom(RecordTypes.BODT),
+                record: recordTypeConverter.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
                 type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
             {
                 WriteEmbedded(

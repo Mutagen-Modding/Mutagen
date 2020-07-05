@@ -12,6 +12,9 @@
             <xs:element name="BaseRecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" />
             <xs:element name="CustomRecordTypeTrigger" type="xs:string" minOccurs="0" />
             <xs:element name="LinkInterface" type="InterfaceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="GameReleaseOptions" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="GameModeOverride" type="GameModeRecordTypeOverrides" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="VersionOverride" type="VersionRecordTypeOverrides" minOccurs="0" maxOccurs="unbounded" />
           </xs:choice>
           <xs:attribute name="recordType" type="xs:string">
             <xs:annotation>
@@ -73,6 +76,13 @@
             <xs:annotation>
               <xs:documentation>
                 whether to define a custom function for when an unrecognized record is encountered
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="usesStringFiles" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                For mod objects, whether or not they should utilize string localization
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -702,6 +712,25 @@
   </xs:complexType>
 
   <xs:complexType name="RecordTypeMappingType" >
+    <xs:attribute name="From" type="xs:string" use="required" />
+    <xs:attribute name="To" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="GameModeRecordTypeOverrides" >
+    <xs:sequence>
+      <xs:element name="Mapping" type="GameModeRecordTypeOverrideType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="release" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="VersionRecordTypeOverrides" >
+    <xs:sequence>
+      <xs:element name="Mapping" type="GameModeRecordTypeOverrideType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="version" type="xs:byte" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="GameModeRecordTypeOverrideType" >
     <xs:attribute name="From" type="xs:string" use="required" />
     <xs:attribute name="To" type="xs:string" use="required" />
   </xs:complexType>

@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public const int BIDS = 0x53444942;
         public const int BMCT = 0x54434D42;
         public const int BNAM = 0x4D414E42;
+        public const int BOD2 = 0x32444F42;
         public const int BODT = 0x54444F42;
         public const int BOOK = 0x4B4F4F42;
         public const int BPND = 0x444E5042;

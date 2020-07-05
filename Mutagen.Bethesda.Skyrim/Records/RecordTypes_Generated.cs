@@ -66,6 +66,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static readonly RecordType BIDS = new RecordType(0x53444942);
         public static readonly RecordType BMCT = new RecordType(0x54434D42);
         public static readonly RecordType BNAM = new RecordType(0x4D414E42);
+        public static readonly RecordType BOD2 = new RecordType(0x32444F42);
         public static readonly RecordType BODT = new RecordType(0x54444F42);
         public static readonly RecordType BOOK = new RecordType(0x4B4F4F42);
         public static readonly RecordType BPND = new RecordType(0x444E5042);

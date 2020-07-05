@@ -559,6 +559,28 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
             data.TriggeringRecordTypes.Add(recTypes);
+
+            if (data.GameReleaseConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.GameReleaseConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
+
+            if (data.VersionConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.VersionConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
         }
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
@@ -579,6 +601,28 @@ namespace Mutagen.Bethesda.Generation
             if (obj.TryGetCustomRecordTypeTriggers(out var customTypeTriggers))
             {
                 data.TriggeringRecordTypes.Add(customTypeTriggers);
+            }
+
+            if (data.GameReleaseConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.GameReleaseConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
+            }
+
+            if (data.VersionConverters != null)
+            {
+                foreach (var trigger in data.TriggeringRecordTypes.ToList())
+                {
+                    foreach (var gameConv in data.VersionConverters)
+                    {
+                        data.TriggeringRecordTypes.Add(gameConv.Value.ConvertToCustom(trigger));
+                    }
+                }
             }
 
             if (data.TriggeringRecordTypes.Count > 0)
