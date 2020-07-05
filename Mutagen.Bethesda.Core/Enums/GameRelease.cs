@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda
 
     public static class GameReleaseExt
     {
-        public static GameCategory Category(this GameRelease release)
+        public static GameCategory ToCategory(this GameRelease release)
         {
             return release switch
             {

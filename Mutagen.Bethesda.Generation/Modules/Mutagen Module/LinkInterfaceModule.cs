@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     mappingGen.AppendLine($"public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes {{ get; }}");
                     mappingGen.AppendLine();
-                    mappingGen.AppendLine($"public {nameof(GameRelease)} GameRelease => {nameof(GameRelease)}.{proto.Protocol.Namespace};");
+                    mappingGen.AppendLine($"public {nameof(GameCategory)} GameCategory => {nameof(GameCategory)}.{proto.Protocol.Namespace};");
                     mappingGen.AppendLine();
 
                     mappingGen.AppendLine("public LinkInterfaceMapping()");

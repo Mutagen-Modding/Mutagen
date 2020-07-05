@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public IReadOnlyDictionary<Type, Type[]> InterfaceToObjectTypes { get; }
 
-        public GameRelease GameRelease => GameRelease.Oblivion;
+        public GameCategory GameCategory => GameCategory.Oblivion;
 
         public LinkInterfaceMapping()
         {
