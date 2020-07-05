@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda
         /// Constructor taking a Mod index and ID as separate parameters
         /// </summary>
         /// <param name="modID">Mod index to use</param>
-        /// <param name="id">Record ID to use.  Must be <= 0x00FFFFFF.</param>
+        /// <param name="id">Record ID to use.  Must be less than 0x00FFFFFF.</param>
         /// <exception cref="ArgumentException">ID needs to contain no data in upper two bytes, or it will throw.</exception>
         public FormID(ModIndex modID, uint id)
         {
