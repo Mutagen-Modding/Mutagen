@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
+        static new ILoquiRegistration Registration => MagicEffectWerewolfArchetype_Registration.Instance;
 
     }
 

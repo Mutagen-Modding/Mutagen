@@ -693,9 +693,6 @@
     <Compile Include="Records\Major Records\StoryManagerQuestNode.cs">
       <DependentUpon>StoryManagerNodes.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\StoryManagerQuestNode.cs">
-      <DependentUpon>StoryManagerNodes.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\TalkingActivator.cs">
       <DependentUpon>TalkingActivator.xml</DependentUpon>
     </Compile>

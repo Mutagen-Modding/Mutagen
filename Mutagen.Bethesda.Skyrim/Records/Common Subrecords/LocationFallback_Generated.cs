@@ -579,7 +579,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LocationFallback_Registration.Instance;
+        static new ILoquiRegistration Registration => LocationFallback_Registration.Instance;
         LocationTargetRadius.LocationType Type { get; }
         Int32 Data { get; }
 

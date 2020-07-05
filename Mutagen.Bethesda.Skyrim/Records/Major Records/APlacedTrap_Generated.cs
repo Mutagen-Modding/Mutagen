@@ -1590,7 +1590,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
+        static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
         IOwnershipGetter? Ownership { get; }

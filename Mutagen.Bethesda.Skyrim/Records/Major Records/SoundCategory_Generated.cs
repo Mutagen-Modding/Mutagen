@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SoundCategory_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundCategoryCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -735,7 +735,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SoundCategory_Registration.Instance;
+        static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
         TranslatedString? Name { get; }
         SoundCategory.Flag? Flags { get; }
         IFormLinkNullable<ISoundDescriptorGetter> Parent { get; }

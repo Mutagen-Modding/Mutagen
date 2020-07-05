@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = TopicReference_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = TopicReference_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => TopicReferenceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => TopicReference_Registration.Instance;
+        static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
         IFormLink<IDialogTopicGetter> Reference { get; }
 
     }

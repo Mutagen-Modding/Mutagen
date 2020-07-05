@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = GlobalInt_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = GlobalInt_Registration.TriggeringRecordType;
         public GlobalInt(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => GlobalInt_Registration.Instance;
+        static new ILoquiRegistration Registration => GlobalInt_Registration.Instance;
         Int32? Data { get; }
 
     }

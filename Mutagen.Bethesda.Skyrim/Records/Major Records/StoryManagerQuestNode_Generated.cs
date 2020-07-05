@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = StoryManagerQuestNode_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => StoryManagerQuestNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -790,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
+        static new ILoquiRegistration Registration => StoryManagerQuestNode_Registration.Instance;
         StoryManagerQuestNode.QuestFlag? Flags { get; }
         UInt32? MaxConcurrentQuests { get; }
         UInt32? MaxNumQuestsToRun { get; }

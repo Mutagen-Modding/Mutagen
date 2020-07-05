@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
         public EffectShader(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => EffectShader_Registration.Instance;
+        static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         IEffectShaderDataGetter? Data { get; }

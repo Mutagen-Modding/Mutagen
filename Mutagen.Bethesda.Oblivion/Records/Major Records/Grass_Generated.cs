@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Grass_Registration.TriggeringRecordType;
         public Grass(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -650,7 +650,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Grass_Registration.Instance;
+        static new ILoquiRegistration Registration => Grass_Registration.Instance;
         IModelGetter? Model { get; }
         IGrassDataGetter? Data { get; }
 

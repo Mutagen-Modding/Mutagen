@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ShaderParticleGeometry_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ShaderParticleGeometry_Registration.TriggeringRecordType;
         public ShaderParticleGeometry(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
+        static new ILoquiRegistration Registration => ShaderParticleGeometry_Registration.Instance;
         Single GravityVelocity { get; }
         Single RotationVelocity { get; }
         Single ParticleSizeX { get; }

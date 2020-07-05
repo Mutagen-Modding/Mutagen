@@ -892,14 +892,14 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream)
         {
             return; // Disabled now that EDID links no longer auto-clear
-            var startLoc = stream.Position;
-            var edid = stream.ReadZString(4);
-            if (!magicEffectEDIDs.Contains(edid))
-            {
-                this._Instructions.SetSubstitution(
-                    startLoc,
-                    new byte[4]);
-            }
+            //var startLoc = stream.Position;
+            //var edid = stream.ReadZString(4);
+            //if (!magicEffectEDIDs.Contains(edid))
+            //{
+            //    this._Instructions.SetSubstitution(
+            //        startLoc,
+            //        new byte[4]);
+            //}
         }
 
         private void ProcessMagicEffects(

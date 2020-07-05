@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LoadScreenCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -991,7 +991,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LoadScreen_Registration.Instance;
+        static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         IIconsGetter? Icons { get; }
         TranslatedString Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }

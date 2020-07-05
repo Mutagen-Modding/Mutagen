@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SpellLeveled_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SpellLeveled_Registration.TriggeringRecordType;
         public SpellLeveled(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SpellLeveled_Registration.Instance;
+        static new ILoquiRegistration Registration => SpellLeveled_Registration.Instance;
 
     }
 

@@ -4018,7 +4018,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = EffectShader_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => EffectShaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4243,7 +4243,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => EffectShader_Registration.Instance;
+        static new ILoquiRegistration Registration => EffectShader_Registration.Instance;
         String? FillTexture { get; }
         String? ParticleShaderTexture { get; }
         String? HolesTexture { get; }

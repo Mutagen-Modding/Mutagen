@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Preprocessing
         /// </summary>
         /// <param name="streamCreator">A func to create an input stream</param>
         /// <param name="outputStream">Stream to write output to</param>
-        /// <param name="gameMode">Type of game the mod stream is reading</param>
+        /// <param name="release">Type of game the mod stream is reading</param>
         /// <param name="interest">Optional specification of which record types to process</param>
         public static void Decompress(
             Func<Stream> streamCreator,

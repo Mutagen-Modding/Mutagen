@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MovementType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MovementType_Registration.TriggeringRecordType;
         public MovementType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MovementType_Registration.Instance;
+        static new ILoquiRegistration Registration => MovementType_Registration.Instance;
         String? Name { get; }
         Single LeftWalk { get; }
         Single LeftRun { get; }

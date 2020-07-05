@@ -596,7 +596,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Class_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Class_Registration.TriggeringRecordType;
         public Class(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Class_Registration.Instance;
+        static new ILoquiRegistration Registration => Class_Registration.Instance;
         String? Name { get; }
         String? Description { get; }
         String? Icon { get; }

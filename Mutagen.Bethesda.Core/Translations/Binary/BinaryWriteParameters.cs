@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda
         public enum ModKeySyncOption
         {
             /// <summary>
-            // Do no check
+            /// Do no check
             /// </summary>
             NoCheck,
             /// <summary>
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda
         public enum MastersListSyncOption
         {
             /// <summary>
-            // Do no check
+            /// Do no check
             /// </summary>
             NoCheck,
             /// <summary>

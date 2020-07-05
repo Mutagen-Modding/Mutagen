@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NpcInheritSound_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = NpcInheritSound_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NpcInheritSoundCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
+        static new ILoquiRegistration Registration => NpcInheritSound_Registration.Instance;
         IFormLinkNullable<INpcGetter> InheritsSoundsFrom { get; }
 
     }

@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
+        static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
         IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }
         IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }

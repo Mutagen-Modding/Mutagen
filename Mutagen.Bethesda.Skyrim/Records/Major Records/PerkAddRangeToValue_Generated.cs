@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkAddRangeToValue_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkAddRangeToValue_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkAddRangeToValue_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkAddRangeToValue_Registration.Instance;
         Single From { get; }
         Single To { get; }
 

@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
+        static new ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
         IFormLink<IKeywordGetter> Link { get; }
 
     }

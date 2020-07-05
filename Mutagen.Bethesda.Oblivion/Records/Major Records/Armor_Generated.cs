@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
         public Armor(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -624,7 +624,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Armor_Registration.Instance;
+        static new ILoquiRegistration Registration => Armor_Registration.Instance;
         IArmorDataGetter? Data { get; }
 
     }

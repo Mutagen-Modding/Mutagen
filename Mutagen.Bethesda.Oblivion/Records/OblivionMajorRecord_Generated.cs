@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
+        static new ILoquiRegistration Registration => OblivionMajorRecord_Registration.Instance;
         OblivionMajorRecord.OblivionMajorRecordFlag OblivionMajorRecordFlags { get; }
 
     }

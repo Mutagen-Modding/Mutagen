@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Sound_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Sound_Registration.TriggeringRecordType;
         public Sound(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -636,7 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Sound_Registration.Instance;
+        static new ILoquiRegistration Registration => Sound_Registration.Instance;
         String? File { get; }
         ISoundDataInternalGetter? Data { get; }
 

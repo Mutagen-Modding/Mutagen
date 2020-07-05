@@ -463,7 +463,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ScriptVariableReference_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ScriptVariableReference_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -544,7 +544,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ScriptVariableReference_Registration.Instance;
+        static new ILoquiRegistration Registration => ScriptVariableReference_Registration.Instance;
         Int32 VariableIndex { get; }
 
     }

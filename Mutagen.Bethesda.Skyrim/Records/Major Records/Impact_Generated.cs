@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Impact_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ImpactCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1123,7 +1123,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Impact_Registration.Instance;
+        static new ILoquiRegistration Registration => Impact_Registration.Instance;
         IModelGetter? Model { get; }
         Single Duration { get; }
         Impact.OrientationType Orientation { get; }

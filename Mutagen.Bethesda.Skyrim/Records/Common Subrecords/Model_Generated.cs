@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Model_Registration.Instance;
+        static new ILoquiRegistration Registration => Model_Registration.Instance;
         IReadOnlyList<IAlternateTextureGetter>? AlternateTextures { get; }
 
     }

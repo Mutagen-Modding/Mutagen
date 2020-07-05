@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = GameSettingString_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = GameSettingString_Registration.TriggeringRecordType;
         public GameSettingString(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => GameSettingString_Registration.Instance;
+        static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
         String? Data { get; }
 
     }

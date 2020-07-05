@@ -485,7 +485,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = GlobalFloat_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = GlobalFloat_Registration.TriggeringRecordType;
         public GlobalFloat(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
+        static new ILoquiRegistration Registration => GlobalFloat_Registration.Instance;
         Single? Data { get; }
 
     }

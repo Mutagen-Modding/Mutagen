@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NpcOwner_Registration.Instance;
+        static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;
         IFormLink<INpcGetter> Npc { get; }
         UInt32 RawVariableData { get; }
 

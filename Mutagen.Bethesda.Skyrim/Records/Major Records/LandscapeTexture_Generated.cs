@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LandscapeTexture_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -881,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
+        static new ILoquiRegistration Registration => LandscapeTexture_Registration.Instance;
         IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
         IFormLink<IMaterialTypeGetter> MaterialType { get; }
         Byte HavokFriction { get; }

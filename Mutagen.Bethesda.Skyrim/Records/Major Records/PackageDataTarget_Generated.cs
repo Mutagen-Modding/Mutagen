@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PackageDataTarget_Registration.Instance;
+        static new ILoquiRegistration Registration => PackageDataTarget_Registration.Instance;
         PackageDataTarget.Types Type { get; }
         IAPackageTargetGetter Target { get; }
 

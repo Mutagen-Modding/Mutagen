@@ -2956,7 +2956,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Oblivion;
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
@@ -13136,7 +13136,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 package: ret._package);
             return ret;
         }
-
 
         public ParseResult FillRecordType(
             IBinaryReadStream stream,

@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SoundDescriptor_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundDescriptorCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
+        static new ILoquiRegistration Registration => SoundDescriptor_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? CNAM { get; }
         IFormLinkNullable<ISoundCategoryGetter> Category { get; }
         IFormLinkNullable<ISoundDescriptorGetter> AlternateSoundFor { get; }

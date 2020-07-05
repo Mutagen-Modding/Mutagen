@@ -914,7 +914,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CameraShot_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CameraShot_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CameraShotCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CameraShot_Registration.Instance;
+        static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
         IModelGetter? Model { get; }
         CameraShot.ActionType Action { get; }
         CameraShot.LocationType Location { get; }

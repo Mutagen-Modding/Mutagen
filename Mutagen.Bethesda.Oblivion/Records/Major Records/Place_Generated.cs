@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Place_Registration.Instance;
+        static new ILoquiRegistration Registration => Place_Registration.Instance;
 
     }
 

@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
+        static new ILoquiRegistration Registration => ScriptObjectListProperty_Registration.Instance;
 
     }
 

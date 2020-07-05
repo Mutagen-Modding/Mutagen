@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = VoiceType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = VoiceType_Registration.TriggeringRecordType;
         public VoiceType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => VoiceType_Registration.Instance;
+        static new ILoquiRegistration Registration => VoiceType_Registration.Instance;
         VoiceType.Flag Flags { get; }
 
     }

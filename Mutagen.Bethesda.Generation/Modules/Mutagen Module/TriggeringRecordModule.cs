@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Generation
             else if (await obj.IsSingleTriggerSource())
             {
                 await obj.IsSingleTriggerSource();
-                fg.AppendLine($"public new static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
+                fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Mutagen.Bethesda.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember};");
             }
             await base.GenerateInClass(obj, fg);
         }

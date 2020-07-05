@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda
         /// <summary>  
         /// Enumerates all contained Major Record of the specified type  
         /// </summary>  
+        /// <param name="t">Type of major records to enumerate</param> 
         /// <param name="throwIfUnknown">Whether to throw an exception if type is unknown</param> 
         /// <exception cref="ArgumentException">If a non applicable type is provided, and throw parameter is on</exception>  
         /// <exception cref="ArgumentException">If a non applicable type is provided</exception>  

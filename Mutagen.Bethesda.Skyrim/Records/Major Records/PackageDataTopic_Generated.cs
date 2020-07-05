@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PackageDataTopic_Registration.Instance;
+        static new ILoquiRegistration Registration => PackageDataTopic_Registration.Instance;
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
         ReadOnlyMemorySlice<Byte>? TPIC { get; }
 

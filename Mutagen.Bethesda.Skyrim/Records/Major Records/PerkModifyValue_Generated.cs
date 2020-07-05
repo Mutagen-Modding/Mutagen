@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkModifyValue_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkModifyValue_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -595,7 +595,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkModifyValue_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkModifyValue_Registration.Instance;
         PerkModifyValue.ModificationType Modification { get; }
         Single Value { get; }
 

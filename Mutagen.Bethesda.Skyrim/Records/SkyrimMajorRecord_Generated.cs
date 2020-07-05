@@ -606,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
+        static new ILoquiRegistration Registration => SkyrimMajorRecord_Registration.Instance;
         UInt16 FormVersion { get; }
         UInt16 Version2 { get; }
 

@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IRegionGrassGetter>? Grasses { get; }
 
     }

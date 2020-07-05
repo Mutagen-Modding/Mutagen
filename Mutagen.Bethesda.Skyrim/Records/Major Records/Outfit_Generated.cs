@@ -567,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Outfit_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Outfit_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => OutfitCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Outfit_Registration.Instance;
+        static new ILoquiRegistration Registration => Outfit_Registration.Instance;
         IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; }
 
     }

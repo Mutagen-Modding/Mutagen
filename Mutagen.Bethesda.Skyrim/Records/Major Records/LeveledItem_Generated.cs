@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         Byte ChanceNone { get; }
         LeveledItem.Flag Flags { get; }

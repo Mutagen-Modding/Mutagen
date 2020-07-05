@@ -484,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkAddLeveledItem_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkAddLeveledItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkAddLeveledItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -572,7 +572,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkAddLeveledItem_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkAddLeveledItem_Registration.Instance;
         IFormLink<ILeveledItemGetter> Item { get; }
 
     }

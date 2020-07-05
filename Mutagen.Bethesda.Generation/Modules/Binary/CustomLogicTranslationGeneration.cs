@@ -14,7 +14,6 @@ namespace Mutagen.Bethesda.Generation
     public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
         public override bool DoErrorMasks => true;
-        public const bool DoErrorMasksStatic = false;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
@@ -97,10 +96,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
-                    if (DoErrorMasksStatic)
-                    {
-                        args.Add($"ErrorMaskBuilder errorMask");
-                    }
                 }
                 fg.AppendLine();
             }
@@ -119,10 +114,6 @@ namespace Mutagen.Bethesda.Generation
                 args.SemiColon = true;
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                if (DoErrorMasksStatic)
-                {
-                    args.Add($"ErrorMaskBuilder errorMask");
-                }
             }
             fg.AppendLine();
             using (var args = new FunctionWrapper(fg,
@@ -131,10 +122,6 @@ namespace Mutagen.Bethesda.Generation
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.Add($"{nameof(MutagenWriter)} writer");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
-                if (DoErrorMasksStatic)
-                {
-                    args.Add($"ErrorMaskBuilder errorMask");
-                }
             }
             using (new BraceWrapper(fg))
             {
@@ -143,10 +130,6 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("writer: writer");
                     args.Add("item: item");
-                    if (DoErrorMasksStatic)
-                    {
-                        args.Add($"errorMask: errorMask");
-                    }
                 }
             }
             fg.AppendLine();
@@ -163,10 +146,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add("item: item");
-                if (DoErrorMasksStatic)
-                {
-                    args.Add("errorMask: errorMask");
-                }
             }
         }
 
@@ -182,10 +161,6 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
                 args.Add("item: item");
-                if (DoErrorMasksStatic)
-                {
-                    args.Add("errorMask: errorMask");
-                }
             }
         }
 

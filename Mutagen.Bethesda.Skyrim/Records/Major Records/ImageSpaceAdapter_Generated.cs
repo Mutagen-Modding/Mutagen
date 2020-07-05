@@ -7128,7 +7128,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ImageSpaceAdapter_Registration.TriggeringRecordType;
         public ImageSpaceAdapter(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -7297,7 +7297,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => ImageSpaceAdapter_Registration.Instance;
         ImageSpaceAdapter.Flag Flags { get; }
         Single Duration { get; }
         ImageSpaceAdapter.RadialBlurFlag RadialBlurFlags { get; }

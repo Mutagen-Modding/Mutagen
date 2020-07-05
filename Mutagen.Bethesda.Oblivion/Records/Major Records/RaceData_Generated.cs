@@ -865,7 +865,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RaceData_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RaceData_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation

@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public bool HasStateLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
         public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
         public string StateName => $"{this.EnumName}State";
-        public bool HasBeenSet = false;
+        public override bool HasBeenSet => false;
 
         public class DataTypeRange
         {

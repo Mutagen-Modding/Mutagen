@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SpellUnleveled_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SpellUnleveledCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
+        static new ILoquiRegistration Registration => SpellUnleveled_Registration.Instance;
         ISpellDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
 

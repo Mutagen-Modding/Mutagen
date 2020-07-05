@@ -2705,7 +2705,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Location_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LocationCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Location_Registration.Instance;
+        static new ILoquiRegistration Registration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
         IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }

@@ -1999,7 +1999,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Cell_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Cell_Registration.Instance;
+        static new ILoquiRegistration Registration => Cell_Registration.Instance;
         TranslatedString? Name { get; }
         Cell.Flag Flags { get; }
         ICellGridGetter? Grid { get; }

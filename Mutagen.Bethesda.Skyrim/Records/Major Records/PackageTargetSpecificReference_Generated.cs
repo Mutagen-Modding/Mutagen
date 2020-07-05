@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PackageTargetSpecificReference_Registration.Instance;
+        static new ILoquiRegistration Registration => PackageTargetSpecificReference_Registration.Instance;
         IFormLink<ILinkedReferenceGetter> Reference { get; }
 
     }

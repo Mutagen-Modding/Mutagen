@@ -591,7 +591,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => FactionOwner_Registration.Instance;
+        static new ILoquiRegistration Registration => FactionOwner_Registration.Instance;
         IFormLink<IFactionGetter> Faction { get; }
         Int32 RequiredRank { get; }
 

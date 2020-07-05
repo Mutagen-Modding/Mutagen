@@ -542,7 +542,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = WaterReflection_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = WaterReflection_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

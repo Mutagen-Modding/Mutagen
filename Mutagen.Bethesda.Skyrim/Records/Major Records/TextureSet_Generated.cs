@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = TextureSet_Registration.TriggeringRecordType;
         public TextureSet(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -956,7 +956,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => TextureSet_Registration.Instance;
+        static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         String? Diffuse { get; }
         String? NormalOrGloss { get; }

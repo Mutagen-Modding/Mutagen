@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => BookTeachesNothing_Registration.Instance;
+        static new ILoquiRegistration Registration => BookTeachesNothing_Registration.Instance;
         UInt32 RawContent { get; }
 
     }

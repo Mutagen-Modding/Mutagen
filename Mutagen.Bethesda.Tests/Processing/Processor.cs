@@ -388,9 +388,9 @@ namespace Mutagen.Bethesda.Tests
                 StringTypes.Add(types);
             }
 
-            public override AStringsAlignment.Handle Handler => Handle;
+            public override AStringsAlignment.Handle Handler => Align;
 
-            private void Handle(
+            private void Align(
                 IMutagenReadStream stream,
                 MajorRecordHeader major,
                 BinaryFileProcessor.Config instr,

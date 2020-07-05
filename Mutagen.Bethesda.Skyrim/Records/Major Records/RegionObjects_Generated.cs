@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionObjects_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
         IReadOnlyList<IRegionObjectGetter>? Objects { get; }
 
     }

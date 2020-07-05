@@ -756,7 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AIPackage_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AIPackageCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -872,7 +872,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AIPackage_Registration.Instance;
+        static new ILoquiRegistration Registration => AIPackage_Registration.Instance;
         IAIPackageDataGetter? Data { get; }
         IAIPackageLocationGetter? Location { get; }
         IAIPackageScheduleGetter? Schedule { get; }

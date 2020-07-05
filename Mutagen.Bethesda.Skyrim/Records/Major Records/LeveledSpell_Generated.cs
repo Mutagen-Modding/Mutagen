@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LeveledSpell_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LeveledSpellCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
+        static new ILoquiRegistration Registration => LeveledSpell_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         Byte? ChanceNone { get; }
         LeveledSpell.Flag Flags { get; }

@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = GameSettingFloat_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = GameSettingFloat_Registration.TriggeringRecordType;
         public GameSettingFloat(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -588,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => GameSettingFloat_Registration.Instance;
+        static new ILoquiRegistration Registration => GameSettingFloat_Registration.Instance;
         Single? Data { get; }
 
     }

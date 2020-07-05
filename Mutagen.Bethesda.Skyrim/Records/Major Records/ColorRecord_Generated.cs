@@ -548,7 +548,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ColorRecord_Registration.TriggeringRecordType;
         public ColorRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -657,7 +657,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
         TranslatedString? Name { get; }
         Color Color { get; }
         Boolean Playable { get; }

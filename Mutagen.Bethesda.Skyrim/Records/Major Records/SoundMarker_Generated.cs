@@ -604,7 +604,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SoundMarker_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SoundMarker_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => SoundMarkerCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SoundMarker_Registration.Instance;
+        static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }

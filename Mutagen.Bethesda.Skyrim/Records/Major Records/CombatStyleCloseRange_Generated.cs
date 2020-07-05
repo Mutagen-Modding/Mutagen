@@ -602,7 +602,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CombatStyleCloseRange_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CombatStyleCloseRange_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

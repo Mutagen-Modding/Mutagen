@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NpcFaceMorph_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = NpcFaceMorph_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation

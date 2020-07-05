@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => ConditionGlobalCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -603,7 +603,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
+        static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
         IFormLink<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 

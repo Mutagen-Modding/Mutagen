@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
         public Keyword(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Keyword_Registration.Instance;
+        static new ILoquiRegistration Registration => Keyword_Registration.Instance;
         Color? Color { get; }
 
     }

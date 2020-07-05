@@ -219,8 +219,6 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var section = new RangeInt64(BUFFER_SIZE + 2, BUFFER_SIZE + 4);
             long loc = BUFFER_SIZE + 6;
-            var section2 = new RangeInt64(BUFFER_SIZE + 8, BUFFER_SIZE + 10);
-            long loc2 = BUFFER_SIZE + 12;
             var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 3));
             var expectedBuf = DoMove(
                 GetBuffer((int)(BUFFER_SIZE * 3)),

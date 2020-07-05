@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionWeather_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }

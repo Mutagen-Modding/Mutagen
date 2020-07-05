@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MaterialType_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MaterialTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MaterialType_Registration.Instance;
+        static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
         IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
         String? Name { get; }
         Color? HavokDisplayColor { get; }

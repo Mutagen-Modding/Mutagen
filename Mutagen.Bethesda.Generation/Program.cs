@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "blic GameRelease Release => GameRelease.Skyrim;";
+            string testString = "public new static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

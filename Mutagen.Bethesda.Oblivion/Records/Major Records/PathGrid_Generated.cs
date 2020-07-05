@@ -843,7 +843,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PathGrid_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PathGrid_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PathGridCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PathGrid_Registration.Instance;
+        static new ILoquiRegistration Registration => PathGrid_Registration.Instance;
         IReadOnlyList<IPathGridPointGetter>? PointToPointConnections { get; }
         ReadOnlyMemorySlice<Byte>? PGAG { get; }
         IReadOnlyList<IInterCellPointGetter>? InterCellConnections { get; }

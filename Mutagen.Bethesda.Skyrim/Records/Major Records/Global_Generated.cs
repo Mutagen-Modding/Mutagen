@@ -442,7 +442,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Global_Registration.TriggeringRecordType;
         public Global(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Global_Registration.Instance;
+        static new ILoquiRegistration Registration => Global_Registration.Instance;
 
         #region Mutagen
         Global.MajorFlag MajorFlags { get; }

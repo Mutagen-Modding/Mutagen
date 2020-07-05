@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RegionWeather_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RegionWeather_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionWeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionWeather_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
 
     }

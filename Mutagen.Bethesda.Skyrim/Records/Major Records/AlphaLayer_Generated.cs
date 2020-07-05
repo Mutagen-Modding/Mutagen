@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AlphaLayer_Registration.Instance;
+        static new ILoquiRegistration Registration => AlphaLayer_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? AlphaLayerData { get; }
 
     }

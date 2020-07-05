@@ -552,7 +552,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => BookSpell_Registration.Instance;
+        static new ILoquiRegistration Registration => BookSpell_Registration.Instance;
         IFormLink<ISpellGetter> Spell { get; }
 
     }

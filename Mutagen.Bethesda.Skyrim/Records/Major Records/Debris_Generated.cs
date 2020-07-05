@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Debris_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Debris_Registration.TriggeringRecordType;
         public Debris(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -675,7 +675,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Debris_Registration.Instance;
+        static new ILoquiRegistration Registration => Debris_Registration.Instance;
         IReadOnlyList<IDebrisModelGetter> Models { get; }
 
     }

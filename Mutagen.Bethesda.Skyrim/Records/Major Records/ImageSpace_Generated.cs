@@ -679,7 +679,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ImageSpace_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ImageSpace_Registration.TriggeringRecordType;
         public ImageSpace(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ImageSpace_Registration.Instance;
+        static new ILoquiRegistration Registration => ImageSpace_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? ENAM { get; }
         IImageSpaceHdrGetter? Hdr { get; }
         IImageSpaceCinematicGetter? Cinematic { get; }

@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkAddActivateChoice_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkAddActivateChoice_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkAddActivateChoiceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkAddActivateChoice_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkAddActivateChoice_Registration.Instance;
         IFormLinkNullable<ISpellGetter> Spell { get; }
         TranslatedString? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }

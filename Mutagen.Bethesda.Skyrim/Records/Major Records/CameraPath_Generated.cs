@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CameraPath_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CameraPathCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CameraPath_Registration.Instance;
+        static new ILoquiRegistration Registration => CameraPath_Registration.Instance;
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IReadOnlyList<IFormLink<ICameraPathGetter>> RelatedPaths { get; }
         CameraPath.ZoomType Zoom { get; }

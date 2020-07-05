@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RegionMap_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RegionMap_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionMap_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
         String? Map { get; }
 
     }

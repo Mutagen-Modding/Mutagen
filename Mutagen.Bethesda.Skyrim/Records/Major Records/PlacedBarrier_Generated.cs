@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PlacedBarrierCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -635,7 +635,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
+        static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
         IFormLink<IProjectileGetter> Projectile { get; }
 
     }

@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = StoryManagerEventNode_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = StoryManagerEventNode_Registration.TriggeringRecordType;
         public StoryManagerEventNode(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => StoryManagerEventNode_Registration.Instance;
+        static new ILoquiRegistration Registration => StoryManagerEventNode_Registration.Instance;
         AStoryManagerNode.Flag? Flags { get; }
         ReadOnlyMemorySlice<Byte>? XNAM { get; }
         RecordType? Type { get; }

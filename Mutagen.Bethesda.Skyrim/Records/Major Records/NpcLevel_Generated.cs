@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NpcLevel_Registration.Instance;
+        static new ILoquiRegistration Registration => NpcLevel_Registration.Instance;
         Int16 Level { get; }
 
     }

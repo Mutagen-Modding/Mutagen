@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogItemData_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogItemData_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {

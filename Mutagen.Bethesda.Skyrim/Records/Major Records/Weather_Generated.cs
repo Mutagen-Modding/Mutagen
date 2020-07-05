@@ -2975,7 +2975,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Weather_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => WeatherCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3161,7 +3161,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Weather_Registration.Instance;
+        static new ILoquiRegistration Registration => Weather_Registration.Instance;
         ReadOnlyMemorySlice<String?> CloudTextures { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
         ReadOnlyMemorySlice<Byte>? CNAM { get; }

@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PackageDataBool_Registration.Instance;
+        static new ILoquiRegistration Registration => PackageDataBool_Registration.Instance;
         Boolean Data { get; }
 
     }

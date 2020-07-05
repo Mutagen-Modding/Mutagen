@@ -102,6 +102,7 @@ namespace Mutagen.Bethesda.Binary
         /// Will throw an exception if there is not at least 3 bytes.
         /// </summary>
         /// <param name="span">Span to read from</param>
+        /// <param name="binaryType">Format to read the color as</param>
         /// <returns>Bytes converted to a Color object</returns>
         public static Color ReadColor(this ReadOnlyMemorySlice<byte> span, ColorBinaryType binaryType)
         {

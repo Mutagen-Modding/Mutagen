@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda
         /// ModKey equality operator
         /// Name is compared ignoring case
         /// </summary>
-        /// <param name="obj">ModKey to compare to</param>
+        /// <param name="other">ModKey to compare to</param>
         /// <returns>True equal Name and Master value</returns>
         public bool Equals(ModKey other)
         {

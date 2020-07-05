@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Eye_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Eye_Registration.TriggeringRecordType;
         public Eye(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -658,7 +658,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Eye_Registration.Instance;
+        static new ILoquiRegistration Registration => Eye_Registration.Instance;
         String? Name { get; }
         String? Icon { get; }
         Eye.Flag? Flags { get; }

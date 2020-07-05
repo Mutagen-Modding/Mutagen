@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LandTexture_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LandTexture_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandTextureCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LandTexture_Registration.Instance;
+        static new ILoquiRegistration Registration => LandTexture_Registration.Instance;
         String? Icon { get; }
         IHavokDataGetter? Havok { get; }
         Byte? TextureSpecularExponent { get; }

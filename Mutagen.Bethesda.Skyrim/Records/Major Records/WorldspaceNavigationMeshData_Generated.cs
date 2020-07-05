@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
+        static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
         IFormLink<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 

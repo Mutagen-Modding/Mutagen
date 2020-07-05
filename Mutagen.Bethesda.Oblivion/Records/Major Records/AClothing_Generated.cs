@@ -977,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AClothing_Registration.Instance;
+        static new ILoquiRegistration Registration => AClothing_Registration.Instance;
         String? Name { get; }
         IFormLinkNullable<IScriptGetter> Script { get; }
         IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }

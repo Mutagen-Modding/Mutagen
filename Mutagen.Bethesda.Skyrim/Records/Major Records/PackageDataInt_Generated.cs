@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PackageDataInt_Registration.Instance;
+        static new ILoquiRegistration Registration => PackageDataInt_Registration.Instance;
         UInt32 Data { get; }
 
     }

@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Road_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Road_Registration.TriggeringRecordType;
         public Road(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -673,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Road_Registration.Instance;
+        static new ILoquiRegistration Registration => Road_Registration.Instance;
         IReadOnlyList<IRoadPointGetter>? Points { get; }
 
     }

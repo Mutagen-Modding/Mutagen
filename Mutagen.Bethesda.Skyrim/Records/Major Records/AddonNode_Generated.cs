@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = AddonNode_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = AddonNode_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => AddonNodeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => AddonNode_Registration.Instance;
+        static new ILoquiRegistration Registration => AddonNode_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Int32 NodeIndex { get; }

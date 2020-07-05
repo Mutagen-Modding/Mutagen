@@ -728,7 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SkillRecord_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SkillRecord_Registration.TriggeringRecordType;
         public SkillRecord(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -840,7 +840,7 @@ namespace Mutagen.Bethesda.Oblivion
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SkillRecord_Registration.Instance;
+        static new ILoquiRegistration Registration => SkillRecord_Registration.Instance;
         ActorValue? Skill { get; }
         String? Description { get; }
         String? Icon { get; }

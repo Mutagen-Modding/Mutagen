@@ -1121,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CombatStyle_Registration.TriggeringRecordType;
         public CombatStyle(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CombatStyle_Registration.Instance;
+        static new ILoquiRegistration Registration => CombatStyle_Registration.Instance;
         Single OffensiveMult { get; }
         Single DefensiveMult { get; }
         Single GroupOffensiveMult { get; }

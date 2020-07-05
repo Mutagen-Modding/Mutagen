@@ -917,7 +917,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogTopicCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogTopic_Registration.Instance;
+        static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         TranslatedString? Name { get; }
         Single Priority { get; }
         IFormLinkNullable<IDialogBranchGetter> Branch { get; }

@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(ModKey.Null.GetHashCode(), modKey.GetHashCode());
             Assert.Equal(ModKey.Null, modKey2);
             Assert.Equal(ModKey.Null.GetHashCode(), modKey2.GetHashCode());
-            Assert.Equal(ModKey.Null, default(ModKey));
+            Assert.Equal(default(ModKey), ModKey.Null);
             Assert.Equal(ModKey.Null.GetHashCode(), default(ModKey).GetHashCode());
         }
     }

@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RegionObjects_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RegionObjects_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionObjectsCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -646,7 +646,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionObjects_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
         IReadOnlyList<IRegionObjectGetter>? Objects { get; }
 
     }

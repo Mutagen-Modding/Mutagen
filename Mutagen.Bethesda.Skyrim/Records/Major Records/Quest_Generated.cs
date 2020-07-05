@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Quest_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => QuestCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1656,7 +1656,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Quest_Registration.Instance;
+        static new ILoquiRegistration Registration => Quest_Registration.Instance;
         IQuestAdapterGetter? VirtualMachineAdapter { get; }
         TranslatedString? Name { get; }
         Quest.Flag Flags { get; }

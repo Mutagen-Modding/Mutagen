@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Hair_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Hair_Registration.TriggeringRecordType;
         public Hair(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Hair_Registration.Instance;
+        static new ILoquiRegistration Registration => Hair_Registration.Instance;
 
     }
 

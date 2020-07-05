@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PerkAbilityEffect_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PerkAbilityEffect_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => PerkAbilityEffectCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
+        static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
         IFormLink<ISpellGetter> Ability { get; }
 
     }

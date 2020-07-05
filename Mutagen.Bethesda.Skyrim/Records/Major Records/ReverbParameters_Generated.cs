@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = ReverbParameters_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = ReverbParameters_Registration.TriggeringRecordType;
         public ReverbParameters(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -976,7 +976,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
+        static new ILoquiRegistration Registration => ReverbParameters_Registration.Instance;
         UInt16 DecayMilliseconds { get; }
         UInt16 HfReferenceHertz { get; }
         SByte RoomFilter { get; }

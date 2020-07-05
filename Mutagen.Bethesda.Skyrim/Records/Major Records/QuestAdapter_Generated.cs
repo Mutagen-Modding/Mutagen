@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = QuestAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = QuestAdapter_Registration.TriggeringRecordType;
         [Flags]
         public enum VersioningBreaks
         {
@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => QuestAdapter_Registration.Instance;
         QuestAdapter.VersioningBreaks Versioning { get; }
         Byte Unknown { get; }
         String FileName { get; }

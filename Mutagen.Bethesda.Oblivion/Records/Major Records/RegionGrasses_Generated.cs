@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = RegionGrasses_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = RegionGrasses_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RegionGrassesCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -643,7 +643,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;
         IReadOnlyList<IFormLink<IGrassGetter>>? Grasses { get; }
 
     }

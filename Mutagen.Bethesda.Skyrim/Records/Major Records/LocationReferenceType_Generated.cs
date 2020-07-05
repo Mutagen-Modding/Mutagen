@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = LocationReferenceType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = LocationReferenceType_Registration.TriggeringRecordType;
         public LocationReferenceType(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -593,7 +593,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
+        static new ILoquiRegistration Registration => LocationReferenceType_Registration.Instance;
         Color? Color { get; }
 
     }

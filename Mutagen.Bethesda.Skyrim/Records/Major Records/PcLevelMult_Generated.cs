@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => PcLevelMult_Registration.Instance;
+        static new ILoquiRegistration Registration => PcLevelMult_Registration.Instance;
         Single LevelMult { get; }
 
     }

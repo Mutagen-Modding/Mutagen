@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogItem_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => DialogItemCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1308,7 +1308,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogItem_Registration.Instance;
+        static new ILoquiRegistration Registration => DialogItem_Registration.Instance;
         IDialogItemDataGetter? Data { get; }
         IFormLinkNullable<IQuestGetter> Quest { get; }
         IFormLinkNullable<IDialogItemGetter> PreviousTopic { get; }

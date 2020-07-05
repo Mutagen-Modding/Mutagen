@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => ASpell_Registration.Instance;
+        static new ILoquiRegistration Registration => ASpell_Registration.Instance;
 
     }
 

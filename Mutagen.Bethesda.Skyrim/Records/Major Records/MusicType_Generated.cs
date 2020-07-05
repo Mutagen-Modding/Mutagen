@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = MusicType_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = MusicType_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => MusicTypeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => MusicType_Registration.Instance;
+        static new ILoquiRegistration Registration => MusicType_Registration.Instance;
         MusicType.Flag Flags { get; }
         IMusicTypeDataGetter? Data { get; }
         Single? FadeDuration { get; }

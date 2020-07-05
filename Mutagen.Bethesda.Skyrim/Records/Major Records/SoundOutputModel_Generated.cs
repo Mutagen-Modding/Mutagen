@@ -743,7 +743,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SoundOutputModel_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SoundOutputModel_Registration.TriggeringRecordType;
         public SoundOutputModel(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -854,7 +854,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
+        static new ILoquiRegistration Registration => SoundOutputModel_Registration.Instance;
         ISoundOutputDataGetter? Data { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         SoundOutputModel.TypeEnum? Type { get; }

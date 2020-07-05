@@ -505,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = CellNavigationMesh_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = CellNavigationMesh_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => CellNavigationMeshCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -617,7 +617,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
+        static new ILoquiRegistration Registration => CellNavigationMesh_Registration.Instance;
         ICellNavigationMeshDataGetter? Data { get; }
 
     }

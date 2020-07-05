@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => RegionSounds_Registration.Instance;
+        static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;
         IFormLinkNullable<IMusicTypeGetter> Music { get; }
         IReadOnlyList<IRegionSoundGetter>? Sounds { get; }
 

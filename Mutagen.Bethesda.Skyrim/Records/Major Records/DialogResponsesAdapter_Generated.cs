@@ -492,7 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = DialogResponsesAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = DialogResponsesAdapter_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => DialogResponsesAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => DialogResponsesAdapter_Registration.Instance;
         IScriptFragmentsGetter? ScriptFragments { get; }
 
     }

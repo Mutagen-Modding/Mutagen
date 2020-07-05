@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = VirtualMachineAdapter_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = VirtualMachineAdapter_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
         IXmlItem,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => VirtualMachineAdapter_Registration.Instance;
+        static new ILoquiRegistration Registration => VirtualMachineAdapter_Registration.Instance;
 
     }
 

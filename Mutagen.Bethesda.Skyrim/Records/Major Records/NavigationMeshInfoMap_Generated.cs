@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => NavigationMeshInfoMapCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -804,7 +804,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
+        static new ILoquiRegistration Registration => NavigationMeshInfoMap_Registration.Instance;
         UInt32? NavMeshVersion { get; }
         IReadOnlyList<INavigationMapInfoGetter> MapInfos { get; }
         IPreferredPathingGetter? PreferredPathing { get; }

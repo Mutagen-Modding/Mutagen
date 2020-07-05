@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = HeadPart_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => HeadPartCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => HeadPart_Registration.Instance;
+        static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
         TranslatedString? Name { get; }
         IModelGetter? Model { get; }
         HeadPart.Flag Flags { get; }

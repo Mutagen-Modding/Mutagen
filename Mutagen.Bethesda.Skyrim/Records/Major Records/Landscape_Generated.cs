@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => LandscapeCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -958,7 +958,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Landscape_Registration.Instance;
+        static new ILoquiRegistration Registration => Landscape_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? DATA { get; }
         ReadOnlyMemorySlice<Byte>? VertexNormals { get; }
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }

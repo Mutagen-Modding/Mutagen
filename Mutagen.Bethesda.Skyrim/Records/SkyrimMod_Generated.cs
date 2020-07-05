@@ -5420,7 +5420,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetGroupGetter<T>() => this.GetGroupGetter<T>();

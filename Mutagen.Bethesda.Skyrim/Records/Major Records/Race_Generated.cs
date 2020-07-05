@@ -3841,7 +3841,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override IEnumerable<FormKey> LinkFormKeys => RaceCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -4052,7 +4052,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedFormKeyContainer,
         IBinaryItem
     {
-        static ILoquiRegistration Registration => Race_Registration.Instance;
+        static new ILoquiRegistration Registration => Race_Registration.Instance;
         TranslatedString? Name { get; }
         String Description { get; }
         IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
