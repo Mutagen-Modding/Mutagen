@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda
                 str = str.Trim();
                 if (!ModKey.TryFactory(str, out var key))
                 {
-                    throw new ArgumentException("Load order file had malformed line: {str}");   
+                    throw new ArgumentException($"Load order file had malformed line: {str}");   
                 }
                 ret.Add(key);
             }
