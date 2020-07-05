@@ -57,8 +57,8 @@ namespace Mutagen.Bethesda
             set => this.FormKey = value;
         }
         #endregion
-        #region Version
-        public UInt32 Version { get; set; } = default;
+        #region VersionControl
+        public UInt32 VersionControl { get; set; } = default;
         #endregion
 
         #region To String
@@ -234,19 +234,19 @@ namespace Mutagen.Bethesda
             {
                 this.MajorRecordFlagsRaw = initialValue;
                 this.FormKey = initialValue;
-                this.Version = initialValue;
+                this.VersionControl = initialValue;
                 this.EditorID = initialValue;
             }
 
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID)
             {
                 this.MajorRecordFlagsRaw = MajorRecordFlagsRaw;
                 this.FormKey = FormKey;
-                this.Version = Version;
+                this.VersionControl = VersionControl;
                 this.EditorID = EditorID;
             }
 
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda
             #region Members
             public TItem MajorRecordFlagsRaw;
             public TItem FormKey;
-            public TItem Version;
+            public TItem VersionControl;
             public TItem EditorID;
             #endregion
 
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda
                 if (rhs == null) return false;
                 if (!object.Equals(this.MajorRecordFlagsRaw, rhs.MajorRecordFlagsRaw)) return false;
                 if (!object.Equals(this.FormKey, rhs.FormKey)) return false;
-                if (!object.Equals(this.Version, rhs.Version)) return false;
+                if (!object.Equals(this.VersionControl, rhs.VersionControl)) return false;
                 if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
                 return true;
             }
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda
                 var hash = new HashCode();
                 hash.Add(this.MajorRecordFlagsRaw);
                 hash.Add(this.FormKey);
-                hash.Add(this.Version);
+                hash.Add(this.VersionControl);
                 hash.Add(this.EditorID);
                 return hash.ToHashCode();
             }
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda
             {
                 if (!eval(this.MajorRecordFlagsRaw)) return false;
                 if (!eval(this.FormKey)) return false;
-                if (!eval(this.Version)) return false;
+                if (!eval(this.VersionControl)) return false;
                 if (!eval(this.EditorID)) return false;
                 return true;
             }
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda
             {
                 if (eval(this.MajorRecordFlagsRaw)) return true;
                 if (eval(this.FormKey)) return true;
-                if (eval(this.Version)) return true;
+                if (eval(this.VersionControl)) return true;
                 if (eval(this.EditorID)) return true;
                 return false;
             }
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda
             {
                 obj.MajorRecordFlagsRaw = eval(this.MajorRecordFlagsRaw);
                 obj.FormKey = eval(this.FormKey);
-                obj.Version = eval(this.Version);
+                obj.VersionControl = eval(this.VersionControl);
                 obj.EditorID = eval(this.EditorID);
             }
             #endregion
@@ -359,9 +359,9 @@ namespace Mutagen.Bethesda
                     {
                         fg.AppendItem(FormKey, "FormKey");
                     }
-                    if (printMask?.Version ?? true)
+                    if (printMask?.VersionControl ?? true)
                     {
-                        fg.AppendItem(Version, "Version");
+                        fg.AppendItem(VersionControl, "VersionControl");
                     }
                     if (printMask?.EditorID ?? true)
                     {
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda
             }
             public Exception? MajorRecordFlagsRaw;
             public Exception? FormKey;
-            public Exception? Version;
+            public Exception? VersionControl;
             public Exception? EditorID;
             #endregion
 
@@ -408,8 +408,8 @@ namespace Mutagen.Bethesda
                         return MajorRecordFlagsRaw;
                     case MajorRecord_FieldIndex.FormKey:
                         return FormKey;
-                    case MajorRecord_FieldIndex.Version:
-                        return Version;
+                    case MajorRecord_FieldIndex.VersionControl:
+                        return VersionControl;
                     case MajorRecord_FieldIndex.EditorID:
                         return EditorID;
                     default:
@@ -428,8 +428,8 @@ namespace Mutagen.Bethesda
                     case MajorRecord_FieldIndex.FormKey:
                         this.FormKey = ex;
                         break;
-                    case MajorRecord_FieldIndex.Version:
-                        this.Version = ex;
+                    case MajorRecord_FieldIndex.VersionControl:
+                        this.VersionControl = ex;
                         break;
                     case MajorRecord_FieldIndex.EditorID:
                         this.EditorID = ex;
@@ -450,8 +450,8 @@ namespace Mutagen.Bethesda
                     case MajorRecord_FieldIndex.FormKey:
                         this.FormKey = (Exception?)obj;
                         break;
-                    case MajorRecord_FieldIndex.Version:
-                        this.Version = (Exception?)obj;
+                    case MajorRecord_FieldIndex.VersionControl:
+                        this.VersionControl = (Exception?)obj;
                         break;
                     case MajorRecord_FieldIndex.EditorID:
                         this.EditorID = (Exception?)obj;
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda
                 if (Overall != null) return true;
                 if (MajorRecordFlagsRaw != null) return true;
                 if (FormKey != null) return true;
-                if (Version != null) return true;
+                if (VersionControl != null) return true;
                 if (EditorID != null) return true;
                 return false;
             }
@@ -504,7 +504,7 @@ namespace Mutagen.Bethesda
             {
                 fg.AppendItem(MajorRecordFlagsRaw, "MajorRecordFlagsRaw");
                 fg.AppendItem(FormKey, "FormKey");
-                fg.AppendItem(Version, "Version");
+                fg.AppendItem(VersionControl, "VersionControl");
                 fg.AppendItem(EditorID, "EditorID");
             }
             #endregion
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda
                 var ret = new ErrorMask();
                 ret.MajorRecordFlagsRaw = this.MajorRecordFlagsRaw.Combine(rhs.MajorRecordFlagsRaw);
                 ret.FormKey = this.FormKey.Combine(rhs.FormKey);
-                ret.Version = this.Version.Combine(rhs.Version);
+                ret.VersionControl = this.VersionControl.Combine(rhs.VersionControl);
                 ret.EditorID = this.EditorID.Combine(rhs.EditorID);
                 return ret;
             }
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda
             private TranslationCrystal? _crystal;
             public bool MajorRecordFlagsRaw;
             public bool FormKey;
-            public bool Version;
+            public bool VersionControl;
             public bool EditorID;
             #endregion
 
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda
             {
                 this.MajorRecordFlagsRaw = defaultOn;
                 this.FormKey = defaultOn;
-                this.Version = defaultOn;
+                this.VersionControl = defaultOn;
                 this.EditorID = defaultOn;
             }
 
@@ -569,7 +569,7 @@ namespace Mutagen.Bethesda
             {
                 ret.Add((MajorRecordFlagsRaw, null));
                 ret.Add((FormKey, null));
-                ret.Add((Version, null));
+                ret.Add((VersionControl, null));
                 ret.Add((EditorID, null));
             }
         }
@@ -653,7 +653,7 @@ namespace Mutagen.Bethesda
         ILoquiObjectSetter<IMajorRecordInternal>
     {
         new Int32 MajorRecordFlagsRaw { get; set; }
-        new UInt32 Version { get; set; }
+        new UInt32 VersionControl { get; set; }
         new String? EditorID { get; set; }
     }
 
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda
         static ILoquiRegistration Registration => MajorRecord_Registration.Instance;
         Int32 MajorRecordFlagsRaw { get; }
         FormKey FormKey { get; }
-        UInt32 Version { get; }
+        UInt32 VersionControl { get; }
         String? EditorID { get; }
 
     }
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
     }
     #endregion
@@ -1130,8 +1130,8 @@ namespace Mutagen.Bethesda.Internals
                     return (ushort)MajorRecord_FieldIndex.MajorRecordFlagsRaw;
                 case "FORMKEY":
                     return (ushort)MajorRecord_FieldIndex.FormKey;
-                case "VERSION":
-                    return (ushort)MajorRecord_FieldIndex.Version;
+                case "VERSIONCONTROL":
+                    return (ushort)MajorRecord_FieldIndex.VersionControl;
                 case "EDITORID":
                     return (ushort)MajorRecord_FieldIndex.EditorID;
                 default:
@@ -1146,7 +1146,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
@@ -1161,7 +1161,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
@@ -1193,8 +1193,8 @@ namespace Mutagen.Bethesda.Internals
                     return "MajorRecordFlagsRaw";
                 case MajorRecord_FieldIndex.FormKey:
                     return "FormKey";
-                case MajorRecord_FieldIndex.Version:
-                    return "Version";
+                case MajorRecord_FieldIndex.VersionControl:
+                    return "VersionControl";
                 case MajorRecord_FieldIndex.EditorID:
                     return "EditorID";
                 default:
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Internals
             {
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
                 case MajorRecord_FieldIndex.FormKey:
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
@@ -1225,7 +1225,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.FormKey:
                     return true;
                 case MajorRecord_FieldIndex.MajorRecordFlagsRaw:
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
@@ -1242,7 +1242,7 @@ namespace Mutagen.Bethesda.Internals
                     return typeof(Int32);
                 case MajorRecord_FieldIndex.FormKey:
                     return typeof(FormKey);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return typeof(UInt32);
                 case MajorRecord_FieldIndex.EditorID:
                     return typeof(String);
@@ -1295,7 +1295,7 @@ namespace Mutagen.Bethesda.Internals
         {
             ClearPartial();
             item.MajorRecordFlagsRaw = default;
-            item.Version = default;
+            item.VersionControl = default;
             item.EditorID = default;
         }
         
@@ -1425,7 +1425,7 @@ namespace Mutagen.Bethesda.Internals
             if (rhs == null) return;
             ret.MajorRecordFlagsRaw = item.MajorRecordFlagsRaw == rhs.MajorRecordFlagsRaw;
             ret.FormKey = item.FormKey == rhs.FormKey;
-            ret.Version = item.Version == rhs.Version;
+            ret.VersionControl = item.VersionControl == rhs.VersionControl;
             ret.EditorID = string.Equals(item.EditorID, rhs.EditorID);
         }
         
@@ -1481,9 +1481,9 @@ namespace Mutagen.Bethesda.Internals
             {
                 fg.AppendItem(item.FormKey, "FormKey");
             }
-            if (printMask?.Version ?? true)
+            if (printMask?.VersionControl ?? true)
             {
-                fg.AppendItem(item.Version, "Version");
+                fg.AppendItem(item.VersionControl, "VersionControl");
             }
             if ((printMask?.EditorID ?? true)
                 && item.EditorID.TryGet(out var EditorIDItem))
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Internals
         {
             mask.MajorRecordFlagsRaw = true;
             mask.FormKey = true;
-            mask.Version = true;
+            mask.VersionControl = true;
             mask.EditorID = (item.EditorID != null);
         }
         
@@ -1519,7 +1519,7 @@ namespace Mutagen.Bethesda.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
             if (lhs.FormKey != rhs.FormKey) return false;
-            if (lhs.Version != rhs.Version) return false;
+            if (lhs.VersionControl != rhs.VersionControl) return false;
             if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
             return true;
         }
@@ -1529,7 +1529,7 @@ namespace Mutagen.Bethesda.Internals
             var hash = new HashCode();
             hash.Add(item.MajorRecordFlagsRaw);
             hash.Add(item.FormKey);
-            hash.Add(item.Version);
+            hash.Add(item.VersionControl);
             if (item.EditorID.TryGet(out var EditorIDitem))
             {
                 hash.Add(EditorIDitem);
@@ -1626,9 +1626,9 @@ namespace Mutagen.Bethesda.Internals
             {
                 item.MajorRecordFlagsRaw = rhs.MajorRecordFlagsRaw;
             }
-            if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.VersionControl) ?? true))
             {
-                item.Version = rhs.Version;
+                item.VersionControl = rhs.VersionControl;
             }
             if ((copyMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
             {
@@ -1741,13 +1741,13 @@ namespace Mutagen.Bethesda.Internals
                     fieldIndex: (int)MajorRecord_FieldIndex.FormKey,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.Version) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MajorRecord_FieldIndex.VersionControl) ?? true))
             {
                 UInt32XmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.Version),
-                    item: item.Version,
-                    fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                    name: nameof(item.VersionControl),
+                    item: item.VersionControl,
+                    fieldIndex: (int)MajorRecord_FieldIndex.VersionControl,
                     errorMask: errorMask);
             }
             if ((item.EditorID != null)
@@ -1884,11 +1884,11 @@ namespace Mutagen.Bethesda.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Version":
-                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.Version);
+                case "VersionControl":
+                    errorMask?.PushIndex((int)MajorRecord_FieldIndex.VersionControl);
                     try
                     {
-                        item.Version = UInt32XmlTranslation.Instance.Parse(
+                        item.VersionControl = UInt32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2099,7 +2099,7 @@ namespace Mutagen.Bethesda.Internals
             Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormKey);
-            writer.Write(item.Version);
+            writer.Write(item.VersionControl);
         }
 
         public static void WriteRecordTypes(
@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Internals
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
             item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
-            item.Version = frame.ReadUInt32();
+            item.VersionControl = frame.ReadUInt32();
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -2275,7 +2275,7 @@ namespace Mutagen.Bethesda.Internals
 
         public Int32 MajorRecordFlagsRaw => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
         public FormKey FormKey => FormKeyBinaryTranslation.Instance.Parse(_data.Span.Slice(0x4, 4), this._package.MetaData.MasterReferences!);
-        public UInt32 Version => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
+        public UInt32 VersionControl => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         #region EditorID
         private int? _EditorIDLocation;
         public String? EditorID => _EditorIDLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _EditorIDLocation.Value, _package.MetaData.Constants)) : default(string?);

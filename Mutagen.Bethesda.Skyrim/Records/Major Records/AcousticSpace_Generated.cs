@@ -247,7 +247,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Mask(
                 TItem MajorRecordFlagsRaw,
                 TItem FormKey,
-                TItem Version,
+                TItem VersionControl,
                 TItem EditorID,
                 TItem FormVersion,
                 TItem Version2,
@@ -258,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
-                Version: Version,
+                VersionControl: VersionControl,
                 EditorID: EditorID,
                 FormVersion: FormVersion,
                 Version2: Version2)
@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         MajorRecordFlagsRaw = 0,
         FormKey = 1,
-        Version = 2,
+        VersionControl = 2,
         EditorID = 3,
         FormVersion = 4,
         Version2 = 5,
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (AcousticSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.FormKey:
                     return (AcousticSpace_FieldIndex)((int)index);
-                case SkyrimMajorRecord_FieldIndex.Version:
+                case SkyrimMajorRecord_FieldIndex.VersionControl:
                     return (AcousticSpace_FieldIndex)((int)index);
                 case SkyrimMajorRecord_FieldIndex.EditorID:
                     return (AcousticSpace_FieldIndex)((int)index);
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (AcousticSpace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormKey:
                     return (AcousticSpace_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.VersionControl:
                     return (AcousticSpace_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
                     return (AcousticSpace_FieldIndex)((int)index);
