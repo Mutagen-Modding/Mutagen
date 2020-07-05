@@ -763,8 +763,6 @@
       <DependentUpon>ModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Skyrim.cs" />
-    <Compile Include="Records\RecordTypeInts.cs" />
-    <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Records\SkyrimMajorRecord.cs">
       <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
     </Compile>
@@ -2091,6 +2089,8 @@
       <DependentUpon>SoundOutputModel.xml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
+    <Compile Include="Records\RecordTypes_Generated.cs" />
+    <Compile Include="Records\RecordTypeInts_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.16" />
