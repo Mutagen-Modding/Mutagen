@@ -13133,6 +13133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ret;
         }
 
+
         public ParseResult FillRecordType(
             IBinaryReadStream stream,
             long finalPos,

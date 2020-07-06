@@ -2548,6 +2548,11 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
+                        if (await obj.IsMajorRecord())
+                        {
+                            fg.AppendLine("ret._package.MajorRecord = ret;");
+                        }
+
                         // Parse struct section ending positions 
                         string structPassedAccessor = null;
                         int? structPassedLen = 0;
