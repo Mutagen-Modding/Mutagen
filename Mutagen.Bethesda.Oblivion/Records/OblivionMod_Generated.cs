@@ -13130,10 +13130,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 stream: stream,
                 package: ret._package,
                 fill: ret.FillRecordType);
-            UtilityTranslation.FillEdidLinkCache<IMagicEffectGetter>(
-                mod: ret,
-                recordType: RecordTypes.MGEF,
-                package: ret._package);
             return ret;
         }
 

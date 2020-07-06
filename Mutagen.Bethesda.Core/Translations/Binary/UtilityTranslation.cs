@@ -389,24 +389,6 @@ namespace Mutagen.Bethesda
             return stream;
         }
 
-        public static void FillEdidLinkCache<T>(IModGetter mod, RecordType recordType, BinaryOverlayFactoryPackage package)
-            where T : IMajorRecordCommonGetter
-        {
-            var group = mod.GetGroupGetter<T>();
-            var cache = new Dictionary<RecordType, object>();
-            package.EdidLinkCache[recordType] = cache;
-            foreach (var item in group)
-            {
-                var edid = item.Value.EditorID;
-                if (edid == null) continue;
-                if (edid.Length != Constants.HeaderLength)
-                {
-                    throw new ArgumentException($"EDID link record type {recordType} had an EDID of improper length: {edid}");
-                }
-                cache[new RecordType(edid)] = item.Value;
-            }
-        }
-
         /// <summary>
         /// Parses span data and enumerates pairs of record type -> locations
         /// 

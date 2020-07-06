@@ -5,10 +5,9 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class BinaryOverlayFactoryPackage
+    public struct BinaryOverlayFactoryPackage
     {
         public ParsingBundle MetaData;
-        public Dictionary<RecordType, Dictionary<RecordType, object>> EdidLinkCache = new Dictionary<RecordType, Dictionary<RecordType, object>>();
 
         public BinaryOverlayFactoryPackage(ParsingBundle metaData)
         {

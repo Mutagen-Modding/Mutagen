@@ -2807,21 +2807,6 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
 
-                        if (obj.GetObjectType() == ObjectType.Mod)
-                        {
-                            foreach (var field in obj.IterateFields())
-                            {
-                                if (!(field is GroupType group)) continue;
-                                if (!((bool)group.CustomData[Mutagen.Bethesda.Internals.Constants.EdidLinked])) continue;
-                                using (var args = new ArgsWrapper(fg,
-                                    $"{nameof(UtilityTranslation)}.{nameof(UtilityTranslation.FillEdidLinkCache)}<{group.GetGroupTarget().GetTypeName(LoquiInterfaceType.IGetter)}>"))
-                                {
-                                    args.Add("mod: ret");
-                                    args.Add($"recordType: {group.GetGroupTarget().GetTriggeringSource()}");
-                                    args.Add("package: ret._package");
-                                }
-                            }
-                        }
                         if (objData.CustomBinaryEnd != CustomEnd.Off)
                         {
                             using (var args = new ArgsWrapper(fg,
