@@ -1266,14 +1266,21 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
 
-            await generator.GenerateCopyIn(
-                fg: fg,
-                objGen: obj,
-                typeGen: field,
-                readerAccessor: frameAccessor,
-                itemAccessor: Accessor.FromType(field, "item"),
-                translationAccessor: null,
-                errorMaskAccessor: null);
+            if (data.VersionEnable.HasValue)
+            {
+                fg.AppendLine($"if (frame.MetaData.FormVersion!.Value >= {data.VersionEnable})");
+            }
+            using (new BraceWrapper(fg, doIt: data.VersionEnable.HasValue))
+            {
+                await generator.GenerateCopyIn(
+                    fg: fg,
+                    objGen: obj,
+                    typeGen: field,
+                    readerAccessor: frameAccessor,
+                    itemAccessor: Accessor.FromType(field, "item"),
+                    translationAccessor: null,
+                    errorMaskAccessor: null);
+            }
         }
 
         private void ConvertFromPathOut(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
@@ -1779,15 +1786,22 @@ namespace Mutagen.Bethesda.Generation
                                 if (!field.IntegrateField) continue;
                                 throw new ArgumentException("Unsupported type generator: " + field);
                             }
-                            generator.GenerateWrite(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                writerAccessor: "writer",
-                                itemAccessor: Accessor.FromType(field, "item"),
-                                translationAccessor: null,
-                                errorMaskAccessor: null,
-                                converterAccessor: null);
+                            if (fieldData.VersionEnable.HasValue)
+                            {
+                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {fieldData.VersionEnable})");
+                            }
+                            using (new BraceWrapper(fg, doIt: fieldData.VersionEnable.HasValue))
+                            {
+                                generator.GenerateWrite(
+                                    fg: fg,
+                                    objGen: obj,
+                                    typeGen: field,
+                                    writerAccessor: "writer",
+                                    itemAccessor: Accessor.FromType(field, "item"),
+                                    translationAccessor: null,
+                                    errorMaskAccessor: null,
+                                    converterAccessor: null);
+                            }
                         }
                     }
                     for (int i = 0; i < obj.Fields.WhereCastable<TypeGeneration, BreakType>().Count(); i++)
@@ -1934,15 +1948,22 @@ namespace Mutagen.Bethesda.Generation
                                                 fg.Depth--;
                                                 fg.AppendLine("}");
                                             }
-                                            subGenerator.GenerateWrite(
-                                                fg: fg,
-                                                objGen: obj,
-                                                typeGen: subField.Field,
-                                                writerAccessor: "writer",
-                                                    translationAccessor: null,
-                                                itemAccessor: Accessor.FromType(subField.Field, "item"),
-                                                errorMaskAccessor: null,
-                                                converterAccessor: "recordTypeConverter");
+                                            if (subData.VersionEnable.HasValue)
+                                            {
+                                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {subData.VersionEnable})");
+                                            }
+                                            using (new BraceWrapper(fg, doIt: subData.VersionEnable.HasValue))
+                                            {
+                                                subGenerator.GenerateWrite(
+                                                    fg: fg,
+                                                    objGen: obj,
+                                                    typeGen: subField.Field,
+                                                    writerAccessor: "writer",
+                                                        translationAccessor: null,
+                                                    itemAccessor: Accessor.FromType(subField.Field, "item"),
+                                                    errorMaskAccessor: null,
+                                                    converterAccessor: "recordTypeConverter");
+                                            }
                                         }
                                         for (int i = 0; i < dataType.BreakIndices.Count; i++)
                                         {
@@ -2001,7 +2022,14 @@ namespace Mutagen.Bethesda.Generation
 
                         if (fieldData.CustomVersion == null)
                         {
-                            generate();
+                            if (fieldData.VersionEnable.HasValue)
+                            {
+                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {fieldData.VersionEnable})");
+                            }
+                            using (new BraceWrapper(fg, doIt: fieldData.VersionEnable.HasValue))
+                            {
+                                generate();
+                            }
                         }
                         else
                         {

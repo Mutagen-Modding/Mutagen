@@ -81,12 +81,12 @@
         <FormLink refName="Static" recordType="TNAM" />
       </List>
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
-      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" isSE="true" />
+      <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" version="44" />
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
       <ByteArray name="NAM2" recordType="NAM2" />
       <ByteArray name="NAM3" recordType="NAM3" />
       <RefDirect name="Aurora" refName="Model" />
-      <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" isSE="true" />
+      <FormLink name="SunGlareLensFlare" recordType="GNAM" refName="LensFlare" version="44" />
     </Fields>
   </Object>
   <Object name="CloudLayer" objType="Subrecord" GUID="e89335dd-a532-4104-9ce3-b607df804f84" ID="249">

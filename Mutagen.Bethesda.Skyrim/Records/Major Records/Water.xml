@@ -66,7 +66,7 @@
           <Float name="DepthNormals" />
           <Float name="DepthSpecularLighting" />
           <Float name="SpecularSunSparklePower" />
-          <Float name="NoiseFlowmapScale" isSE="true" />
+          <Float name="NoiseFlowmapScale" version="44" />
         </Fields>
       </Data>
       <ByteArray name="GNAM" recordType="GNAM" />
@@ -75,7 +75,7 @@
       <String name="NoiseLayerOneTexture" recordType="NAM2" />
       <String name="NoiseLayerTwoTexture" recordType="NAM3" />
       <String name="NoiseLayerThreeTexture" recordType="NAM4" />
-      <String name="FlowNormalsNoiseTexture" recordType="NAM5" isSE="true" />
+      <String name="FlowNormalsNoiseTexture" recordType="NAM5" version="44" />
     </Fields>
   </Object>
 </Loqui>

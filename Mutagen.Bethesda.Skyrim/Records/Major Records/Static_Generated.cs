@@ -75,6 +75,20 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<IMaterialObjectGetter> IStaticGetter.Material => this.Material;
         #endregion
+        #region Flags
+        public Static.Flag Flags { get; set; } = default;
+        #endregion
+        #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private MemorySlice<Byte> _Unused = new byte[3];
+        public MemorySlice<Byte> Unused
+        {
+            get => _Unused;
+            set => this._Unused = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ReadOnlyMemorySlice<Byte> IStaticGetter.Unused => this.Unused;
+        #endregion
         #region Lod
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Lod? _Lod;
@@ -262,6 +276,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
                 this.MaxAngle = initialValue;
                 this.Material = initialValue;
+                this.Flags = initialValue;
+                this.Unused = initialValue;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(initialValue, new Lod.Mask<TItem>(initialValue));
                 this.DNAMDataTypeState = initialValue;
             }
@@ -277,6 +293,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Model,
                 TItem MaxAngle,
                 TItem Material,
+                TItem Flags,
+                TItem Unused,
                 TItem Lod,
                 TItem DNAMDataTypeState)
             : base(
@@ -291,6 +309,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
                 this.MaxAngle = MaxAngle;
                 this.Material = Material;
+                this.Flags = Flags;
+                this.Unused = Unused;
                 this.Lod = new MaskItem<TItem, Lod.Mask<TItem>?>(Lod, new Lod.Mask<TItem>(Lod));
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
@@ -308,6 +328,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
             public TItem MaxAngle;
             public TItem Material;
+            public TItem Flags;
+            public TItem Unused;
             public MaskItem<TItem, Lod.Mask<TItem>?>? Lod { get; set; }
             public TItem DNAMDataTypeState;
             #endregion
@@ -327,6 +349,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Model, rhs.Model)) return false;
                 if (!object.Equals(this.MaxAngle, rhs.MaxAngle)) return false;
                 if (!object.Equals(this.Material, rhs.Material)) return false;
+                if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.Lod, rhs.Lod)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
@@ -338,6 +362,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Model);
                 hash.Add(this.MaxAngle);
                 hash.Add(this.Material);
+                hash.Add(this.Flags);
+                hash.Add(this.Unused);
                 hash.Add(this.Lod);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
@@ -362,6 +388,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.MaxAngle)) return false;
                 if (!eval(this.Material)) return false;
+                if (!eval(this.Flags)) return false;
+                if (!eval(this.Unused)) return false;
                 if (Lod != null)
                 {
                     if (!eval(this.Lod.Overall)) return false;
@@ -388,6 +416,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.MaxAngle)) return true;
                 if (eval(this.Material)) return true;
+                if (eval(this.Flags)) return true;
+                if (eval(this.Unused)) return true;
                 if (Lod != null)
                 {
                     if (eval(this.Lod.Overall)) return true;
@@ -413,6 +443,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
                 obj.MaxAngle = eval(this.MaxAngle);
                 obj.Material = eval(this.Material);
+                obj.Flags = eval(this.Flags);
+                obj.Unused = eval(this.Unused);
                 obj.Lod = this.Lod == null ? null : new MaskItem<R, Lod.Mask<R>?>(eval(this.Lod.Overall), this.Lod.Specific?.Translate(eval));
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
@@ -453,6 +485,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Material, "Material");
                     }
+                    if (printMask?.Flags ?? true)
+                    {
+                        fg.AppendItem(Flags, "Flags");
+                    }
+                    if (printMask?.Unused ?? true)
+                    {
+                        fg.AppendItem(Unused, "Unused");
+                    }
                     if (printMask?.Lod?.Overall ?? true)
                     {
                         Lod?.ToString(fg);
@@ -477,6 +517,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
             public Exception? MaxAngle;
             public Exception? Material;
+            public Exception? Flags;
+            public Exception? Unused;
             public MaskItem<Exception?, Lod.ErrorMask?>? Lod;
             public Exception? DNAMDataTypeState;
             #endregion
@@ -495,6 +537,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return MaxAngle;
                     case Static_FieldIndex.Material:
                         return Material;
+                    case Static_FieldIndex.Flags:
+                        return Flags;
+                    case Static_FieldIndex.Unused:
+                        return Unused;
                     case Static_FieldIndex.Lod:
                         return Lod;
                     case Static_FieldIndex.DNAMDataTypeState:
@@ -520,6 +566,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Static_FieldIndex.Material:
                         this.Material = ex;
+                        break;
+                    case Static_FieldIndex.Flags:
+                        this.Flags = ex;
+                        break;
+                    case Static_FieldIndex.Unused:
+                        this.Unused = ex;
                         break;
                     case Static_FieldIndex.Lod:
                         this.Lod = new MaskItem<Exception?, Lod.ErrorMask?>(ex, null);
@@ -550,6 +602,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case Static_FieldIndex.Material:
                         this.Material = (Exception?)obj;
                         break;
+                    case Static_FieldIndex.Flags:
+                        this.Flags = (Exception?)obj;
+                        break;
+                    case Static_FieldIndex.Unused:
+                        this.Unused = (Exception?)obj;
+                        break;
                     case Static_FieldIndex.Lod:
                         this.Lod = (MaskItem<Exception?, Lod.ErrorMask?>?)obj;
                         break;
@@ -569,6 +627,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Model != null) return true;
                 if (MaxAngle != null) return true;
                 if (Material != null) return true;
+                if (Flags != null) return true;
+                if (Unused != null) return true;
                 if (Lod != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
@@ -610,6 +670,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Model?.ToString(fg);
                 fg.AppendItem(MaxAngle, "MaxAngle");
                 fg.AppendItem(Material, "Material");
+                fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Unused, "Unused");
                 Lod?.ToString(fg);
                 fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
@@ -624,6 +686,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
                 ret.MaxAngle = this.MaxAngle.Combine(rhs.MaxAngle);
                 ret.Material = this.Material.Combine(rhs.Material);
+                ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.Lod = this.Lod.Combine(rhs.Lod, (l, r) => l.Combine(r));
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
@@ -652,6 +716,8 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Model.TranslationMask?> Model;
             public bool MaxAngle;
             public bool Material;
+            public bool Flags;
+            public bool Unused;
             public MaskItem<bool, Lod.TranslationMask?> Lod;
             public bool DNAMDataTypeState;
             #endregion
@@ -664,6 +730,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
                 this.MaxAngle = defaultOn;
                 this.Material = defaultOn;
+                this.Flags = defaultOn;
+                this.Unused = defaultOn;
                 this.Lod = new MaskItem<bool, Lod.TranslationMask?>(defaultOn, null);
                 this.DNAMDataTypeState = defaultOn;
             }
@@ -677,6 +745,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
                 ret.Add((MaxAngle, null));
                 ret.Add((Material, null));
+                ret.Add((Flags, null));
+                ret.Add((Unused, null));
                 ret.Add((Lod?.Overall ?? true, Lod?.Specific?.GetCrystal()));
                 ret.Add((DNAMDataTypeState, null));
             }
@@ -796,6 +866,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
         new FormLink<MaterialObject> Material { get; set; }
+        new Static.Flag Flags { get; set; }
+        new MemorySlice<Byte> Unused { get; set; }
         new Lod? Lod { get; set; }
         new Static.DNAMDataType DNAMDataTypeState { get; set; }
         #region Mutagen
@@ -827,6 +899,8 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? Model { get; }
         Single MaxAngle { get; }
         IFormLink<IMaterialObjectGetter> Material { get; }
+        Static.Flag Flags { get; }
+        ReadOnlyMemorySlice<Byte> Unused { get; }
         ILodGetter? Lod { get; }
         Static.DNAMDataType DNAMDataTypeState { get; }
 
@@ -1137,8 +1211,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Model = 7,
         MaxAngle = 8,
         Material = 9,
-        Lod = 10,
-        DNAMDataTypeState = 11,
+        Flags = 10,
+        Unused = 11,
+        Lod = 12,
+        DNAMDataTypeState = 13,
     }
     #endregion
 
@@ -1156,9 +1232,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "89036057-4570-493d-a5f7-4c5718f67a06";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Static.Mask<>);
 
@@ -1196,6 +1272,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Static_FieldIndex.MaxAngle;
                 case "MATERIAL":
                     return (ushort)Static_FieldIndex.Material;
+                case "FLAGS":
+                    return (ushort)Static_FieldIndex.Flags;
+                case "UNUSED":
+                    return (ushort)Static_FieldIndex.Unused;
                 case "LOD":
                     return (ushort)Static_FieldIndex.Lod;
                 case "DNAMDATATYPESTATE":
@@ -1214,6 +1294,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1233,6 +1315,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return true;
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -1249,6 +1333,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1270,6 +1356,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "MaxAngle";
                 case Static_FieldIndex.Material:
                     return "Material";
+                case Static_FieldIndex.Flags:
+                    return "Flags";
+                case Static_FieldIndex.Unused:
+                    return "Unused";
                 case Static_FieldIndex.Lod:
                     return "Lod";
                 case Static_FieldIndex.DNAMDataTypeState:
@@ -1288,6 +1378,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1305,6 +1397,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Static_FieldIndex.Model:
                 case Static_FieldIndex.MaxAngle:
                 case Static_FieldIndex.Material:
+                case Static_FieldIndex.Flags:
+                case Static_FieldIndex.Unused:
                 case Static_FieldIndex.Lod:
                 case Static_FieldIndex.DNAMDataTypeState:
                     return false;
@@ -1326,6 +1420,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Static_FieldIndex.Material:
                     return typeof(FormLink<MaterialObject>);
+                case Static_FieldIndex.Flags:
+                    return typeof(Static.Flag);
+                case Static_FieldIndex.Unused:
+                    return typeof(MemorySlice<Byte>);
                 case Static_FieldIndex.Lod:
                     return typeof(Lod);
                 case Static_FieldIndex.DNAMDataTypeState:
@@ -1383,6 +1481,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Model = null;
             item.MaxAngle = Static._MaxAngle_Default;
             item.Material = FormLink<MaterialObject>.Null;
+            item.Flags = default;
+            item.Unused = new byte[3];
             item.Lod = null;
             item.DNAMDataTypeState = default;
             base.Clear(item);
@@ -1550,6 +1650,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.MaxAngle = item.MaxAngle.EqualsWithin(rhs.MaxAngle);
             ret.Material = object.Equals(item.Material, rhs.Material);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Unused = MemoryExtensions.SequenceEqual(item.Unused.Span, rhs.Unused.Span);
             ret.Lod = EqualsMaskHelper.EqualsHelper(
                 item.Lod,
                 rhs.Lod,
@@ -1624,6 +1726,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Material, "Material");
             }
+            if (printMask?.Flags ?? true)
+            {
+                fg.AppendItem(item.Flags, "Flags");
+            }
+            if (printMask?.Unused ?? true)
+            {
+                fg.AppendLine($"Unused => {SpanExt.ToHexString(item.Unused)}");
+            }
             if ((printMask?.Lod?.Overall ?? true)
                 && item.Lod.TryGet(out var LodItem))
             {
@@ -1657,6 +1767,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
             mask.MaxAngle = true;
             mask.Material = true;
+            mask.Flags = true;
+            mask.Unused = true;
             var itemLod = item.Lod;
             mask.Lod = new MaskItem<bool, Lod.Mask<bool>?>(itemLod != null, itemLod?.GetHasBeenSetMask());
             mask.DNAMDataTypeState = true;
@@ -1715,6 +1827,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
             if (!lhs.MaxAngle.EqualsWithin(rhs.MaxAngle)) return false;
             if (!lhs.Material.Equals(rhs.Material)) return false;
+            if (lhs.Flags != rhs.Flags) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
             if (!object.Equals(lhs.Lod, rhs.Lod)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
@@ -1748,6 +1862,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             hash.Add(item.MaxAngle);
             hash.Add(item.Material);
+            hash.Add(item.Flags);
+            hash.Add(item.Unused);
             if (item.Lod.TryGet(out var Loditem))
             {
                 hash.Add(Loditem);
@@ -1892,6 +2008,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Material) ?? true))
             {
                 item.Material = rhs.Material.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
+            {
+                item.Flags = rhs.Flags;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Unused) ?? true))
+            {
+                item.Unused = rhs.Unused.ToArray();
             }
             if ((copyMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
             {
@@ -2108,6 +2232,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Static_FieldIndex.Material,
                     errorMask: errorMask);
             }
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.Flags) ?? true))
+            {
+                EnumXmlTranslation<Static.Flag>.Instance.Write(
+                    node: node,
+                    name: nameof(item.Flags),
+                    item: item.Flags,
+                    fieldIndex: (int)Static_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Static_FieldIndex.Unused) ?? true))
+            {
+                ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unused),
+                    item: item.Unused,
+                    fieldIndex: (int)Static_FieldIndex.Unused,
+                    errorMask: errorMask);
+            }
             if ((item.Lod != null)
                 && (translationMask?.GetShouldTranslate((int)Static_FieldIndex.Lod) ?? true))
             {
@@ -2313,8 +2455,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Flags":
+                    errorMask?.PushIndex((int)Static_FieldIndex.Flags);
+                    try
+                    {
+                        item.Flags = EnumXmlTranslation<Static.Flag>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Unused":
+                    errorMask?.PushIndex((int)Static_FieldIndex.Unused);
+                    try
+                    {
+                        item.Unused = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 3,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "Lod":
                     errorMask?.PushIndex((int)Static_FieldIndex.Lod);
@@ -2477,6 +2652,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Material);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Write(
+                        writer,
+                        item.Flags,
+                        length: 1);
+                }
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Unused);
+                }
             }
             if (item.Lod.TryGet(out var LodItem))
             {
@@ -2589,7 +2777,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Material = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                         frame: dataFrame,
                         defaultVal: FormKey.Null);
-                    return (int)Static_FieldIndex.Material;
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    }
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    }
+                    return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
                 {
@@ -2692,6 +2888,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _Material_IsSet => _DNAMLocation.HasValue;
         public IFormLink<IMaterialObjectGetter> Material => _Material_IsSet ? new FormLink<IMaterialObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_MaterialLocation, 0x4)))) : FormLink<IMaterialObjectGetter>.Null;
         #endregion
+        #region Flags
+        private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
+        #endregion
+        #region Unused
+        private int _UnusedLocation => _DNAMLocation!.Value + 0x9;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
+        #endregion
         #region Lod
         private RangeInt32? _LodLocation;
         public ILodGetter? Lod => _LodLocation.HasValue ? LodBinaryOverlay.LodFactory(new OverlayStream(_data.Slice(_LodLocation!.Value.Min), _package), _package) : default;
@@ -2778,7 +2984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)Static_FieldIndex.Material;
+                    return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:
                 {

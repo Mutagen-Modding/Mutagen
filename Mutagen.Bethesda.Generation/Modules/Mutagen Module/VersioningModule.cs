@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,11 +79,12 @@ namespace Mutagen.Bethesda.Generation
         {
             await base.PostFieldLoad(obj, field, node);
             var data = field.GetFieldData();
-            var version = node.Elements(XName.Get("CustomVersion", LoquiGenerator.Namespace)).FirstOrDefault();
-            if (version != null)
+            var customVersion = node.Elements(XName.Get("CustomVersion", LoquiGenerator.Namespace)).FirstOrDefault();
+            if (customVersion != null)
             {
-                data.CustomVersion = int.Parse(version.Value);
+                data.CustomVersion = ushort.Parse(customVersion.Value);
             }
+            data.VersionEnable = node.GetAttribute<ushort?>("version");
         }
     }
 }

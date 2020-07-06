@@ -353,6 +353,17 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IWeatherImageSpacesGetter? IWeatherGetter.ImageSpaces => this.ImageSpaces;
         #endregion
+        #region VolumetricLighting
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private WeatherVolumetricLighting? _VolumetricLighting;
+        public WeatherVolumetricLighting? VolumetricLighting
+        {
+            get => _VolumetricLighting;
+            set => _VolumetricLighting = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IWeatherVolumetricLightingGetter? IWeatherGetter.VolumetricLighting => this.VolumetricLighting;
+        #endregion
         #region DirectionalAmbientLightingColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private WeatherAmbientColorSet? _DirectionalAmbientLightingColors;
@@ -396,6 +407,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
+        #endregion
+        #region SunGlareLensFlare
+        public FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; } = new FormLinkNullable<LensFlare>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -629,10 +645,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(initialValue, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(initialValue, new WeatherImageSpaces.Mask<TItem>(initialValue));
+                this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(initialValue, new WeatherVolumetricLighting.Mask<TItem>(initialValue));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(initialValue, new WeatherAmbientColorSet.Mask<TItem>(initialValue));
                 this.NAM2 = initialValue;
                 this.NAM3 = initialValue;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.SunGlareLensFlare = initialValue;
                 this.NAM0DataTypeState = initialValue;
                 this.FNAMDataTypeState = initialValue;
                 this.DATADataTypeState = initialValue;
@@ -699,10 +717,12 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Sounds,
                 TItem SkyStatics,
                 TItem ImageSpaces,
+                TItem VolumetricLighting,
                 TItem DirectionalAmbientLightingColors,
                 TItem NAM2,
                 TItem NAM3,
                 TItem Aurora,
+                TItem SunGlareLensFlare,
                 TItem NAM0DataTypeState,
                 TItem FNAMDataTypeState,
                 TItem DATADataTypeState)
@@ -768,10 +788,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>(Sounds, Enumerable.Empty<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>());
                 this.SkyStatics = new MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>(SkyStatics, Enumerable.Empty<(int Index, TItem Value)>());
                 this.ImageSpaces = new MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>(ImageSpaces, new WeatherImageSpaces.Mask<TItem>(ImageSpaces));
+                this.VolumetricLighting = new MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>(VolumetricLighting, new WeatherVolumetricLighting.Mask<TItem>(VolumetricLighting));
                 this.DirectionalAmbientLightingColors = new MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>(DirectionalAmbientLightingColors, new WeatherAmbientColorSet.Mask<TItem>(DirectionalAmbientLightingColors));
                 this.NAM2 = NAM2;
                 this.NAM3 = NAM3;
                 this.Aurora = new MaskItem<TItem, Model.Mask<TItem>?>(Aurora, new Model.Mask<TItem>(Aurora));
+                this.SunGlareLensFlare = SunGlareLensFlare;
                 this.NAM0DataTypeState = NAM0DataTypeState;
                 this.FNAMDataTypeState = FNAMDataTypeState;
                 this.DATADataTypeState = DATADataTypeState;
@@ -840,10 +862,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, WeatherSound.Mask<TItem>?>>?>? Sounds;
             public MaskItem<TItem, IEnumerable<(int Index, TItem Value)>?>? SkyStatics;
             public MaskItem<TItem, WeatherImageSpaces.Mask<TItem>?>? ImageSpaces { get; set; }
+            public MaskItem<TItem, WeatherVolumetricLighting.Mask<TItem>?>? VolumetricLighting { get; set; }
             public MaskItem<TItem, WeatherAmbientColorSet.Mask<TItem>?>? DirectionalAmbientLightingColors { get; set; }
             public TItem NAM2;
             public TItem NAM3;
             public MaskItem<TItem, Model.Mask<TItem>?>? Aurora { get; set; }
+            public TItem SunGlareLensFlare;
             public TItem NAM0DataTypeState;
             public TItem FNAMDataTypeState;
             public TItem DATADataTypeState;
@@ -914,10 +938,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
                 if (!object.Equals(this.SkyStatics, rhs.SkyStatics)) return false;
                 if (!object.Equals(this.ImageSpaces, rhs.ImageSpaces)) return false;
+                if (!object.Equals(this.VolumetricLighting, rhs.VolumetricLighting)) return false;
                 if (!object.Equals(this.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
                 if (!object.Equals(this.NAM2, rhs.NAM2)) return false;
                 if (!object.Equals(this.NAM3, rhs.NAM3)) return false;
                 if (!object.Equals(this.Aurora, rhs.Aurora)) return false;
+                if (!object.Equals(this.SunGlareLensFlare, rhs.SunGlareLensFlare)) return false;
                 if (!object.Equals(this.NAM0DataTypeState, rhs.NAM0DataTypeState)) return false;
                 if (!object.Equals(this.FNAMDataTypeState, rhs.FNAMDataTypeState)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
@@ -980,10 +1006,12 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Sounds);
                 hash.Add(this.SkyStatics);
                 hash.Add(this.ImageSpaces);
+                hash.Add(this.VolumetricLighting);
                 hash.Add(this.DirectionalAmbientLightingColors);
                 hash.Add(this.NAM2);
                 hash.Add(this.NAM3);
                 hash.Add(this.Aurora);
+                hash.Add(this.SunGlareLensFlare);
                 hash.Add(this.NAM0DataTypeState);
                 hash.Add(this.FNAMDataTypeState);
                 hash.Add(this.DATADataTypeState);
@@ -1165,6 +1193,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.ImageSpaces.Overall)) return false;
                     if (this.ImageSpaces.Specific != null && !this.ImageSpaces.Specific.All(eval)) return false;
                 }
+                if (VolumetricLighting != null)
+                {
+                    if (!eval(this.VolumetricLighting.Overall)) return false;
+                    if (this.VolumetricLighting.Specific != null && !this.VolumetricLighting.Specific.All(eval)) return false;
+                }
                 if (DirectionalAmbientLightingColors != null)
                 {
                     if (!eval(this.DirectionalAmbientLightingColors.Overall)) return false;
@@ -1177,6 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Aurora.Overall)) return false;
                     if (this.Aurora.Specific != null && !this.Aurora.Specific.All(eval)) return false;
                 }
+                if (!eval(this.SunGlareLensFlare)) return false;
                 if (!eval(this.NAM0DataTypeState)) return false;
                 if (!eval(this.FNAMDataTypeState)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
@@ -1356,6 +1390,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.ImageSpaces.Overall)) return true;
                     if (this.ImageSpaces.Specific != null && this.ImageSpaces.Specific.Any(eval)) return true;
                 }
+                if (VolumetricLighting != null)
+                {
+                    if (eval(this.VolumetricLighting.Overall)) return true;
+                    if (this.VolumetricLighting.Specific != null && this.VolumetricLighting.Specific.Any(eval)) return true;
+                }
                 if (DirectionalAmbientLightingColors != null)
                 {
                     if (eval(this.DirectionalAmbientLightingColors.Overall)) return true;
@@ -1368,6 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Aurora.Overall)) return true;
                     if (this.Aurora.Specific != null && this.Aurora.Specific.Any(eval)) return true;
                 }
+                if (eval(this.SunGlareLensFlare)) return true;
                 if (eval(this.NAM0DataTypeState)) return true;
                 if (eval(this.FNAMDataTypeState)) return true;
                 if (eval(this.DATADataTypeState)) return true;
@@ -1494,10 +1534,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.ImageSpaces = this.ImageSpaces == null ? null : new MaskItem<R, WeatherImageSpaces.Mask<R>?>(eval(this.ImageSpaces.Overall), this.ImageSpaces.Specific?.Translate(eval));
+                obj.VolumetricLighting = this.VolumetricLighting == null ? null : new MaskItem<R, WeatherVolumetricLighting.Mask<R>?>(eval(this.VolumetricLighting.Overall), this.VolumetricLighting.Specific?.Translate(eval));
                 obj.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors == null ? null : new MaskItem<R, WeatherAmbientColorSet.Mask<R>?>(eval(this.DirectionalAmbientLightingColors.Overall), this.DirectionalAmbientLightingColors.Specific?.Translate(eval));
                 obj.NAM2 = eval(this.NAM2);
                 obj.NAM3 = eval(this.NAM3);
                 obj.Aurora = this.Aurora == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Aurora.Overall), this.Aurora.Specific?.Translate(eval));
+                obj.SunGlareLensFlare = eval(this.SunGlareLensFlare);
                 obj.NAM0DataTypeState = eval(this.NAM0DataTypeState);
                 obj.FNAMDataTypeState = eval(this.FNAMDataTypeState);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
@@ -1815,6 +1857,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ImageSpaces?.ToString(fg);
                     }
+                    if (printMask?.VolumetricLighting?.Overall ?? true)
+                    {
+                        VolumetricLighting?.ToString(fg);
+                    }
                     if (printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                     {
                         DirectionalAmbientLightingColors?.ToString(fg);
@@ -1830,6 +1876,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Aurora?.Overall ?? true)
                     {
                         Aurora?.ToString(fg);
+                    }
+                    if (printMask?.SunGlareLensFlare ?? true)
+                    {
+                        fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                     }
                     if (printMask?.NAM0DataTypeState ?? true)
                     {
@@ -1909,10 +1959,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>? Sounds;
             public MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>? SkyStatics;
             public MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>? ImageSpaces;
+            public MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>? VolumetricLighting;
             public MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>? DirectionalAmbientLightingColors;
             public Exception? NAM2;
             public Exception? NAM3;
             public MaskItem<Exception?, Model.ErrorMask?>? Aurora;
+            public Exception? SunGlareLensFlare;
             public Exception? NAM0DataTypeState;
             public Exception? FNAMDataTypeState;
             public Exception? DATADataTypeState;
@@ -2032,6 +2084,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return SkyStatics;
                     case Weather_FieldIndex.ImageSpaces:
                         return ImageSpaces;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        return VolumetricLighting;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         return DirectionalAmbientLightingColors;
                     case Weather_FieldIndex.NAM2:
@@ -2040,6 +2094,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return NAM3;
                     case Weather_FieldIndex.Aurora:
                         return Aurora;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        return SunGlareLensFlare;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         return NAM0DataTypeState;
                     case Weather_FieldIndex.FNAMDataTypeState:
@@ -2218,6 +2274,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.ImageSpaces:
                         this.ImageSpaces = new MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>(ex, null);
                         break;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        this.VolumetricLighting = new MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>(ex, null);
+                        break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = new MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>(ex, null);
                         break;
@@ -2229,6 +2288,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        this.SunGlareLensFlare = ex;
                         break;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = ex;
@@ -2412,6 +2474,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Weather_FieldIndex.ImageSpaces:
                         this.ImageSpaces = (MaskItem<Exception?, WeatherImageSpaces.ErrorMask?>?)obj;
                         break;
+                    case Weather_FieldIndex.VolumetricLighting:
+                        this.VolumetricLighting = (MaskItem<Exception?, WeatherVolumetricLighting.ErrorMask?>?)obj;
+                        break;
                     case Weather_FieldIndex.DirectionalAmbientLightingColors:
                         this.DirectionalAmbientLightingColors = (MaskItem<Exception?, WeatherAmbientColorSet.ErrorMask?>?)obj;
                         break;
@@ -2423,6 +2488,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Weather_FieldIndex.Aurora:
                         this.Aurora = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Weather_FieldIndex.SunGlareLensFlare:
+                        this.SunGlareLensFlare = (Exception?)obj;
                         break;
                     case Weather_FieldIndex.NAM0DataTypeState:
                         this.NAM0DataTypeState = (Exception?)obj;
@@ -2496,10 +2564,12 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Sounds != null) return true;
                 if (SkyStatics != null) return true;
                 if (ImageSpaces != null) return true;
+                if (VolumetricLighting != null) return true;
                 if (DirectionalAmbientLightingColors != null) return true;
                 if (NAM2 != null) return true;
                 if (NAM3 != null) return true;
                 if (Aurora != null) return true;
+                if (SunGlareLensFlare != null) return true;
                 if (NAM0DataTypeState != null) return true;
                 if (FNAMDataTypeState != null) return true;
                 if (DATADataTypeState != null) return true;
@@ -2676,10 +2746,12 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 ImageSpaces?.ToString(fg);
+                VolumetricLighting?.ToString(fg);
                 DirectionalAmbientLightingColors?.ToString(fg);
                 fg.AppendItem(NAM2, "NAM2");
                 fg.AppendItem(NAM3, "NAM3");
                 Aurora?.ToString(fg);
+                fg.AppendItem(SunGlareLensFlare, "SunGlareLensFlare");
                 fg.AppendItem(NAM0DataTypeState, "NAM0DataTypeState");
                 fg.AppendItem(FNAMDataTypeState, "FNAMDataTypeState");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -2745,10 +2817,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Sounds = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, WeatherSound.ErrorMask?>>?>(ExceptionExt.Combine(this.Sounds?.Overall, rhs.Sounds?.Overall), ExceptionExt.Combine(this.Sounds?.Specific, rhs.Sounds?.Specific));
                 ret.SkyStatics = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ExceptionExt.Combine(this.SkyStatics?.Overall, rhs.SkyStatics?.Overall), ExceptionExt.Combine(this.SkyStatics?.Specific, rhs.SkyStatics?.Specific));
                 ret.ImageSpaces = this.ImageSpaces.Combine(rhs.ImageSpaces, (l, r) => l.Combine(r));
+                ret.VolumetricLighting = this.VolumetricLighting.Combine(rhs.VolumetricLighting, (l, r) => l.Combine(r));
                 ret.DirectionalAmbientLightingColors = this.DirectionalAmbientLightingColors.Combine(rhs.DirectionalAmbientLightingColors, (l, r) => l.Combine(r));
                 ret.NAM2 = this.NAM2.Combine(rhs.NAM2);
                 ret.NAM3 = this.NAM3.Combine(rhs.NAM3);
                 ret.Aurora = this.Aurora.Combine(rhs.Aurora, (l, r) => l.Combine(r));
+                ret.SunGlareLensFlare = this.SunGlareLensFlare.Combine(rhs.SunGlareLensFlare);
                 ret.NAM0DataTypeState = this.NAM0DataTypeState.Combine(rhs.NAM0DataTypeState);
                 ret.FNAMDataTypeState = this.FNAMDataTypeState.Combine(rhs.FNAMDataTypeState);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
@@ -2828,10 +2902,12 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, WeatherSound.TranslationMask?> Sounds;
             public bool SkyStatics;
             public MaskItem<bool, WeatherImageSpaces.TranslationMask?> ImageSpaces;
+            public MaskItem<bool, WeatherVolumetricLighting.TranslationMask?> VolumetricLighting;
             public MaskItem<bool, WeatherAmbientColorSet.TranslationMask?> DirectionalAmbientLightingColors;
             public bool NAM2;
             public bool NAM3;
             public MaskItem<bool, Model.TranslationMask?> Aurora;
+            public bool SunGlareLensFlare;
             public bool NAM0DataTypeState;
             public bool FNAMDataTypeState;
             public bool DATADataTypeState;
@@ -2895,10 +2971,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Sounds = new MaskItem<bool, WeatherSound.TranslationMask?>(defaultOn, null);
                 this.SkyStatics = defaultOn;
                 this.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.TranslationMask?>(defaultOn, null);
+                this.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.TranslationMask?>(defaultOn, null);
                 this.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.TranslationMask?>(defaultOn, null);
                 this.NAM2 = defaultOn;
                 this.NAM3 = defaultOn;
                 this.Aurora = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
+                this.SunGlareLensFlare = defaultOn;
                 this.NAM0DataTypeState = defaultOn;
                 this.FNAMDataTypeState = defaultOn;
                 this.DATADataTypeState = defaultOn;
@@ -2963,10 +3041,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Sounds?.Overall ?? true, Sounds?.Specific?.GetCrystal()));
                 ret.Add((SkyStatics, null));
                 ret.Add((ImageSpaces?.Overall ?? true, ImageSpaces?.Specific?.GetCrystal()));
+                ret.Add((VolumetricLighting?.Overall ?? true, VolumetricLighting?.Specific?.GetCrystal()));
                 ret.Add((DirectionalAmbientLightingColors?.Overall ?? true, DirectionalAmbientLightingColors?.Specific?.GetCrystal()));
                 ret.Add((NAM2, null));
                 ret.Add((NAM3, null));
                 ret.Add((Aurora?.Overall ?? true, Aurora?.Specific?.GetCrystal()));
+                ret.Add((SunGlareLensFlare, null));
                 ret.Add((NAM0DataTypeState, null));
                 ret.Add((FNAMDataTypeState, null));
                 ret.Add((DATADataTypeState, null));
@@ -3138,10 +3218,12 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<WeatherSound> Sounds { get; }
         new IExtendedList<IFormLink<Static>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
+        new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
+        new FormLinkNullable<LensFlare> SunGlareLensFlare { get; set; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3216,10 +3298,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
         IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
+        IWeatherVolumetricLightingGetter? VolumetricLighting { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
         ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
+        IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3577,13 +3661,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Sounds = 57,
         SkyStatics = 58,
         ImageSpaces = 59,
-        DirectionalAmbientLightingColors = 60,
-        NAM2 = 61,
-        NAM3 = 62,
-        Aurora = 63,
-        NAM0DataTypeState = 64,
-        FNAMDataTypeState = 65,
-        DATADataTypeState = 66,
+        VolumetricLighting = 60,
+        DirectionalAmbientLightingColors = 61,
+        NAM2 = 62,
+        NAM3 = 63,
+        Aurora = 64,
+        SunGlareLensFlare = 65,
+        NAM0DataTypeState = 66,
+        FNAMDataTypeState = 67,
+        DATADataTypeState = 68,
     }
     #endregion
 
@@ -3601,9 +3687,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "2a067384-8f2a-4245-9c26-092e2a0351f0";
 
-        public const ushort AdditionalFieldCount = 61;
+        public const ushort AdditionalFieldCount = 63;
 
-        public const ushort FieldCount = 67;
+        public const ushort FieldCount = 69;
 
         public static readonly Type MaskType = typeof(Weather.Mask<>);
 
@@ -3741,6 +3827,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.SkyStatics;
                 case "IMAGESPACES":
                     return (ushort)Weather_FieldIndex.ImageSpaces;
+                case "VOLUMETRICLIGHTING":
+                    return (ushort)Weather_FieldIndex.VolumetricLighting;
                 case "DIRECTIONALAMBIENTLIGHTINGCOLORS":
                     return (ushort)Weather_FieldIndex.DirectionalAmbientLightingColors;
                 case "NAM2":
@@ -3749,6 +3837,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Weather_FieldIndex.NAM3;
                 case "AURORA":
                     return (ushort)Weather_FieldIndex.Aurora;
+                case "SUNGLARELENSFLARE":
+                    return (ushort)Weather_FieldIndex.SunGlareLensFlare;
                 case "NAM0DATATYPESTATE":
                     return (ushort)Weather_FieldIndex.NAM0DataTypeState;
                 case "FNAMDATATYPESTATE":
@@ -3820,10 +3910,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.WindDirection:
                 case Weather_FieldIndex.WindDirectionRange:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -3858,6 +3950,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.MoonGlareColor:
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.Aurora:
                     return true;
@@ -3897,6 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -3965,10 +4059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4091,6 +4187,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "SkyStatics";
                 case Weather_FieldIndex.ImageSpaces:
                     return "ImageSpaces";
+                case Weather_FieldIndex.VolumetricLighting:
+                    return "VolumetricLighting";
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return "DirectionalAmbientLightingColors";
                 case Weather_FieldIndex.NAM2:
@@ -4099,6 +4197,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "NAM3";
                 case Weather_FieldIndex.Aurora:
                     return "Aurora";
+                case Weather_FieldIndex.SunGlareLensFlare:
+                    return "SunGlareLensFlare";
                 case Weather_FieldIndex.NAM0DataTypeState:
                     return "NAM0DataTypeState";
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4169,10 +4269,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4241,10 +4343,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Weather_FieldIndex.Sounds:
                 case Weather_FieldIndex.SkyStatics:
                 case Weather_FieldIndex.ImageSpaces:
+                case Weather_FieldIndex.VolumetricLighting:
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                 case Weather_FieldIndex.NAM2:
                 case Weather_FieldIndex.NAM3:
                 case Weather_FieldIndex.Aurora:
+                case Weather_FieldIndex.SunGlareLensFlare:
                 case Weather_FieldIndex.NAM0DataTypeState:
                 case Weather_FieldIndex.FNAMDataTypeState:
                 case Weather_FieldIndex.DATADataTypeState:
@@ -4367,6 +4471,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(IExtendedList<IFormLink<Static>>);
                 case Weather_FieldIndex.ImageSpaces:
                     return typeof(WeatherImageSpaces);
+                case Weather_FieldIndex.VolumetricLighting:
+                    return typeof(WeatherVolumetricLighting);
                 case Weather_FieldIndex.DirectionalAmbientLightingColors:
                     return typeof(WeatherAmbientColorSet);
                 case Weather_FieldIndex.NAM2:
@@ -4375,6 +4481,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(MemorySlice<Byte>);
                 case Weather_FieldIndex.Aurora:
                     return typeof(Model);
+                case Weather_FieldIndex.SunGlareLensFlare:
+                    return typeof(FormLinkNullable<LensFlare>);
                 case Weather_FieldIndex.NAM0DataTypeState:
                     return typeof(Weather.NAM0DataType);
                 case Weather_FieldIndex.FNAMDataTypeState:
@@ -4484,10 +4592,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Sounds.Clear();
             item.SkyStatics.Clear();
             item.ImageSpaces = null;
+            item.VolumetricLighting = null;
             item.DirectionalAmbientLightingColors = null;
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
+            item.SunGlareLensFlare = FormLinkNullable<LensFlare>.Null;
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -4720,6 +4830,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.ImageSpaces,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.VolumetricLighting = EqualsMaskHelper.EqualsHelper(
+                item.VolumetricLighting,
+                rhs.VolumetricLighting,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             ret.DirectionalAmbientLightingColors = EqualsMaskHelper.EqualsHelper(
                 item.DirectionalAmbientLightingColors,
                 rhs.DirectionalAmbientLightingColors,
@@ -4732,6 +4847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Aurora,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
+            ret.SunGlareLensFlare = object.Equals(item.SunGlareLensFlare, rhs.SunGlareLensFlare);
             ret.NAM0DataTypeState = item.NAM0DataTypeState == rhs.NAM0DataTypeState;
             ret.FNAMDataTypeState = item.FNAMDataTypeState == rhs.FNAMDataTypeState;
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
@@ -5066,6 +5182,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ImageSpacesItem?.ToString(fg, "ImageSpaces");
             }
+            if ((printMask?.VolumetricLighting?.Overall ?? true)
+                && item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+            {
+                VolumetricLightingItem?.ToString(fg, "VolumetricLighting");
+            }
             if ((printMask?.DirectionalAmbientLightingColors?.Overall ?? true)
                 && item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsItem))
             {
@@ -5085,6 +5206,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 && item.Aurora.TryGet(out var AuroraItem))
             {
                 AuroraItem?.ToString(fg, "Aurora");
+            }
+            if ((printMask?.SunGlareLensFlare ?? true)
+                && item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareItem))
+            {
+                fg.AppendItem(SunGlareLensFlareItem, "SunGlareLensFlare");
             }
             if (printMask?.NAM0DataTypeState ?? true)
             {
@@ -5113,12 +5239,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.ONAM.HasValue && checkMask.ONAM.Value != (item.ONAM != null)) return false;
             if (checkMask.ImageSpaces?.Overall.HasValue ?? false && checkMask.ImageSpaces.Overall.Value != (item.ImageSpaces != null)) return false;
             if (checkMask.ImageSpaces?.Specific != null && (item.ImageSpaces == null || !item.ImageSpaces.HasBeenSet(checkMask.ImageSpaces.Specific))) return false;
+            if (checkMask.VolumetricLighting?.Overall.HasValue ?? false && checkMask.VolumetricLighting.Overall.Value != (item.VolumetricLighting != null)) return false;
+            if (checkMask.VolumetricLighting?.Specific != null && (item.VolumetricLighting == null || !item.VolumetricLighting.HasBeenSet(checkMask.VolumetricLighting.Specific))) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Overall.HasValue ?? false && checkMask.DirectionalAmbientLightingColors.Overall.Value != (item.DirectionalAmbientLightingColors != null)) return false;
             if (checkMask.DirectionalAmbientLightingColors?.Specific != null && (item.DirectionalAmbientLightingColors == null || !item.DirectionalAmbientLightingColors.HasBeenSet(checkMask.DirectionalAmbientLightingColors.Specific))) return false;
             if (checkMask.NAM2.HasValue && checkMask.NAM2.Value != (item.NAM2 != null)) return false;
             if (checkMask.NAM3.HasValue && checkMask.NAM3.Value != (item.NAM3 != null)) return false;
             if (checkMask.Aurora?.Overall.HasValue ?? false && checkMask.Aurora.Overall.Value != (item.Aurora != null)) return false;
             if (checkMask.Aurora?.Specific != null && (item.Aurora == null || !item.Aurora.HasBeenSet(checkMask.Aurora.Specific))) return false;
+            if (checkMask.SunGlareLensFlare.HasValue && checkMask.SunGlareLensFlare.Value != (item.SunGlareLensFlare.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -5185,12 +5314,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.SkyStatics = new MaskItem<bool, IEnumerable<(int Index, bool Value)>?>(true, default);
             var itemImageSpaces = item.ImageSpaces;
             mask.ImageSpaces = new MaskItem<bool, WeatherImageSpaces.Mask<bool>?>(itemImageSpaces != null, itemImageSpaces?.GetHasBeenSetMask());
+            var itemVolumetricLighting = item.VolumetricLighting;
+            mask.VolumetricLighting = new MaskItem<bool, WeatherVolumetricLighting.Mask<bool>?>(itemVolumetricLighting != null, itemVolumetricLighting?.GetHasBeenSetMask());
             var itemDirectionalAmbientLightingColors = item.DirectionalAmbientLightingColors;
             mask.DirectionalAmbientLightingColors = new MaskItem<bool, WeatherAmbientColorSet.Mask<bool>?>(itemDirectionalAmbientLightingColors != null, itemDirectionalAmbientLightingColors?.GetHasBeenSetMask());
             mask.NAM2 = (item.NAM2 != null);
             mask.NAM3 = (item.NAM3 != null);
             var itemAurora = item.Aurora;
             mask.Aurora = new MaskItem<bool, Model.Mask<bool>?>(itemAurora != null, itemAurora?.GetHasBeenSetMask());
+            mask.SunGlareLensFlare = (item.SunGlareLensFlare.FormKey != null);
             mask.NAM0DataTypeState = true;
             mask.FNAMDataTypeState = true;
             mask.DATADataTypeState = true;
@@ -5299,10 +5431,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.Sounds.SequenceEqual(rhs.Sounds)) return false;
             if (!lhs.SkyStatics.SequenceEqual(rhs.SkyStatics)) return false;
             if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
+            if (!object.Equals(lhs.VolumetricLighting, rhs.VolumetricLighting)) return false;
             if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
             if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
             if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
             if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
+            if (!lhs.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare)) return false;
             if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
             if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
@@ -5408,6 +5542,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(ImageSpacesitem);
             }
+            if (item.VolumetricLighting.TryGet(out var VolumetricLightingitem))
+            {
+                hash.Add(VolumetricLightingitem);
+            }
             if (item.DirectionalAmbientLightingColors.TryGet(out var DirectionalAmbientLightingColorsitem))
             {
                 hash.Add(DirectionalAmbientLightingColorsitem);
@@ -5423,6 +5561,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.Aurora.TryGet(out var Auroraitem))
             {
                 hash.Add(Auroraitem);
+            }
+            if (item.SunGlareLensFlare.TryGet(out var SunGlareLensFlareitem))
+            {
+                hash.Add(SunGlareLensFlareitem);
             }
             hash.Add(item.NAM0DataTypeState);
             hash.Add(item.FNAMDataTypeState);
@@ -5476,12 +5618,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.VolumetricLighting.TryGet(out var VolumetricLightingItems))
+            {
+                foreach (var item in VolumetricLightingItems.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             if (obj.Aurora.TryGet(out var AuroraItems))
             {
                 foreach (var item in AuroraItems.LinkFormKeys)
                 {
                     yield return item;
                 }
+            }
+            if (obj.SunGlareLensFlare.FormKey.TryGet(out var SunGlareLensFlareKey))
+            {
+                yield return SunGlareLensFlareKey;
             }
             yield break;
         }
@@ -6158,6 +6311,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VolumetricLighting) ?? true))
+            {
+                errorMask?.PushIndex((int)Weather_FieldIndex.VolumetricLighting);
+                try
+                {
+                    if(rhs.VolumetricLighting.TryGet(out var rhsVolumetricLighting))
+                    {
+                        item.VolumetricLighting = rhsVolumetricLighting.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Weather_FieldIndex.VolumetricLighting));
+                    }
+                    else
+                    {
+                        item.VolumetricLighting = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
             {
                 errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
@@ -6231,6 +6410,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
+            {
+                item.SunGlareLensFlare = rhs.SunGlareLensFlare.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -6968,6 +7151,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.ImageSpaces));
                 }
             }
+            if ((item.VolumetricLighting != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.VolumetricLighting) ?? true))
+            {
+                if (item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+                {
+                    ((WeatherVolumetricLightingXmlWriteTranslation)((IXmlItem)VolumetricLightingItem).XmlWriteTranslator).Write(
+                        item: VolumetricLightingItem,
+                        node: node,
+                        name: nameof(item.VolumetricLighting),
+                        fieldIndex: (int)Weather_FieldIndex.VolumetricLighting,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.VolumetricLighting));
+                }
+            }
             if ((item.DirectionalAmbientLightingColors != null)
                 && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
             {
@@ -7015,6 +7212,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora));
                 }
+            }
+            if ((item.SunGlareLensFlare.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.SunGlareLensFlare),
+                    item: item.SunGlareLensFlare.FormKey,
+                    fieldIndex: (int)Weather_FieldIndex.SunGlareLensFlare,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -8182,6 +8389,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "VolumetricLighting":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.VolumetricLighting);
+                    try
+                    {
+                        item.VolumetricLighting = LoquiXmlTranslation<WeatherVolumetricLighting>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.VolumetricLighting));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DirectionalAmbientLightingColors":
                     errorMask?.PushIndex((int)Weather_FieldIndex.DirectionalAmbientLightingColors);
                     try
@@ -8245,6 +8471,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)Weather_FieldIndex.Aurora));
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "SunGlareLensFlare":
+                    errorMask?.PushIndex((int)Weather_FieldIndex.SunGlareLensFlare);
+                    try
+                    {
+                        item.SunGlareLensFlare = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -8771,6 +9015,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                if (item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
+                {
+                    ((WeatherVolumetricLightingBinaryWriteTranslation)((IBinaryItem)VolumetricLightingItem).BinaryWriteTranslator).Write(
+                        item: VolumetricLightingItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
             WeatherBinaryWriteTranslation.WriteBinaryDirectionalAmbientLightingColors(
                 writer: writer,
                 item: item);
@@ -8788,6 +9042,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: AuroraItem,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
+            }
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.SunGlareLensFlare,
+                    header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
             }
         }
 
@@ -9082,6 +9343,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaces = Mutagen.Bethesda.Skyrim.WeatherImageSpaces.CreateFromBinary(frame: frame);
                     return (int)Weather_FieldIndex.ImageSpaces;
                 }
+                case RecordTypeInts.HNAM:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.VolumetricLighting = Mutagen.Bethesda.Skyrim.WeatherVolumetricLighting.CreateFromBinary(frame: frame);
+                    }
+                    return (int)Weather_FieldIndex.VolumetricLighting;
+                }
                 case RecordTypeInts.DALC:
                 {
                     WeatherBinaryCreateTranslation.FillBinaryDirectionalAmbientLightingColorsCustom(
@@ -9107,6 +9376,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame,
                         recordTypeConverter: recordTypeConverter);
                     return (int)Weather_FieldIndex.Aurora;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.SunGlareLensFlare = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            defaultVal: FormKey.Null);
+                    }
+                    return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
                 default:
                     return CustomRecordFallback(
@@ -9517,6 +9797,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
         public bool ImageSpaces_IsSet => _ImageSpacesLocation.HasValue;
         #endregion
+        #region VolumetricLighting
+        private RangeInt32? _VolumetricLightingLocation;
+        public IWeatherVolumetricLightingGetter? VolumetricLighting => _VolumetricLightingLocation.HasValue ? WeatherVolumetricLightingBinaryOverlay.WeatherVolumetricLightingFactory(new OverlayStream(_data.Slice(_VolumetricLightingLocation!.Value.Min), _package), _package) : default;
+        public bool VolumetricLighting_IsSet => _VolumetricLightingLocation.HasValue;
+        #endregion
         #region DirectionalAmbientLightingColors
         partial void DirectionalAmbientLightingColorsCustomParse(
             OverlayStream stream,
@@ -9533,6 +9818,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public ReadOnlyMemorySlice<Byte>? NAM3 => _NAM3Location.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _NAM3Location.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IModelGetter? Aurora { get; private set; }
+        #region SunGlareLensFlare
+        private int? _SunGlareLensFlareLocation;
+        public bool SunGlareLensFlare_IsSet => _SunGlareLensFlareLocation.HasValue;
+        public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -9733,6 +10023,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     _ImageSpacesLocation = new RangeInt32((stream.Position - offset), finalPos);
                     return (int)Weather_FieldIndex.ImageSpaces;
                 }
+                case RecordTypeInts.HNAM:
+                {
+                    _VolumetricLightingLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)Weather_FieldIndex.VolumetricLighting;
+                }
                 case RecordTypeInts.DALC:
                 {
                     DirectionalAmbientLightingColorsCustomParse(
@@ -9758,6 +10053,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
                     return (int)Weather_FieldIndex.Aurora;
+                }
+                case RecordTypeInts.GNAM:
+                {
+                    _SunGlareLensFlareLocation = (stream.Position - offset);
+                    return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
                 default:
                     return CustomRecordFallback(

@@ -225,6 +225,7 @@ namespace Mutagen.Bethesda.Generation
 
         public static void GenerateWrapperExtraMembers(FileGeneration fg, DataType dataType, ObjectGeneration objGen, TypeGeneration typeGen, string posAccessor)
         {
+            var fieldData = typeGen.GetFieldData();
             var dataMeta = dataType.IterateFieldsWithMeta().First(item => item.Field == typeGen);
             StringBuilder extraChecks = new StringBuilder();
             if (dataMeta.EncounteredBreaks.Any())
@@ -235,6 +236,10 @@ namespace Mutagen.Bethesda.Generation
             if (dataMeta.RangeIndex != -1)
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
+            }
+            if (fieldData.VersionEnable.HasValue)
+            {
+                extraChecks.Append($"_package.MajorRecord!.FormVersion!.Value >= {fieldData.VersionEnable}");
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)

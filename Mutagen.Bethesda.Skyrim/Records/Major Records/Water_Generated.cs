@@ -284,6 +284,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region SpecularSunSparklePower
         public Single SpecularSunSparklePower { get; set; } = default;
         #endregion
+        #region NoiseFlowmapScale
+        public Single NoiseFlowmapScale { get; set; } = default;
+        #endregion
         #region GNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected MemorySlice<Byte>? _GNAM;
@@ -319,6 +322,11 @@ namespace Mutagen.Bethesda.Skyrim
         public String? NoiseLayerThreeTexture { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWaterGetter.NoiseLayerThreeTexture => this.NoiseLayerThreeTexture;
+        #endregion
+        #region FlowNormalsNoiseTexture
+        public String? FlowNormalsNoiseTexture { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IWaterGetter.FlowNormalsNoiseTexture => this.FlowNormalsNoiseTexture;
         #endregion
         #region DNAMDataTypeState
         public Water.DNAMDataType DNAMDataTypeState { get; set; } = default;
@@ -551,12 +559,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = initialValue;
                 this.DepthSpecularLighting = initialValue;
                 this.SpecularSunSparklePower = initialValue;
+                this.NoiseFlowmapScale = initialValue;
                 this.GNAM = initialValue;
                 this.LinearVelocity = initialValue;
                 this.AngularVelocity = initialValue;
                 this.NoiseLayerOneTexture = initialValue;
                 this.NoiseLayerTwoTexture = initialValue;
                 this.NoiseLayerThreeTexture = initialValue;
+                this.FlowNormalsNoiseTexture = initialValue;
                 this.DNAMDataTypeState = initialValue;
             }
 
@@ -626,12 +636,14 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem DepthNormals,
                 TItem DepthSpecularLighting,
                 TItem SpecularSunSparklePower,
+                TItem NoiseFlowmapScale,
                 TItem GNAM,
                 TItem LinearVelocity,
                 TItem AngularVelocity,
                 TItem NoiseLayerOneTexture,
                 TItem NoiseLayerTwoTexture,
                 TItem NoiseLayerThreeTexture,
+                TItem FlowNormalsNoiseTexture,
                 TItem DNAMDataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -700,12 +712,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = DepthNormals;
                 this.DepthSpecularLighting = DepthSpecularLighting;
                 this.SpecularSunSparklePower = SpecularSunSparklePower;
+                this.NoiseFlowmapScale = NoiseFlowmapScale;
                 this.GNAM = GNAM;
                 this.LinearVelocity = LinearVelocity;
                 this.AngularVelocity = AngularVelocity;
                 this.NoiseLayerOneTexture = NoiseLayerOneTexture;
                 this.NoiseLayerTwoTexture = NoiseLayerTwoTexture;
                 this.NoiseLayerThreeTexture = NoiseLayerThreeTexture;
+                this.FlowNormalsNoiseTexture = FlowNormalsNoiseTexture;
                 this.DNAMDataTypeState = DNAMDataTypeState;
             }
 
@@ -777,12 +791,14 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DepthNormals;
             public TItem DepthSpecularLighting;
             public TItem SpecularSunSparklePower;
+            public TItem NoiseFlowmapScale;
             public TItem GNAM;
             public TItem LinearVelocity;
             public TItem AngularVelocity;
             public TItem NoiseLayerOneTexture;
             public TItem NoiseLayerTwoTexture;
             public TItem NoiseLayerThreeTexture;
+            public TItem FlowNormalsNoiseTexture;
             public TItem DNAMDataTypeState;
             #endregion
 
@@ -856,12 +872,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DepthNormals, rhs.DepthNormals)) return false;
                 if (!object.Equals(this.DepthSpecularLighting, rhs.DepthSpecularLighting)) return false;
                 if (!object.Equals(this.SpecularSunSparklePower, rhs.SpecularSunSparklePower)) return false;
+                if (!object.Equals(this.NoiseFlowmapScale, rhs.NoiseFlowmapScale)) return false;
                 if (!object.Equals(this.GNAM, rhs.GNAM)) return false;
                 if (!object.Equals(this.LinearVelocity, rhs.LinearVelocity)) return false;
                 if (!object.Equals(this.AngularVelocity, rhs.AngularVelocity)) return false;
                 if (!object.Equals(this.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
                 if (!object.Equals(this.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
                 if (!object.Equals(this.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+                if (!object.Equals(this.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
                 if (!object.Equals(this.DNAMDataTypeState, rhs.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -927,12 +945,14 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DepthNormals);
                 hash.Add(this.DepthSpecularLighting);
                 hash.Add(this.SpecularSunSparklePower);
+                hash.Add(this.NoiseFlowmapScale);
                 hash.Add(this.GNAM);
                 hash.Add(this.LinearVelocity);
                 hash.Add(this.AngularVelocity);
                 hash.Add(this.NoiseLayerOneTexture);
                 hash.Add(this.NoiseLayerTwoTexture);
                 hash.Add(this.NoiseLayerThreeTexture);
+                hash.Add(this.FlowNormalsNoiseTexture);
                 hash.Add(this.DNAMDataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -1013,12 +1033,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.DepthNormals)) return false;
                 if (!eval(this.DepthSpecularLighting)) return false;
                 if (!eval(this.SpecularSunSparklePower)) return false;
+                if (!eval(this.NoiseFlowmapScale)) return false;
                 if (!eval(this.GNAM)) return false;
                 if (!eval(this.LinearVelocity)) return false;
                 if (!eval(this.AngularVelocity)) return false;
                 if (!eval(this.NoiseLayerOneTexture)) return false;
                 if (!eval(this.NoiseLayerTwoTexture)) return false;
                 if (!eval(this.NoiseLayerThreeTexture)) return false;
+                if (!eval(this.FlowNormalsNoiseTexture)) return false;
                 if (!eval(this.DNAMDataTypeState)) return false;
                 return true;
             }
@@ -1097,12 +1119,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.DepthNormals)) return true;
                 if (eval(this.DepthSpecularLighting)) return true;
                 if (eval(this.SpecularSunSparklePower)) return true;
+                if (eval(this.NoiseFlowmapScale)) return true;
                 if (eval(this.GNAM)) return true;
                 if (eval(this.LinearVelocity)) return true;
                 if (eval(this.AngularVelocity)) return true;
                 if (eval(this.NoiseLayerOneTexture)) return true;
                 if (eval(this.NoiseLayerTwoTexture)) return true;
                 if (eval(this.NoiseLayerThreeTexture)) return true;
+                if (eval(this.FlowNormalsNoiseTexture)) return true;
                 if (eval(this.DNAMDataTypeState)) return true;
                 return false;
             }
@@ -1191,12 +1215,14 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.DepthNormals = eval(this.DepthNormals);
                 obj.DepthSpecularLighting = eval(this.DepthSpecularLighting);
                 obj.SpecularSunSparklePower = eval(this.SpecularSunSparklePower);
+                obj.NoiseFlowmapScale = eval(this.NoiseFlowmapScale);
                 obj.GNAM = eval(this.GNAM);
                 obj.LinearVelocity = eval(this.LinearVelocity);
                 obj.AngularVelocity = eval(this.AngularVelocity);
                 obj.NoiseLayerOneTexture = eval(this.NoiseLayerOneTexture);
                 obj.NoiseLayerTwoTexture = eval(this.NoiseLayerTwoTexture);
                 obj.NoiseLayerThreeTexture = eval(this.NoiseLayerThreeTexture);
+                obj.FlowNormalsNoiseTexture = eval(this.FlowNormalsNoiseTexture);
                 obj.DNAMDataTypeState = eval(this.DNAMDataTypeState);
             }
             #endregion
@@ -1475,6 +1501,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
                     }
+                    if (printMask?.NoiseFlowmapScale ?? true)
+                    {
+                        fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
+                    }
                     if (printMask?.GNAM ?? true)
                     {
                         fg.AppendItem(GNAM, "GNAM");
@@ -1498,6 +1528,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.NoiseLayerThreeTexture ?? true)
                     {
                         fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                    }
+                    if (printMask?.FlowNormalsNoiseTexture ?? true)
+                    {
+                        fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                     }
                     if (printMask?.DNAMDataTypeState ?? true)
                     {
@@ -1574,12 +1608,14 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DepthNormals;
             public Exception? DepthSpecularLighting;
             public Exception? SpecularSunSparklePower;
+            public Exception? NoiseFlowmapScale;
             public Exception? GNAM;
             public Exception? LinearVelocity;
             public Exception? AngularVelocity;
             public Exception? NoiseLayerOneTexture;
             public Exception? NoiseLayerTwoTexture;
             public Exception? NoiseLayerThreeTexture;
+            public Exception? FlowNormalsNoiseTexture;
             public Exception? DNAMDataTypeState;
             #endregion
 
@@ -1707,6 +1743,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return DepthSpecularLighting;
                     case Water_FieldIndex.SpecularSunSparklePower:
                         return SpecularSunSparklePower;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        return NoiseFlowmapScale;
                     case Water_FieldIndex.GNAM:
                         return GNAM;
                     case Water_FieldIndex.LinearVelocity:
@@ -1719,6 +1757,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return NoiseLayerTwoTexture;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         return NoiseLayerThreeTexture;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        return FlowNormalsNoiseTexture;
                     case Water_FieldIndex.DNAMDataTypeState:
                         return DNAMDataTypeState;
                     default:
@@ -1908,6 +1948,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Water_FieldIndex.SpecularSunSparklePower:
                         this.SpecularSunSparklePower = ex;
                         break;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        this.NoiseFlowmapScale = ex;
+                        break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = ex;
                         break;
@@ -1925,6 +1968,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         this.NoiseLayerThreeTexture = ex;
+                        break;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        this.FlowNormalsNoiseTexture = ex;
                         break;
                     case Water_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = ex;
@@ -2117,6 +2163,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Water_FieldIndex.SpecularSunSparklePower:
                         this.SpecularSunSparklePower = (Exception?)obj;
                         break;
+                    case Water_FieldIndex.NoiseFlowmapScale:
+                        this.NoiseFlowmapScale = (Exception?)obj;
+                        break;
                     case Water_FieldIndex.GNAM:
                         this.GNAM = (Exception?)obj;
                         break;
@@ -2134,6 +2183,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Water_FieldIndex.NoiseLayerThreeTexture:
                         this.NoiseLayerThreeTexture = (Exception?)obj;
+                        break;
+                    case Water_FieldIndex.FlowNormalsNoiseTexture:
+                        this.FlowNormalsNoiseTexture = (Exception?)obj;
                         break;
                     case Water_FieldIndex.DNAMDataTypeState:
                         this.DNAMDataTypeState = (Exception?)obj;
@@ -2206,12 +2258,14 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DepthNormals != null) return true;
                 if (DepthSpecularLighting != null) return true;
                 if (SpecularSunSparklePower != null) return true;
+                if (NoiseFlowmapScale != null) return true;
                 if (GNAM != null) return true;
                 if (LinearVelocity != null) return true;
                 if (AngularVelocity != null) return true;
                 if (NoiseLayerOneTexture != null) return true;
                 if (NoiseLayerTwoTexture != null) return true;
                 if (NoiseLayerThreeTexture != null) return true;
+                if (FlowNormalsNoiseTexture != null) return true;
                 if (DNAMDataTypeState != null) return true;
                 return false;
             }
@@ -2328,12 +2382,14 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(DepthNormals, "DepthNormals");
                 fg.AppendItem(DepthSpecularLighting, "DepthSpecularLighting");
                 fg.AppendItem(SpecularSunSparklePower, "SpecularSunSparklePower");
+                fg.AppendItem(NoiseFlowmapScale, "NoiseFlowmapScale");
                 fg.AppendItem(GNAM, "GNAM");
                 fg.AppendItem(LinearVelocity, "LinearVelocity");
                 fg.AppendItem(AngularVelocity, "AngularVelocity");
                 fg.AppendItem(NoiseLayerOneTexture, "NoiseLayerOneTexture");
                 fg.AppendItem(NoiseLayerTwoTexture, "NoiseLayerTwoTexture");
                 fg.AppendItem(NoiseLayerThreeTexture, "NoiseLayerThreeTexture");
+                fg.AppendItem(FlowNormalsNoiseTexture, "FlowNormalsNoiseTexture");
                 fg.AppendItem(DNAMDataTypeState, "DNAMDataTypeState");
             }
             #endregion
@@ -2402,12 +2458,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DepthNormals = this.DepthNormals.Combine(rhs.DepthNormals);
                 ret.DepthSpecularLighting = this.DepthSpecularLighting.Combine(rhs.DepthSpecularLighting);
                 ret.SpecularSunSparklePower = this.SpecularSunSparklePower.Combine(rhs.SpecularSunSparklePower);
+                ret.NoiseFlowmapScale = this.NoiseFlowmapScale.Combine(rhs.NoiseFlowmapScale);
                 ret.GNAM = this.GNAM.Combine(rhs.GNAM);
                 ret.LinearVelocity = this.LinearVelocity.Combine(rhs.LinearVelocity);
                 ret.AngularVelocity = this.AngularVelocity.Combine(rhs.AngularVelocity);
                 ret.NoiseLayerOneTexture = this.NoiseLayerOneTexture.Combine(rhs.NoiseLayerOneTexture);
                 ret.NoiseLayerTwoTexture = this.NoiseLayerTwoTexture.Combine(rhs.NoiseLayerTwoTexture);
                 ret.NoiseLayerThreeTexture = this.NoiseLayerThreeTexture.Combine(rhs.NoiseLayerThreeTexture);
+                ret.FlowNormalsNoiseTexture = this.FlowNormalsNoiseTexture.Combine(rhs.FlowNormalsNoiseTexture);
                 ret.DNAMDataTypeState = this.DNAMDataTypeState.Combine(rhs.DNAMDataTypeState);
                 return ret;
             }
@@ -2490,12 +2548,14 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DepthNormals;
             public bool DepthSpecularLighting;
             public bool SpecularSunSparklePower;
+            public bool NoiseFlowmapScale;
             public bool GNAM;
             public bool LinearVelocity;
             public bool AngularVelocity;
             public bool NoiseLayerOneTexture;
             public bool NoiseLayerTwoTexture;
             public bool NoiseLayerThreeTexture;
+            public bool FlowNormalsNoiseTexture;
             public bool DNAMDataTypeState;
             #endregion
 
@@ -2562,12 +2622,14 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DepthNormals = defaultOn;
                 this.DepthSpecularLighting = defaultOn;
                 this.SpecularSunSparklePower = defaultOn;
+                this.NoiseFlowmapScale = defaultOn;
                 this.GNAM = defaultOn;
                 this.LinearVelocity = defaultOn;
                 this.AngularVelocity = defaultOn;
                 this.NoiseLayerOneTexture = defaultOn;
                 this.NoiseLayerTwoTexture = defaultOn;
                 this.NoiseLayerThreeTexture = defaultOn;
+                this.FlowNormalsNoiseTexture = defaultOn;
                 this.DNAMDataTypeState = defaultOn;
             }
 
@@ -2635,12 +2697,14 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DepthNormals, null));
                 ret.Add((DepthSpecularLighting, null));
                 ret.Add((SpecularSunSparklePower, null));
+                ret.Add((NoiseFlowmapScale, null));
                 ret.Add((GNAM, null));
                 ret.Add((LinearVelocity, null));
                 ret.Add((AngularVelocity, null));
                 ret.Add((NoiseLayerOneTexture, null));
                 ret.Add((NoiseLayerTwoTexture, null));
                 ret.Add((NoiseLayerThreeTexture, null));
+                ret.Add((FlowNormalsNoiseTexture, null));
                 ret.Add((DNAMDataTypeState, null));
             }
         }
@@ -2806,12 +2870,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Single DepthNormals { get; set; }
         new Single DepthSpecularLighting { get; set; }
         new Single SpecularSunSparklePower { get; set; }
+        new Single NoiseFlowmapScale { get; set; }
         new MemorySlice<Byte>? GNAM { get; set; }
         new P3Float? LinearVelocity { get; set; }
         new P3Float? AngularVelocity { get; set; }
         new String? NoiseLayerOneTexture { get; set; }
         new String? NoiseLayerTwoTexture { get; set; }
         new String? NoiseLayerThreeTexture { get; set; }
+        new String? FlowNormalsNoiseTexture { get; set; }
         new Water.DNAMDataType DNAMDataTypeState { get; set; }
     }
 
@@ -2890,12 +2956,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single DepthNormals { get; }
         Single DepthSpecularLighting { get; }
         Single SpecularSunSparklePower { get; }
+        Single NoiseFlowmapScale { get; }
         ReadOnlyMemorySlice<Byte>? GNAM { get; }
         P3Float? LinearVelocity { get; }
         P3Float? AngularVelocity { get; }
         String? NoiseLayerOneTexture { get; }
         String? NoiseLayerTwoTexture { get; }
         String? NoiseLayerThreeTexture { get; }
+        String? FlowNormalsNoiseTexture { get; }
         Water.DNAMDataType DNAMDataTypeState { get; }
 
     }
@@ -3256,13 +3324,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         DepthNormals = 62,
         DepthSpecularLighting = 63,
         SpecularSunSparklePower = 64,
-        GNAM = 65,
-        LinearVelocity = 66,
-        AngularVelocity = 67,
-        NoiseLayerOneTexture = 68,
-        NoiseLayerTwoTexture = 69,
-        NoiseLayerThreeTexture = 70,
-        DNAMDataTypeState = 71,
+        NoiseFlowmapScale = 65,
+        GNAM = 66,
+        LinearVelocity = 67,
+        AngularVelocity = 68,
+        NoiseLayerOneTexture = 69,
+        NoiseLayerTwoTexture = 70,
+        NoiseLayerThreeTexture = 71,
+        FlowNormalsNoiseTexture = 72,
+        DNAMDataTypeState = 73,
     }
     #endregion
 
@@ -3280,9 +3350,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "cf1e41d5-72e0-47c6-82ca-e1289b290653";
 
-        public const ushort AdditionalFieldCount = 66;
+        public const ushort AdditionalFieldCount = 68;
 
-        public const ushort FieldCount = 72;
+        public const ushort FieldCount = 74;
 
         public static readonly Type MaskType = typeof(Water.Mask<>);
 
@@ -3430,6 +3500,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Water_FieldIndex.DepthSpecularLighting;
                 case "SPECULARSUNSPARKLEPOWER":
                     return (ushort)Water_FieldIndex.SpecularSunSparklePower;
+                case "NOISEFLOWMAPSCALE":
+                    return (ushort)Water_FieldIndex.NoiseFlowmapScale;
                 case "GNAM":
                     return (ushort)Water_FieldIndex.GNAM;
                 case "LINEARVELOCITY":
@@ -3442,6 +3514,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Water_FieldIndex.NoiseLayerTwoTexture;
                 case "NOISELAYERTHREETEXTURE":
                     return (ushort)Water_FieldIndex.NoiseLayerThreeTexture;
+                case "FLOWNORMALSNOISETEXTURE":
+                    return (ushort)Water_FieldIndex.FlowNormalsNoiseTexture;
                 case "DNAMDATATYPESTATE":
                     return (ushort)Water_FieldIndex.DNAMDataTypeState;
                 default:
@@ -3514,12 +3588,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3591,12 +3667,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3668,12 +3746,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3804,6 +3884,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "DepthSpecularLighting";
                 case Water_FieldIndex.SpecularSunSparklePower:
                     return "SpecularSunSparklePower";
+                case Water_FieldIndex.NoiseFlowmapScale:
+                    return "NoiseFlowmapScale";
                 case Water_FieldIndex.GNAM:
                     return "GNAM";
                 case Water_FieldIndex.LinearVelocity:
@@ -3816,6 +3898,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "NoiseLayerTwoTexture";
                 case Water_FieldIndex.NoiseLayerThreeTexture:
                     return "NoiseLayerThreeTexture";
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
+                    return "FlowNormalsNoiseTexture";
                 case Water_FieldIndex.DNAMDataTypeState:
                     return "DNAMDataTypeState";
                 default:
@@ -3887,12 +3971,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -3964,12 +4050,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.DepthNormals:
                 case Water_FieldIndex.DepthSpecularLighting:
                 case Water_FieldIndex.SpecularSunSparklePower:
+                case Water_FieldIndex.NoiseFlowmapScale:
                 case Water_FieldIndex.GNAM:
                 case Water_FieldIndex.LinearVelocity:
                 case Water_FieldIndex.AngularVelocity:
                 case Water_FieldIndex.NoiseLayerOneTexture:
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                 case Water_FieldIndex.DNAMDataTypeState:
                     return false;
                 default:
@@ -4100,6 +4188,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Water_FieldIndex.SpecularSunSparklePower:
                     return typeof(Single);
+                case Water_FieldIndex.NoiseFlowmapScale:
+                    return typeof(Single);
                 case Water_FieldIndex.GNAM:
                     return typeof(MemorySlice<Byte>);
                 case Water_FieldIndex.LinearVelocity:
@@ -4111,6 +4201,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Water_FieldIndex.NoiseLayerTwoTexture:
                     return typeof(String);
                 case Water_FieldIndex.NoiseLayerThreeTexture:
+                    return typeof(String);
+                case Water_FieldIndex.FlowNormalsNoiseTexture:
                     return typeof(String);
                 case Water_FieldIndex.DNAMDataTypeState:
                     return typeof(Water.DNAMDataType);
@@ -4222,12 +4314,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DepthNormals = default;
             item.DepthSpecularLighting = default;
             item.SpecularSunSparklePower = default;
+            item.NoiseFlowmapScale = default;
             item.GNAM = default;
             item.LinearVelocity = default;
             item.AngularVelocity = default;
             item.NoiseLayerOneTexture = default;
             item.NoiseLayerTwoTexture = default;
             item.NoiseLayerThreeTexture = default;
+            item.FlowNormalsNoiseTexture = default;
             item.DNAMDataTypeState = default;
             base.Clear(item);
         }
@@ -4448,12 +4542,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.DepthNormals = item.DepthNormals.EqualsWithin(rhs.DepthNormals);
             ret.DepthSpecularLighting = item.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting);
             ret.SpecularSunSparklePower = item.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower);
+            ret.NoiseFlowmapScale = item.NoiseFlowmapScale.EqualsWithin(rhs.NoiseFlowmapScale);
             ret.GNAM = MemorySliceExt.Equal(item.GNAM, rhs.GNAM);
             ret.LinearVelocity = item.LinearVelocity.Equals(rhs.LinearVelocity);
             ret.AngularVelocity = item.AngularVelocity.Equals(rhs.AngularVelocity);
             ret.NoiseLayerOneTexture = string.Equals(item.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture);
             ret.NoiseLayerTwoTexture = string.Equals(item.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture);
             ret.NoiseLayerThreeTexture = string.Equals(item.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture);
+            ret.FlowNormalsNoiseTexture = string.Equals(item.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture);
             ret.DNAMDataTypeState = item.DNAMDataTypeState == rhs.DNAMDataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -4764,6 +4860,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.SpecularSunSparklePower, "SpecularSunSparklePower");
             }
+            if (printMask?.NoiseFlowmapScale ?? true)
+            {
+                fg.AppendItem(item.NoiseFlowmapScale, "NoiseFlowmapScale");
+            }
             if ((printMask?.GNAM ?? true)
                 && item.GNAM.TryGet(out var GNAMItem))
             {
@@ -4794,6 +4894,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(NoiseLayerThreeTextureItem, "NoiseLayerThreeTexture");
             }
+            if ((printMask?.FlowNormalsNoiseTexture ?? true)
+                && item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureItem))
+            {
+                fg.AppendItem(FlowNormalsNoiseTextureItem, "FlowNormalsNoiseTexture");
+            }
             if (printMask?.DNAMDataTypeState ?? true)
             {
                 fg.AppendItem(item.DNAMDataTypeState, "DNAMDataTypeState");
@@ -4818,6 +4923,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.NoiseLayerOneTexture.HasValue && checkMask.NoiseLayerOneTexture.Value != (item.NoiseLayerOneTexture != null)) return false;
             if (checkMask.NoiseLayerTwoTexture.HasValue && checkMask.NoiseLayerTwoTexture.Value != (item.NoiseLayerTwoTexture != null)) return false;
             if (checkMask.NoiseLayerThreeTexture.HasValue && checkMask.NoiseLayerThreeTexture.Value != (item.NoiseLayerThreeTexture != null)) return false;
+            if (checkMask.FlowNormalsNoiseTexture.HasValue && checkMask.FlowNormalsNoiseTexture.Value != (item.FlowNormalsNoiseTexture != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -4886,12 +4992,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.DepthNormals = true;
             mask.DepthSpecularLighting = true;
             mask.SpecularSunSparklePower = true;
+            mask.NoiseFlowmapScale = true;
             mask.GNAM = (item.GNAM != null);
             mask.LinearVelocity = (item.LinearVelocity != null);
             mask.AngularVelocity = (item.AngularVelocity != null);
             mask.NoiseLayerOneTexture = (item.NoiseLayerOneTexture != null);
             mask.NoiseLayerTwoTexture = (item.NoiseLayerTwoTexture != null);
             mask.NoiseLayerThreeTexture = (item.NoiseLayerThreeTexture != null);
+            mask.FlowNormalsNoiseTexture = (item.FlowNormalsNoiseTexture != null);
             mask.DNAMDataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -5003,12 +5111,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.DepthNormals.EqualsWithin(rhs.DepthNormals)) return false;
             if (!lhs.DepthSpecularLighting.EqualsWithin(rhs.DepthSpecularLighting)) return false;
             if (!lhs.SpecularSunSparklePower.EqualsWithin(rhs.SpecularSunSparklePower)) return false;
+            if (!lhs.NoiseFlowmapScale.EqualsWithin(rhs.NoiseFlowmapScale)) return false;
             if (!MemorySliceExt.Equal(lhs.GNAM, rhs.GNAM)) return false;
             if (!lhs.LinearVelocity.Equals(rhs.LinearVelocity)) return false;
             if (!lhs.AngularVelocity.Equals(rhs.AngularVelocity)) return false;
             if (!string.Equals(lhs.NoiseLayerOneTexture, rhs.NoiseLayerOneTexture)) return false;
             if (!string.Equals(lhs.NoiseLayerTwoTexture, rhs.NoiseLayerTwoTexture)) return false;
             if (!string.Equals(lhs.NoiseLayerThreeTexture, rhs.NoiseLayerThreeTexture)) return false;
+            if (!string.Equals(lhs.FlowNormalsNoiseTexture, rhs.FlowNormalsNoiseTexture)) return false;
             if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
             return true;
         }
@@ -5117,6 +5227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.DepthNormals);
             hash.Add(item.DepthSpecularLighting);
             hash.Add(item.SpecularSunSparklePower);
+            hash.Add(item.NoiseFlowmapScale);
             if (item.GNAM.TryGet(out var GNAMItem))
             {
                 hash.Add(GNAMItem);
@@ -5140,6 +5251,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.NoiseLayerThreeTexture.TryGet(out var NoiseLayerThreeTextureitem))
             {
                 hash.Add(NoiseLayerThreeTextureitem);
+            }
+            if (item.FlowNormalsNoiseTexture.TryGet(out var FlowNormalsNoiseTextureitem))
+            {
+                hash.Add(FlowNormalsNoiseTextureitem);
             }
             hash.Add(item.DNAMDataTypeState);
             hash.Add(base.GetHashCode());
@@ -5490,6 +5605,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.SpecularSunSparklePower = rhs.SpecularSunSparklePower;
             }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFlowmapScale) ?? true))
+            {
+                item.NoiseFlowmapScale = rhs.NoiseFlowmapScale;
+            }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
                 if(rhs.GNAM.TryGet(out var GNAMrhs))
@@ -5520,6 +5639,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseLayerThreeTexture) ?? true))
             {
                 item.NoiseLayerThreeTexture = rhs.NoiseLayerThreeTexture;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.FlowNormalsNoiseTexture) ?? true))
+            {
+                item.FlowNormalsNoiseTexture = rhs.FlowNormalsNoiseTexture;
             }
             if ((copyMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
             {
@@ -6215,6 +6338,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Water_FieldIndex.SpecularSunSparklePower,
                     errorMask: errorMask);
             }
+            if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.NoiseFlowmapScale) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.NoiseFlowmapScale),
+                    item: item.NoiseFlowmapScale,
+                    fieldIndex: (int)Water_FieldIndex.NoiseFlowmapScale,
+                    errorMask: errorMask);
+            }
             if ((item.GNAM != null)
                 && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.GNAM) ?? true))
             {
@@ -6273,6 +6405,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.NoiseLayerThreeTexture),
                     item: item.NoiseLayerThreeTexture,
                     fieldIndex: (int)Water_FieldIndex.NoiseLayerThreeTexture,
+                    errorMask: errorMask);
+            }
+            if ((item.FlowNormalsNoiseTexture != null)
+                && (translationMask?.GetShouldTranslate((int)Water_FieldIndex.FlowNormalsNoiseTexture) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.FlowNormalsNoiseTexture),
+                    item: item.FlowNormalsNoiseTexture,
+                    fieldIndex: (int)Water_FieldIndex.FlowNormalsNoiseTexture,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Water_FieldIndex.DNAMDataTypeState) ?? true))
@@ -7467,6 +7609,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "NoiseFlowmapScale":
+                    errorMask?.PushIndex((int)Water_FieldIndex.NoiseFlowmapScale);
+                    try
+                    {
+                        item.NoiseFlowmapScale = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "GNAM":
                     errorMask?.PushIndex((int)Water_FieldIndex.GNAM);
@@ -7563,6 +7721,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.NoiseLayerThreeTexture = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "FlowNormalsNoiseTexture":
+                    errorMask?.PushIndex((int)Water_FieldIndex.FlowNormalsNoiseTexture);
+                    try
+                    {
+                        item.FlowNormalsNoiseTexture = StringXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -7883,6 +8059,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpecularSunSparklePower);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.NoiseFlowmapScale);
+                }
             }
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -7911,6 +8093,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.NoiseLayerThreeTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                    writer: writer,
+                    item: item.FlowNormalsNoiseTexture,
+                    header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5),
+                    binaryType: StringBinaryType.NullTerminate);
+            }
         }
 
         public void Write(
@@ -8122,7 +8312,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DepthNormals = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.DepthSpecularLighting = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.SpecularSunSparklePower = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return (int)Water_FieldIndex.SpecularSunSparklePower;
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.NoiseFlowmapScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    }
+                    return (int)Water_FieldIndex.NoiseFlowmapScale;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -8165,6 +8359,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Water_FieldIndex.NoiseLayerThreeTexture;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                        item.FlowNormalsNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            frame: frame.SpawnWithLength(contentLength),
+                            stringBinaryType: StringBinaryType.NullTerminate);
+                    }
+                    return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -8531,6 +8736,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private bool _SpecularSunSparklePower_IsSet => _DNAMLocation.HasValue;
         public Single SpecularSunSparklePower => _SpecularSunSparklePower_IsSet ? SpanExt.GetFloat(_data.Slice(_SpecularSunSparklePowerLocation, 4)) : default;
         #endregion
+        #region NoiseFlowmapScale
+        private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
+        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseFlowmapScaleLocation, 4)) : default;
+        #endregion
         #region GNAM
         private int? _GNAMLocation;
         public ReadOnlyMemorySlice<Byte>? GNAM => _GNAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _GNAMLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -8554,6 +8764,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region NoiseLayerThreeTexture
         private int? _NoiseLayerThreeTextureLocation;
         public String? NoiseLayerThreeTexture => _NoiseLayerThreeTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NoiseLayerThreeTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        #region FlowNormalsNoiseTexture
+        private int? _FlowNormalsNoiseTextureLocation;
+        public String? FlowNormalsNoiseTexture => _FlowNormalsNoiseTextureLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FlowNormalsNoiseTextureLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -8682,7 +8896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     _DNAMLocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)Water_FieldIndex.SpecularSunSparklePower;
+                    return (int)Water_FieldIndex.NoiseFlowmapScale;
                 }
                 case RecordTypeInts.GNAM:
                 {
@@ -8713,6 +8927,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _NoiseLayerThreeTextureLocation = (stream.Position - offset);
                     return (int)Water_FieldIndex.NoiseLayerThreeTexture;
+                }
+                case RecordTypeInts.NAM5:
+                {
+                    _FlowNormalsNoiseTextureLocation = (stream.Position - offset);
+                    return (int)Water_FieldIndex.FlowNormalsNoiseTexture;
                 }
                 default:
                     return base.FillRecordType(

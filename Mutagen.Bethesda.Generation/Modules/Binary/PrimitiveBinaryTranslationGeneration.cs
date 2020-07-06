@@ -104,15 +104,15 @@ namespace Mutagen.Bethesda.Generation
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
-            if (data.HasTrigger)
+            var fieldData = typeGen.GetFieldData();
+            if (fieldData.HasTrigger)
             {
                 fg.AppendLine($"{frameAccessor}.Position += {frameAccessor}.{nameof(MutagenBinaryReadStream.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(RecordHeaderConstants.HeaderLength)};");
             }
 
             bool hasCustom = false;
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
+            extraArgs.Add($"frame: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
             foreach (var writeParam in this.AdditionalCopyInParams)
             {
                 var get = writeParam(

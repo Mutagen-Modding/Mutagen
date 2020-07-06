@@ -24,7 +24,7 @@
           <Enum name="Flags" enumName="Ammunition.Flag" byteLength="4" />
           <Float name="Damage" />
           <UInt32 name="Value" />
-          <Float name="Weight" isSE="true" />
+          <Float name="Weight" version="44" />
         </Fields>
       </Data>
       <String name="ShortName" recordType="ONAM" />

@@ -135,6 +135,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Value
         public UInt32 Value { get; set; } = default;
         #endregion
+        #region Weight
+        public Single Weight { get; set; } = default;
+        #endregion
         #region ShortName
         public String? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -325,6 +328,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = initialValue;
                 this.Damage = initialValue;
                 this.Value = initialValue;
+                this.Weight = initialValue;
                 this.ShortName = initialValue;
                 this.DATADataTypeState = initialValue;
             }
@@ -349,6 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Flags,
                 TItem Damage,
                 TItem Value,
+                TItem Weight,
                 TItem ShortName,
                 TItem DATADataTypeState)
             : base(
@@ -372,6 +377,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = Flags;
                 this.Damage = Damage;
                 this.Value = Value;
+                this.Weight = Weight;
                 this.ShortName = ShortName;
                 this.DATADataTypeState = DATADataTypeState;
             }
@@ -398,6 +404,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Flags;
             public TItem Damage;
             public TItem Value;
+            public TItem Weight;
             public TItem ShortName;
             public TItem DATADataTypeState;
             #endregion
@@ -426,6 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.Damage, rhs.Damage)) return false;
                 if (!object.Equals(this.Value, rhs.Value)) return false;
+                if (!object.Equals(this.Weight, rhs.Weight)) return false;
                 if (!object.Equals(this.ShortName, rhs.ShortName)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
@@ -446,6 +454,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Flags);
                 hash.Add(this.Damage);
                 hash.Add(this.Value);
+                hash.Add(this.Weight);
                 hash.Add(this.ShortName);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
@@ -497,6 +506,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.Damage)) return false;
                 if (!eval(this.Value)) return false;
+                if (!eval(this.Weight)) return false;
                 if (!eval(this.ShortName)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
@@ -546,6 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Flags)) return true;
                 if (eval(this.Damage)) return true;
                 if (eval(this.Value)) return true;
+                if (eval(this.Weight)) return true;
                 if (eval(this.ShortName)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
@@ -589,6 +600,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Flags = eval(this.Flags);
                 obj.Damage = eval(this.Damage);
                 obj.Value = eval(this.Value);
+                obj.Weight = eval(this.Weight);
                 obj.ShortName = eval(this.ShortName);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
@@ -684,6 +696,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Value, "Value");
                     }
+                    if (printMask?.Weight ?? true)
+                    {
+                        fg.AppendItem(Weight, "Weight");
+                    }
                     if (printMask?.ShortName ?? true)
                     {
                         fg.AppendItem(ShortName, "ShortName");
@@ -717,6 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Flags;
             public Exception? Damage;
             public Exception? Value;
+            public Exception? Weight;
             public Exception? ShortName;
             public Exception? DATADataTypeState;
             #endregion
@@ -753,6 +770,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Damage;
                     case Ammunition_FieldIndex.Value:
                         return Value;
+                    case Ammunition_FieldIndex.Weight:
+                        return Weight;
                     case Ammunition_FieldIndex.ShortName:
                         return ShortName;
                     case Ammunition_FieldIndex.DATADataTypeState:
@@ -805,6 +824,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Ammunition_FieldIndex.Value:
                         this.Value = ex;
+                        break;
+                    case Ammunition_FieldIndex.Weight:
+                        this.Weight = ex;
                         break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = ex;
@@ -862,6 +884,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case Ammunition_FieldIndex.Value:
                         this.Value = (Exception?)obj;
                         break;
+                    case Ammunition_FieldIndex.Weight:
+                        this.Weight = (Exception?)obj;
+                        break;
                     case Ammunition_FieldIndex.ShortName:
                         this.ShortName = (Exception?)obj;
                         break;
@@ -890,6 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Flags != null) return true;
                 if (Damage != null) return true;
                 if (Value != null) return true;
+                if (Weight != null) return true;
                 if (ShortName != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
@@ -961,6 +987,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(Damage, "Damage");
                 fg.AppendItem(Value, "Value");
+                fg.AppendItem(Weight, "Weight");
                 fg.AppendItem(ShortName, "ShortName");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
@@ -984,6 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.Damage = this.Damage.Combine(rhs.Damage);
                 ret.Value = this.Value.Combine(rhs.Value);
+                ret.Weight = this.Weight.Combine(rhs.Weight);
                 ret.ShortName = this.ShortName.Combine(rhs.ShortName);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
@@ -1021,6 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Flags;
             public bool Damage;
             public bool Value;
+            public bool Weight;
             public bool ShortName;
             public bool DATADataTypeState;
             #endregion
@@ -1042,6 +1071,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Flags = defaultOn;
                 this.Damage = defaultOn;
                 this.Value = defaultOn;
+                this.Weight = defaultOn;
                 this.ShortName = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
@@ -1064,6 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Flags, null));
                 ret.Add((Damage, null));
                 ret.Add((Value, null));
+                ret.Add((Weight, null));
                 ret.Add((ShortName, null));
                 ret.Add((DATADataTypeState, null));
             }
@@ -1195,6 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Ammunition.Flag Flags { get; set; }
         new Single Damage { get; set; }
         new UInt32 Value { get; set; }
+        new Single Weight { get; set; }
         new String? ShortName { get; set; }
         new Ammunition.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
@@ -1238,6 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim
         Ammunition.Flag Flags { get; }
         Single Damage { get; }
         UInt32 Value { get; }
+        Single Weight { get; }
         String? ShortName { get; }
         Ammunition.DATADataType DATADataTypeState { get; }
 
@@ -1557,8 +1590,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Flags = 16,
         Damage = 17,
         Value = 18,
-        ShortName = 19,
-        DATADataTypeState = 20,
+        Weight = 19,
+        ShortName = 20,
+        DATADataTypeState = 21,
     }
     #endregion
 
@@ -1576,9 +1610,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "14e93a4b-95d0-42a5-8ccf-bad4555e8184";
 
-        public const ushort AdditionalFieldCount = 15;
+        public const ushort AdditionalFieldCount = 16;
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Ammunition.Mask<>);
 
@@ -1634,6 +1668,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Ammunition_FieldIndex.Damage;
                 case "VALUE":
                     return (ushort)Ammunition_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Ammunition_FieldIndex.Weight;
                 case "SHORTNAME":
                     return (ushort)Ammunition_FieldIndex.ShortName;
                 case "DATADATATYPESTATE":
@@ -1662,6 +1698,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1689,6 +1726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1715,6 +1753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1754,6 +1793,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Damage";
                 case Ammunition_FieldIndex.Value:
                     return "Value";
+                case Ammunition_FieldIndex.Weight:
+                    return "Weight";
                 case Ammunition_FieldIndex.ShortName:
                     return "ShortName";
                 case Ammunition_FieldIndex.DATADataTypeState:
@@ -1781,6 +1822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1807,6 +1849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Ammunition_FieldIndex.Flags:
                 case Ammunition_FieldIndex.Damage:
                 case Ammunition_FieldIndex.Value:
+                case Ammunition_FieldIndex.Weight:
                 case Ammunition_FieldIndex.ShortName:
                 case Ammunition_FieldIndex.DATADataTypeState:
                     return false;
@@ -1846,6 +1889,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case Ammunition_FieldIndex.Value:
                     return typeof(UInt32);
+                case Ammunition_FieldIndex.Weight:
+                    return typeof(Single);
                 case Ammunition_FieldIndex.ShortName:
                     return typeof(String);
                 case Ammunition_FieldIndex.DATADataTypeState:
@@ -1912,6 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = default;
             item.Damage = default;
             item.Value = default;
+            item.Weight = default;
             item.ShortName = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -2099,6 +2145,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Flags = item.Flags == rhs.Flags;
             ret.Damage = item.Damage.EqualsWithin(rhs.Damage);
             ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight.EqualsWithin(rhs.Weight);
             ret.ShortName = string.Equals(item.ShortName, rhs.ShortName);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
@@ -2226,6 +2273,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Value, "Value");
             }
+            if (printMask?.Weight ?? true)
+            {
+                fg.AppendItem(item.Weight, "Weight");
+            }
             if ((printMask?.ShortName ?? true)
                 && item.ShortName.TryGet(out var ShortNameItem))
             {
@@ -2278,6 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Flags = true;
             mask.Damage = true;
             mask.Value = true;
+            mask.Weight = true;
             mask.ShortName = (item.ShortName != null);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
@@ -2344,6 +2396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Flags != rhs.Flags) return false;
             if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
             if (lhs.Value != rhs.Value) return false;
+            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
             if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
@@ -2404,6 +2457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Flags);
             hash.Add(item.Damage);
             hash.Add(item.Value);
+            hash.Add(item.Weight);
             if (item.ShortName.TryGet(out var ShortNameitem))
             {
                 hash.Add(ShortNameitem);
@@ -2673,6 +2727,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
             {
                 item.Value = rhs.Value;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
+            {
+                item.Weight = rhs.Weight;
             }
             if ((copyMask?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
             {
@@ -2970,6 +3028,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.Value),
                     item: item.Value,
                     fieldIndex: (int)Ammunition_FieldIndex.Value,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
+            {
+                FloatXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Weight),
+                    item: item.Weight,
+                    fieldIndex: (int)Ammunition_FieldIndex.Weight,
                     errorMask: errorMask);
             }
             if ((item.ShortName != null)
@@ -3347,6 +3414,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     break;
                 case "Weight":
+                    errorMask?.PushIndex((int)Ammunition_FieldIndex.Weight);
+                    try
+                    {
+                        item.Weight = FloatXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
                     break;
                 case "ShortName":
                     errorMask?.PushIndex((int)Ammunition_FieldIndex.ShortName);
@@ -3559,6 +3642,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Damage);
                 writer.Write(item.Value);
+                if (writer.MetaData.FormVersion!.Value >= 44)
+                {
+                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: item.Weight);
+                }
             }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
@@ -3734,7 +3823,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.Damage = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
-                    return (int)Ammunition_FieldIndex.Value;
+                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    {
+                        item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    }
+                    return (int)Ammunition_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -3870,6 +3963,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int _ValueLocation => _DATALocation!.Value + 0xC;
         private bool _Value_IsSet => _DATALocation.HasValue;
         public UInt32 Value => _Value_IsSet ? BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(_ValueLocation, 4)) : default;
+        #endregion
+        #region Weight
+        private int _WeightLocation => _DATALocation!.Value + 0x10;
+        private bool _Weight_IsSet => _DATALocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
@@ -4007,7 +4105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)Ammunition_FieldIndex.Value;
+                    return (int)Ammunition_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ONAM:
                 {

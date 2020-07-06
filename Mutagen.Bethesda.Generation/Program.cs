@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "public new static readonly RecordType GrupRecordType = Ammunition_Registration.TriggeringRecordType;";
+            string testString = "utagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Writ";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

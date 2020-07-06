@@ -29,7 +29,8 @@ namespace Mutagen.Bethesda.Generation
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;
         public RecordTypeConverter RecordTypeConverter;
-        public int? CustomVersion;
+        public ushort? CustomVersion;
+        public ushort? VersionEnable;
 
         public MutagenFieldData(TypeGeneration source)
         {

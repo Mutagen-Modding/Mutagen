@@ -58,21 +58,27 @@ namespace Mutagen.Bethesda.Skyrim
         #region Flags
         public CriticalData.Flag Flags { get; set; } = default;
         #endregion
-        #region Unused3
+        #region Unused2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private MemorySlice<Byte> _Unused3 = new byte[3];
-        public MemorySlice<Byte> Unused3
+        private MemorySlice<Byte> _Unused2 = new byte[3];
+        public MemorySlice<Byte> Unused2
         {
-            get => _Unused3;
-            set => this._Unused3 = value;
+            get => _Unused2;
+            set => this._Unused2 = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte> ICriticalDataGetter.Unused3 => this.Unused3;
+        ReadOnlyMemorySlice<Byte> ICriticalDataGetter.Unused2 => this.Unused2;
+        #endregion
+        #region Unused3
+        public Int32 Unused3 { get; set; } = default;
         #endregion
         #region Effect
         public FormLink<Spell> Effect { get; set; } = new FormLink<Spell>();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IFormLink<ISpellGetter> ICriticalDataGetter.Effect => this.Effect;
+        #endregion
+        #region Unused4
+        public Int32 Unused4 { get; set; } = default;
         #endregion
 
         #region To String
@@ -247,8 +253,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unused = initialValue;
                 this.PercentMult = initialValue;
                 this.Flags = initialValue;
+                this.Unused2 = initialValue;
                 this.Unused3 = initialValue;
                 this.Effect = initialValue;
+                this.Unused4 = initialValue;
             }
 
             public Mask(
@@ -256,15 +264,19 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Unused,
                 TItem PercentMult,
                 TItem Flags,
+                TItem Unused2,
                 TItem Unused3,
-                TItem Effect)
+                TItem Effect,
+                TItem Unused4)
             {
                 this.Damage = Damage;
                 this.Unused = Unused;
                 this.PercentMult = PercentMult;
                 this.Flags = Flags;
+                this.Unused2 = Unused2;
                 this.Unused3 = Unused3;
                 this.Effect = Effect;
+                this.Unused4 = Unused4;
             }
 
             #pragma warning disable CS8618
@@ -280,8 +292,10 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem Unused;
             public TItem PercentMult;
             public TItem Flags;
+            public TItem Unused2;
             public TItem Unused3;
             public TItem Effect;
+            public TItem Unused4;
             #endregion
 
             #region Equals
@@ -298,8 +312,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.Unused, rhs.Unused)) return false;
                 if (!object.Equals(this.PercentMult, rhs.PercentMult)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
+                if (!object.Equals(this.Unused2, rhs.Unused2)) return false;
                 if (!object.Equals(this.Unused3, rhs.Unused3)) return false;
                 if (!object.Equals(this.Effect, rhs.Effect)) return false;
+                if (!object.Equals(this.Unused4, rhs.Unused4)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -309,8 +325,10 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.Unused);
                 hash.Add(this.PercentMult);
                 hash.Add(this.Flags);
+                hash.Add(this.Unused2);
                 hash.Add(this.Unused3);
                 hash.Add(this.Effect);
+                hash.Add(this.Unused4);
                 return hash.ToHashCode();
             }
 
@@ -323,8 +341,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.Unused)) return false;
                 if (!eval(this.PercentMult)) return false;
                 if (!eval(this.Flags)) return false;
+                if (!eval(this.Unused2)) return false;
                 if (!eval(this.Unused3)) return false;
                 if (!eval(this.Effect)) return false;
+                if (!eval(this.Unused4)) return false;
                 return true;
             }
             #endregion
@@ -336,8 +356,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.Unused)) return true;
                 if (eval(this.PercentMult)) return true;
                 if (eval(this.Flags)) return true;
+                if (eval(this.Unused2)) return true;
                 if (eval(this.Unused3)) return true;
                 if (eval(this.Effect)) return true;
+                if (eval(this.Unused4)) return true;
                 return false;
             }
             #endregion
@@ -356,8 +378,10 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.Unused = eval(this.Unused);
                 obj.PercentMult = eval(this.PercentMult);
                 obj.Flags = eval(this.Flags);
+                obj.Unused2 = eval(this.Unused2);
                 obj.Unused3 = eval(this.Unused3);
                 obj.Effect = eval(this.Effect);
+                obj.Unused4 = eval(this.Unused4);
             }
             #endregion
 
@@ -396,6 +420,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Flags, "Flags");
                     }
+                    if (printMask?.Unused2 ?? true)
+                    {
+                        fg.AppendItem(Unused2, "Unused2");
+                    }
                     if (printMask?.Unused3 ?? true)
                     {
                         fg.AppendItem(Unused3, "Unused3");
@@ -403,6 +431,10 @@ namespace Mutagen.Bethesda.Skyrim
                     if (printMask?.Effect ?? true)
                     {
                         fg.AppendItem(Effect, "Effect");
+                    }
+                    if (printMask?.Unused4 ?? true)
+                    {
+                        fg.AppendItem(Unused4, "Unused4");
                     }
                 }
                 fg.AppendLine("]");
@@ -433,8 +465,10 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? Unused;
             public Exception? PercentMult;
             public Exception? Flags;
+            public Exception? Unused2;
             public Exception? Unused3;
             public Exception? Effect;
+            public Exception? Unused4;
             #endregion
 
             #region IErrorMask
@@ -451,10 +485,14 @@ namespace Mutagen.Bethesda.Skyrim
                         return PercentMult;
                     case CriticalData_FieldIndex.Flags:
                         return Flags;
+                    case CriticalData_FieldIndex.Unused2:
+                        return Unused2;
                     case CriticalData_FieldIndex.Unused3:
                         return Unused3;
                     case CriticalData_FieldIndex.Effect:
                         return Effect;
+                    case CriticalData_FieldIndex.Unused4:
+                        return Unused4;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -477,11 +515,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case CriticalData_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
+                    case CriticalData_FieldIndex.Unused2:
+                        this.Unused2 = ex;
+                        break;
                     case CriticalData_FieldIndex.Unused3:
                         this.Unused3 = ex;
                         break;
                     case CriticalData_FieldIndex.Effect:
                         this.Effect = ex;
+                        break;
+                    case CriticalData_FieldIndex.Unused4:
+                        this.Unused4 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -505,11 +549,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case CriticalData_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
+                    case CriticalData_FieldIndex.Unused2:
+                        this.Unused2 = (Exception?)obj;
+                        break;
                     case CriticalData_FieldIndex.Unused3:
                         this.Unused3 = (Exception?)obj;
                         break;
                     case CriticalData_FieldIndex.Effect:
                         this.Effect = (Exception?)obj;
+                        break;
+                    case CriticalData_FieldIndex.Unused4:
+                        this.Unused4 = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -523,8 +573,10 @@ namespace Mutagen.Bethesda.Skyrim
                 if (Unused != null) return true;
                 if (PercentMult != null) return true;
                 if (Flags != null) return true;
+                if (Unused2 != null) return true;
                 if (Unused3 != null) return true;
                 if (Effect != null) return true;
+                if (Unused4 != null) return true;
                 return false;
             }
             #endregion
@@ -563,8 +615,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(Unused, "Unused");
                 fg.AppendItem(PercentMult, "PercentMult");
                 fg.AppendItem(Flags, "Flags");
+                fg.AppendItem(Unused2, "Unused2");
                 fg.AppendItem(Unused3, "Unused3");
                 fg.AppendItem(Effect, "Effect");
+                fg.AppendItem(Unused4, "Unused4");
             }
             #endregion
 
@@ -577,8 +631,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Unused = this.Unused.Combine(rhs.Unused);
                 ret.PercentMult = this.PercentMult.Combine(rhs.PercentMult);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
+                ret.Unused2 = this.Unused2.Combine(rhs.Unused2);
                 ret.Unused3 = this.Unused3.Combine(rhs.Unused3);
                 ret.Effect = this.Effect.Combine(rhs.Effect);
+                ret.Unused4 = this.Unused4.Combine(rhs.Unused4);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -604,8 +660,10 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Unused;
             public bool PercentMult;
             public bool Flags;
+            public bool Unused2;
             public bool Unused3;
             public bool Effect;
+            public bool Unused4;
             #endregion
 
             #region Ctors
@@ -615,8 +673,10 @@ namespace Mutagen.Bethesda.Skyrim
                 this.Unused = defaultOn;
                 this.PercentMult = defaultOn;
                 this.Flags = defaultOn;
+                this.Unused2 = defaultOn;
                 this.Unused3 = defaultOn;
                 this.Effect = defaultOn;
+                this.Unused4 = defaultOn;
             }
 
             #endregion
@@ -636,8 +696,10 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((Unused, null));
                 ret.Add((PercentMult, null));
                 ret.Add((Flags, null));
+                ret.Add((Unused2, null));
                 ret.Add((Unused3, null));
                 ret.Add((Effect, null));
+                ret.Add((Unused4, null));
             }
         }
         #endregion
@@ -726,8 +788,10 @@ namespace Mutagen.Bethesda.Skyrim
         new Int16 Unused { get; set; }
         new Single PercentMult { get; set; }
         new CriticalData.Flag Flags { get; set; }
-        new MemorySlice<Byte> Unused3 { get; set; }
+        new MemorySlice<Byte> Unused2 { get; set; }
+        new Int32 Unused3 { get; set; }
         new FormLink<Spell> Effect { get; set; }
+        new Int32 Unused4 { get; set; }
     }
 
     public partial interface ICriticalDataGetter :
@@ -748,8 +812,10 @@ namespace Mutagen.Bethesda.Skyrim
         Int16 Unused { get; }
         Single PercentMult { get; }
         CriticalData.Flag Flags { get; }
-        ReadOnlyMemorySlice<Byte> Unused3 { get; }
+        ReadOnlyMemorySlice<Byte> Unused2 { get; }
+        Int32 Unused3 { get; }
         IFormLink<ISpellGetter> Effect { get; }
+        Int32 Unused4 { get; }
 
     }
 
@@ -1071,8 +1137,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         Unused = 1,
         PercentMult = 2,
         Flags = 3,
-        Unused3 = 4,
-        Effect = 5,
+        Unused2 = 4,
+        Unused3 = 5,
+        Effect = 6,
+        Unused4 = 7,
     }
     #endregion
 
@@ -1090,9 +1158,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "cceb2d63-f5de-413e-9150-086047c758a8";
 
-        public const ushort AdditionalFieldCount = 6;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(CriticalData.Mask<>);
 
@@ -1130,10 +1198,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)CriticalData_FieldIndex.PercentMult;
                 case "FLAGS":
                     return (ushort)CriticalData_FieldIndex.Flags;
+                case "UNUSED2":
+                    return (ushort)CriticalData_FieldIndex.Unused2;
                 case "UNUSED3":
                     return (ushort)CriticalData_FieldIndex.Unused3;
                 case "EFFECT":
                     return (ushort)CriticalData_FieldIndex.Effect;
+                case "UNUSED4":
+                    return (ushort)CriticalData_FieldIndex.Unused4;
                 default:
                     return null;
             }
@@ -1148,8 +1220,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused:
                 case CriticalData_FieldIndex.PercentMult:
                 case CriticalData_FieldIndex.Flags:
+                case CriticalData_FieldIndex.Unused2:
                 case CriticalData_FieldIndex.Unused3:
                 case CriticalData_FieldIndex.Effect:
+                case CriticalData_FieldIndex.Unused4:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1165,8 +1239,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused:
                 case CriticalData_FieldIndex.PercentMult:
                 case CriticalData_FieldIndex.Flags:
+                case CriticalData_FieldIndex.Unused2:
                 case CriticalData_FieldIndex.Unused3:
                 case CriticalData_FieldIndex.Effect:
+                case CriticalData_FieldIndex.Unused4:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1182,8 +1258,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused:
                 case CriticalData_FieldIndex.PercentMult:
                 case CriticalData_FieldIndex.Flags:
+                case CriticalData_FieldIndex.Unused2:
                 case CriticalData_FieldIndex.Unused3:
                 case CriticalData_FieldIndex.Effect:
+                case CriticalData_FieldIndex.Unused4:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1203,10 +1281,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "PercentMult";
                 case CriticalData_FieldIndex.Flags:
                     return "Flags";
+                case CriticalData_FieldIndex.Unused2:
+                    return "Unused2";
                 case CriticalData_FieldIndex.Unused3:
                     return "Unused3";
                 case CriticalData_FieldIndex.Effect:
                     return "Effect";
+                case CriticalData_FieldIndex.Unused4:
+                    return "Unused4";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1221,8 +1303,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused:
                 case CriticalData_FieldIndex.PercentMult:
                 case CriticalData_FieldIndex.Flags:
+                case CriticalData_FieldIndex.Unused2:
                 case CriticalData_FieldIndex.Unused3:
                 case CriticalData_FieldIndex.Effect:
+                case CriticalData_FieldIndex.Unused4:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1238,8 +1322,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case CriticalData_FieldIndex.Unused:
                 case CriticalData_FieldIndex.PercentMult:
                 case CriticalData_FieldIndex.Flags:
+                case CriticalData_FieldIndex.Unused2:
                 case CriticalData_FieldIndex.Unused3:
                 case CriticalData_FieldIndex.Effect:
+                case CriticalData_FieldIndex.Unused4:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1259,10 +1345,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Single);
                 case CriticalData_FieldIndex.Flags:
                     return typeof(CriticalData.Flag);
-                case CriticalData_FieldIndex.Unused3:
+                case CriticalData_FieldIndex.Unused2:
                     return typeof(MemorySlice<Byte>);
+                case CriticalData_FieldIndex.Unused3:
+                    return typeof(Int32);
                 case CriticalData_FieldIndex.Effect:
                     return typeof(FormLink<Spell>);
+                case CriticalData_FieldIndex.Unused4:
+                    return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1316,8 +1406,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused = default;
             item.PercentMult = default;
             item.Flags = default;
-            item.Unused3 = new byte[3];
+            item.Unused2 = new byte[3];
+            item.Unused3 = default;
             item.Effect = FormLink<Spell>.Null;
+            item.Unused4 = default;
         }
         
         #region Xml Translation
@@ -1396,8 +1488,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.Unused = item.Unused == rhs.Unused;
             ret.PercentMult = item.PercentMult.EqualsWithin(rhs.PercentMult);
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Unused3 = MemoryExtensions.SequenceEqual(item.Unused3.Span, rhs.Unused3.Span);
+            ret.Unused2 = MemoryExtensions.SequenceEqual(item.Unused2.Span, rhs.Unused2.Span);
+            ret.Unused3 = item.Unused3 == rhs.Unused3;
             ret.Effect = object.Equals(item.Effect, rhs.Effect);
+            ret.Unused4 = item.Unused4 == rhs.Unused4;
         }
         
         public string ToString(
@@ -1460,13 +1554,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Flags, "Flags");
             }
+            if (printMask?.Unused2 ?? true)
+            {
+                fg.AppendLine($"Unused2 => {SpanExt.ToHexString(item.Unused2)}");
+            }
             if (printMask?.Unused3 ?? true)
             {
-                fg.AppendLine($"Unused3 => {SpanExt.ToHexString(item.Unused3)}");
+                fg.AppendItem(item.Unused3, "Unused3");
             }
             if (printMask?.Effect ?? true)
             {
                 fg.AppendItem(item.Effect, "Effect");
+            }
+            if (printMask?.Unused4 ?? true)
+            {
+                fg.AppendItem(item.Unused4, "Unused4");
             }
         }
         
@@ -1485,8 +1587,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Unused = true;
             mask.PercentMult = true;
             mask.Flags = true;
+            mask.Unused2 = true;
             mask.Unused3 = true;
             mask.Effect = true;
+            mask.Unused4 = true;
         }
         
         #region Equals and Hash
@@ -1500,8 +1604,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.Unused != rhs.Unused) return false;
             if (!lhs.PercentMult.EqualsWithin(rhs.PercentMult)) return false;
             if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused3.Span, rhs.Unused3.Span)) return false;
+            if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            if (lhs.Unused3 != rhs.Unused3) return false;
             if (!lhs.Effect.Equals(rhs.Effect)) return false;
+            if (lhs.Unused4 != rhs.Unused4) return false;
             return true;
         }
         
@@ -1512,8 +1618,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.Unused);
             hash.Add(item.PercentMult);
             hash.Add(item.Flags);
+            hash.Add(item.Unused2);
             hash.Add(item.Unused3);
             hash.Add(item.Effect);
+            hash.Add(item.Unused4);
             return hash.ToHashCode();
         }
         
@@ -1563,13 +1671,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
+            if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused2) ?? true))
+            {
+                item.Unused2 = rhs.Unused2.ToArray();
+            }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused3) ?? true))
             {
-                item.Unused3 = rhs.Unused3.ToArray();
+                item.Unused3 = rhs.Unused3;
             }
             if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Effect) ?? true))
             {
                 item.Effect = rhs.Effect.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
+            {
+                item.Unused4 = rhs.Unused4;
             }
         }
         
@@ -1696,9 +1812,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)CriticalData_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused3) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused2) ?? true))
             {
                 ByteArrayXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unused2),
+                    item: item.Unused2,
+                    fieldIndex: (int)CriticalData_FieldIndex.Unused2,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused3) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.Unused3),
                     item: item.Unused3,
@@ -1712,6 +1837,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.Effect),
                     item: item.Effect.FormKey,
                     fieldIndex: (int)CriticalData_FieldIndex.Effect,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)CriticalData_FieldIndex.Unused4) ?? true))
+            {
+                Int32XmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Unused4),
+                    item: item.Unused4,
+                    fieldIndex: (int)CriticalData_FieldIndex.Unused4,
                     errorMask: errorMask);
             }
         }
@@ -1892,13 +2026,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "Unused2":
+                    errorMask?.PushIndex((int)CriticalData_FieldIndex.Unused2);
+                    try
+                    {
+                        item.Unused2 = ByteArrayXmlTranslation.Instance.Parse(
+                            node: node,
+                            fallbackLength: 3,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "Unused3":
                     errorMask?.PushIndex((int)CriticalData_FieldIndex.Unused3);
                     try
                     {
-                        item.Unused3 = ByteArrayXmlTranslation.Instance.Parse(
+                        item.Unused3 = Int32XmlTranslation.Instance.Parse(
                             node: node,
-                            fallbackLength: 3,
                             errorMask: errorMask);
                     }
                     catch (Exception ex)
@@ -1916,6 +2068,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.Effect = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "Unused4":
+                    errorMask?.PushIndex((int)CriticalData_FieldIndex.Unused4);
+                    try
+                    {
+                        item.Unused4 = Int32XmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2115,10 +2285,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 length: 1);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Unused3);
+                item: item.Unused2);
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                writer.Write(item.Unused3);
+            }
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Effect);
+            if (writer.MetaData.FormVersion!.Value >= 44)
+            {
+                writer.Write(item.Unused4);
+            }
         }
 
         public void Write(
@@ -2162,10 +2340,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unused = frame.ReadInt16();
             item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            if (frame.MetaData.FormVersion!.Value >= 44)
+            {
+                item.Unused3 = frame.ReadInt32();
+            }
             item.Effect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                 frame: frame,
                 defaultVal: FormKey.Null);
+            if (frame.MetaData.FormVersion!.Value >= 44)
+            {
+                item.Unused4 = frame.ReadInt32();
+            }
         }
 
     }
@@ -2259,8 +2445,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
         public Single PercentMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
         public CriticalData.Flag Flags => (CriticalData.Flag)_data.Span.Slice(0x8, 0x1)[0];
-        public ReadOnlyMemorySlice<Byte> Unused3 => _data.Span.Slice(0x9, 0x3).ToArray();
-        public IFormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0x3).ToArray();
+        #region Unused3
+        public Int32 Unused3 => GetUnused3Custom(location: 0xC);
+        protected int Unused3EndingPos;
+        partial void CustomUnused3EndPos();
+        #endregion
+        #region Effect
+        public IFormLink<ISpellGetter> Effect => GetEffectCustom(location: Unused3EndingPos);
+        protected int EffectEndingPos;
+        partial void CustomEffectEndPos();
+        #endregion
+        #region Unused4
+        public Int32 Unused4 => GetUnused4Custom(location: EffectEndingPos);
+        protected int Unused4EndingPos;
+        partial void CustomUnused4EndPos();
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2287,7 +2487,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            stream.Position += 0x10 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
