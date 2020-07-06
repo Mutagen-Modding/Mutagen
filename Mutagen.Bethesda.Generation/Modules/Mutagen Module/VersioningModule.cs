@@ -84,7 +84,28 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.CustomVersion = ushort.Parse(customVersion.Value);
             }
-            data.VersionEnable = node.GetAttribute<ushort?>("version");
+            foreach (var versioning in node.Elements(XName.Get("Versioning", LoquiGenerator.Namespace)))
+            {
+                data.Versioning.Add((
+                    versioning.GetAttribute<ushort>("formVersion", throwException: true),
+                    versioning.GetAttribute("action", VersionAction.Add)));
+            }
+        }
+
+        public static string GetVersionIfCheck(MutagenFieldData data, Accessor versionAccessor)
+        {
+            if (!data.HasVersioning)
+            {
+                throw new ArgumentException();
+            }
+            if (data.Versioning.Count <= 2)
+            {
+                return string.Join(" && ", data.Versioning.Select(v => $"{versionAccessor} {(v.Action == VersionAction.Add ? ">=" : "<")} {v.Version}"));
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

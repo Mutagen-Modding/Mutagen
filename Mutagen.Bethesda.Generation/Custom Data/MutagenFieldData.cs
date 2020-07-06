@@ -30,7 +30,8 @@ namespace Mutagen.Bethesda.Generation
         public bool IsTriggerForObject;
         public RecordTypeConverter RecordTypeConverter;
         public ushort? CustomVersion;
-        public ushort? VersionEnable;
+        public List<(ushort Version, VersionAction Action)> Versioning = new List<(ushort Version, VersionAction Action)>();
+        public bool HasVersioning => Versioning.Count > 0;
 
         public MutagenFieldData(TypeGeneration source)
         {

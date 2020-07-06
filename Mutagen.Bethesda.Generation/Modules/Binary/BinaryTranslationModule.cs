@@ -1266,11 +1266,11 @@ namespace Mutagen.Bethesda.Generation
                 }
             }
 
-            if (data.VersionEnable.HasValue)
+            if (data.HasVersioning)
             {
-                fg.AppendLine($"if (frame.MetaData.FormVersion!.Value >= {data.VersionEnable})");
+                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(data, "frame.MetaData.FormVersion!.Value")})");
             }
-            using (new BraceWrapper(fg, doIt: data.VersionEnable.HasValue))
+            using (new BraceWrapper(fg, doIt: data.HasVersioning))
             {
                 await generator.GenerateCopyIn(
                     fg: fg,
@@ -1786,11 +1786,11 @@ namespace Mutagen.Bethesda.Generation
                                 if (!field.IntegrateField) continue;
                                 throw new ArgumentException("Unsupported type generator: " + field);
                             }
-                            if (fieldData.VersionEnable.HasValue)
+                            if (fieldData.HasVersioning)
                             {
-                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {fieldData.VersionEnable})");
+                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
                             }
-                            using (new BraceWrapper(fg, doIt: fieldData.VersionEnable.HasValue))
+                            using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
                             {
                                 generator.GenerateWrite(
                                     fg: fg,
@@ -1948,11 +1948,11 @@ namespace Mutagen.Bethesda.Generation
                                                 fg.Depth--;
                                                 fg.AppendLine("}");
                                             }
-                                            if (subData.VersionEnable.HasValue)
+                                            if (subData.HasVersioning)
                                             {
-                                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {subData.VersionEnable})");
+                                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, "writer.MetaData.FormVersion!.Value")})");
                                             }
-                                            using (new BraceWrapper(fg, doIt: subData.VersionEnable.HasValue))
+                                            using (new BraceWrapper(fg, doIt: subData.HasVersioning))
                                             {
                                                 subGenerator.GenerateWrite(
                                                     fg: fg,
@@ -2022,11 +2022,11 @@ namespace Mutagen.Bethesda.Generation
 
                         if (fieldData.CustomVersion == null)
                         {
-                            if (fieldData.VersionEnable.HasValue)
+                            if (fieldData.HasVersioning)
                             {
-                                fg.AppendLine($"if (writer.MetaData.FormVersion!.Value >= {fieldData.VersionEnable})");
+                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
                             }
-                            using (new BraceWrapper(fg, doIt: fieldData.VersionEnable.HasValue))
+                            using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
                             {
                                 generate();
                             }

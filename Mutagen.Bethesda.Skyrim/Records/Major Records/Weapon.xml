@@ -97,9 +97,13 @@
       <Float name="PercentMult" />
       <Enum name="Flags" enumName="CriticalData.Flag" byteLength="1" />
       <ByteArray name="Unused2" hasBeenSet="False" byteLength="3" />
-      <Int32 name="Unused3" version="44" binaryOverlay="Custom" />
+      <Int32 name="Unused3" binaryOverlay="Custom" >
+        <Versioning formVersion="44" />
+      </Int32>
       <FormLink name="Effect" refName="Spell" binaryOverlay="Custom" />
-      <Int32 name="Unused4" version="44" binaryOverlay="Custom" />
+      <Int32 name="Unused4" binaryOverlay="Custom" >
+        <Versioning formVersion="44" />
+      </Int32>
     </Fields>
   </Object>
 </Loqui>

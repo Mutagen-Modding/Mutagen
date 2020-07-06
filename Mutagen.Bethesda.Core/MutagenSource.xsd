@@ -109,6 +109,7 @@
         <xs:extension base="Field">
           <xs:sequence>
             <xs:element name="CustomVersion" type="xs:int" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Versioning" type="VersioningType" minOccurs="0" maxOccurs="unbounded" />
           </xs:sequence>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
@@ -149,13 +150,6 @@
             <xs:annotation>
               <xs:documentation>
                 Explicit definition of byte length on disk.  Used in various circumstances
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="version" type="xs:byte" >
-            <xs:annotation>
-              <xs:documentation>
-                What version the field shows up in
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -480,6 +474,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="MutagenVersionAction" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Remove" />
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="StringBinaryType" final="restriction" >
     <xs:restriction base="xs:string">
       <xs:enumeration value="Plain" />
@@ -504,6 +505,11 @@
         <xs:attribute name="static" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="VersioningType" >
+    <xs:attribute name="formVersion" type="xs:unsignedShort" use="required" />
+    <xs:attribute name="action" type="MutagenVersionAction" />
   </xs:complexType>
 
   <xs:complexType name="NBuffer" >

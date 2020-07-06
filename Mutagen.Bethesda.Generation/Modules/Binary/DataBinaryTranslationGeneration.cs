@@ -237,9 +237,9 @@ namespace Mutagen.Bethesda.Generation
             {
                 extraChecks.Append($"{dataType.StateName}.HasFlag({objGen.Name}.{dataType.EnumName}.Range{dataMeta.RangeIndex})");
             }
-            if (fieldData.VersionEnable.HasValue)
+            if (fieldData.HasVersioning)
             {
-                extraChecks.Append($"_package.MajorRecord!.FormVersion!.Value >= {fieldData.VersionEnable}");
+                extraChecks.Append(VersioningModule.GetVersionIfCheck(fieldData, "_package.MajorRecord!.FormVersion!.Value"));
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)
