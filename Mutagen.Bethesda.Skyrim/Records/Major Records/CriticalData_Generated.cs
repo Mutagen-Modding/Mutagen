@@ -2447,19 +2447,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public CriticalData.Flag Flags => (CriticalData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0x3).ToArray();
         #region Unused3
-        public Int32 Unused3 => GetUnused3Custom(location: 0xC);
-        protected int Unused3EndingPos;
-        partial void CustomUnused3EndPos();
+        public Int32 Unused3 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
+        int Unused3VersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
-        #region Effect
-        public IFormLink<ISpellGetter> Effect => GetEffectCustom(location: Unused3EndingPos);
-        protected int EffectEndingPos;
-        partial void CustomEffectEndPos();
-        #endregion
+        public IFormLink<ISpellGetter> Effect => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(Unused3VersioningOffset + 0x10, 0x4))));
         #region Unused4
-        public Int32 Unused4 => GetUnused4Custom(location: EffectEndingPos);
-        protected int Unused4EndingPos;
-        partial void CustomUnused4EndPos();
+        public Int32 Unused4 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(Unused3VersioningOffset + 0x14, 0x4));
+        int Unused4VersioningOffset => Unused3VersioningOffset + (_package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2487,6 +2481,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Generation
                     dataType.SubFields,
                     forOverlay: true)
                 .ToListAsync();
+            TypeGeneration lastVersionedField = null;
             foreach (var field in dataType.IterateFieldsWithMeta())
             {
                 if (!field.Field.Enabled) continue;
@@ -103,6 +104,7 @@ namespace Mutagen.Bethesda.Generation
                     SkipIfOnlyOneLine = true
                 })
                 {
+                    var fieldData = field.Field.GetFieldData();
                     var length = lengths.FirstOrDefault(l => l.Field == field.Field);
                     if (length.Field == null)
                     {
@@ -127,9 +129,13 @@ namespace Mutagen.Bethesda.Generation
                         length.PassedLength,
                         passIn,
                         data: dataType);
+                    if (fieldData.HasVersioning)
+                    {
+                        VersioningModule.AddVersionOffset(fg, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.MajorRecord!.FormVersion!.Value");
+                        lastVersionedField = field.Field;
+                    }
                     if (length.CurLength == null)
                     {
-                        var fieldData = field.Field.GetFieldData();
                         fg.AppendLine($"protected int {length.Field.Name}EndingPos;");
                         if (fieldData.BinaryOverlayFallback == BinaryGenerationType.Custom)
                         {

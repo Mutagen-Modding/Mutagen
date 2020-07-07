@@ -8740,6 +8740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
         private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
         public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseFlowmapScaleLocation, 4)) : default;
+        int NoiseFlowmapScaleVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region GNAM
         private int? _GNAMLocation;

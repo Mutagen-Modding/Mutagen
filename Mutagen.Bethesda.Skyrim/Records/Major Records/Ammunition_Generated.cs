@@ -3968,6 +3968,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int _WeightLocation => _DATALocation!.Value + 0x10;
         private bool _Weight_IsSet => _DATALocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        int WeightVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region ShortName
         private int? _ShortNameLocation;

@@ -2171,6 +2171,7 @@ namespace Mutagen.Bethesda.Generation
                 }
 
                 int? totalPassedLength = 0;
+                TypeGeneration lastVersionedField = null;
                 await foreach (var lengths in IteratePassedLengths(obj, forOverlay: true))
                 {
                     if (totalPassedLength != null)
@@ -2210,6 +2211,12 @@ namespace Mutagen.Bethesda.Generation
                             dataAccessor,
                             lengths.PassedLength,
                             lengths.PassedAccessor);
+                        if (data.HasVersioning
+                            && !lengths.Field.HasBeenSet)
+                        {
+                            VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.MajorRecord!.FormVersion!.Value");
+                            lastVersionedField = lengths.Field;
+                        }
                         if (!data.HasTrigger)
                         {
                             if (lengths.CurLength == null)
@@ -3185,6 +3192,7 @@ namespace Mutagen.Bethesda.Generation
             public int? PassedLength;
             public string CurAccessor;
             public int? CurLength;
+            public int? FieldLength;
         }
 
         public async IAsyncEnumerable<PassedLengths> IteratePassedLengths(
@@ -3225,9 +3233,11 @@ namespace Mutagen.Bethesda.Generation
                 CurLength = 0
             };
             TypeGeneration lastUnknownField = null;
+            TypeGeneration lastVersionedField = null;
             foreach (var field in fields)
             {
                 lengths.Field = field;
+                lengths.FieldLength = null;
                 if (!this.TryGetTypeGeneration(field.GetType(), out var typeGen))
                 {
                     if (!field.IntegrateField) continue;
@@ -3242,6 +3252,7 @@ namespace Mutagen.Bethesda.Generation
                         lengths.CurLength = null;
                         lastUnknownField = field;
                         lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos";
+                        lastVersionedField = null;
                     }
                     else
                     {
@@ -3253,15 +3264,21 @@ namespace Mutagen.Bethesda.Generation
                         {
                             lengths.CurLength += expectedLen.Value;
                         }
-                        if (lastUnknownField == null)
+                        if (field.GetFieldData().HasVersioning)
                         {
-                            lengths.CurAccessor = $"0x{ lengths.CurLength:X}";
+                            lastVersionedField = field;
                         }
-                        else
+                        lengths.CurAccessor = $"0x{lengths.CurLength:X}";
+                        if (lastVersionedField != null)
                         {
-                            lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos + 0x{lengths.CurLength:X}";
+                            lengths.CurAccessor = $"{passedLenPrefix}{lastVersionedField.Name}VersioningOffset + {lengths.CurAccessor}";
+                        }
+                        if (lastUnknownField != null)
+                        {
+                            lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos + {lengths.CurAccessor}";
                         }
                     }
+                    lengths.FieldLength = expectedLen;
                 }
 
                 var data = field.GetFieldData();

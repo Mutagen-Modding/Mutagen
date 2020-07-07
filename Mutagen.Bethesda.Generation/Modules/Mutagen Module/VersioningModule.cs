@@ -84,11 +84,21 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.CustomVersion = ushort.Parse(customVersion.Value);
             }
-            foreach (var versioning in node.Elements(XName.Get("Versioning", LoquiGenerator.Namespace)))
+            data.Versioning.AddRange(node.Elements(XName.Get("Versioning", LoquiGenerator.Namespace))
+                .Select(versioning =>
+                    (Version: versioning.GetAttribute<ushort>("formVersion", throwException: true),
+                    Action: versioning.GetAttribute("action", VersionAction.Add)))
+                .OrderBy(versioning => versioning.Version));
+            if (data.Versioning.Count > 2)
             {
-                data.Versioning.Add((
-                    versioning.GetAttribute<ushort>("formVersion", throwException: true),
-                    versioning.GetAttribute("action", VersionAction.Add)));
+                throw new NotImplementedException();
+            }
+            else if (data.Versioning.Count == 2)
+            {
+                if (data.Versioning[0].Action == data.Versioning[1].Action)
+                {
+                    throw new ArgumentException("Versioning has non-sensical instructions.");
+                }
             }
         }
 
@@ -106,6 +116,41 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public static void AddVersionOffset(FileGeneration fg, TypeGeneration field, int expectedLen, TypeGeneration lastVersionedField, Accessor versionAccessor)
+        {
+            var data = field.GetFieldData();
+            string offsetStr;
+            if (data.Versioning.Count == 1)
+            {
+                if (data.Versioning[0].Action == VersionAction.Add)
+                {
+                    offsetStr = $"{versionAccessor} < {data.Versioning[0].Version} ? -{expectedLen} : 0";
+                }
+                else
+                {
+                    offsetStr = $"{versionAccessor} >= {data.Versioning[0].Version} ? -{expectedLen} : 0";
+                }
+            }
+            else if (data.Versioning.Count == 2)
+            {
+                if (data.Versioning[0].Action == VersionAction.Add)
+                {
+                    // Add first
+                    offsetStr = $"{versionAccessor} < {data.Versioning[0].Version} || {versionAccessor} >= {data.Versioning[1].Version} ? -{expectedLen} : 0";
+                }
+                else
+                {
+                    // Remove first
+                    offsetStr = $"{versionAccessor} >= {data.Versioning[0].Version} || {versionAccessor} < {data.Versioning[1].Version} ? -{expectedLen} : 0";
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            fg.AppendLine($"int {field.Name}VersioningOffset => {(lastVersionedField == null ? null : $"{lastVersionedField.Name}VersioningOffset + (")}{offsetStr}{(lastVersionedField == null ? null : ")")};");
         }
     }
 }

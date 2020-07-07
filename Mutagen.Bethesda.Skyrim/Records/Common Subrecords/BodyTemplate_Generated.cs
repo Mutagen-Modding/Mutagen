@@ -46,9 +46,6 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Versioning
-        public BodyTemplate.VersioningBreaks Versioning { get; set; } = default;
-        #endregion
         #region FirstPersonFlags
         public BipedObjectFlag FirstPersonFlags { get; set; } = default;
         #endregion
@@ -227,19 +224,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Versioning = initialValue;
                 this.FirstPersonFlags = initialValue;
                 this.Flags = initialValue;
                 this.ArmorType = initialValue;
             }
 
             public Mask(
-                TItem Versioning,
                 TItem FirstPersonFlags,
                 TItem Flags,
                 TItem ArmorType)
             {
-                this.Versioning = Versioning;
                 this.FirstPersonFlags = FirstPersonFlags;
                 this.Flags = Flags;
                 this.ArmorType = ArmorType;
@@ -254,7 +248,6 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Versioning;
             public TItem FirstPersonFlags;
             public TItem Flags;
             public TItem ArmorType;
@@ -270,7 +263,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Versioning, rhs.Versioning)) return false;
                 if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ArmorType, rhs.ArmorType)) return false;
@@ -279,7 +271,6 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Versioning);
                 hash.Add(this.FirstPersonFlags);
                 hash.Add(this.Flags);
                 hash.Add(this.ArmorType);
@@ -291,7 +282,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Versioning)) return false;
                 if (!eval(this.FirstPersonFlags)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ArmorType)) return false;
@@ -302,7 +292,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Versioning)) return true;
                 if (eval(this.FirstPersonFlags)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.ArmorType)) return true;
@@ -320,7 +309,6 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Versioning = eval(this.Versioning);
                 obj.FirstPersonFlags = eval(this.FirstPersonFlags);
                 obj.Flags = eval(this.Flags);
                 obj.ArmorType = eval(this.ArmorType);
@@ -346,10 +334,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Versioning ?? true)
-                    {
-                        fg.AppendItem(Versioning, "Versioning");
-                    }
                     if (printMask?.FirstPersonFlags ?? true)
                     {
                         fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
@@ -387,7 +371,6 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Versioning;
             public Exception? FirstPersonFlags;
             public Exception? Flags;
             public Exception? ArmorType;
@@ -399,8 +382,6 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        return Versioning;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         return FirstPersonFlags;
                     case BodyTemplate_FieldIndex.Flags:
@@ -417,9 +398,6 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        this.Versioning = ex;
-                        break;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         this.FirstPersonFlags = ex;
                         break;
@@ -439,9 +417,6 @@ namespace Mutagen.Bethesda.Skyrim
                 BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
                 switch (enu)
                 {
-                    case BodyTemplate_FieldIndex.Versioning:
-                        this.Versioning = (Exception?)obj;
-                        break;
                     case BodyTemplate_FieldIndex.FirstPersonFlags:
                         this.FirstPersonFlags = (Exception?)obj;
                         break;
@@ -459,7 +434,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Versioning != null) return true;
                 if (FirstPersonFlags != null) return true;
                 if (Flags != null) return true;
                 if (ArmorType != null) return true;
@@ -497,7 +471,6 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Versioning, "Versioning");
                 fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(ArmorType, "ArmorType");
@@ -509,7 +482,6 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Versioning = this.Versioning.Combine(rhs.Versioning);
                 ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ArmorType = this.ArmorType.Combine(rhs.ArmorType);
@@ -534,7 +506,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Versioning;
             public bool FirstPersonFlags;
             public bool Flags;
             public bool ArmorType;
@@ -543,7 +514,6 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Versioning = defaultOn;
                 this.FirstPersonFlags = defaultOn;
                 this.Flags = defaultOn;
                 this.ArmorType = defaultOn;
@@ -562,19 +532,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Versioning, null));
                 ret.Add((FirstPersonFlags, null));
                 ret.Add((Flags, null));
                 ret.Add((ArmorType, null));
             }
-        }
-        #endregion
-
-        #region Mutagen
-        [Flags]
-        public enum VersioningBreaks
-        {
-            Break0 = 1
         }
         #endregion
 
@@ -648,7 +609,6 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter,
         ILoquiObjectSetter<IBodyTemplate>
     {
-        new BodyTemplate.VersioningBreaks Versioning { get; set; }
         new BipedObjectFlag FirstPersonFlags { get; set; }
         new BodyTemplate.Flag Flags { get; set; }
         new ArmorType ArmorType { get; set; }
@@ -667,7 +627,6 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => BodyTemplate_Registration.Instance;
-        BodyTemplate.VersioningBreaks Versioning { get; }
         BipedObjectFlag FirstPersonFlags { get; }
         BodyTemplate.Flag Flags { get; }
         ArmorType ArmorType { get; }
@@ -988,10 +947,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum BodyTemplate_FieldIndex
     {
-        Versioning = 0,
-        FirstPersonFlags = 1,
-        Flags = 2,
-        ArmorType = 3,
+        FirstPersonFlags = 0,
+        Flags = 1,
+        ArmorType = 2,
     }
     #endregion
 
@@ -1009,9 +967,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "8f6a5735-ee64-4fe6-b024-fffabb2bd8e4";
 
-        public const ushort AdditionalFieldCount = 4;
+        public const ushort AdditionalFieldCount = 3;
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(BodyTemplate.Mask<>);
 
@@ -1041,8 +999,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "VERSIONING":
-                    return (ushort)BodyTemplate_FieldIndex.Versioning;
                 case "FIRSTPERSONFLAGS":
                     return (ushort)BodyTemplate_FieldIndex.FirstPersonFlags;
                 case "FLAGS":
@@ -1059,7 +1015,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
@@ -1074,7 +1029,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
@@ -1089,7 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
@@ -1104,8 +1057,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
-                    return "Versioning";
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                     return "FirstPersonFlags";
                 case BodyTemplate_FieldIndex.Flags:
@@ -1122,7 +1073,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
@@ -1137,7 +1087,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
@@ -1152,8 +1101,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BodyTemplate_FieldIndex enu = (BodyTemplate_FieldIndex)index;
             switch (enu)
             {
-                case BodyTemplate_FieldIndex.Versioning:
-                    return typeof(BodyTemplate.VersioningBreaks);
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                     return typeof(BipedObjectFlag);
                 case BodyTemplate_FieldIndex.Flags:
@@ -1233,7 +1180,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBodyTemplate item)
         {
             ClearPartial();
-            item.Versioning = default;
             item.FirstPersonFlags = default;
             item.Flags = default;
             item.ArmorType = default;
@@ -1311,7 +1257,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Versioning = item.Versioning == rhs.Versioning;
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ArmorType = item.ArmorType == rhs.ArmorType;
@@ -1361,10 +1306,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             BodyTemplate.Mask<bool>? printMask = null)
         {
-            if (printMask?.Versioning ?? true)
-            {
-                fg.AppendItem(item.Versioning, "Versioning");
-            }
             if (printMask?.FirstPersonFlags ?? true)
             {
                 fg.AppendItem(item.FirstPersonFlags, "FirstPersonFlags");
@@ -1390,7 +1331,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             BodyTemplate.Mask<bool> mask)
         {
-            mask.Versioning = true;
             mask.FirstPersonFlags = true;
             mask.Flags = true;
             mask.ArmorType = true;
@@ -1403,7 +1343,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
             if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ArmorType != rhs.ArmorType) return false;
@@ -1413,7 +1352,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IBodyTemplateGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Versioning);
             hash.Add(item.FirstPersonFlags);
             hash.Add(item.Flags);
             hash.Add(item.ArmorType);
@@ -1449,10 +1387,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Versioning) ?? true))
-            {
-                item.Versioning = rhs.Versioning;
-            }
             if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
             {
                 item.FirstPersonFlags = rhs.FirstPersonFlags;
@@ -1461,7 +1395,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Flags = rhs.Flags;
             }
-            if (rhs.Versioning.HasFlag(BodyTemplate.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
             {
                 item.ArmorType = rhs.ArmorType;
@@ -1555,15 +1488,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.Versioning) ?? true))
-            {
-                EnumXmlTranslation<BodyTemplate.VersioningBreaks>.Instance.Write(
-                    node: node,
-                    name: nameof(item.Versioning),
-                    item: item.Versioning,
-                    fieldIndex: (int)BodyTemplate_FieldIndex.Versioning,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
             {
                 EnumXmlTranslation<BipedObjectFlag>.Instance.Write(
@@ -1697,24 +1621,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Versioning":
-                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.Versioning);
-                    try
-                    {
-                        item.Versioning = EnumXmlTranslation<BodyTemplate.VersioningBreaks>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "FirstPersonFlags":
                     errorMask?.PushIndex((int)BodyTemplate_FieldIndex.FirstPersonFlags);
                     try
@@ -1948,17 +1854,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
-            if (!item.Versioning.HasFlag(BodyTemplate.VersioningBreaks.Break0))
+            if (writer.MetaData.FormVersion!.Value >= 22 && writer.MetaData.FormVersion!.Value < 44)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
                     writer,
-                    item.ArmorType,
+                    item.Flags,
                     length: 4);
             }
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                writer,
+                item.ArmorType,
+                length: 4);
         }
 
         public void Write(
@@ -1999,11 +1905,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            if (frame.Complete)
+            if (frame.MetaData.FormVersion!.Value >= 22 && frame.MetaData.FormVersion!.Value < 44)
             {
-                item.Versioning |= BodyTemplate.VersioningBreaks.Break0;
-                return;
+                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             }
             item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
@@ -2089,10 +1993,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public BodyTemplate.VersioningBreaks Versioning { get; private set; }
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        #region Flags
         public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
+        int FlagsVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 22 || _package.MajorRecord!.FormVersion!.Value >= 44 ? -4 : 0;
+        #endregion
+        public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2119,10 +2025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-            if (ret._data.Length <= 0x8)
-            {
-                ret.Versioning |= BodyTemplate.VersioningBreaks.Break0;
-            }
+            stream.Position += 0xC + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,
