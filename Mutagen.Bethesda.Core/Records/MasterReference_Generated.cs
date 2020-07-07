@@ -49,9 +49,7 @@ namespace Mutagen.Bethesda
         public ModKey Master { get; set; } = ModKey.Null;
         #endregion
         #region FileSize
-        public UInt64? FileSize { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt64? IMasterReferenceGetter.FileSize => this.FileSize;
+        public UInt64 FileSize { get; set; } = default;
         #endregion
 
         #region To String
@@ -584,7 +582,7 @@ namespace Mutagen.Bethesda
         ILoquiObjectSetter<IMasterReference>
     {
         new ModKey Master { get; set; }
-        new UInt64? FileSize { get; set; }
+        new UInt64 FileSize { get; set; }
     }
 
     public partial interface IMasterReferenceGetter :
@@ -601,7 +599,7 @@ namespace Mutagen.Bethesda
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MasterReference_Registration.Instance;
         ModKey Master { get; }
-        UInt64? FileSize { get; }
+        UInt64 FileSize { get; }
 
     }
 
@@ -1242,10 +1240,9 @@ namespace Mutagen.Bethesda.Internals
             {
                 fg.AppendItem(item.Master, "Master");
             }
-            if ((printMask?.FileSize ?? true)
-                && item.FileSize.TryGet(out var FileSizeItem))
+            if (printMask?.FileSize ?? true)
             {
-                fg.AppendItem(FileSizeItem, "FileSize");
+                fg.AppendItem(item.FileSize, "FileSize");
             }
         }
         
@@ -1253,7 +1250,6 @@ namespace Mutagen.Bethesda.Internals
             IMasterReferenceGetter item,
             MasterReference.Mask<bool?> checkMask)
         {
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != (item.FileSize != null)) return false;
             return true;
         }
         
@@ -1262,7 +1258,7 @@ namespace Mutagen.Bethesda.Internals
             MasterReference.Mask<bool> mask)
         {
             mask.Master = true;
-            mask.FileSize = (item.FileSize != null);
+            mask.FileSize = true;
         }
         
         #region Equals and Hash
@@ -1281,10 +1277,7 @@ namespace Mutagen.Bethesda.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Master);
-            if (item.FileSize.TryGet(out var FileSizeitem))
-            {
-                hash.Add(FileSizeitem);
-            }
+            hash.Add(item.FileSize);
             return hash.ToHashCode();
         }
         
@@ -1423,13 +1416,12 @@ namespace Mutagen.Bethesda.Internals
                     fieldIndex: (int)MasterReference_FieldIndex.Master,
                     errorMask: errorMask);
             }
-            if ((item.FileSize != null)
-                && (translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
             {
                 UInt64XmlTranslation.Instance.Write(
                     node: node,
                     name: nameof(item.FileSize),
-                    item: item.FileSize.Value,
+                    item: item.FileSize,
                     fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                     errorMask: errorMask);
             }
@@ -1755,7 +1747,7 @@ namespace Mutagen.Bethesda.Internals
                 writer: writer,
                 item: item.Master,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MAST));
-            Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
@@ -1912,7 +1904,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
         #region FileSize
         private int? _FileSizeLocation;
-        public UInt64? FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FileSizeLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
+        public UInt64 FileSize => _FileSizeLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FileSizeLocation.Value, _package.MetaData.Constants)) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
