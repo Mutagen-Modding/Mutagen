@@ -6987,6 +6987,7 @@ namespace Mutagen.Bethesda.Skyrim
             var ret = new SkyrimMod(
                 modKey: modKey,
                 release: release);
+            frame.MetaData.ModKey = modKey;
             ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 release: release,
@@ -9683,7 +9684,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -21776,7 +21776,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
                     return (int)SkyrimMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:

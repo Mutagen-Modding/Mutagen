@@ -1443,6 +1443,10 @@ namespace Mutagen.Bethesda.Generation
                         args.AddPassArg("release");
                     }
                 }
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    fg.AppendLine("frame.MetaData.ModKey = modKey;");
+                }
             }
         }
 
@@ -1466,11 +1470,6 @@ namespace Mutagen.Bethesda.Generation
 
             bool typelessStruct = obj.IsTypelessStruct();
             ObjectType objType = obj.GetObjectType();
-
-            if (obj.GetObjectType() == ObjectType.Mod)
-            {
-                fg.AppendLine($"frame.Reader.MetaData.{nameof(ParsingBundle.MasterReferences)} = new {nameof(MasterReferenceReader)}(modKey, {accessor}.ModHeader.MasterReferences);");
-            }
 
             if (await obj.IsMajorRecord())
             {

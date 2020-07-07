@@ -63,12 +63,12 @@ namespace Mutagen.Bethesda
             int contentLength,
             RecordTypeConverter? recordTypeConverter);
 
-        public delegate ParseResult ModRecordTypeFill<R, G>(
-            R record,
+        public delegate ParseResult ModRecordTypeFill<TRecord, TImportMask>(
+            TRecord record,
             MutagenFrame frame,
             RecordType nextRecordType,
             int contentLength,
-            G importMask,
+            TImportMask importMask,
             RecordTypeConverter? recordTypeConverter);
 
         public static M MajorRecordParse<M>(
@@ -267,13 +267,14 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static M ModParse<M, G>(
-            M record,
+        public static TMod ModParse<TMod, TImportMask>(
+            TMod record,
             MutagenFrame frame,
-            G importMask,
+            TImportMask importMask,
             RecordTypeConverter? recordTypeConverter,
-            RecordStructFill<M> fillStructs,
-            ModRecordTypeFill<M, G> fillTyped)
+            RecordStructFill<TMod> fillStructs,
+            ModRecordTypeFill<TMod, TImportMask> fillTyped)
+            where TMod : IMod
         {
             var modHeader = frame.Reader.GetMod();
             fillTyped(
@@ -283,6 +284,7 @@ namespace Mutagen.Bethesda
                 nextRecordType: modHeader.RecordType,
                 contentLength: checked((int)modHeader.ContentLength),
                 recordTypeConverter: recordTypeConverter);
+            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(record.ModKey, record.MasterReferences);
             while (!frame.Complete)
             {
                 var groupHeader = frame.GetGroup();

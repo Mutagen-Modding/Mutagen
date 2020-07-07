@@ -45,6 +45,11 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public ushort? FormVersion { get; set; }
 
+        /// <summary>
+        /// ModKey of the mod being parsed
+        /// </summary>
+        public ModKey ModKey { get; set; }
+
         public ParsingBundle(GameConstants constants)
         {
             this.Constants = constants;

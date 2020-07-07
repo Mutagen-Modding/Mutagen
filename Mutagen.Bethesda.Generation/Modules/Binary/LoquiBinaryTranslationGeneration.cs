@@ -176,10 +176,6 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
                     }
-                    if (loqui.Name == "ModHeader")
-                    {
-                        fg.AppendLine($"{frameAccessor}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.MasterReferences)}!.SetTo(item.ModHeader.MasterReferences);");
-                    }
                 }
                 else
                 {

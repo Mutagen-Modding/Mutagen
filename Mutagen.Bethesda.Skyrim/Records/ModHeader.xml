@@ -12,7 +12,7 @@
       <ByteArray name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />
       <String name="Description" recordType="SNAM" maxLength="512" />
-      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" hasBeenSet="False" binary="Custom" binaryOverlay="Normal" />
       <List name="OverriddenForms" recordType="ONAM">
         <FormLink refName="SkyrimMajorRecord" />
       </List>

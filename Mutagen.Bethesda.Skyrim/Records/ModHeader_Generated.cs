@@ -3177,6 +3177,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
 
+        static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteEmbedded(
             IModHeaderGetter item,
             MutagenWriter writer)
@@ -3219,17 +3232,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+            ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
-                items: item.MasterReferences,
-                transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>
-                {
-                    var Item = subItem;
-                    ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        recordTypeConverter: conv);
-                });
+                item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
@@ -3344,12 +3349,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MAST:
                 {
-                    item.MasterReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: RecordTypes.MAST,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: MasterReference.TryCreateFromBinary));
+                    ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                     return (int)ModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
@@ -3379,6 +3381,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return default(int?);
             }
         }
+
+        static partial void FillBinaryMasterReferencesCustom(
+            MutagenFrame frame,
+            IModHeader item);
 
     }
 

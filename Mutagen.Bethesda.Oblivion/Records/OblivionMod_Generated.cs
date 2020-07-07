@@ -3786,6 +3786,7 @@ namespace Mutagen.Bethesda.Oblivion
             GroupMask? importMask = null)
         {
             var ret = new OblivionMod(modKey: modKey);
+            frame.MetaData.ModKey = modKey;
             ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 importMask: importMask,
@@ -5571,7 +5572,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter = null,
             GroupMask? importMask = null)
         {
-            frame.Reader.MetaData.MasterReferences = new MasterReferenceReader(modKey, item.ModHeader.MasterReferences);
             UtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
@@ -11841,7 +11841,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.ModHeader.CopyInFromBinary(
                         frame: frame,
                         recordTypeConverter: null);
-                    frame.MetaData.MasterReferences!.SetTo(item.ModHeader.MasterReferences);
                     return (int)OblivionMod_FieldIndex.ModHeader;
                 }
                 case RecordTypeInts.GMST:

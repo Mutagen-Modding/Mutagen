@@ -108,11 +108,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
-        #region VestigialData
-        public UInt64? VestigialData { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        UInt64? IModHeaderGetter.VestigialData => this.VestigialData;
-        #endregion
 
         #region To String
 
@@ -291,7 +286,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Author = initialValue;
                 this.Description = initialValue;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
-                this.VestigialData = initialValue;
             }
 
             public Mask(
@@ -303,8 +297,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Deleted,
                 TItem Author,
                 TItem Description,
-                TItem MasterReferences,
-                TItem VestigialData)
+                TItem MasterReferences)
             {
                 this.Flags = Flags;
                 this.FormID = FormID;
@@ -315,7 +308,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Author = Author;
                 this.Description = Description;
                 this.MasterReferences = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>(MasterReferences, Enumerable.Empty<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>());
-                this.VestigialData = VestigialData;
             }
 
             #pragma warning disable CS8618
@@ -336,7 +328,6 @@ namespace Mutagen.Bethesda.Oblivion
             public TItem Author;
             public TItem Description;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, MasterReference.Mask<TItem>?>>?>? MasterReferences;
-            public TItem VestigialData;
             #endregion
 
             #region Equals
@@ -358,7 +349,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!object.Equals(this.Author, rhs.Author)) return false;
                 if (!object.Equals(this.Description, rhs.Description)) return false;
                 if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
-                if (!object.Equals(this.VestigialData, rhs.VestigialData)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -373,7 +363,6 @@ namespace Mutagen.Bethesda.Oblivion
                 hash.Add(this.Author);
                 hash.Add(this.Description);
                 hash.Add(this.MasterReferences);
-                hash.Add(this.VestigialData);
                 return hash.ToHashCode();
             }
 
@@ -406,7 +395,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (!eval(this.VestigialData)) return false;
                 return true;
             }
             #endregion
@@ -438,7 +426,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                if (eval(this.VestigialData)) return true;
                 return false;
             }
             #endregion
@@ -476,7 +463,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                     }
                 }
-                obj.VestigialData = eval(this.VestigialData);
             }
             #endregion
 
@@ -554,10 +540,6 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         fg.AppendLine("]");
                     }
-                    if (printMask?.VestigialData ?? true)
-                    {
-                        fg.AppendItem(VestigialData, "VestigialData");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -592,7 +574,6 @@ namespace Mutagen.Bethesda.Oblivion
             public Exception? Author;
             public Exception? Description;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>? MasterReferences;
-            public Exception? VestigialData;
             #endregion
 
             #region IErrorMask
@@ -619,8 +600,6 @@ namespace Mutagen.Bethesda.Oblivion
                         return Description;
                     case ModHeader_FieldIndex.MasterReferences:
                         return MasterReferences;
-                    case ModHeader_FieldIndex.VestigialData:
-                        return VestigialData;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -657,9 +636,6 @@ namespace Mutagen.Bethesda.Oblivion
                         break;
                     case ModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
-                        break;
-                    case ModHeader_FieldIndex.VestigialData:
-                        this.VestigialData = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -698,9 +674,6 @@ namespace Mutagen.Bethesda.Oblivion
                     case ModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
                         break;
-                    case ModHeader_FieldIndex.VestigialData:
-                        this.VestigialData = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -718,7 +691,6 @@ namespace Mutagen.Bethesda.Oblivion
                 if (Author != null) return true;
                 if (Description != null) return true;
                 if (MasterReferences != null) return true;
-                if (VestigialData != null) return true;
                 return false;
             }
             #endregion
@@ -783,7 +755,6 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     fg.AppendLine("]");
                 }
-                fg.AppendItem(VestigialData, "VestigialData");
             }
             #endregion
 
@@ -801,7 +772,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Author = this.Author.Combine(rhs.Author);
                 ret.Description = this.Description.Combine(rhs.Description);
                 ret.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ExceptionExt.Combine(this.MasterReferences?.Overall, rhs.MasterReferences?.Overall), ExceptionExt.Combine(this.MasterReferences?.Specific, rhs.MasterReferences?.Specific));
-                ret.VestigialData = this.VestigialData.Combine(rhs.VestigialData);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -832,7 +802,6 @@ namespace Mutagen.Bethesda.Oblivion
             public bool Author;
             public bool Description;
             public MaskItem<bool, MasterReference.TranslationMask?> MasterReferences;
-            public bool VestigialData;
             #endregion
 
             #region Ctors
@@ -847,7 +816,6 @@ namespace Mutagen.Bethesda.Oblivion
                 this.Author = defaultOn;
                 this.Description = defaultOn;
                 this.MasterReferences = new MaskItem<bool, MasterReference.TranslationMask?>(defaultOn, null);
-                this.VestigialData = defaultOn;
             }
 
             #endregion
@@ -872,7 +840,6 @@ namespace Mutagen.Bethesda.Oblivion
                 ret.Add((Author, null));
                 ret.Add((Description, null));
                 ret.Add((MasterReferences?.Overall ?? true, MasterReferences?.Specific?.GetCrystal()));
-                ret.Add((VestigialData, null));
             }
         }
         #endregion
@@ -960,7 +927,6 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Author { get; set; }
         new String? Description { get; set; }
         new IExtendedList<MasterReference> MasterReferences { get; }
-        new UInt64? VestigialData { get; set; }
     }
 
     public partial interface IModHeaderGetter :
@@ -985,7 +951,6 @@ namespace Mutagen.Bethesda.Oblivion
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        UInt64? VestigialData { get; }
 
     }
 
@@ -1312,7 +1277,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Author = 6,
         Description = 7,
         MasterReferences = 8,
-        VestigialData = 9,
     }
     #endregion
 
@@ -1330,9 +1294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "d26d9f2a-53af-4c45-9490-dfdb377b6655";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(ModHeader.Mask<>);
 
@@ -1380,8 +1344,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)ModHeader_FieldIndex.Description;
                 case "MASTERREFERENCES":
                     return (ushort)ModHeader_FieldIndex.MasterReferences;
-                case "VESTIGIALDATA":
-                    return (ushort)ModHeader_FieldIndex.VestigialData;
                 default:
                     return null;
             }
@@ -1402,7 +1364,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1424,7 +1385,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Deleted:
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1445,7 +1405,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1475,8 +1434,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Description";
                 case ModHeader_FieldIndex.MasterReferences:
                     return "MasterReferences";
-                case ModHeader_FieldIndex.VestigialData:
-                    return "VestigialData";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1496,7 +1453,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1517,7 +1473,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ModHeader_FieldIndex.Author:
                 case ModHeader_FieldIndex.Description:
                 case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.VestigialData:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1547,8 +1502,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(String);
                 case ModHeader_FieldIndex.MasterReferences:
                     return typeof(IExtendedList<MasterReference>);
-                case ModHeader_FieldIndex.VestigialData:
-                    return typeof(UInt64);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1607,7 +1560,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Author = default;
             item.Description = default;
             item.MasterReferences.Clear();
-            item.VestigialData = default;
         }
         
         #region Xml Translation
@@ -1695,7 +1647,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 rhs.MasterReferences,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.VestigialData = item.VestigialData == rhs.VestigialData;
         }
         
         public string ToString(
@@ -1796,11 +1747,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 fg.AppendLine("]");
             }
-            if ((printMask?.VestigialData ?? true)
-                && item.VestigialData.TryGet(out var VestigialDataItem))
-            {
-                fg.AppendItem(VestigialDataItem, "VestigialData");
-            }
         }
         
         public bool HasBeenSet(
@@ -1811,7 +1757,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != (item.Deleted != null)) return false;
             if (checkMask.Author.HasValue && checkMask.Author.Value != (item.Author != null)) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != (item.Description != null)) return false;
-            if (checkMask.VestigialData.HasValue && checkMask.VestigialData.Value != (item.VestigialData != null)) return false;
             return true;
         }
         
@@ -1829,7 +1774,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             mask.Description = (item.Description != null);
             var MasterReferencesItem = item.MasterReferences;
             mask.MasterReferences = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, MasterReference.Mask<bool>?>>?>(true, MasterReferencesItem.WithIndex().Select((i) => new MaskItemIndexed<bool, MasterReference.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
-            mask.VestigialData = (item.VestigialData != null);
         }
         
         #region Equals and Hash
@@ -1848,7 +1792,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!string.Equals(lhs.Author, rhs.Author)) return false;
             if (!string.Equals(lhs.Description, rhs.Description)) return false;
             if (!lhs.MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
-            if (lhs.VestigialData != rhs.VestigialData) return false;
             return true;
         }
         
@@ -1876,10 +1819,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 hash.Add(Descriptionitem);
             }
             hash.Add(item.MasterReferences);
-            if (item.VestigialData.TryGet(out var VestigialDataitem))
-            {
-                hash.Add(VestigialDataitem);
-            }
             return hash.ToHashCode();
         }
         
@@ -1999,10 +1938,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.VestigialData) ?? true))
-            {
-                item.VestigialData = rhs.VestigialData;
             }
         }
         
@@ -2190,16 +2125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: listSubMask,
                             translationMask: listTranslMask);
                     });
-            }
-            if ((item.VestigialData != null)
-                && (translationMask?.GetShouldTranslate((int)ModHeader_FieldIndex.VestigialData) ?? true))
-            {
-                UInt64XmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.VestigialData),
-                    item: item.VestigialData.Value,
-                    fieldIndex: (int)ModHeader_FieldIndex.VestigialData,
-                    errorMask: errorMask);
             }
         }
 
@@ -2480,24 +2405,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "VestigialData":
-                    errorMask?.PushIndex((int)ModHeader_FieldIndex.VestigialData);
-                    try
-                    {
-                        item.VestigialData = UInt64XmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     break;
             }
@@ -2669,6 +2576,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
 
+        static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteEmbedded(
             IModHeaderGetter item,
             MutagenWriter writer)
@@ -2709,21 +2629,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+            ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
-                items: item.MasterReferences,
-                transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>
-                {
-                    var Item = subItem;
-                    ((MasterReferenceBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                        item: Item,
-                        writer: subWriter,
-                        recordTypeConverter: conv);
-                });
-            Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.VestigialData,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
+                item: item);
         }
 
         public void Write(
@@ -2818,25 +2726,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.MAST:
                 {
-                    item.MasterReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
-                            frame: frame,
-                            triggeringRecord: RecordTypes.MAST,
-                            recordTypeConverter: recordTypeConverter,
-                            transl: MasterReference.TryCreateFromBinary));
+                    ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                     return (int)ModHeader_FieldIndex.MasterReferences;
-                }
-                case RecordTypeInts.DATA:
-                {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VestigialData = frame.ReadUInt64();
-                    return (int)ModHeader_FieldIndex.VestigialData;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
                     return default(int?);
             }
         }
+
+        static partial void FillBinaryMasterReferencesCustom(
+            MutagenFrame frame,
+            IModHeader item);
 
     }
 
@@ -2944,10 +2847,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
-        #region VestigialData
-        private int? _VestigialDataLocation;
-        public UInt64? VestigialData => _VestigialDataLocation.HasValue ? BinaryPrimitives.ReadUInt64LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VestigialDataLocation.Value, _package.MetaData.Constants)) : default(UInt64?);
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3044,11 +2943,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
                     return (int)ModHeader_FieldIndex.MasterReferences;
-                }
-                case RecordTypeInts.DATA:
-                {
-                    _VestigialDataLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.VestigialData;
                 }
                 default:
                     return default(int?);
