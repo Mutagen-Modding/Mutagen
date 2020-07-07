@@ -462,7 +462,12 @@ namespace Mutagen.Bethesda.Tests
                         FixObjectPropertyIDs(stream, loc, objectFormat);
                         break;
                     case ScriptObjectListProperty objList:
-                        throw new NotImplementedException();
+                        var count = stream.ReadUInt32();
+                        for (int i = 0; i < count; i++)
+                        {
+                            FixObjectPropertyIDs(stream, loc, objectFormat);
+                        }
+                        break;
                     default:
                         prop.CopyInFromBinary(new MutagenFrame(stream));
                         break;

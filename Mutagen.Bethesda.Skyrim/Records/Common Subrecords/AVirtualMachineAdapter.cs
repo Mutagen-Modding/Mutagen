@@ -81,7 +81,14 @@ namespace Mutagen.Bethesda.Skyrim
                             FillObject(frame, obj, objectFormat);
                             break;
                         case ScriptObjectListProperty objList:
-                            throw new NotImplementedException();
+                            var objListCount = frame.ReadUInt32();
+                            for (int j = 0; j < objListCount; j++)
+                            {
+                                var subObj = new ScriptObjectProperty();
+                                FillObject(frame, subObj, objectFormat);
+                                objList.Objects.Add(subObj);
+                            }
+                            break;
                         default:
                             prop.CopyInFromBinary(frame);
                             break;

@@ -50,6 +50,7 @@
   </Object>
   <Object name="ScriptObjectListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="f1e67286-b4d7-4f4f-bec6-fdc8a8a9f58b" ID="99">
     <Fields>
+      <RefList name="Objects" refName="ScriptObjectProperty" />
     </Fields>
   </Object>
   <!--<Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8a0d079d-f9de-4460-82b6-01611f36fa7a" ID="100">
