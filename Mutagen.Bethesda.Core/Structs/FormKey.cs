@@ -1,5 +1,3 @@
-using DynamicData;
-using DynamicData.Annotations;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
@@ -13,13 +11,13 @@ using System.Threading.Tasks;
 namespace Mutagen.Bethesda
 {
     /// <summary>
-    /// A struct representing a unique identifier for a record:
-    ///   - The ID of a record (6 bytes)
-    ///   - The ModKey the record originates from
-    ///
-    /// FormKeys are preferable to FormIDs, as they:
-    ///   - Cannot be misinterpreted to originate from the wrong Mod depending on context
-    ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.
+    /// A struct representing a unique identifier for a record:<br/>
+    ///   - The ID of a record (6 bytes)<br/>
+    ///   - The ModKey the record originates from<br/>
+    ///<br/>
+    /// FormKeys are preferable to FormIDs, as they:<br/>
+    ///   - Cannot be misinterpreted to originate from the wrong Mod depending on context<br/>
+    ///   - Remove the 255 limit while within code space.  On-disk formats still enforce 255 limit.<br/>
     /// </summary>
     public struct FormKey : IEquatable<FormKey>
     {
