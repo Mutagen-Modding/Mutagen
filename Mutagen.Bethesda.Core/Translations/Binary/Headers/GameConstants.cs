@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -94,7 +93,8 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 20,
                 lengthLength: 4,
                 flagsLoc: 8,
-                formIDloc: 12),
+                formIDloc: 12,
+                formVersionLoc: null),
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,
@@ -115,7 +115,8 @@ namespace Mutagen.Bethesda.Binary
                 headerLength: 24,
                 lengthLength: 4,
                 flagsLoc: 8,
-                formIDloc: 12),
+                formIDloc: 12,
+                formVersionLoc: 20),
             subConstants: new RecordHeaderConstants(
                 ObjectType.Subrecord,
                 headerLength: 6,

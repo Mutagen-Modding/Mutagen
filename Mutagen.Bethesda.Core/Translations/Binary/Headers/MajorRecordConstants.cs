@@ -13,11 +13,16 @@ namespace Mutagen.Bethesda.Binary
         /// Offset in the header where flags are located
         /// </summary>
         public sbyte FlagLocationOffset { get; }
-        
+
         /// <summary>
         /// Offset in the header where the FormID is located
         /// </summary>
         public sbyte FormIDLocationOffset { get; }
+
+        /// <summary>
+        /// Offset in the header where the Form Version is located
+        /// </summary>
+        public sbyte? FormVersionLocationOffset { get; }
 
         /// <summary>
         /// Constructor
@@ -26,15 +31,18 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="lengthLength">Number of bytes representing the content length</param>
         /// <param name="flagsLoc">Offset in the header where flags are located</param>
         /// <param name="formIDloc">Offset in the header where the FormID is located</param>
+        /// <param name="formVersionLoc">Offset in the header where the Form Version is located</param>
         public MajorRecordConstants(
             sbyte headerLength,
             sbyte lengthLength,
             sbyte flagsLoc,
-            sbyte formIDloc)
+            sbyte formIDloc,
+            sbyte? formVersionLoc)
             : base(ObjectType.Record, headerLength, lengthLength)
         {
             this.FlagLocationOffset = flagsLoc;
             this.FormIDLocationOffset = formIDloc;
+            this.FormVersionLocationOffset = formVersionLoc;
         }
     }
 }

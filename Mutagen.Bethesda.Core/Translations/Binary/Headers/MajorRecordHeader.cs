@@ -1,8 +1,8 @@
-using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -65,12 +65,17 @@ namespace Mutagen.Bethesda.Binary
         /// be casted to the appropriate enum for use.
         /// </summary>
         public int MajorRecordFlags => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(8, 4));
-        
+
         /// <summary>
         /// FormID of the Major Record
         /// </summary>
         public FormID FormID => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
-        
+
+        /// <summary>
+        /// Version control of the Major Record
+        /// </summary>
+        public int VersionControl => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(16, 4));
+
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
@@ -80,6 +85,32 @@ namespace Mutagen.Bethesda.Binary
         /// Whether the compression flag is on
         /// </summary>
         public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
+
+        /// <summary>
+        /// Returns the Form Version of the Major Record
+        /// </summary>
+        public short? FormVersion
+        {
+            get
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                return BinaryPrimitives.ReadInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value));
+            }
+        }
+
+        /// <summary>
+        /// Returns the second Version Control of the Major Record
+        /// </summary>
+        public short? VersionControl2
+        {
+            get
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                return BinaryPrimitives.ReadInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
+            }
+        }
 
         /// <inheritdoc/>
         public override string ToString() => $"{RecordType} =>0x{ContentLength:X}";
@@ -169,12 +200,69 @@ namespace Mutagen.Bethesda.Binary
             get => FormID.Factory(BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(12, 4)));
             set => BinaryPrimitives.WriteUInt32LittleEndian(this.Span.Slice(12, 4), value.Raw);
         }
-        
+
+        /// <summary>
+        /// Version control of the Major Record
+        /// </summary>
+        public int VersionControl
+        {
+            get => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(16, 4));
+            set => BinaryPrimitives.WriteInt32LittleEndian(this.Span.Slice(16, 4), value);
+        }
+
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
         public long TotalLength => this.HeaderLength + this.RecordLength;
-        
+
+        /// <summary>
+        /// Form Version of the Major Record
+        /// </summary>
+        [DisallowNull]
+        public short? FormVersion
+        {
+            get
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                return BinaryPrimitives.ReadInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value));
+            }
+            set
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue)
+                {
+                    throw new ArgumentException("Attempted to set Form Version on a non-applicable game.");
+                }
+                BinaryPrimitives.WriteInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value, 2),
+                    value.Value);
+            }
+        }
+
+        /// <summary>
+        /// Second Version Control of the Major Record
+        /// </summary>
+        [DisallowNull]
+        public short? VersionControl2
+        {
+            get
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue) return null;
+                return BinaryPrimitives.ReadInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2));
+            }
+            set
+            {
+                if (!this.Meta.MajorConstants.FormVersionLocationOffset.HasValue)
+                {
+                    throw new ArgumentException("Attempted to set Form Version on a non-applicable game.");
+                }
+                BinaryPrimitives.WriteInt16LittleEndian(
+                    this.Span.Slice(this.Meta.MajorConstants.FormVersionLocationOffset.Value + 2, 2),
+                    value.Value);
+            }
+        }
+
         /// <summary>
         /// Whether the compression flag is on
         /// </summary>
