@@ -94,14 +94,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OcclusionPlane
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Placement? _OcclusionPlane;
-        public Placement? OcclusionPlane
+        private Bounding? _OcclusionPlane;
+        public Bounding? OcclusionPlane
         {
             get => _OcclusionPlane;
             set => _OcclusionPlane = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlacementGetter? IPlacedObjectGetter.OcclusionPlane => this.OcclusionPlane;
+        IBoundingGetter? IPlacedObjectGetter.OcclusionPlane => this.OcclusionPlane;
         #endregion
         #region Portals
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,14 +119,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RoomPortal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Placement? _RoomPortal;
-        public Placement? RoomPortal
+        private Bounding? _RoomPortal;
+        public Bounding? RoomPortal
         {
             get => _RoomPortal;
             set => _RoomPortal = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IPlacementGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
+        IBoundingGetter? IPlacedObjectGetter.RoomPortal => this.RoomPortal;
         #endregion
         #region Unknown
         public Int16 Unknown { get; set; } = default;
@@ -518,14 +518,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ReadOnlyMemorySlice<Byte>? IPlacedObjectGetter.DistantLodData => this.DistantLodData;
         #endregion
-        #region Position
-        public P3Float Position { get; set; } = default;
-        #endregion
-        #region Rotation
-        public P3Float Rotation { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public PlacedObject.DATADataType DATADataTypeState { get; set; } = default;
+        #region Placement
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Placement? _Placement;
+        public Placement? Placement
+        {
+            get => _Placement;
+            set => _Placement = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedObjectGetter.Placement => this.Placement;
         #endregion
 
         #region To String
@@ -701,9 +703,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BoundHalfExtents = initialValue;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(initialValue, new PlacedPrimitive.Mask<TItem>(initialValue));
                 this.XORD = initialValue;
-                this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
+                this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
                 this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
-                this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
+                this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(initialValue, new Bounding.Mask<TItem>(initialValue));
                 this.Unknown = initialValue;
                 this.LightingTemplate = initialValue;
                 this.ImageSpace = initialValue;
@@ -753,9 +755,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(initialValue, new MapMarker.Mask<TItem>(initialValue));
                 this.AttachRef = initialValue;
                 this.DistantLodData = initialValue;
-                this.Position = initialValue;
-                this.Rotation = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -822,9 +822,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MapMarker,
                 TItem AttachRef,
                 TItem DistantLodData,
-                TItem Position,
-                TItem Rotation,
-                TItem DATADataTypeState)
+                TItem Placement)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -838,9 +836,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BoundHalfExtents = BoundHalfExtents;
                 this.Primitive = new MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>(Primitive, new PlacedPrimitive.Mask<TItem>(Primitive));
                 this.XORD = XORD;
-                this.OcclusionPlane = new MaskItem<TItem, Placement.Mask<TItem>?>(OcclusionPlane, new Placement.Mask<TItem>(OcclusionPlane));
+                this.OcclusionPlane = new MaskItem<TItem, Bounding.Mask<TItem>?>(OcclusionPlane, new Bounding.Mask<TItem>(OcclusionPlane));
                 this.Portals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>(Portals, Enumerable.Empty<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>());
-                this.RoomPortal = new MaskItem<TItem, Placement.Mask<TItem>?>(RoomPortal, new Placement.Mask<TItem>(RoomPortal));
+                this.RoomPortal = new MaskItem<TItem, Bounding.Mask<TItem>?>(RoomPortal, new Bounding.Mask<TItem>(RoomPortal));
                 this.Unknown = Unknown;
                 this.LightingTemplate = LightingTemplate;
                 this.ImageSpace = ImageSpace;
@@ -890,9 +888,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapMarker = new MaskItem<TItem, MapMarker.Mask<TItem>?>(MapMarker, new MapMarker.Mask<TItem>(MapMarker));
                 this.AttachRef = AttachRef;
                 this.DistantLodData = DistantLodData;
-                this.Position = Position;
-                this.Rotation = Rotation;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(Placement, new Placement.Mask<TItem>(Placement));
             }
 
             #pragma warning disable CS8618
@@ -909,9 +905,9 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BoundHalfExtents;
             public MaskItem<TItem, PlacedPrimitive.Mask<TItem>?>? Primitive { get; set; }
             public TItem XORD;
-            public MaskItem<TItem, Placement.Mask<TItem>?>? OcclusionPlane { get; set; }
+            public MaskItem<TItem, Bounding.Mask<TItem>?>? OcclusionPlane { get; set; }
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, Portal.Mask<TItem>?>>?>? Portals;
-            public MaskItem<TItem, Placement.Mask<TItem>?>? RoomPortal { get; set; }
+            public MaskItem<TItem, Bounding.Mask<TItem>?>? RoomPortal { get; set; }
             public TItem Unknown;
             public TItem LightingTemplate;
             public TItem ImageSpace;
@@ -961,9 +957,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, MapMarker.Mask<TItem>?>? MapMarker { get; set; }
             public TItem AttachRef;
             public TItem DistantLodData;
-            public TItem Position;
-            public TItem Rotation;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, Placement.Mask<TItem>?>? Placement { get; set; }
             #endregion
 
             #region Equals
@@ -1034,9 +1028,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MapMarker, rhs.MapMarker)) return false;
                 if (!object.Equals(this.AttachRef, rhs.AttachRef)) return false;
                 if (!object.Equals(this.DistantLodData, rhs.DistantLodData)) return false;
-                if (!object.Equals(this.Position, rhs.Position)) return false;
-                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Placement, rhs.Placement)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1099,9 +1091,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MapMarker);
                 hash.Add(this.AttachRef);
                 hash.Add(this.DistantLodData);
-                hash.Add(this.Position);
-                hash.Add(this.Rotation);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Placement);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -1292,9 +1282,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (!eval(this.AttachRef)) return false;
                 if (!eval(this.DistantLodData)) return false;
-                if (!eval(this.Position)) return false;
-                if (!eval(this.Rotation)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Placement != null)
+                {
+                    if (!eval(this.Placement.Overall)) return false;
+                    if (this.Placement.Specific != null && !this.Placement.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -1483,9 +1475,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 if (eval(this.AttachRef)) return true;
                 if (eval(this.DistantLodData)) return true;
-                if (eval(this.Position)) return true;
-                if (eval(this.Rotation)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Placement != null)
+                {
+                    if (eval(this.Placement.Overall)) return true;
+                    if (this.Placement.Specific != null && this.Placement.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -1506,7 +1500,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.BoundHalfExtents = eval(this.BoundHalfExtents);
                 obj.Primitive = this.Primitive == null ? null : new MaskItem<R, PlacedPrimitive.Mask<R>?>(eval(this.Primitive.Overall), this.Primitive.Specific?.Translate(eval));
                 obj.XORD = eval(this.XORD);
-                obj.OcclusionPlane = this.OcclusionPlane == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.OcclusionPlane.Overall), this.OcclusionPlane.Specific?.Translate(eval));
+                obj.OcclusionPlane = this.OcclusionPlane == null ? null : new MaskItem<R, Bounding.Mask<R>?>(eval(this.OcclusionPlane.Overall), this.OcclusionPlane.Specific?.Translate(eval));
                 if (Portals != null)
                 {
                     obj.Portals = new MaskItem<R, IEnumerable<MaskItemIndexed<R, Portal.Mask<R>?>>?>(eval(this.Portals.Overall), Enumerable.Empty<MaskItemIndexed<R, Portal.Mask<R>?>>());
@@ -1522,7 +1516,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                     }
                 }
-                obj.RoomPortal = this.RoomPortal == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.RoomPortal.Overall), this.RoomPortal.Specific?.Translate(eval));
+                obj.RoomPortal = this.RoomPortal == null ? null : new MaskItem<R, Bounding.Mask<R>?>(eval(this.RoomPortal.Overall), this.RoomPortal.Specific?.Translate(eval));
                 obj.Unknown = eval(this.Unknown);
                 obj.LightingTemplate = eval(this.LightingTemplate);
                 obj.ImageSpace = eval(this.ImageSpace);
@@ -1639,9 +1633,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MapMarker = this.MapMarker == null ? null : new MaskItem<R, MapMarker.Mask<R>?>(eval(this.MapMarker.Overall), this.MapMarker.Specific?.Translate(eval));
                 obj.AttachRef = eval(this.AttachRef);
                 obj.DistantLodData = eval(this.DistantLodData);
-                obj.Position = eval(this.Position);
-                obj.Rotation = eval(this.Rotation);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Placement = this.Placement == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.Placement.Overall), this.Placement.Specific?.Translate(eval));
             }
             #endregion
 
@@ -2006,17 +1998,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(DistantLodData, "DistantLodData");
                     }
-                    if (printMask?.Position ?? true)
+                    if (printMask?.Placement?.Overall ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
-                    }
-                    if (printMask?.Rotation ?? true)
-                    {
-                        fg.AppendItem(Rotation, "Rotation");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Placement?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -2035,9 +2019,9 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BoundHalfExtents;
             public MaskItem<Exception?, PlacedPrimitive.ErrorMask?>? Primitive;
             public Exception? XORD;
-            public MaskItem<Exception?, Placement.ErrorMask?>? OcclusionPlane;
+            public MaskItem<Exception?, Bounding.ErrorMask?>? OcclusionPlane;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>? Portals;
-            public MaskItem<Exception?, Placement.ErrorMask?>? RoomPortal;
+            public MaskItem<Exception?, Bounding.ErrorMask?>? RoomPortal;
             public Exception? Unknown;
             public Exception? LightingTemplate;
             public Exception? ImageSpace;
@@ -2087,9 +2071,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, MapMarker.ErrorMask?>? MapMarker;
             public Exception? AttachRef;
             public Exception? DistantLodData;
-            public Exception? Position;
-            public Exception? Rotation;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, Placement.ErrorMask?>? Placement;
             #endregion
 
             #region IErrorMask
@@ -2212,12 +2194,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return AttachRef;
                     case PlacedObject_FieldIndex.DistantLodData:
                         return DistantLodData;
-                    case PlacedObject_FieldIndex.Position:
-                        return Position;
-                    case PlacedObject_FieldIndex.Rotation:
-                        return Rotation;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case PlacedObject_FieldIndex.Placement:
+                        return Placement;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -2244,13 +2222,13 @@ namespace Mutagen.Bethesda.Skyrim
                         this.XORD = ex;
                         break;
                     case PlacedObject_FieldIndex.OcclusionPlane:
-                        this.OcclusionPlane = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
+                        this.OcclusionPlane = new MaskItem<Exception?, Bounding.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.Portals:
                         this.Portals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.RoomPortal:
-                        this.RoomPortal = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
+                        this.RoomPortal = new MaskItem<Exception?, Bounding.ErrorMask?>(ex, null);
                         break;
                     case PlacedObject_FieldIndex.Unknown:
                         this.Unknown = ex;
@@ -2399,14 +2377,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.DistantLodData:
                         this.DistantLodData = ex;
                         break;
-                    case PlacedObject_FieldIndex.Position:
-                        this.Position = ex;
-                        break;
-                    case PlacedObject_FieldIndex.Rotation:
-                        this.Rotation = ex;
-                        break;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case PlacedObject_FieldIndex.Placement:
+                        this.Placement = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -2435,13 +2407,13 @@ namespace Mutagen.Bethesda.Skyrim
                         this.XORD = (Exception?)obj;
                         break;
                     case PlacedObject_FieldIndex.OcclusionPlane:
-                        this.OcclusionPlane = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
+                        this.OcclusionPlane = (MaskItem<Exception?, Bounding.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.Portals:
                         this.Portals = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, Portal.ErrorMask?>>?>)obj;
                         break;
                     case PlacedObject_FieldIndex.RoomPortal:
-                        this.RoomPortal = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
+                        this.RoomPortal = (MaskItem<Exception?, Bounding.ErrorMask?>?)obj;
                         break;
                     case PlacedObject_FieldIndex.Unknown:
                         this.Unknown = (Exception?)obj;
@@ -2590,14 +2562,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedObject_FieldIndex.DistantLodData:
                         this.DistantLodData = (Exception?)obj;
                         break;
-                    case PlacedObject_FieldIndex.Position:
-                        this.Position = (Exception?)obj;
-                        break;
-                    case PlacedObject_FieldIndex.Rotation:
-                        this.Rotation = (Exception?)obj;
-                        break;
-                    case PlacedObject_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case PlacedObject_FieldIndex.Placement:
+                        this.Placement = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -2665,9 +2631,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MapMarker != null) return true;
                 if (AttachRef != null) return true;
                 if (DistantLodData != null) return true;
-                if (Position != null) return true;
-                if (Rotation != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Placement != null) return true;
                 return false;
             }
             #endregion
@@ -2886,9 +2850,7 @@ namespace Mutagen.Bethesda.Skyrim
                 MapMarker?.ToString(fg);
                 fg.AppendItem(AttachRef, "AttachRef");
                 fg.AppendItem(DistantLodData, "DistantLodData");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Placement?.ToString(fg);
             }
             #endregion
 
@@ -2954,9 +2916,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MapMarker = this.MapMarker.Combine(rhs.MapMarker, (l, r) => l.Combine(r));
                 ret.AttachRef = this.AttachRef.Combine(rhs.AttachRef);
                 ret.DistantLodData = this.DistantLodData.Combine(rhs.DistantLodData);
-                ret.Position = this.Position.Combine(rhs.Position);
-                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Placement = this.Placement.Combine(rhs.Placement, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -2984,9 +2944,9 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BoundHalfExtents;
             public MaskItem<bool, PlacedPrimitive.TranslationMask?> Primitive;
             public bool XORD;
-            public MaskItem<bool, Placement.TranslationMask?> OcclusionPlane;
+            public MaskItem<bool, Bounding.TranslationMask?> OcclusionPlane;
             public MaskItem<bool, Portal.TranslationMask?> Portals;
-            public MaskItem<bool, Placement.TranslationMask?> RoomPortal;
+            public MaskItem<bool, Bounding.TranslationMask?> RoomPortal;
             public bool Unknown;
             public bool LightingTemplate;
             public bool ImageSpace;
@@ -3036,9 +2996,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, MapMarker.TranslationMask?> MapMarker;
             public bool AttachRef;
             public bool DistantLodData;
-            public bool Position;
-            public bool Rotation;
-            public bool DATADataTypeState;
+            public MaskItem<bool, Placement.TranslationMask?> Placement;
             #endregion
 
             #region Ctors
@@ -3050,9 +3008,9 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BoundHalfExtents = defaultOn;
                 this.Primitive = new MaskItem<bool, PlacedPrimitive.TranslationMask?>(defaultOn, null);
                 this.XORD = defaultOn;
-                this.OcclusionPlane = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
+                this.OcclusionPlane = new MaskItem<bool, Bounding.TranslationMask?>(defaultOn, null);
                 this.Portals = new MaskItem<bool, Portal.TranslationMask?>(defaultOn, null);
-                this.RoomPortal = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
+                this.RoomPortal = new MaskItem<bool, Bounding.TranslationMask?>(defaultOn, null);
                 this.Unknown = defaultOn;
                 this.LightingTemplate = defaultOn;
                 this.ImageSpace = defaultOn;
@@ -3102,9 +3060,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MapMarker = new MaskItem<bool, MapMarker.TranslationMask?>(defaultOn, null);
                 this.AttachRef = defaultOn;
                 this.DistantLodData = defaultOn;
-                this.Position = defaultOn;
-                this.Rotation = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Placement = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -3169,9 +3125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MapMarker?.Overall ?? true, MapMarker?.Specific?.GetCrystal()));
                 ret.Add((AttachRef, null));
                 ret.Add((DistantLodData, null));
-                ret.Add((Position, null));
-                ret.Add((Rotation, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Placement?.Overall ?? true, Placement?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -3201,10 +3155,6 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
-        [Flags]
-        public enum DATADataType
-        {
-        }
         #endregion
 
         #region Binary Translation
@@ -3279,7 +3229,6 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimple,
         IPlacedThing,
         ILocationTargetable,
-        IPositionRotation,
         ILoquiObjectSetter<IPlacedObjectInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -3287,9 +3236,9 @@ namespace Mutagen.Bethesda.Skyrim
         new P3Float? BoundHalfExtents { get; set; }
         new PlacedPrimitive? Primitive { get; set; }
         new MemorySlice<Byte>? XORD { get; set; }
-        new Placement? OcclusionPlane { get; set; }
+        new Bounding? OcclusionPlane { get; set; }
         new IExtendedList<Portal>? Portals { get; set; }
-        new Placement? RoomPortal { get; set; }
+        new Bounding? RoomPortal { get; set; }
         new Int16 Unknown { get; set; }
         new FormLinkNullable<Light> LightingTemplate { get; set; }
         new FormLinkNullable<ImageSpaceAdapter> ImageSpace { get; set; }
@@ -3339,9 +3288,7 @@ namespace Mutagen.Bethesda.Skyrim
         new MapMarker? MapMarker { get; set; }
         new FormLinkNullable<IPlacedThing> AttachRef { get; set; }
         new MemorySlice<Byte>? DistantLodData { get; set; }
-        new P3Float Position { get; set; }
-        new P3Float Rotation { get; set; }
-        new PlacedObject.DATADataType DATADataTypeState { get; set; }
+        new Placement? Placement { get; set; }
     }
 
     public partial interface IPlacedObjectInternal :
@@ -3358,7 +3305,6 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedSimpleGetter,
         IPlacedThingGetter,
         ILocationTargetableGetter,
-        IPositionRotationGetter,
         ILoquiObject<IPlacedObjectGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -3370,9 +3316,9 @@ namespace Mutagen.Bethesda.Skyrim
         P3Float? BoundHalfExtents { get; }
         IPlacedPrimitiveGetter? Primitive { get; }
         ReadOnlyMemorySlice<Byte>? XORD { get; }
-        IPlacementGetter? OcclusionPlane { get; }
+        IBoundingGetter? OcclusionPlane { get; }
         IReadOnlyList<IPortalGetter>? Portals { get; }
-        IPlacementGetter? RoomPortal { get; }
+        IBoundingGetter? RoomPortal { get; }
         Int16 Unknown { get; }
         IFormLinkNullable<ILightGetter> LightingTemplate { get; }
         IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpace { get; }
@@ -3422,9 +3368,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapMarkerGetter? MapMarker { get; }
         IFormLinkNullable<IPlacedThingGetter> AttachRef { get; }
         ReadOnlyMemorySlice<Byte>? DistantLodData { get; }
-        P3Float Position { get; }
-        P3Float Rotation { get; }
-        PlacedObject.DATADataType DATADataTypeState { get; }
+        IPlacementGetter? Placement { get; }
 
     }
 
@@ -3782,9 +3726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MapMarker = 60,
         AttachRef = 61,
         DistantLodData = 62,
-        Position = 63,
-        Rotation = 64,
-        DATADataTypeState = 65,
+        Placement = 63,
     }
     #endregion
 
@@ -3802,9 +3744,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "15cab6c0-7390-410a-b2a8-7ee0e58569a6";
 
-        public const ushort AdditionalFieldCount = 60;
+        public const ushort AdditionalFieldCount = 58;
 
-        public const ushort FieldCount = 66;
+        public const ushort FieldCount = 64;
 
         public static readonly Type MaskType = typeof(PlacedObject.Mask<>);
 
@@ -3948,12 +3890,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)PlacedObject_FieldIndex.AttachRef;
                 case "DISTANTLODDATA":
                     return (ushort)PlacedObject_FieldIndex.DistantLodData;
-                case "POSITION":
-                    return (ushort)PlacedObject_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)PlacedObject_FieldIndex.Rotation;
-                case "DATADATATYPESTATE":
-                    return (ushort)PlacedObject_FieldIndex.DATADataTypeState;
+                case "PLACEMENT":
+                    return (ushort)PlacedObject_FieldIndex.Placement;
                 default:
                     return null;
             }
@@ -4022,9 +3960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MapMarker:
                 case PlacedObject_FieldIndex.AttachRef:
                 case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                case PlacedObject_FieldIndex.DATADataTypeState:
+                case PlacedObject_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -4054,6 +3990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.LinkedReferences:
                 case PlacedObject_FieldIndex.Patrol:
                 case PlacedObject_FieldIndex.MapMarker:
+                case PlacedObject_FieldIndex.Placement:
                     return true;
                 case PlacedObject_FieldIndex.Base:
                 case PlacedObject_FieldIndex.BoundHalfExtents:
@@ -4094,9 +4031,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.OpenByDefault:
                 case PlacedObject_FieldIndex.AttachRef:
                 case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                case PlacedObject_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -4165,9 +4099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MapMarker:
                 case PlacedObject_FieldIndex.AttachRef:
                 case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                case PlacedObject_FieldIndex.DATADataTypeState:
+                case PlacedObject_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -4293,12 +4225,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "AttachRef";
                 case PlacedObject_FieldIndex.DistantLodData:
                     return "DistantLodData";
-                case PlacedObject_FieldIndex.Position:
-                    return "Position";
-                case PlacedObject_FieldIndex.Rotation:
-                    return "Rotation";
-                case PlacedObject_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case PlacedObject_FieldIndex.Placement:
+                    return "Placement";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -4366,9 +4294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MapMarker:
                 case PlacedObject_FieldIndex.AttachRef:
                 case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                case PlacedObject_FieldIndex.DATADataTypeState:
+                case PlacedObject_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -4437,9 +4363,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.MapMarker:
                 case PlacedObject_FieldIndex.AttachRef:
                 case PlacedObject_FieldIndex.DistantLodData:
-                case PlacedObject_FieldIndex.Position:
-                case PlacedObject_FieldIndex.Rotation:
-                case PlacedObject_FieldIndex.DATADataTypeState:
+                case PlacedObject_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -4462,11 +4386,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedObject_FieldIndex.XORD:
                     return typeof(MemorySlice<Byte>);
                 case PlacedObject_FieldIndex.OcclusionPlane:
-                    return typeof(Placement);
+                    return typeof(Bounding);
                 case PlacedObject_FieldIndex.Portals:
                     return typeof(IExtendedList<Portal>);
                 case PlacedObject_FieldIndex.RoomPortal:
-                    return typeof(Placement);
+                    return typeof(Bounding);
                 case PlacedObject_FieldIndex.Unknown:
                     return typeof(Int16);
                 case PlacedObject_FieldIndex.LightingTemplate:
@@ -4565,12 +4489,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<IPlacedThing>);
                 case PlacedObject_FieldIndex.DistantLodData:
                     return typeof(MemorySlice<Byte>);
-                case PlacedObject_FieldIndex.Position:
-                    return typeof(P3Float);
-                case PlacedObject_FieldIndex.Rotation:
-                    return typeof(P3Float);
-                case PlacedObject_FieldIndex.DATADataTypeState:
-                    return typeof(PlacedObject.DATADataType);
+                case PlacedObject_FieldIndex.Placement:
+                    return typeof(Placement);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -4677,9 +4597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MapMarker = null;
             item.AttachRef = FormLinkNullable<IPlacedThing>.Null;
             item.DistantLodData = default;
-            item.Position = default;
-            item.Rotation = default;
-            item.DATADataTypeState = default;
+            item.Placement = null;
             base.Clear(item);
         }
         
@@ -4972,9 +4890,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 include);
             ret.AttachRef = object.Equals(item.AttachRef, rhs.AttachRef);
             ret.DistantLodData = MemorySliceExt.Equal(item.DistantLodData, rhs.DistantLodData);
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Placement = EqualsMaskHelper.EqualsHelper(
+                item.Placement,
+                rhs.Placement,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -5387,17 +5307,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendLine($"DistantLodData => {SpanExt.ToHexString(DistantLodDataItem)}");
             }
-            if (printMask?.Position ?? true)
+            if ((printMask?.Placement?.Overall ?? true)
+                && item.Placement.TryGet(out var PlacementItem))
             {
-                fg.AppendItem(item.Position, "Position");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                fg.AppendItem(item.Rotation, "Rotation");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                PlacementItem?.ToString(fg, "Placement");
             }
         }
         
@@ -5469,6 +5382,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.MapMarker?.Specific != null && (item.MapMarker == null || !item.MapMarker.HasBeenSet(checkMask.MapMarker.Specific))) return false;
             if (checkMask.AttachRef.HasValue && checkMask.AttachRef.Value != (item.AttachRef.FormKey != null)) return false;
             if (checkMask.DistantLodData.HasValue && checkMask.DistantLodData.Value != (item.DistantLodData != null)) return false;
+            if (checkMask.Placement?.Overall.HasValue ?? false && checkMask.Placement.Overall.Value != (item.Placement != null)) return false;
+            if (checkMask.Placement?.Specific != null && (item.Placement == null || !item.Placement.HasBeenSet(checkMask.Placement.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -5486,13 +5401,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.Primitive = new MaskItem<bool, PlacedPrimitive.Mask<bool>?>(itemPrimitive != null, itemPrimitive?.GetHasBeenSetMask());
             mask.XORD = (item.XORD != null);
             var itemOcclusionPlane = item.OcclusionPlane;
-            mask.OcclusionPlane = new MaskItem<bool, Placement.Mask<bool>?>(itemOcclusionPlane != null, itemOcclusionPlane?.GetHasBeenSetMask());
+            mask.OcclusionPlane = new MaskItem<bool, Bounding.Mask<bool>?>(itemOcclusionPlane != null, itemOcclusionPlane?.GetHasBeenSetMask());
             if (item.Portals.TryGet(out var PortalsItem))
             {
                 mask.Portals = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, Portal.Mask<bool>?>>?>(true, PortalsItem.WithIndex().Select((i) => new MaskItemIndexed<bool, Portal.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             }
             var itemRoomPortal = item.RoomPortal;
-            mask.RoomPortal = new MaskItem<bool, Placement.Mask<bool>?>(itemRoomPortal != null, itemRoomPortal?.GetHasBeenSetMask());
+            mask.RoomPortal = new MaskItem<bool, Bounding.Mask<bool>?>(itemRoomPortal != null, itemRoomPortal?.GetHasBeenSetMask());
             mask.Unknown = true;
             mask.LightingTemplate = (item.LightingTemplate.FormKey != null);
             mask.ImageSpace = (item.ImageSpace.FormKey != null);
@@ -5555,9 +5470,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MapMarker = new MaskItem<bool, MapMarker.Mask<bool>?>(itemMapMarker != null, itemMapMarker?.GetHasBeenSetMask());
             mask.AttachRef = (item.AttachRef.FormKey != null);
             mask.DistantLodData = (item.DistantLodData != null);
-            mask.Position = true;
-            mask.Rotation = true;
-            mask.DATADataTypeState = true;
+            var itemPlacement = item.Placement;
+            mask.Placement = new MaskItem<bool, Placement.Mask<bool>?>(itemPlacement != null, itemPlacement?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -5666,9 +5580,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
             if (!lhs.AttachRef.Equals(rhs.AttachRef)) return false;
             if (!MemorySliceExt.Equal(lhs.DistantLodData, rhs.DistantLodData)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
         }
         
@@ -5891,9 +5803,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(DistantLodDataItem);
             }
-            hash.Add(item.Position);
-            hash.Add(item.Rotation);
-            hash.Add(item.DATADataTypeState);
+            if (item.Placement.TryGet(out var Placementitem))
+            {
+                hash.Add(Placementitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -6847,17 +6760,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.DistantLodData = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
             {
-                item.Position = rhs.Position;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
-            {
-                item.Rotation = rhs.Rotation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)PlacedObject_FieldIndex.Placement);
+                try
+                {
+                    if(rhs.Placement.TryGet(out var rhsPlacement))
+                    {
+                        item.Placement = rhsPlacement.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement));
+                    }
+                    else
+                    {
+                        item.Placement = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -7064,7 +6991,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.OcclusionPlane.TryGet(out var OcclusionPlaneItem))
                 {
-                    ((PlacementXmlWriteTranslation)((IXmlItem)OcclusionPlaneItem).XmlWriteTranslator).Write(
+                    ((BoundingXmlWriteTranslation)((IXmlItem)OcclusionPlaneItem).XmlWriteTranslator).Write(
                         item: OcclusionPlaneItem,
                         node: node,
                         name: nameof(item.OcclusionPlane),
@@ -7099,7 +7026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 if (item.RoomPortal.TryGet(out var RoomPortalItem))
                 {
-                    ((PlacementXmlWriteTranslation)((IXmlItem)RoomPortalItem).XmlWriteTranslator).Write(
+                    ((BoundingXmlWriteTranslation)((IXmlItem)RoomPortalItem).XmlWriteTranslator).Write(
                         item: RoomPortalItem,
                         node: node,
                         name: nameof(item.RoomPortal),
@@ -7683,32 +7610,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PlacedObject_FieldIndex.DistantLodData,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Position) ?? true))
+            if ((item.Placement != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
             {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Position),
-                    item: item.Position,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Position,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.Rotation) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation,
-                    fieldIndex: (int)PlacedObject_FieldIndex.Rotation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedObject_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)PlacedObject_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
+                if (item.Placement.TryGet(out var PlacementItem))
+                {
+                    ((PlacementXmlWriteTranslation)((IXmlItem)PlacementItem).XmlWriteTranslator).Write(
+                        item: PlacementItem,
+                        node: node,
+                        name: nameof(item.Placement),
+                        fieldIndex: (int)PlacedObject_FieldIndex.Placement,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement));
+                }
             }
         }
 
@@ -7913,7 +7827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PlacedObject_FieldIndex.OcclusionPlane);
                     try
                     {
-                        item.OcclusionPlane = LoquiXmlTranslation<Placement>.Instance.Parse(
+                        item.OcclusionPlane = LoquiXmlTranslation<Bounding>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane));
@@ -7960,7 +7874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PushIndex((int)PlacedObject_FieldIndex.RoomPortal);
                     try
                     {
-                        item.RoomPortal = LoquiXmlTranslation<Placement>.Instance.Parse(
+                        item.RoomPortal = LoquiXmlTranslation<Bounding>.Instance.Parse(
                             node: node,
                             errorMask: errorMask,
                             translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal));
@@ -8918,49 +8832,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Position":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Position);
+                case "Placement":
+                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Placement);
                     try
                     {
-                        item.Position = P3FloatXmlTranslation.Instance.Parse(
+                        item.Placement = LoquiXmlTranslation<Placement>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Rotation":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.Rotation);
-                    try
-                    {
-                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)PlacedObject_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<PlacedObject.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -9119,7 +8998,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XOCP))
                 {
-                    ((PlacementBinaryWriteTranslation)((IBinaryItem)OcclusionPlaneItem).BinaryWriteTranslator).Write(
+                    ((BoundingBinaryWriteTranslation)((IBinaryItem)OcclusionPlaneItem).BinaryWriteTranslator).Write(
                         item: OcclusionPlaneItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
@@ -9141,7 +9020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XPTL))
                 {
-                    ((PlacementBinaryWriteTranslation)((IBinaryItem)RoomPortalItem).BinaryWriteTranslator).Write(
+                    ((BoundingBinaryWriteTranslation)((IBinaryItem)RoomPortalItem).BinaryWriteTranslator).Write(
                         item: RoomPortalItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
@@ -9392,14 +9271,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.DistantLodData,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLOD));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            if (item.Placement.TryGet(out var PlacementItem))
             {
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                ((PlacementBinaryWriteTranslation)((IBinaryItem)PlacementItem).BinaryWriteTranslator).Write(
+                    item: PlacementItem,
                     writer: writer,
-                    item: item.Position);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Rotation);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -9518,7 +9395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XOCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    item.OcclusionPlane = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.OcclusionPlane;
                 }
                 case RecordTypeInts.XPOD:
@@ -9534,7 +9411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XPTL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength; // Skip header
-                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    item.RoomPortal = Mutagen.Bethesda.Skyrim.Bounding.CreateFromBinary(frame: frame);
                     return (int)PlacedObject_FieldIndex.RoomPortal;
                 }
                 case RecordTypeInts.XRMR:
@@ -9849,11 +9726,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return (int)PlacedObject_FieldIndex.Rotation;
+                    item.Placement = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return (int)PlacedObject_FieldIndex.Placement;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -9959,9 +9833,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _XORDLocation;
         public ReadOnlyMemorySlice<Byte>? XORD => _XORDLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _XORDLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        public IPlacementGetter? OcclusionPlane { get; private set; }
+        public IBoundingGetter? OcclusionPlane { get; private set; }
         public IReadOnlyList<IPortalGetter>? Portals { get; private set; }
-        public IPlacementGetter? RoomPortal { get; private set; }
+        public IBoundingGetter? RoomPortal { get; private set; }
         #region BoundData
         partial void BoundDataCustomParse(
             OverlayStream stream,
@@ -10141,17 +10015,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _DistantLodDataLocation;
         public ReadOnlyMemorySlice<Byte>? DistantLodData => _DistantLodDataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DistantLodDataLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
-        private int? _DATALocation;
-        public PlacedObject.DATADataType DATADataTypeState { get; private set; }
-        #region Position
-        private int _PositionLocation => _DATALocation!.Value;
-        private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
-        #endregion
-        #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
-        private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
+        #region Placement
+        private RangeInt32? _PlacementLocation;
+        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(new OverlayStream(_data.Slice(_PlacementLocation!.Value.Min), _package), _package) : default;
+        public bool Placement_IsSet => _PlacementLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -10246,7 +10113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XOCP:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.OcclusionPlane = PlacementBinaryOverlay.PlacementFactory(
+                    this.OcclusionPlane = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
@@ -10267,7 +10134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XPTL:
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
-                    this.RoomPortal = PlacementBinaryOverlay.PlacementFactory(
+                    this.RoomPortal = BoundingBinaryOverlay.BoundingFactory(
                         stream: stream,
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
@@ -10555,8 +10422,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)PlacedObject_FieldIndex.Rotation;
+                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)PlacedObject_FieldIndex.Placement;
                 }
                 default:
                     return base.FillRecordType(

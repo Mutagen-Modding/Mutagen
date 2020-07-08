@@ -160,6 +160,14 @@ namespace Mutagen.Bethesda.Skyrim
                             case ScriptObjectProperty obj:
                                 WriteObject(writer, obj, objFormat);
                                 break;
+                            case ScriptObjectListProperty objList:
+                                var objsList = objList.Objects;
+                                writer.Write(objsList.Count);
+                                foreach (var subObj in objsList)
+                                {
+                                    WriteObject(writer, subObj, objFormat);
+                                }
+                                break;
                             default:
                                 property.WriteToBinary(writer);
                                 break;

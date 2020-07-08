@@ -82,7 +82,7 @@
       </List>
       <RefDirect name="ImageSpaces" refName="WeatherImageSpaces" />
       <RefDirect name="VolumetricLighting" refName="WeatherVolumetricLighting" >
-        <Versioning formVersion="44" />
+        <Versioning formVersion="43" />
       </RefDirect>
       <RefDirect name="DirectionalAmbientLightingColors" refName="WeatherAmbientColorSet" binary="Custom" />
       <ByteArray name="NAM2" recordType="NAM2" />

@@ -3189,9 +3189,17 @@ namespace Mutagen.Bethesda.Generation
             public TypeGeneration Field;
             public string PassedAccessor;
             public int? PassedLength;
+            public PassedType PassedType;
             public string CurAccessor;
             public int? CurLength;
+            public PassedType CurType;
             public int? FieldLength;
+        }
+
+        public enum PassedType
+        {
+            Direct,
+            Relative,
         }
 
         public async IAsyncEnumerable<PassedLengths> IteratePassedLengths(
@@ -3246,12 +3254,14 @@ namespace Mutagen.Bethesda.Generation
                 {
                     lengths.PassedLength = lengths.CurLength;
                     lengths.PassedAccessor = lengths.CurAccessor;
+                    lengths.PassedType = lengths.CurType;
                     if (expectedLen == null)
                     {
                         lengths.CurLength = null;
                         lastUnknownField = field;
                         lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos";
                         lastVersionedField = null;
+                        lengths.CurType = PassedType.Relative;
                     }
                     else
                     {
@@ -3267,6 +3277,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             lastVersionedField = field;
                         }
+                        lengths.CurType = PassedType.Direct;
                         lengths.CurAccessor = $"0x{lengths.CurLength:X}";
                         if (lastVersionedField != null)
                         {
@@ -3275,6 +3286,7 @@ namespace Mutagen.Bethesda.Generation
                         if (lastUnknownField != null)
                         {
                             lengths.CurAccessor = $"{passedLenPrefix}{lastUnknownField.Name}EndingPos + {lengths.CurAccessor}";
+                            lengths.CurType = PassedType.Relative;
                         }
                     }
                     lengths.FieldLength = expectedLen;

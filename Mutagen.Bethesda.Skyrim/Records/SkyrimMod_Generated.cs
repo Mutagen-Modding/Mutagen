@@ -155,6 +155,7 @@ namespace Mutagen.Bethesda.Skyrim
             _CollisionLayers_Object = new Group<CollisionLayer>(this);
             _Colors_Object = new Group<ColorRecord>(this);
             _ReverbParameters_Object = new Group<ReverbParameters>(this);
+            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -951,6 +952,13 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IReverbParametersGetter> ISkyrimModGetter.ReverbParameters => _ReverbParameters_Object;
         #endregion
+        #region VolumetricLightings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<VolumetricLighting> _VolumetricLightings_Object;
+        public Group<VolumetricLighting> VolumetricLightings => _VolumetricLightings_Object;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IGroupGetter<IVolumetricLightingGetter> ISkyrimModGetter.VolumetricLightings => _VolumetricLightings_Object;
+        #endregion
 
         #region To String
 
@@ -1233,6 +1241,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
+                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -1348,7 +1357,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SoundOutputModels,
                 TItem CollisionLayers,
                 TItem Colors,
-                TItem ReverbParameters)
+                TItem ReverbParameters,
+                TItem VolumetricLightings)
             {
                 this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -1463,6 +1473,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CollisionLayers = new MaskItem<TItem, Group.Mask<TItem>?>(CollisionLayers, new Group.Mask<TItem>(CollisionLayers));
                 this.Colors = new MaskItem<TItem, Group.Mask<TItem>?>(Colors, new Group.Mask<TItem>(Colors));
                 this.ReverbParameters = new MaskItem<TItem, Group.Mask<TItem>?>(ReverbParameters, new Group.Mask<TItem>(ReverbParameters));
+                this.VolumetricLightings = new MaskItem<TItem, Group.Mask<TItem>?>(VolumetricLightings, new Group.Mask<TItem>(VolumetricLightings));
             }
 
             #pragma warning disable CS8618
@@ -1587,6 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<TItem, Group.Mask<TItem>?>? CollisionLayers { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Colors { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? ReverbParameters { get; set; }
+            public MaskItem<TItem, Group.Mask<TItem>?>? VolumetricLightings { get; set; }
             #endregion
 
             #region Equals
@@ -1712,6 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.CollisionLayers, rhs.CollisionLayers)) return false;
                 if (!object.Equals(this.Colors, rhs.Colors)) return false;
                 if (!object.Equals(this.ReverbParameters, rhs.ReverbParameters)) return false;
+                if (!object.Equals(this.VolumetricLightings, rhs.VolumetricLightings)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -1830,6 +1843,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.CollisionLayers);
                 hash.Add(this.Colors);
                 hash.Add(this.ReverbParameters);
+                hash.Add(this.VolumetricLightings);
                 return hash.ToHashCode();
             }
 
@@ -2403,6 +2417,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.ReverbParameters.Overall)) return false;
                     if (this.ReverbParameters.Specific != null && !this.ReverbParameters.Specific.All(eval)) return false;
                 }
+                if (VolumetricLightings != null)
+                {
+                    if (!eval(this.VolumetricLightings.Overall)) return false;
+                    if (this.VolumetricLightings.Specific != null && !this.VolumetricLightings.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -2975,6 +2994,11 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.ReverbParameters.Overall)) return true;
                     if (this.ReverbParameters.Specific != null && this.ReverbParameters.Specific.Any(eval)) return true;
                 }
+                if (VolumetricLightings != null)
+                {
+                    if (eval(this.VolumetricLightings.Overall)) return true;
+                    if (this.VolumetricLightings.Specific != null && this.VolumetricLightings.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -3102,6 +3126,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.CollisionLayers = this.CollisionLayers == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.CollisionLayers.Overall), this.CollisionLayers.Specific?.Translate(eval));
                 obj.Colors = this.Colors == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Colors.Overall), this.Colors.Specific?.Translate(eval));
                 obj.ReverbParameters = this.ReverbParameters == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.ReverbParameters.Overall), this.ReverbParameters.Specific?.Translate(eval));
+                obj.VolumetricLightings = this.VolumetricLightings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.VolumetricLightings.Overall), this.VolumetricLightings.Specific?.Translate(eval));
             }
             #endregion
 
@@ -3576,6 +3601,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         ReverbParameters?.ToString(fg);
                     }
+                    if (printMask?.VolumetricLightings?.Overall ?? true)
+                    {
+                        VolumetricLightings?.ToString(fg);
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -3714,6 +3743,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<Exception?, Group.ErrorMask<CollisionLayer.ErrorMask>?>? CollisionLayers;
             public MaskItem<Exception?, Group.ErrorMask<ColorRecord.ErrorMask>?>? Colors;
             public MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>? ReverbParameters;
+            public MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>? VolumetricLightings;
             #endregion
 
             #region IErrorMask
@@ -3948,6 +3978,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Colors;
                     case SkyrimMod_FieldIndex.ReverbParameters:
                         return ReverbParameters;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        return VolumetricLightings;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4296,6 +4328,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case SkyrimMod_FieldIndex.ReverbParameters:
                         this.ReverbParameters = new MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>(ex, null);
+                        break;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        this.VolumetricLightings = new MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -4646,6 +4681,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case SkyrimMod_FieldIndex.ReverbParameters:
                         this.ReverbParameters = (MaskItem<Exception?, Group.ErrorMask<ReverbParameters.ErrorMask>?>?)obj;
                         break;
+                    case SkyrimMod_FieldIndex.VolumetricLightings:
+                        this.VolumetricLightings = (MaskItem<Exception?, Group.ErrorMask<VolumetricLighting.ErrorMask>?>?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -4767,6 +4805,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (CollisionLayers != null) return true;
                 if (Colors != null) return true;
                 if (ReverbParameters != null) return true;
+                if (VolumetricLightings != null) return true;
                 return false;
             }
             #endregion
@@ -4914,6 +4953,7 @@ namespace Mutagen.Bethesda.Skyrim
                 CollisionLayers?.ToString(fg);
                 Colors?.ToString(fg);
                 ReverbParameters?.ToString(fg);
+                VolumetricLightings?.ToString(fg);
             }
             #endregion
 
@@ -5035,6 +5075,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.CollisionLayers = this.CollisionLayers.Combine(rhs.CollisionLayers, (l, r) => l.Combine(r));
                 ret.Colors = this.Colors.Combine(rhs.Colors, (l, r) => l.Combine(r));
                 ret.ReverbParameters = this.ReverbParameters.Combine(rhs.ReverbParameters, (l, r) => l.Combine(r));
+                ret.VolumetricLightings = this.VolumetricLightings.Combine(rhs.VolumetricLightings, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -5169,6 +5210,7 @@ namespace Mutagen.Bethesda.Skyrim
             public MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?> CollisionLayers;
             public MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?> Colors;
             public MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?> ReverbParameters;
+            public MaskItem<bool, Group.TranslationMask<VolumetricLighting.TranslationMask>?> VolumetricLightings;
             #endregion
 
             #region Ctors
@@ -5287,6 +5329,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.CollisionLayers = new MaskItem<bool, Group.TranslationMask<CollisionLayer.TranslationMask>?>(defaultOn, null);
                 this.Colors = new MaskItem<bool, Group.TranslationMask<ColorRecord.TranslationMask>?>(defaultOn, null);
                 this.ReverbParameters = new MaskItem<bool, Group.TranslationMask<ReverbParameters.TranslationMask>?>(defaultOn, null);
+                this.VolumetricLightings = new MaskItem<bool, Group.TranslationMask<VolumetricLighting.TranslationMask>?>(defaultOn, null);
             }
 
             #endregion
@@ -5415,6 +5458,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((CollisionLayers?.Overall ?? true, CollisionLayers?.Specific?.GetCrystal()));
                 ret.Add((Colors?.Overall ?? true, Colors?.Specific?.GetCrystal()));
                 ret.Add((ReverbParameters?.Overall ?? true, ReverbParameters?.Specific?.GetCrystal()));
+                ret.Add((VolumetricLightings?.Overall ?? true, VolumetricLightings?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -5556,6 +5600,7 @@ namespace Mutagen.Bethesda.Skyrim
             _CollisionLayers_Object = new Group<CollisionLayer>(this);
             _Colors_Object = new Group<ColorRecord>(this);
             _ReverbParameters_Object = new Group<ReverbParameters>(this);
+            _VolumetricLightings_Object = new Group<VolumetricLighting>(this);
         }
         public void AddRecords(
             SkyrimMod rhsMod,
@@ -6011,6 +6056,10 @@ namespace Mutagen.Bethesda.Skyrim
             if (mask?.ReverbParameters ?? true)
             {
                 this.ReverbParameters.RecordCache.Set(rhsMod.ReverbParameters.RecordCache.Items);
+            }
+            if (mask?.VolumetricLightings ?? true)
+            {
+                this.VolumetricLightings.RecordCache.Set(rhsMod.VolumetricLightings.RecordCache.Items);
             }
         }
 
@@ -6803,6 +6852,13 @@ namespace Mutagen.Bethesda.Skyrim
                         .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
                         .Cast<ReverbParameters>());
             }
+            if (mask?.VolumetricLightings ?? true)
+            {
+                this.VolumetricLightings.RecordCache.Set(
+                    rhs.VolumetricLightings.Records
+                        .Select(i => i.Duplicate(this.GetNextFormKey, duppedRecords))
+                        .Cast<VolumetricLighting>());
+            }
             var router = new Dictionary<FormKey, IMajorRecordCommon>();
             router.Set(duppedRecords.Select(dup => new KeyValuePair<FormKey, IMajorRecordCommon>(dup.OriginalFormKey, dup.Record)));
             var mapping = new Dictionary<FormKey, FormKey>();
@@ -6934,6 +6990,7 @@ namespace Mutagen.Bethesda.Skyrim
             count += CollisionLayers.RecordCache.Count > 0 ? 1 : 0;
             count += Colors.RecordCache.Count > 0 ? 1 : 0;
             count += ReverbParameters.RecordCache.Count > 0 ? 1 : 0;
+            count += VolumetricLightings.RecordCache.Count > 0 ? 1 : 0;
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -7292,6 +7349,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Group<CollisionLayer> CollisionLayers { get; }
         new Group<ColorRecord> Colors { get; }
         new Group<ReverbParameters> ReverbParameters { get; }
+        new Group<VolumetricLighting> VolumetricLightings { get; }
     }
 
     public partial interface ISkyrimModGetter :
@@ -7422,6 +7480,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGroupGetter<ICollisionLayerGetter> CollisionLayers { get; }
         IGroupGetter<IColorRecordGetter> Colors { get; }
         IGroupGetter<IReverbParametersGetter> ReverbParameters { get; }
+        IGroupGetter<IVolumetricLightingGetter> VolumetricLightings { get; }
 
         #region Mutagen
         SkyrimRelease SkyrimRelease { get; }
@@ -8037,6 +8096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         CollisionLayers = 110,
         Colors = 111,
         ReverbParameters = 112,
+        VolumetricLightings = 113,
     }
     #endregion
 
@@ -8054,9 +8114,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "9dcb1a8f-db0a-44bd-9a30-9427a9350e7a";
 
-        public const ushort AdditionalFieldCount = 113;
+        public const ushort AdditionalFieldCount = 114;
 
-        public const ushort FieldCount = 113;
+        public const ushort FieldCount = 114;
 
         public static readonly Type MaskType = typeof(SkyrimMod.Mask<>);
 
@@ -8312,6 +8372,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)SkyrimMod_FieldIndex.Colors;
                 case "REVERBPARAMETERS":
                     return (ushort)SkyrimMod_FieldIndex.ReverbParameters;
+                case "VOLUMETRICLIGHTINGS":
+                    return (ushort)SkyrimMod_FieldIndex.VolumetricLightings;
                 default:
                     return null;
             }
@@ -8435,6 +8497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.CollisionLayers:
                 case SkyrimMod_FieldIndex.Colors:
                 case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8559,6 +8622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.CollisionLayers:
                 case SkyrimMod_FieldIndex.Colors:
                 case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8683,6 +8747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.CollisionLayers:
                 case SkyrimMod_FieldIndex.Colors:
                 case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -8920,6 +8985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Colors";
                 case SkyrimMod_FieldIndex.ReverbParameters:
                     return "ReverbParameters";
+                case SkyrimMod_FieldIndex.VolumetricLightings:
+                    return "VolumetricLightings";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -9043,6 +9110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.CollisionLayers:
                 case SkyrimMod_FieldIndex.Colors:
                 case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -9168,6 +9236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case SkyrimMod_FieldIndex.CollisionLayers:
                 case SkyrimMod_FieldIndex.Colors:
                 case SkyrimMod_FieldIndex.ReverbParameters:
+                case SkyrimMod_FieldIndex.VolumetricLightings:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -9405,6 +9474,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Group<ColorRecord>);
                 case SkyrimMod_FieldIndex.ReverbParameters:
                     return typeof(Group<ReverbParameters>);
+                case SkyrimMod_FieldIndex.VolumetricLightings:
+                    return typeof(Group<VolumetricLighting>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -9565,6 +9636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CollisionLayers.Clear();
             item.Colors.Clear();
             item.ReverbParameters.Clear();
+            item.VolumetricLightings.Clear();
         }
         
         #region Xml Translation
@@ -9834,6 +9906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.CollisionLayers = MaskItemExt.Factory(item.CollisionLayers.GetEqualsMask(rhs.CollisionLayers, include), include);
             ret.Colors = MaskItemExt.Factory(item.Colors.GetEqualsMask(rhs.Colors, include), include);
             ret.ReverbParameters = MaskItemExt.Factory(item.ReverbParameters.GetEqualsMask(rhs.ReverbParameters, include), include);
+            ret.VolumetricLightings = MaskItemExt.Factory(item.VolumetricLightings.GetEqualsMask(rhs.VolumetricLightings, include), include);
         }
         
         public string ToString(
@@ -10332,6 +10405,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.ReverbParameters?.ToString(fg, "ReverbParameters");
             }
+            if (printMask?.VolumetricLightings?.Overall ?? true)
+            {
+                item.VolumetricLightings?.ToString(fg, "VolumetricLightings");
+            }
         }
         
         public bool HasBeenSet(
@@ -10458,6 +10535,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.CollisionLayers = new MaskItem<bool, Group.Mask<bool>?>(true, item.CollisionLayers?.GetHasBeenSetMask());
             mask.Colors = new MaskItem<bool, Group.Mask<bool>?>(true, item.Colors?.GetHasBeenSetMask());
             mask.ReverbParameters = new MaskItem<bool, Group.Mask<bool>?>(true, item.ReverbParameters?.GetHasBeenSetMask());
+            mask.VolumetricLightings = new MaskItem<bool, Group.Mask<bool>?>(true, item.VolumetricLightings?.GetHasBeenSetMask());
         }
         
         #region Equals and Hash
@@ -10580,6 +10658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!object.Equals(lhs.CollisionLayers, rhs.CollisionLayers)) return false;
             if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
             if (!object.Equals(lhs.ReverbParameters, rhs.ReverbParameters)) return false;
+            if (!object.Equals(lhs.VolumetricLightings, rhs.VolumetricLightings)) return false;
             return true;
         }
         
@@ -10699,6 +10778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.CollisionLayers);
             hash.Add(item.Colors);
             hash.Add(item.ReverbParameters);
+            hash.Add(item.VolumetricLightings);
             return hash.ToHashCode();
         }
         
@@ -11275,6 +11355,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
                     return obj.ReverbParameters.RecordCache;
+                case "VolumetricLighting":
+                case "IVolumetricLightingGetter":
+                case "IVolumetricLighting":
+                case "IVolumetricLightingInternal":
+                    return obj.VolumetricLightings.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -11295,7 +11380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item,
                 new MutagenWriter(stream, bundle),
                 modKey);
-            Stream[] outputStreams = new Stream[112];
+            Stream[] outputStreams = new Stream[113];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, gameConstants, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, gameConstants, outputStreams, param.StringsWriter));
@@ -11409,6 +11494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, gameConstants, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, gameConstants, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, masterRefs, 112, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -12244,6 +12330,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+            if (obj.VolumetricLightings is ILinkedFormKeyContainer VolumetricLightingslinkCont)
+            {
+                foreach (var item in VolumetricLightingslinkCont.LinkFormKeys)
+                {
+                    yield return item;
+                }
+            }
             yield break;
         }
         
@@ -12695,6 +12788,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 yield return item;
             }
             foreach (var item in obj.ReverbParameters.EnumerateMajorRecords())
+            {
+                yield return item;
+            }
+            foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -13721,6 +13818,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
                     foreach (var item in obj.ReverbParameters.EnumerateMajorRecords(type))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                case "VolumetricLighting":
+                case "IVolumetricLightingGetter":
+                case "IVolumetricLighting":
+                case "IVolumetricLightingInternal":
+                    foreach (var item in obj.VolumetricLightings.EnumerateMajorRecords(type))
                     {
                         yield return item;
                     }
@@ -16473,6 +16579,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
+            if ((copyMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VolumetricLightings) ?? true))
+            {
+                errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VolumetricLightings);
+                try
+                {
+                    item.VolumetricLightings.DeepCopyIn(
+                        rhs: rhs.VolumetricLightings,
+                        errorMask: errorMask,
+                        copyMask: copyMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VolumetricLightings));
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
         }
         
         #endregion
@@ -17804,6 +17930,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)SkyrimMod_FieldIndex.ReverbParameters,
                     errorMask: errorMask,
                     translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.ReverbParameters));
+            }
+            if ((translationMask?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VolumetricLightings) ?? true))
+            {
+                var VolumetricLightingsItem = item.VolumetricLightings;
+                ((GroupXmlWriteTranslation)((IXmlItem)VolumetricLightingsItem).XmlWriteTranslator).Write<IVolumetricLightingGetter>(
+                    item: VolumetricLightingsItem,
+                    node: node,
+                    name: nameof(item.VolumetricLightings),
+                    fieldIndex: (int)SkyrimMod_FieldIndex.VolumetricLightings,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)SkyrimMod_FieldIndex.VolumetricLightings));
             }
         }
 
@@ -20020,6 +20157,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "VolumetricLightings":
+                    errorMask?.PushIndex((int)SkyrimMod_FieldIndex.VolumetricLightings);
+                    try
+                    {
+                        item.VolumetricLightings.CopyInFromXml<VolumetricLighting>(
+                            node: node,
+                            translationMask: translationMask,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -20301,6 +20457,7 @@ namespace Mutagen.Bethesda.Skyrim
         public bool CollisionLayers;
         public bool Colors;
         public bool ReverbParameters;
+        public bool VolumetricLightings;
         public GroupMask()
         {
         }
@@ -20418,6 +20575,7 @@ namespace Mutagen.Bethesda.Skyrim
             CollisionLayers = defaultValue;
             Colors = defaultValue;
             ReverbParameters = defaultValue;
+            VolumetricLightings = defaultValue;
         }
     }
 
@@ -21706,6 +21864,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)ReverbParametersItem).BinaryWriteTranslator).Write<IReverbParametersGetter>(
                         item: ReverbParametersItem,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter);
+                }
+            }
+            if (importMask?.VolumetricLightings ?? true)
+            {
+                var VolumetricLightingsItem = item.VolumetricLightings;
+                if (VolumetricLightingsItem.RecordCache.Count > 0)
+                {
+                    ((GroupBinaryWriteTranslation)((IBinaryItem)VolumetricLightingsItem).BinaryWriteTranslator).Write<IVolumetricLightingGetter>(
+                        item: VolumetricLightingsItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -23346,6 +23515,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     return (int)SkyrimMod_FieldIndex.ReverbParameters;
                 }
+                case RecordTypeInts.VOLI:
+                {
+                    if (importMask?.VolumetricLightings ?? true)
+                    {
+                        item.VolumetricLightings.CopyInFromBinary(
+                            frame: frame,
+                            recordTypeConverter: null);
+                    }
+                    else
+                    {
+                        frame.Position += contentLength;
+                    }
+                    return (int)SkyrimMod_FieldIndex.VolumetricLightings;
+                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -24080,6 +24263,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGroupGetter<IReverbParametersGetter>? _ReverbParameters => _ReverbParametersLocation.HasValue ? GroupBinaryOverlay<IReverbParametersGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ReverbParametersLocation!.Value.Min, _ReverbParametersLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IReverbParametersGetter> ReverbParameters => _ReverbParameters ?? new Group<ReverbParameters>(this);
         #endregion
+        #region VolumetricLightings
+        private RangeInt64? _VolumetricLightingsLocation;
+        private IGroupGetter<IVolumetricLightingGetter>? _VolumetricLightings => _VolumetricLightingsLocation.HasValue ? GroupBinaryOverlay<IVolumetricLightingGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _VolumetricLightingsLocation!.Value.Min, _VolumetricLightingsLocation!.Value.Max), _package), _package) : default;
+        public IGroupGetter<IVolumetricLightingGetter> VolumetricLightings => _VolumetricLightings ?? new Group<VolumetricLighting>(this);
+        #endregion
         protected SkyrimModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -24742,6 +24930,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     _ReverbParametersLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)SkyrimMod_FieldIndex.ReverbParameters;
+                }
+                case RecordTypeInts.VOLI:
+                {
+                    _VolumetricLightingsLocation = new RangeInt64((stream.Position - offset), finalPos);
+                    return (int)SkyrimMod_FieldIndex.VolumetricLightings;
                 }
                 default:
                     return default(int?);

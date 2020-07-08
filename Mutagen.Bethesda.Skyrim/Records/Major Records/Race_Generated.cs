@@ -437,6 +437,16 @@ namespace Mutagen.Bethesda.Skyrim
         public GenderedItem<HeadData?>? HeadData { get; set; }
         IGenderedItemGetter<IHeadDataGetter?>? IRaceGetter.HeadData => this.HeadData;
         #endregion
+        #region MorphRace
+        public FormLinkNullable<Race> MorphRace { get; set; } = new FormLinkNullable<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IRaceGetter> IRaceGetter.MorphRace => this.MorphRace;
+        #endregion
+        #region ArmorRace
+        public FormLinkNullable<Race> ArmorRace { get; set; } = new FormLinkNullable<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullable<IRaceGetter> IRaceGetter.ArmorRace => this.ArmorRace;
+        #endregion
         #region DATADataTypeState
         public Race.DATADataType DATADataTypeState { get; set; } = default;
         #endregion
@@ -678,6 +688,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = initialValue;
                 this.BaseMovementDefaultSprint = initialValue;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(initialValue, default);
+                this.MorphRace = initialValue;
+                this.ArmorRace = initialValue;
                 this.DATADataTypeState = initialValue;
             }
 
@@ -757,6 +769,8 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem BaseMovementDefaultSneak,
                 TItem BaseMovementDefaultSprint,
                 TItem HeadData,
+                TItem MorphRace,
+                TItem ArmorRace,
                 TItem DATADataTypeState)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -835,6 +849,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = BaseMovementDefaultSneak;
                 this.BaseMovementDefaultSprint = BaseMovementDefaultSprint;
                 this.HeadData = new MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>(HeadData, default);
+                this.MorphRace = MorphRace;
+                this.ArmorRace = ArmorRace;
                 this.DATADataTypeState = DATADataTypeState;
             }
 
@@ -916,6 +932,8 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem BaseMovementDefaultSneak;
             public TItem BaseMovementDefaultSprint;
             public MaskItem<TItem, GenderedItem<MaskItem<TItem, HeadData.Mask<TItem>?>?>?>? HeadData;
+            public TItem MorphRace;
+            public TItem ArmorRace;
             public TItem DATADataTypeState;
             #endregion
 
@@ -999,6 +1017,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.BaseMovementDefaultSneak, rhs.BaseMovementDefaultSneak)) return false;
                 if (!object.Equals(this.BaseMovementDefaultSprint, rhs.BaseMovementDefaultSprint)) return false;
                 if (!object.Equals(this.HeadData, rhs.HeadData)) return false;
+                if (!object.Equals(this.MorphRace, rhs.MorphRace)) return false;
+                if (!object.Equals(this.ArmorRace, rhs.ArmorRace)) return false;
                 if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
                 return true;
             }
@@ -1074,6 +1094,8 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.BaseMovementDefaultSneak);
                 hash.Add(this.BaseMovementDefaultSprint);
                 hash.Add(this.HeadData);
+                hash.Add(this.MorphRace);
+                hash.Add(this.ArmorRace);
                 hash.Add(this.DATADataTypeState);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -1318,6 +1340,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!GenderedItem.AllMask(
                     this.HeadData,
                     eval: eval)) return false;
+                if (!eval(this.MorphRace)) return false;
+                if (!eval(this.ArmorRace)) return false;
                 if (!eval(this.DATADataTypeState)) return false;
                 return true;
             }
@@ -1560,6 +1584,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (GenderedItem.AnyMask(
                     this.HeadData,
                     eval: eval)) return true;
+                if (eval(this.MorphRace)) return true;
+                if (eval(this.ArmorRace)) return true;
                 if (eval(this.DATADataTypeState)) return true;
                 return false;
             }
@@ -1809,6 +1835,8 @@ namespace Mutagen.Bethesda.Skyrim
                     this.HeadData,
                     eval,
                     (m, e) => m?.Translate(e));
+                obj.MorphRace = eval(this.MorphRace);
+                obj.ArmorRace = eval(this.ArmorRace);
                 obj.DATADataTypeState = eval(this.DATADataTypeState);
             }
             #endregion
@@ -2369,6 +2397,14 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendLine($"HeadData => {HeadData}");
                     }
+                    if (printMask?.MorphRace ?? true)
+                    {
+                        fg.AppendItem(MorphRace, "MorphRace");
+                    }
+                    if (printMask?.ArmorRace ?? true)
+                    {
+                        fg.AppendItem(ArmorRace, "ArmorRace");
+                    }
                     if (printMask?.DATADataTypeState ?? true)
                     {
                         fg.AppendItem(DATADataTypeState, "DATADataTypeState");
@@ -2454,6 +2490,8 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? BaseMovementDefaultSneak;
             public Exception? BaseMovementDefaultSprint;
             public MaskItem<Exception?, GenderedItem<Exception?>?>? HeadData;
+            public Exception? MorphRace;
+            public Exception? ArmorRace;
             public Exception? DATADataTypeState;
             #endregion
 
@@ -2601,6 +2639,10 @@ namespace Mutagen.Bethesda.Skyrim
                         return BaseMovementDefaultSprint;
                     case Race_FieldIndex.HeadData:
                         return HeadData;
+                    case Race_FieldIndex.MorphRace:
+                        return MorphRace;
+                    case Race_FieldIndex.ArmorRace:
+                        return ArmorRace;
                     case Race_FieldIndex.DATADataTypeState:
                         return DATADataTypeState;
                     default:
@@ -2819,6 +2861,12 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case Race_FieldIndex.HeadData:
                         this.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ex, null);
+                        break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = ex;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = ex;
                         break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = ex;
@@ -3041,6 +3089,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case Race_FieldIndex.HeadData:
                         this.HeadData = (MaskItem<Exception?, GenderedItem<Exception?>?>?)obj;
                         break;
+                    case Race_FieldIndex.MorphRace:
+                        this.MorphRace = (Exception?)obj;
+                        break;
+                    case Race_FieldIndex.ArmorRace:
+                        this.ArmorRace = (Exception?)obj;
+                        break;
                     case Race_FieldIndex.DATADataTypeState:
                         this.DATADataTypeState = (Exception?)obj;
                         break;
@@ -3122,6 +3176,8 @@ namespace Mutagen.Bethesda.Skyrim
                 if (BaseMovementDefaultSneak != null) return true;
                 if (BaseMovementDefaultSprint != null) return true;
                 if (HeadData != null) return true;
+                if (MorphRace != null) return true;
+                if (ArmorRace != null) return true;
                 if (DATADataTypeState != null) return true;
                 return false;
             }
@@ -3512,6 +3568,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     fg.AppendLine($"HeadData => {HeadData}");
                 }
+                fg.AppendItem(MorphRace, "MorphRace");
+                fg.AppendItem(ArmorRace, "ArmorRace");
                 fg.AppendItem(DATADataTypeState, "DATADataTypeState");
             }
             #endregion
@@ -3590,6 +3648,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.BaseMovementDefaultSneak = this.BaseMovementDefaultSneak.Combine(rhs.BaseMovementDefaultSneak);
                 ret.BaseMovementDefaultSprint = this.BaseMovementDefaultSprint.Combine(rhs.BaseMovementDefaultSprint);
                 ret.HeadData = new MaskItem<Exception?, GenderedItem<Exception?>?>(ExceptionExt.Combine(this.HeadData?.Overall, rhs.HeadData?.Overall), GenderedItem.Combine(this.HeadData?.Specific, rhs.HeadData?.Specific));
+                ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
+                ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
                 return ret;
             }
@@ -3682,6 +3742,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool BaseMovementDefaultSneak;
             public bool BaseMovementDefaultSprint;
             public MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?> HeadData;
+            public bool MorphRace;
+            public bool ArmorRace;
             public bool DATADataTypeState;
             #endregion
 
@@ -3758,6 +3820,8 @@ namespace Mutagen.Bethesda.Skyrim
                 this.BaseMovementDefaultSneak = defaultOn;
                 this.BaseMovementDefaultSprint = defaultOn;
                 this.HeadData = new MaskItem<bool, GenderedItem<HeadData.TranslationMask?>?>(defaultOn, default);
+                this.MorphRace = defaultOn;
+                this.ArmorRace = defaultOn;
                 this.DATADataTypeState = defaultOn;
             }
 
@@ -3835,6 +3899,8 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((BaseMovementDefaultSneak, null));
                 ret.Add((BaseMovementDefaultSprint, null));
                 ret.Add((HeadData?.Overall ?? true, null));
+                ret.Add((MorphRace, null));
+                ret.Add((ArmorRace, null));
                 ret.Add((DATADataTypeState, null));
             }
         }
@@ -4017,6 +4083,8 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<MovementType> BaseMovementDefaultSneak { get; set; }
         new FormLinkNullable<MovementType> BaseMovementDefaultSprint { get; set; }
         new GenderedItem<HeadData?>? HeadData { get; set; }
+        new FormLinkNullable<Race> MorphRace { get; set; }
+        new FormLinkNullable<Race> ArmorRace { get; set; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
@@ -4122,6 +4190,8 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSneak { get; }
         IFormLinkNullable<IMovementTypeGetter> BaseMovementDefaultSprint { get; }
         IGenderedItemGetter<IHeadDataGetter?>? HeadData { get; }
+        IFormLinkNullable<IRaceGetter> MorphRace { get; }
+        IFormLinkNullable<IRaceGetter> ArmorRace { get; }
         Race.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -4496,7 +4566,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         BaseMovementDefaultSneak = 72,
         BaseMovementDefaultSprint = 73,
         HeadData = 74,
-        DATADataTypeState = 75,
+        MorphRace = 75,
+        ArmorRace = 76,
+        DATADataTypeState = 77,
     }
     #endregion
 
@@ -4514,9 +4586,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "54b1dfac-1494-41b6-b6d3-653bc47987eb";
 
-        public const ushort AdditionalFieldCount = 70;
+        public const ushort AdditionalFieldCount = 72;
 
-        public const ushort FieldCount = 76;
+        public const ushort FieldCount = 78;
 
         public static readonly Type MaskType = typeof(Race.Mask<>);
 
@@ -4684,6 +4756,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)Race_FieldIndex.BaseMovementDefaultSprint;
                 case "HEADDATA":
                     return (ushort)Race_FieldIndex.HeadData;
+                case "MORPHRACE":
+                    return (ushort)Race_FieldIndex.MorphRace;
+                case "ARMORRACE":
+                    return (ushort)Race_FieldIndex.ArmorRace;
                 case "DATADATATYPESTATE":
                     return (ushort)Race_FieldIndex.DATADataTypeState;
                 default:
@@ -4766,6 +4842,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -4848,6 +4926,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultFly:
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -4929,6 +5009,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5079,6 +5161,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "BaseMovementDefaultSprint";
                 case Race_FieldIndex.HeadData:
                     return "HeadData";
+                case Race_FieldIndex.MorphRace:
+                    return "MorphRace";
+                case Race_FieldIndex.ArmorRace:
+                    return "ArmorRace";
                 case Race_FieldIndex.DATADataTypeState:
                     return "DATADataTypeState";
                 default:
@@ -5160,6 +5246,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5241,6 +5329,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.BaseMovementDefaultSneak:
                 case Race_FieldIndex.BaseMovementDefaultSprint:
                 case Race_FieldIndex.HeadData:
+                case Race_FieldIndex.MorphRace:
+                case Race_FieldIndex.ArmorRace:
                 case Race_FieldIndex.DATADataTypeState:
                     return false;
                 default:
@@ -5391,6 +5481,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(FormLinkNullable<MovementType>);
                 case Race_FieldIndex.HeadData:
                     return typeof(GenderedItem<HeadData?>);
+                case Race_FieldIndex.MorphRace:
+                    return typeof(FormLinkNullable<Race>);
+                case Race_FieldIndex.ArmorRace:
+                    return typeof(FormLinkNullable<Race>);
                 case Race_FieldIndex.DATADataTypeState:
                     return typeof(Race.DATADataType);
                 default:
@@ -5533,6 +5627,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BaseMovementDefaultSneak = FormLinkNullable<MovementType>.Null;
             item.BaseMovementDefaultSprint = FormLinkNullable<MovementType>.Null;
             item.HeadData = null;
+            item.MorphRace = FormLinkNullable<Race>.Null;
+            item.ArmorRace = FormLinkNullable<Race>.Null;
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -5828,6 +5924,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs: rhs.HeadData,
                 maskGetter: (l, r, i) => EqualsMaskHelper.EqualsHelper(l, r, (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl), i),
                 include: include);
+            ret.MorphRace = object.Equals(item.MorphRace, rhs.MorphRace);
+            ret.ArmorRace = object.Equals(item.ArmorRace, rhs.ArmorRace);
             ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
             base.FillEqualsMask(item, rhs, ret, include);
         }
@@ -6341,6 +6439,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 HeadDataItem?.ToString(fg, "HeadData");
             }
+            if ((printMask?.MorphRace ?? true)
+                && item.MorphRace.TryGet(out var MorphRaceItem))
+            {
+                fg.AppendItem(MorphRaceItem, "MorphRace");
+            }
+            if ((printMask?.ArmorRace ?? true)
+                && item.ArmorRace.TryGet(out var ArmorRaceItem))
+            {
+                fg.AppendItem(ArmorRaceItem, "ArmorRace");
+            }
             if (printMask?.DATADataTypeState ?? true)
             {
                 fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
@@ -6384,6 +6492,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.BaseMovementDefaultSneak.HasValue && checkMask.BaseMovementDefaultSneak.Value != (item.BaseMovementDefaultSneak.FormKey != null)) return false;
             if (checkMask.BaseMovementDefaultSprint.HasValue && checkMask.BaseMovementDefaultSprint.Value != (item.BaseMovementDefaultSprint.FormKey != null)) return false;
             if (checkMask.HeadData?.Overall ?? false) return false;
+            if (checkMask.MorphRace.HasValue && checkMask.MorphRace.Value != (item.MorphRace.FormKey != null)) return false;
+            if (checkMask.ArmorRace.HasValue && checkMask.ArmorRace.Value != (item.ArmorRace.FormKey != null)) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -6473,6 +6583,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.HeadData = GenderedItem.HasBeenSetMaskHelper(
                 item.HeadData,
                 (i) => i?.GetHasBeenSetMask());
+            mask.MorphRace = (item.MorphRace.FormKey != null);
+            mask.ArmorRace = (item.ArmorRace.FormKey != null);
             mask.DATADataTypeState = true;
             base.FillHasBeenSetMask(
                 item: item,
@@ -6594,6 +6706,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
             if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
             if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
+            if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
             return true;
         }
@@ -6757,6 +6871,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(HashCode.Combine(HeadDataitem.Male, HeadDataitem.Female));
             }
+            if (item.MorphRace.TryGet(out var MorphRaceitem))
+            {
+                hash.Add(MorphRaceitem);
+            }
+            if (item.ArmorRace.TryGet(out var ArmorRaceitem))
+            {
+                hash.Add(ArmorRaceitem);
+            }
             hash.Add(item.DATADataTypeState);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
@@ -6886,6 +7008,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (obj.BaseMovementDefaultSprint.FormKey.TryGet(out var BaseMovementDefaultSprintKey))
             {
                 yield return BaseMovementDefaultSprintKey;
+            }
+            if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
+            {
+                yield return MorphRaceKey;
+            }
+            if (obj.ArmorRace.FormKey.TryGet(out var ArmorRaceKey))
+            {
+                yield return ArmorRaceKey;
             }
             yield break;
         }
@@ -7588,6 +7718,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     female: rhsHeadDataitem.Female?.DeepCopy(
                         errorMask: errorMask,
                         default(TranslationCrystal)));
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                item.MorphRace = rhs.MorphRace.FormKey;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                item.ArmorRace = rhs.ArmorRace.FormKey;
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -8643,6 +8781,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             translationMask: translationMask);
                     }
                 }
+            }
+            if ((item.MorphRace.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.MorphRace),
+                    item: item.MorphRace.FormKey,
+                    fieldIndex: (int)Race_FieldIndex.MorphRace,
+                    errorMask: errorMask);
+            }
+            if ((item.ArmorRace.FormKey != null)
+                && (translationMask?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                FormKeyXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ArmorRace),
+                    item: item.ArmorRace.FormKey,
+                    fieldIndex: (int)Race_FieldIndex.ArmorRace,
+                    errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -10113,6 +10271,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
+                case "MorphRace":
+                    errorMask?.PushIndex((int)Race_FieldIndex.MorphRace);
+                    try
+                    {
+                        item.MorphRace = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ArmorRace":
+                    errorMask?.PushIndex((int)Race_FieldIndex.ArmorRace);
+                    try
+                    {
+                        item.ArmorRace = FormKeyXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "DATADataTypeState":
                     errorMask?.PushIndex((int)Race_FieldIndex.DATADataTypeState);
                     try
@@ -10716,6 +10910,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MorphRace,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.ArmorRace,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
         }
 
         public void Write(
@@ -11203,6 +11405,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: HeadData.TryCreateFromBinary);
                     return (int)Race_FieldIndex.HeadData;
                 }
+                case RecordTypeInts.NAM8:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MorphRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.ArmorRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        defaultVal: FormKey.Null);
+                    return (int)Race_FieldIndex.ArmorRace;
+                }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
@@ -11677,6 +11895,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private IGenderedItemGetter<IHeadDataGetter?>? _HeadDataOverlay;
         public IGenderedItemGetter<IHeadDataGetter?>? HeadData => _HeadDataOverlay;
         #endregion
+        #region MorphRace
+        private int? _MorphRaceLocation;
+        public bool MorphRace_IsSet => _MorphRaceLocation.HasValue;
+        public IFormLinkNullable<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
+        #region ArmorRace
+        private int? _ArmorRaceLocation;
+        public bool ArmorRace_IsSet => _ArmorRaceLocation.HasValue;
+        public IFormLinkNullable<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -12045,6 +12273,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         creator: (s, p, r) => HeadDataBinaryOverlay.HeadDataFactory(s, p, r),
                         femaleRecordConverter: Race_Registration.HeadDataFemaleConverter);
                     return (int)Race_FieldIndex.HeadData;
+                }
+                case RecordTypeInts.NAM8:
+                {
+                    _MorphRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.MorphRace;
+                }
+                case RecordTypeInts.RNAM:
+                {
+                    _ArmorRaceLocation = (stream.Position - offset);
+                    return (int)Race_FieldIndex.ArmorRace;
                 }
                 default:
                     return base.FillRecordType(

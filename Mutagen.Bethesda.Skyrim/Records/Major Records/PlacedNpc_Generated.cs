@@ -246,14 +246,16 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Single? IPlacedNpcGetter.Scale => this.Scale;
         #endregion
-        #region Position
-        public P3Float Position { get; set; } = default;
-        #endregion
-        #region Rotation
-        public P3Float Rotation { get; set; } = default;
-        #endregion
-        #region DATADataTypeState
-        public PlacedNpc.DATADataType DATADataTypeState { get; set; } = default;
+        #region Placement
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Placement? _Placement;
+        public Placement? Placement
+        {
+            get => _Placement;
+            set => _Placement = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IPlacementGetter? IPlacedNpcGetter.Placement => this.Placement;
         #endregion
 
         #region To String
@@ -451,9 +453,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MultiboundReference = initialValue;
                 this.IgnoredBySandbox2 = initialValue;
                 this.Scale = initialValue;
-                this.Position = initialValue;
-                this.Rotation = initialValue;
-                this.DATADataTypeState = initialValue;
+                this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(initialValue, new Placement.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -490,9 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem MultiboundReference,
                 TItem IgnoredBySandbox2,
                 TItem Scale,
-                TItem Position,
-                TItem Rotation,
-                TItem DATADataTypeState)
+                TItem Placement)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
                 FormKey: FormKey,
@@ -528,9 +526,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MultiboundReference = MultiboundReference;
                 this.IgnoredBySandbox2 = IgnoredBySandbox2;
                 this.Scale = Scale;
-                this.Position = Position;
-                this.Rotation = Rotation;
-                this.DATADataTypeState = DATADataTypeState;
+                this.Placement = new MaskItem<TItem, Placement.Mask<TItem>?>(Placement, new Placement.Mask<TItem>(Placement));
             }
 
             #pragma warning disable CS8618
@@ -569,9 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem MultiboundReference;
             public TItem IgnoredBySandbox2;
             public TItem Scale;
-            public TItem Position;
-            public TItem Rotation;
-            public TItem DATADataTypeState;
+            public MaskItem<TItem, Placement.Mask<TItem>?>? Placement { get; set; }
             #endregion
 
             #region Equals
@@ -612,9 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.MultiboundReference, rhs.MultiboundReference)) return false;
                 if (!object.Equals(this.IgnoredBySandbox2, rhs.IgnoredBySandbox2)) return false;
                 if (!object.Equals(this.Scale, rhs.Scale)) return false;
-                if (!object.Equals(this.Position, rhs.Position)) return false;
-                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
-                if (!object.Equals(this.DATADataTypeState, rhs.DATADataTypeState)) return false;
+                if (!object.Equals(this.Placement, rhs.Placement)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -647,9 +639,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.MultiboundReference);
                 hash.Add(this.IgnoredBySandbox2);
                 hash.Add(this.Scale);
-                hash.Add(this.Position);
-                hash.Add(this.Rotation);
-                hash.Add(this.DATADataTypeState);
+                hash.Add(this.Placement);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -732,9 +722,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.MultiboundReference)) return false;
                 if (!eval(this.IgnoredBySandbox2)) return false;
                 if (!eval(this.Scale)) return false;
-                if (!eval(this.Position)) return false;
-                if (!eval(this.Rotation)) return false;
-                if (!eval(this.DATADataTypeState)) return false;
+                if (Placement != null)
+                {
+                    if (!eval(this.Placement.Overall)) return false;
+                    if (this.Placement.Specific != null && !this.Placement.Specific.All(eval)) return false;
+                }
                 return true;
             }
             #endregion
@@ -815,9 +807,11 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.MultiboundReference)) return true;
                 if (eval(this.IgnoredBySandbox2)) return true;
                 if (eval(this.Scale)) return true;
-                if (eval(this.Position)) return true;
-                if (eval(this.Rotation)) return true;
-                if (eval(this.DATADataTypeState)) return true;
+                if (Placement != null)
+                {
+                    if (eval(this.Placement.Overall)) return true;
+                    if (this.Placement.Specific != null && this.Placement.Specific.Any(eval)) return true;
+                }
                 return false;
             }
             #endregion
@@ -887,9 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.MultiboundReference = eval(this.MultiboundReference);
                 obj.IgnoredBySandbox2 = eval(this.IgnoredBySandbox2);
                 obj.Scale = eval(this.Scale);
-                obj.Position = eval(this.Position);
-                obj.Rotation = eval(this.Rotation);
-                obj.DATADataTypeState = eval(this.DATADataTypeState);
+                obj.Placement = this.Placement == null ? null : new MaskItem<R, Placement.Mask<R>?>(eval(this.Placement.Overall), this.Placement.Specific?.Translate(eval));
             }
             #endregion
 
@@ -1058,17 +1050,9 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(Scale, "Scale");
                     }
-                    if (printMask?.Position ?? true)
+                    if (printMask?.Placement?.Overall ?? true)
                     {
-                        fg.AppendItem(Position, "Position");
-                    }
-                    if (printMask?.Rotation ?? true)
-                    {
-                        fg.AppendItem(Rotation, "Rotation");
-                    }
-                    if (printMask?.DATADataTypeState ?? true)
-                    {
-                        fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                        Placement?.ToString(fg);
                     }
                 }
                 fg.AppendLine("]");
@@ -1109,9 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? MultiboundReference;
             public Exception? IgnoredBySandbox2;
             public Exception? Scale;
-            public Exception? Position;
-            public Exception? Rotation;
-            public Exception? DATADataTypeState;
+            public MaskItem<Exception?, Placement.ErrorMask?>? Placement;
             #endregion
 
             #region IErrorMask
@@ -1174,12 +1156,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return IgnoredBySandbox2;
                     case PlacedNpc_FieldIndex.Scale:
                         return Scale;
-                    case PlacedNpc_FieldIndex.Position:
-                        return Position;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        return Rotation;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        return DATADataTypeState;
+                    case PlacedNpc_FieldIndex.Placement:
+                        return Placement;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -1271,14 +1249,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = ex;
                         break;
-                    case PlacedNpc_FieldIndex.Position:
-                        this.Position = ex;
-                        break;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        this.Rotation = ex;
-                        break;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = ex;
+                    case PlacedNpc_FieldIndex.Placement:
+                        this.Placement = new MaskItem<Exception?, Placement.ErrorMask?>(ex, null);
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -1372,14 +1344,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case PlacedNpc_FieldIndex.Scale:
                         this.Scale = (Exception?)obj;
                         break;
-                    case PlacedNpc_FieldIndex.Position:
-                        this.Position = (Exception?)obj;
-                        break;
-                    case PlacedNpc_FieldIndex.Rotation:
-                        this.Rotation = (Exception?)obj;
-                        break;
-                    case PlacedNpc_FieldIndex.DATADataTypeState:
-                        this.DATADataTypeState = (Exception?)obj;
+                    case PlacedNpc_FieldIndex.Placement:
+                        this.Placement = (MaskItem<Exception?, Placement.ErrorMask?>?)obj;
                         break;
                     default:
                         base.SetNthMask(index, obj);
@@ -1417,9 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (MultiboundReference != null) return true;
                 if (IgnoredBySandbox2 != null) return true;
                 if (Scale != null) return true;
-                if (Position != null) return true;
-                if (Rotation != null) return true;
-                if (DATADataTypeState != null) return true;
+                if (Placement != null) return true;
                 return false;
             }
             #endregion
@@ -1524,9 +1488,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(MultiboundReference, "MultiboundReference");
                 fg.AppendItem(IgnoredBySandbox2, "IgnoredBySandbox2");
                 fg.AppendItem(Scale, "Scale");
-                fg.AppendItem(Position, "Position");
-                fg.AppendItem(Rotation, "Rotation");
-                fg.AppendItem(DATADataTypeState, "DATADataTypeState");
+                Placement?.ToString(fg);
             }
             #endregion
 
@@ -1562,9 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.MultiboundReference = this.MultiboundReference.Combine(rhs.MultiboundReference);
                 ret.IgnoredBySandbox2 = this.IgnoredBySandbox2.Combine(rhs.IgnoredBySandbox2);
                 ret.Scale = this.Scale.Combine(rhs.Scale);
-                ret.Position = this.Position.Combine(rhs.Position);
-                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
-                ret.DATADataTypeState = this.DATADataTypeState.Combine(rhs.DATADataTypeState);
+                ret.Placement = this.Placement.Combine(rhs.Placement, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1614,9 +1574,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool MultiboundReference;
             public bool IgnoredBySandbox2;
             public bool Scale;
-            public bool Position;
-            public bool Rotation;
-            public bool DATADataTypeState;
+            public MaskItem<bool, Placement.TranslationMask?> Placement;
             #endregion
 
             #region Ctors
@@ -1650,9 +1608,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.MultiboundReference = defaultOn;
                 this.IgnoredBySandbox2 = defaultOn;
                 this.Scale = defaultOn;
-                this.Position = defaultOn;
-                this.Rotation = defaultOn;
-                this.DATADataTypeState = defaultOn;
+                this.Placement = new MaskItem<bool, Placement.TranslationMask?>(defaultOn, null);
             }
 
             #endregion
@@ -1687,9 +1643,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((MultiboundReference, null));
                 ret.Add((IgnoredBySandbox2, null));
                 ret.Add((Scale, null));
-                ret.Add((Position, null));
-                ret.Add((Rotation, null));
-                ret.Add((DATADataTypeState, null));
+                ret.Add((Placement?.Overall ?? true, Placement?.Specific?.GetCrystal()));
             }
         }
         #endregion
@@ -1723,10 +1677,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
-        }
-        [Flags]
-        public enum DATADataType
-        {
         }
         #endregion
 
@@ -1802,7 +1752,6 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedSimple,
         ILocationTargetable,
-        IPositionRotation,
         ILoquiObjectSetter<IPlacedNpcInternal>
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1832,9 +1781,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<PlacedObject> MultiboundReference { get; set; }
         new Boolean IgnoredBySandbox2 { get; set; }
         new Single? Scale { get; set; }
-        new P3Float Position { get; set; }
-        new P3Float Rotation { get; set; }
-        new PlacedNpc.DATADataType DATADataTypeState { get; set; }
+        new Placement? Placement { get; set; }
         #region Mutagen
         new PlacedNpc.MajorFlag MajorFlags { get; set; }
         #endregion
@@ -1855,7 +1802,6 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedGetter,
         IPlacedSimpleGetter,
         ILocationTargetableGetter,
-        IPositionRotationGetter,
         ILoquiObject<IPlacedNpcGetter>,
         IXmlItem,
         ILinkedFormKeyContainer,
@@ -1889,9 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IPlacedObjectGetter> MultiboundReference { get; }
         Boolean IgnoredBySandbox2 { get; }
         Single? Scale { get; }
-        P3Float Position { get; }
-        P3Float Rotation { get; }
-        PlacedNpc.DATADataType DATADataTypeState { get; }
+        IPlacementGetter? Placement { get; }
 
         #region Mutagen
         PlacedNpc.MajorFlag MajorFlags { get; }
@@ -2223,9 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         MultiboundReference = 30,
         IgnoredBySandbox2 = 31,
         Scale = 32,
-        Position = 33,
-        Rotation = 34,
-        DATADataTypeState = 35,
+        Placement = 33,
     }
     #endregion
 
@@ -2243,9 +2185,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "b00383a9-1cbf-4c8c-9cdf-f2e886a6909a";
 
-        public const ushort AdditionalFieldCount = 30;
+        public const ushort AdditionalFieldCount = 28;
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 34;
 
         public static readonly Type MaskType = typeof(PlacedNpc.Mask<>);
 
@@ -2329,12 +2271,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)PlacedNpc_FieldIndex.IgnoredBySandbox2;
                 case "SCALE":
                     return (ushort)PlacedNpc_FieldIndex.Scale;
-                case "POSITION":
-                    return (ushort)PlacedNpc_FieldIndex.Position;
-                case "ROTATION":
-                    return (ushort)PlacedNpc_FieldIndex.Rotation;
-                case "DATADATATYPESTATE":
-                    return (ushort)PlacedNpc_FieldIndex.DATADataTypeState;
+                case "PLACEMENT":
+                    return (ushort)PlacedNpc_FieldIndex.Placement;
                 default:
                     return null;
             }
@@ -2373,9 +2311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.MultiboundReference:
                 case PlacedNpc_FieldIndex.IgnoredBySandbox2:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2394,6 +2330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.LinkedReferenceColor:
                 case PlacedNpc_FieldIndex.EnableParent:
                 case PlacedNpc_FieldIndex.Ownership:
+                case PlacedNpc_FieldIndex.Placement:
                     return true;
                 case PlacedNpc_FieldIndex.Base:
                 case PlacedNpc_FieldIndex.EncounterZone:
@@ -2415,9 +2352,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.MultiboundReference:
                 case PlacedNpc_FieldIndex.IgnoredBySandbox2:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsLoqui(index);
@@ -2456,9 +2390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.MultiboundReference:
                 case PlacedNpc_FieldIndex.IgnoredBySandbox2:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.GetNthIsSingleton(index);
@@ -2524,12 +2456,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "IgnoredBySandbox2";
                 case PlacedNpc_FieldIndex.Scale:
                     return "Scale";
-                case PlacedNpc_FieldIndex.Position:
-                    return "Position";
-                case PlacedNpc_FieldIndex.Rotation:
-                    return "Rotation";
-                case PlacedNpc_FieldIndex.DATADataTypeState:
-                    return "DATADataTypeState";
+                case PlacedNpc_FieldIndex.Placement:
+                    return "Placement";
                 default:
                     return SkyrimMajorRecord_Registration.GetNthName(index);
             }
@@ -2567,9 +2495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.MultiboundReference:
                 case PlacedNpc_FieldIndex.IgnoredBySandbox2:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsNthDerivative(index);
@@ -2608,9 +2534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case PlacedNpc_FieldIndex.MultiboundReference:
                 case PlacedNpc_FieldIndex.IgnoredBySandbox2:
                 case PlacedNpc_FieldIndex.Scale:
-                case PlacedNpc_FieldIndex.Position:
-                case PlacedNpc_FieldIndex.Rotation:
-                case PlacedNpc_FieldIndex.DATADataTypeState:
+                case PlacedNpc_FieldIndex.Placement:
                     return false;
                 default:
                     return SkyrimMajorRecord_Registration.IsProtected(index);
@@ -2676,12 +2600,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(Boolean);
                 case PlacedNpc_FieldIndex.Scale:
                     return typeof(Single);
-                case PlacedNpc_FieldIndex.Position:
-                    return typeof(P3Float);
-                case PlacedNpc_FieldIndex.Rotation:
-                    return typeof(P3Float);
-                case PlacedNpc_FieldIndex.DATADataTypeState:
-                    return typeof(PlacedNpc.DATADataType);
+                case PlacedNpc_FieldIndex.Placement:
+                    return typeof(Placement);
                 default:
                     return SkyrimMajorRecord_Registration.GetNthType(index);
             }
@@ -2758,9 +2678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MultiboundReference = FormLinkNullable<PlacedObject>.Null;
             item.IgnoredBySandbox2 = default;
             item.Scale = default;
-            item.Position = default;
-            item.Rotation = default;
-            item.DATADataTypeState = default;
+            item.Placement = null;
             base.Clear(item);
         }
         
@@ -2975,9 +2893,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.MultiboundReference = object.Equals(item.MultiboundReference, rhs.MultiboundReference);
             ret.IgnoredBySandbox2 = item.IgnoredBySandbox2 == rhs.IgnoredBySandbox2;
             ret.Scale = item.Scale.EqualsWithin(rhs.Scale);
-            ret.Position = item.Position.Equals(rhs.Position);
-            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
-            ret.DATADataTypeState = item.DATADataTypeState == rhs.DATADataTypeState;
+            ret.Placement = EqualsMaskHelper.EqualsHelper(
+                item.Placement,
+                rhs.Placement,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -3189,17 +3109,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(ScaleItem, "Scale");
             }
-            if (printMask?.Position ?? true)
+            if ((printMask?.Placement?.Overall ?? true)
+                && item.Placement.TryGet(out var PlacementItem))
             {
-                fg.AppendItem(item.Position, "Position");
-            }
-            if (printMask?.Rotation ?? true)
-            {
-                fg.AppendItem(item.Rotation, "Rotation");
-            }
-            if (printMask?.DATADataTypeState ?? true)
-            {
-                fg.AppendItem(item.DATADataTypeState, "DATADataTypeState");
+                PlacementItem?.ToString(fg, "Placement");
             }
         }
         
@@ -3237,6 +3150,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.Emittance.HasValue && checkMask.Emittance.Value != (item.Emittance.FormKey != null)) return false;
             if (checkMask.MultiboundReference.HasValue && checkMask.MultiboundReference.Value != (item.MultiboundReference.FormKey != null)) return false;
             if (checkMask.Scale.HasValue && checkMask.Scale.Value != (item.Scale != null)) return false;
+            if (checkMask.Placement?.Overall.HasValue ?? false && checkMask.Placement.Overall.Value != (item.Placement != null)) return false;
+            if (checkMask.Placement?.Specific != null && (item.Placement == null || !item.Placement.HasBeenSet(checkMask.Placement.Specific))) return false;
             return base.HasBeenSet(
                 item: item,
                 checkMask: checkMask);
@@ -3280,9 +3195,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.MultiboundReference = (item.MultiboundReference.FormKey != null);
             mask.IgnoredBySandbox2 = true;
             mask.Scale = (item.Scale != null);
-            mask.Position = true;
-            mask.Rotation = true;
-            mask.DATADataTypeState = true;
+            var itemPlacement = item.Placement;
+            mask.Placement = new MaskItem<bool, Placement.Mask<bool>?>(itemPlacement != null, itemPlacement?.GetHasBeenSetMask());
             base.FillHasBeenSetMask(
                 item: item,
                 mask: mask);
@@ -3361,9 +3275,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
             if (lhs.IgnoredBySandbox2 != rhs.IgnoredBySandbox2) return false;
             if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
             return true;
         }
         
@@ -3484,9 +3396,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(Scaleitem);
             }
-            hash.Add(item.Position);
-            hash.Add(item.Rotation);
-            hash.Add(item.DATADataTypeState);
+            if (item.Placement.TryGet(out var Placementitem))
+            {
+                hash.Add(Placementitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -3938,17 +3851,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 item.Scale = rhs.Scale;
             }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Placement) ?? true))
             {
-                item.Position = rhs.Position;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
-            {
-                item.Rotation = rhs.Rotation;
-            }
-            if ((copyMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                item.DATADataTypeState = rhs.DATADataTypeState;
+                errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Placement);
+                try
+                {
+                    if(rhs.Placement.TryGet(out var rhsPlacement))
+                    {
+                        item.Placement = rhsPlacement.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Placement));
+                    }
+                    else
+                    {
+                        item.Placement = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
         }
         
@@ -4403,32 +4330,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)PlacedNpc_FieldIndex.Scale,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Position) ?? true))
+            if ((item.Placement != null)
+                && (translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Placement) ?? true))
             {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Position),
-                    item: item.Position,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.Position,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Rotation) ?? true))
-            {
-                P3FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Rotation),
-                    item: item.Rotation,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.Rotation,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DATADataTypeState) ?? true))
-            {
-                EnumXmlTranslation<PlacedNpc.DATADataType>.Instance.Write(
-                    node: node,
-                    name: nameof(item.DATADataTypeState),
-                    item: item.DATADataTypeState,
-                    fieldIndex: (int)PlacedNpc_FieldIndex.DATADataTypeState,
-                    errorMask: errorMask);
+                if (item.Placement.TryGet(out var PlacementItem))
+                {
+                    ((PlacementXmlWriteTranslation)((IXmlItem)PlacementItem).XmlWriteTranslator).Write(
+                        item: PlacementItem,
+                        node: node,
+                        name: nameof(item.Placement),
+                        fieldIndex: (int)PlacedNpc_FieldIndex.Placement,
+                        errorMask: errorMask,
+                        translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Placement));
+                }
             }
         }
 
@@ -5049,49 +4963,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "Position":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Position);
+                case "Placement":
+                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Placement);
                     try
                     {
-                        item.Position = P3FloatXmlTranslation.Instance.Parse(
+                        item.Placement = LoquiXmlTranslation<Placement>.Instance.Parse(
                             node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Rotation":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.Rotation);
-                    try
-                    {
-                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "DATADataTypeState":
-                    errorMask?.PushIndex((int)PlacedNpc_FieldIndex.DATADataTypeState);
-                    try
-                    {
-                        item.DATADataTypeState = EnumXmlTranslation<PlacedNpc.DATADataType>.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            translationMask: translationMask?.GetSubCrystal((int)PlacedNpc_FieldIndex.Placement));
                     }
                     catch (Exception ex)
                     when (errorMask != null)
@@ -5188,15 +5067,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         IBinaryWriteTranslator
     {
         public new readonly static PlacedNpcBinaryWriteTranslation Instance = new PlacedNpcBinaryWriteTranslation();
-
-        public static void WriteEmbedded(
-            IPlacedNpcGetter item,
-            MutagenWriter writer)
-        {
-            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-        }
 
         public static void WriteRecordTypes(
             IPlacedNpcGetter item,
@@ -5347,14 +5217,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Scale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XSCL));
-            using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
+            if (item.Placement.TryGet(out var PlacementItem))
             {
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                ((PlacementBinaryWriteTranslation)((IBinaryItem)PlacementItem).BinaryWriteTranslator).Write(
+                    item: PlacementItem,
                     writer: writer,
-                    item: item.Position);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Rotation);
+                    recordTypeConverter: recordTypeConverter);
             }
         }
 
@@ -5368,7 +5236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ACHR),
                 type: Mutagen.Bethesda.Binary.ObjectType.Record))
             {
-                WriteEmbedded(
+                SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                     item: item,
                     writer: writer);
                 writer.MetaData.FormVersion = item.FormVersion;
@@ -5627,11 +5495,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    return (int)PlacedNpc_FieldIndex.Rotation;
+                    item.Placement = Mutagen.Bethesda.Skyrim.Placement.CreateFromBinary(frame: frame);
+                    return (int)PlacedNpc_FieldIndex.Placement;
                 }
                 default:
                     return SkyrimMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
@@ -5815,17 +5680,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _ScaleLocation;
         public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
         #endregion
-        private int? _DATALocation;
-        public PlacedNpc.DATADataType DATADataTypeState { get; private set; }
-        #region Position
-        private int _PositionLocation => _DATALocation!.Value;
-        private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
-        #endregion
-        #region Rotation
-        private int _RotationLocation => _DATALocation!.Value + 0xC;
-        private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
+        #region Placement
+        private RangeInt32? _PlacementLocation;
+        public IPlacementGetter? Placement => _PlacementLocation.HasValue ? PlacementBinaryOverlay.PlacementFactory(new OverlayStream(_data.Slice(_PlacementLocation!.Value.Min), _package), _package) : default;
+        public bool Placement_IsSet => _PlacementLocation.HasValue;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6055,8 +5913,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DATA:
                 {
-                    _DATALocation = (stream.Position - offset) + _package.MetaData.Constants.SubConstants.TypeAndLengthLength;
-                    return (int)PlacedNpc_FieldIndex.Rotation;
+                    _PlacementLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)PlacedNpc_FieldIndex.Placement;
                 }
                 default:
                     return base.FillRecordType(

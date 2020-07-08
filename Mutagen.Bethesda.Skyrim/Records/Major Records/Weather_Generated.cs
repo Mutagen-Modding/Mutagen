@@ -9015,7 +9015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            if (writer.MetaData.FormVersion!.Value >= 44)
+            if (writer.MetaData.FormVersion!.Value >= 43)
             {
                 if (item.VolumetricLighting.TryGet(out var VolumetricLightingItem))
                 {
@@ -9345,7 +9345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    if (frame.MetaData.FormVersion!.Value >= 44)
+                    if (frame.MetaData.FormVersion!.Value >= 43)
                     {
                         item.VolumetricLighting = Mutagen.Bethesda.Skyrim.WeatherVolumetricLighting.CreateFromBinary(frame: frame);
                     }

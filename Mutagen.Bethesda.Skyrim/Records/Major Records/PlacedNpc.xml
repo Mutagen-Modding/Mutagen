@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PlacedNpc" recordType="ACHR" baseClass="SkyrimMajorRecord" objType="Record" majorFlag="true" GUID="b00383a9-1cbf-4c8c-9cdf-f2e886a6909a" ID="224">
-    <Interface>IPositionRotation</Interface>
     <Fields>
       <RefDirect name="VirtualMachineAdapter" refName="VirtualMachineAdapter" />
       <FormLink name="Base" refName="Npc" recordType="NAME" />
@@ -36,12 +35,7 @@
       <FormLink name="MultiboundReference" refName="PlacedObject" recordType="XMBR" />
       <Bool name="IgnoredBySandbox2" boolAsMarker="XIBS" />
       <Float name="Scale" recordType="XSCL" />
-      <Data>
-        <Fields>
-          <P3Float name="Position" />
-          <P3Float name="Rotation" />
-        </Fields>
-      </Data>
+      <RefDirect name="Placement" refName="Placement" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>ILinkedReference</LinkInterface>

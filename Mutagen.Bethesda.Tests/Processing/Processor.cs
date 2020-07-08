@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Tests
             // Need to zero out master
             this._Instructions.SetSubstitution(
                 (loc?.Min ?? 0) + stream.Position - 1,
-                0);
+                _NumMasters);
         }
 
         public void ProcessStringTermination(

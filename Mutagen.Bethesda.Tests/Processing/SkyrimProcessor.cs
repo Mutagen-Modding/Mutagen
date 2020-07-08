@@ -35,6 +35,8 @@ namespace Mutagen.Bethesda.Tests
             ProcessShaders(stream, formID, recType, loc);
             ProcessExplosions(stream, formID, recType, loc);
             ProcessImageSpaceAdapters(stream, formID, recType, loc);
+            ProcessLoadScreens(stream, formID, recType, loc);
+            ProcessActivators(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -284,6 +286,39 @@ namespace Mutagen.Bethesda.Tests
                 stream,
                 formID,
                 loc);
+
+            // Reset misnumbered counter
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.TIFC);
+            if (pos != null)
+            {
+                var subHeader = stream.MetaData.Constants.SubrecordFrame(majorFrame.Content.Slice(pos.Value));
+                var count = BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content);
+
+                uint actualCount = 0;
+                var groupFrame = stream.ReadGroupFrame();
+                if (groupFrame.Header.IsGroup)
+                {
+                    int groupPos = 0;
+                    while (groupPos < groupFrame.Content.Length)
+                    {
+                        var majorMeta = stream.MetaData.Constants.MajorRecord(groupFrame.Content.Slice(groupPos));
+                        actualCount++;
+                        groupPos += checked((int)majorMeta.TotalLength);
+                    }
+                }
+
+                if (actualCount != count)
+                {
+                    byte[] b = new byte[4];
+                    BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
+                    _Instructions.SetSubstitution(
+                        loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength,
+                        b);
+                }
+            }
         }
 
         private void ProcessQuests(
@@ -410,8 +445,11 @@ namespace Mutagen.Bethesda.Tests
                 return;
             }
             var stream = new MutagenInterfaceReadStream(
-                new MutagenMemoryReadStream(frame.Content.Slice(vmadPos.Value), new ParsingBundle(GameRelease)),
-                new ParsingBundle(GameRelease));
+                new MutagenMemoryReadStream(frame.HeaderAndContentData, new ParsingBundle(GameRelease)),
+                new ParsingBundle(GameRelease))
+            {
+                Position = vmadPos.Value + frame.Header.HeaderLength
+            };
             stream.Position += Meta.SubConstants.HeaderLength;
             // Skip version
             stream.Position += 2;
@@ -421,7 +459,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 FixVMADScriptIDs(stream, loc, objectFormat);
             }
-            processed = (int)stream.Position;
+            processed = (int)(stream.Position - vmadPos.Value - frame.Header.HeaderLength);
         }
 
         private void FixVMADScriptIDs(IMutagenReadStream stream, RangeInt64 loc, ushort objectFormat)
@@ -923,6 +961,46 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        private void ProcessLoadScreens(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!LoadScreen_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XNAM);
+            if (pos != null)
+            {
+                stream.Position = loc.Min + majorFrame.Header.HeaderLength + pos.Value + stream.MetaData.Constants.SubConstants.HeaderLength;
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+                ProcessZeroFloat(stream);
+            }
+        }
+
+        private void ProcessActivators(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Activator_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            FixVMADFormIDs(
+                majorFrame,
+                loc,
+                out var vmadPos,
+                out var objectFormat,
+                out var processedLen);
+        }
+
         protected override void PreProcessorJobs(IMutagenReadStream stream)
         {
             base.PreProcessorJobs(stream);
@@ -931,10 +1009,10 @@ namespace Mutagen.Bethesda.Tests
 
         public void PerkStringHandler(
             IMutagenReadStream stream,
-            MajorRecordHeader major, 
-            BinaryFileProcessor.Config instr, 
+            MajorRecordHeader major,
+            BinaryFileProcessor.Config instr,
             List<KeyValuePair<uint, uint>> processedStrings,
-            IStringsLookup overlay, 
+            IStringsLookup overlay,
             ref uint newIndex)
         {
             var majorCompletePos = stream.Position + major.ContentLength;

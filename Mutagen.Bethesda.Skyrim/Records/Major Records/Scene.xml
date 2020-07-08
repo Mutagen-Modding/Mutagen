@@ -22,7 +22,7 @@
   </Object>
   <Object name="SceneScriptFragments" baseClass="ScriptFragments" objType="Subrecord" GUID="17cf35cc-e0fd-4a46-ae82-c3f779d2fdcd" ID="466">
     <Fields>
-      <RefList name="PhaseFragments" refName="ScenePhaseFragment" prependCount="2" counterLength="2" />
+      <RefList name="PhaseFragments" refName="ScenePhaseFragment" counterLength="2" />
     </Fields>
   </Object>
   <Object name="ScenePhaseFragment" objType="Subrecord" GUID="85dc02e5-bd8b-4912-bf75-efda4c03ab35" ID="467">

@@ -1780,6 +1780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
+                countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IScriptObjectPropertyGetter subItem, RecordTypeConverter? conv) =>
                 {
                     var Item = subItem;
@@ -1837,6 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
             item.Objects.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
+                    amount: frame.ReadInt32(),
                     frame: frame,
                     transl: ScriptObjectProperty.TryCreateFromBinary));
         }
@@ -1909,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Objects
-        public IReadOnlyList<IScriptObjectPropertyGetter> Objects => BinaryOverlayList<ScriptObjectPropertyBinaryOverlay>.FactoryByLazyParse(_data, _package, (s, p) => ScriptObjectPropertyBinaryOverlay.ScriptObjectPropertyFactory(s, p));
+        public IReadOnlyList<IScriptObjectPropertyGetter> Objects => BinaryOverlayList<ScriptObjectPropertyBinaryOverlay>.FactoryByLazyParse(_data, _package, countLength: 4, (s, p) => ScriptObjectPropertyBinaryOverlay.ScriptObjectPropertyFactory(s, p));
         protected int ObjectsEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1937,7 +1939,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 bytes: stream.RemainingMemory,
                 package: package);
             int offset = stream.Position;
-            ret.ObjectsEndingPos = ret._data.Length;
             stream.Position += ret.ObjectsEndingPos;
             ret.CustomFactoryEnd(
                 stream: stream,

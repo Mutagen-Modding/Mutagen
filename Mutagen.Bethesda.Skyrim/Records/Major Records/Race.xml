@@ -161,6 +161,8 @@
           <RefDirect refName="HeadData" />
         </Fields>
       </Gendered>
+      <FormLink name="MorphRace" refName="Race" recordType="NAM8" />
+      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
     </Fields>
     <LinkInterface>IRelatable</LinkInterface>
   </Object>
@@ -283,8 +285,6 @@
       <FormLink name="DefaultFaceTexture" refName="TextureSet" recordType="DFTM" />
       <RefList name="TintMasks" refName="TintAssets" />
       <RefDirect name="Model" refName="Model" />
-      <FormLink name="MorphRace" refName="Race" recordType="NAM8" />
-      <FormLink name="ArmorRace" refName="Race" recordType="RNAM" />
     </Fields>
   </Object>
   <Object name="HeadPartReference" objType="Subrecord" GUID="d9a4b8da-2a5b-42d5-9cf6-614b7a13bc26" ID="73">

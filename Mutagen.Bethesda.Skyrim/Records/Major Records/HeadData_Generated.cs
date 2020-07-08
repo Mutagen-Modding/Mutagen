@@ -144,16 +144,6 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IModelGetter? IHeadDataGetter.Model => this.Model;
         #endregion
-        #region MorphRace
-        public FormLinkNullable<Race> MorphRace { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRaceGetter> IHeadDataGetter.MorphRace => this.MorphRace;
-        #endregion
-        #region ArmorRace
-        public FormLinkNullable<Race> ArmorRace { get; set; } = new FormLinkNullable<Race>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IFormLinkNullable<IRaceGetter> IHeadDataGetter.ArmorRace => this.ArmorRace;
-        #endregion
 
         #region To String
 
@@ -331,8 +321,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultFaceTexture = initialValue;
                 this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
-                this.MorphRace = initialValue;
-                this.ArmorRace = initialValue;
             }
 
             public Mask(
@@ -343,9 +331,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem FaceDetails,
                 TItem DefaultFaceTexture,
                 TItem TintMasks,
-                TItem Model,
-                TItem MorphRace,
-                TItem ArmorRace)
+                TItem Model)
             {
                 this.HeadParts = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>?>(HeadParts, Enumerable.Empty<MaskItemIndexed<TItem, HeadPartReference.Mask<TItem>?>>());
                 this.AvailableMorphs = new MaskItem<TItem, AvailableMorphs.Mask<TItem>?>(AvailableMorphs, new AvailableMorphs.Mask<TItem>(AvailableMorphs));
@@ -355,8 +341,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultFaceTexture = DefaultFaceTexture;
                 this.TintMasks = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>(TintMasks, Enumerable.Empty<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>());
                 this.Model = new MaskItem<TItem, Model.Mask<TItem>?>(Model, new Model.Mask<TItem>(Model));
-                this.MorphRace = MorphRace;
-                this.ArmorRace = ArmorRace;
             }
 
             #pragma warning disable CS8618
@@ -376,8 +360,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem DefaultFaceTexture;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, TintAssets.Mask<TItem>?>>?>? TintMasks;
             public MaskItem<TItem, Model.Mask<TItem>?>? Model { get; set; }
-            public TItem MorphRace;
-            public TItem ArmorRace;
             #endregion
 
             #region Equals
@@ -398,8 +380,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.DefaultFaceTexture, rhs.DefaultFaceTexture)) return false;
                 if (!object.Equals(this.TintMasks, rhs.TintMasks)) return false;
                 if (!object.Equals(this.Model, rhs.Model)) return false;
-                if (!object.Equals(this.MorphRace, rhs.MorphRace)) return false;
-                if (!object.Equals(this.ArmorRace, rhs.ArmorRace)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -413,8 +393,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.DefaultFaceTexture);
                 hash.Add(this.TintMasks);
                 hash.Add(this.Model);
-                hash.Add(this.MorphRace);
-                hash.Add(this.ArmorRace);
                 return hash.ToHashCode();
             }
 
@@ -491,8 +469,6 @@ namespace Mutagen.Bethesda.Skyrim
                     if (!eval(this.Model.Overall)) return false;
                     if (this.Model.Specific != null && !this.Model.Specific.All(eval)) return false;
                 }
-                if (!eval(this.MorphRace)) return false;
-                if (!eval(this.ArmorRace)) return false;
                 return true;
             }
             #endregion
@@ -568,8 +544,6 @@ namespace Mutagen.Bethesda.Skyrim
                     if (eval(this.Model.Overall)) return true;
                     if (this.Model.Specific != null && this.Model.Specific.Any(eval)) return true;
                 }
-                if (eval(this.MorphRace)) return true;
-                if (eval(this.ArmorRace)) return true;
                 return false;
             }
             #endregion
@@ -659,8 +633,6 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
                 obj.Model = this.Model == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.Model.Overall), this.Model.Specific?.Translate(eval));
-                obj.MorphRace = eval(this.MorphRace);
-                obj.ArmorRace = eval(this.ArmorRace);
             }
             #endregion
 
@@ -810,14 +782,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         Model?.ToString(fg);
                     }
-                    if (printMask?.MorphRace ?? true)
-                    {
-                        fg.AppendItem(MorphRace, "MorphRace");
-                    }
-                    if (printMask?.ArmorRace ?? true)
-                    {
-                        fg.AppendItem(ArmorRace, "ArmorRace");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -851,8 +815,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? DefaultFaceTexture;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintAssets.ErrorMask?>>?>? TintMasks;
             public MaskItem<Exception?, Model.ErrorMask?>? Model;
-            public Exception? MorphRace;
-            public Exception? ArmorRace;
             #endregion
 
             #region IErrorMask
@@ -877,10 +839,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return TintMasks;
                     case HeadData_FieldIndex.Model:
                         return Model;
-                    case HeadData_FieldIndex.MorphRace:
-                        return MorphRace;
-                    case HeadData_FieldIndex.ArmorRace:
-                        return ArmorRace;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -914,12 +872,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case HeadData_FieldIndex.Model:
                         this.Model = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
-                        break;
-                    case HeadData_FieldIndex.MorphRace:
-                        this.MorphRace = ex;
-                        break;
-                    case HeadData_FieldIndex.ArmorRace:
-                        this.ArmorRace = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -955,12 +907,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case HeadData_FieldIndex.Model:
                         this.Model = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
                         break;
-                    case HeadData_FieldIndex.MorphRace:
-                        this.MorphRace = (Exception?)obj;
-                        break;
-                    case HeadData_FieldIndex.ArmorRace:
-                        this.ArmorRace = (Exception?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -977,8 +923,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (DefaultFaceTexture != null) return true;
                 if (TintMasks != null) return true;
                 if (Model != null) return true;
-                if (MorphRace != null) return true;
-                if (ArmorRace != null) return true;
                 return false;
             }
             #endregion
@@ -1126,8 +1070,6 @@ namespace Mutagen.Bethesda.Skyrim
                     fg.AppendLine("]");
                 }
                 Model?.ToString(fg);
-                fg.AppendItem(MorphRace, "MorphRace");
-                fg.AppendItem(ArmorRace, "ArmorRace");
             }
             #endregion
 
@@ -1144,8 +1086,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.DefaultFaceTexture = this.DefaultFaceTexture.Combine(rhs.DefaultFaceTexture);
                 ret.TintMasks = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, TintAssets.ErrorMask?>>?>(ExceptionExt.Combine(this.TintMasks?.Overall, rhs.TintMasks?.Overall), ExceptionExt.Combine(this.TintMasks?.Specific, rhs.TintMasks?.Specific));
                 ret.Model = this.Model.Combine(rhs.Model, (l, r) => l.Combine(r));
-                ret.MorphRace = this.MorphRace.Combine(rhs.MorphRace);
-                ret.ArmorRace = this.ArmorRace.Combine(rhs.ArmorRace);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -1175,8 +1115,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool DefaultFaceTexture;
             public MaskItem<bool, TintAssets.TranslationMask?> TintMasks;
             public MaskItem<bool, Model.TranslationMask?> Model;
-            public bool MorphRace;
-            public bool ArmorRace;
             #endregion
 
             #region Ctors
@@ -1190,8 +1128,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.DefaultFaceTexture = defaultOn;
                 this.TintMasks = new MaskItem<bool, TintAssets.TranslationMask?>(defaultOn, null);
                 this.Model = new MaskItem<bool, Model.TranslationMask?>(defaultOn, null);
-                this.MorphRace = defaultOn;
-                this.ArmorRace = defaultOn;
             }
 
             #endregion
@@ -1215,8 +1151,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((DefaultFaceTexture, null));
                 ret.Add((TintMasks?.Overall ?? true, TintMasks?.Specific?.GetCrystal()));
                 ret.Add((Model?.Overall ?? true, Model?.Specific?.GetCrystal()));
-                ret.Add((MorphRace, null));
-                ret.Add((ArmorRace, null));
             }
         }
         #endregion
@@ -1309,8 +1243,6 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<TextureSet> DefaultFaceTexture { get; set; }
         new IExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
-        new FormLinkNullable<Race> MorphRace { get; set; }
-        new FormLinkNullable<Race> ArmorRace { get; set; }
     }
 
     public partial interface IHeadDataGetter :
@@ -1336,8 +1268,6 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
         IModelGetter? Model { get; }
-        IFormLinkNullable<IRaceGetter> MorphRace { get; }
-        IFormLinkNullable<IRaceGetter> ArmorRace { get; }
 
     }
 
@@ -1663,8 +1593,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         DefaultFaceTexture = 5,
         TintMasks = 6,
         Model = 7,
-        MorphRace = 8,
-        ArmorRace = 9,
     }
     #endregion
 
@@ -1682,9 +1610,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "c0a94c29-c6cd-4b72-b019-b2af3b6b2b34";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 8;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(HeadData.Mask<>);
 
@@ -1730,10 +1658,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)HeadData_FieldIndex.TintMasks;
                 case "MODEL":
                     return (ushort)HeadData_FieldIndex.Model;
-                case "MORPHRACE":
-                    return (ushort)HeadData_FieldIndex.MorphRace;
-                case "ARMORRACE":
-                    return (ushort)HeadData_FieldIndex.ArmorRace;
                 default:
                     return null;
             }
@@ -1753,8 +1677,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.AvailableMorphs:
                 case HeadData_FieldIndex.DefaultFaceTexture:
                 case HeadData_FieldIndex.Model:
-                case HeadData_FieldIndex.MorphRace:
-                case HeadData_FieldIndex.ArmorRace:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1775,8 +1697,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.AvailableHairColors:
                 case HeadData_FieldIndex.FaceDetails:
                 case HeadData_FieldIndex.DefaultFaceTexture:
-                case HeadData_FieldIndex.MorphRace:
-                case HeadData_FieldIndex.ArmorRace:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1796,8 +1716,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.DefaultFaceTexture:
                 case HeadData_FieldIndex.TintMasks:
                 case HeadData_FieldIndex.Model:
-                case HeadData_FieldIndex.MorphRace:
-                case HeadData_FieldIndex.ArmorRace:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1825,10 +1743,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "TintMasks";
                 case HeadData_FieldIndex.Model:
                     return "Model";
-                case HeadData_FieldIndex.MorphRace:
-                    return "MorphRace";
-                case HeadData_FieldIndex.ArmorRace:
-                    return "ArmorRace";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1847,8 +1761,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.DefaultFaceTexture:
                 case HeadData_FieldIndex.TintMasks:
                 case HeadData_FieldIndex.Model:
-                case HeadData_FieldIndex.MorphRace:
-                case HeadData_FieldIndex.ArmorRace:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1868,8 +1780,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case HeadData_FieldIndex.DefaultFaceTexture:
                 case HeadData_FieldIndex.TintMasks:
                 case HeadData_FieldIndex.Model:
-                case HeadData_FieldIndex.MorphRace:
-                case HeadData_FieldIndex.ArmorRace:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1897,10 +1807,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(IExtendedList<TintAssets>);
                 case HeadData_FieldIndex.Model:
                     return typeof(Model);
-                case HeadData_FieldIndex.MorphRace:
-                    return typeof(FormLinkNullable<Race>);
-                case HeadData_FieldIndex.ArmorRace:
-                    return typeof(FormLinkNullable<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1928,9 +1834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         RecordTypes.TINC,
                         RecordTypes.TINV,
                         RecordTypes.TIRS,
-                        RecordTypes.MODL,
-                        RecordTypes.NAM8,
-                        RecordTypes.RNAM
+                        RecordTypes.MODL
                     })
             );
         });
@@ -1984,8 +1888,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.DefaultFaceTexture = FormLinkNullable<TextureSet>.Null;
             item.TintMasks.Clear();
             item.Model = null;
-            item.MorphRace = FormLinkNullable<Race>.Null;
-            item.ArmorRace = FormLinkNullable<Race>.Null;
         }
         
         #region Xml Translation
@@ -2089,8 +1991,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 rhs.Model,
                 (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
                 include);
-            ret.MorphRace = object.Equals(item.MorphRace, rhs.MorphRace);
-            ret.ArmorRace = object.Equals(item.ArmorRace, rhs.ArmorRace);
         }
         
         public string ToString(
@@ -2242,16 +2142,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 ModelItem?.ToString(fg, "Model");
             }
-            if ((printMask?.MorphRace ?? true)
-                && item.MorphRace.TryGet(out var MorphRaceItem))
-            {
-                fg.AppendItem(MorphRaceItem, "MorphRace");
-            }
-            if ((printMask?.ArmorRace ?? true)
-                && item.ArmorRace.TryGet(out var ArmorRaceItem))
-            {
-                fg.AppendItem(ArmorRaceItem, "ArmorRace");
-            }
         }
         
         public bool HasBeenSet(
@@ -2263,8 +2153,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (checkMask.DefaultFaceTexture.HasValue && checkMask.DefaultFaceTexture.Value != (item.DefaultFaceTexture.FormKey != null)) return false;
             if (checkMask.Model?.Overall.HasValue ?? false && checkMask.Model.Overall.Value != (item.Model != null)) return false;
             if (checkMask.Model?.Specific != null && (item.Model == null || !item.Model.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.MorphRace.HasValue && checkMask.MorphRace.Value != (item.MorphRace.FormKey != null)) return false;
-            if (checkMask.ArmorRace.HasValue && checkMask.ArmorRace.Value != (item.ArmorRace.FormKey != null)) return false;
             return true;
         }
         
@@ -2284,8 +2172,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.TintMasks = new MaskItem<bool, IEnumerable<MaskItemIndexed<bool, TintAssets.Mask<bool>?>>?>(true, TintMasksItem.WithIndex().Select((i) => new MaskItemIndexed<bool, TintAssets.Mask<bool>?>(i.Index, true, i.Item.GetHasBeenSetMask())));
             var itemModel = item.Model;
             mask.Model = new MaskItem<bool, Model.Mask<bool>?>(itemModel != null, itemModel?.GetHasBeenSetMask());
-            mask.MorphRace = (item.MorphRace.FormKey != null);
-            mask.ArmorRace = (item.ArmorRace.FormKey != null);
         }
         
         #region Equals and Hash
@@ -2303,8 +2189,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
             if (!lhs.TintMasks.SequenceEqual(rhs.TintMasks)) return false;
             if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
-            if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
             return true;
         }
         
@@ -2327,14 +2211,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (item.Model.TryGet(out var Modelitem))
             {
                 hash.Add(Modelitem);
-            }
-            if (item.MorphRace.TryGet(out var MorphRaceitem))
-            {
-                hash.Add(MorphRaceitem);
-            }
-            if (item.ArmorRace.TryGet(out var ArmorRaceitem))
-            {
-                hash.Add(ArmorRaceitem);
             }
             return hash.ToHashCode();
         }
@@ -2380,14 +2256,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     yield return item;
                 }
-            }
-            if (obj.MorphRace.FormKey.TryGet(out var MorphRaceKey))
-            {
-                yield return MorphRaceKey;
-            }
-            if (obj.ArmorRace.FormKey.TryGet(out var ArmorRaceKey))
-            {
-                yield return ArmorRaceKey;
             }
             yield break;
         }
@@ -2567,14 +2435,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     errorMask?.PopIndex();
                 }
-            }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphRace) ?? true))
-            {
-                item.MorphRace = rhs.MorphRace.FormKey;
-            }
-            if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.ArmorRace) ?? true))
-            {
-                item.ArmorRace = rhs.ArmorRace.FormKey;
             }
         }
         
@@ -2796,26 +2656,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask: errorMask,
                         translationMask: translationMask?.GetSubCrystal((int)HeadData_FieldIndex.Model));
                 }
-            }
-            if ((item.MorphRace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.MorphRace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.MorphRace),
-                    item: item.MorphRace.FormKey,
-                    fieldIndex: (int)HeadData_FieldIndex.MorphRace,
-                    errorMask: errorMask);
-            }
-            if ((item.ArmorRace.FormKey != null)
-                && (translationMask?.GetShouldTranslate((int)HeadData_FieldIndex.ArmorRace) ?? true))
-            {
-                FormKeyXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ArmorRace),
-                    item: item.ArmorRace.FormKey,
-                    fieldIndex: (int)HeadData_FieldIndex.ArmorRace,
-                    errorMask: errorMask);
             }
         }
 
@@ -3119,42 +2959,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "MorphRace":
-                    errorMask?.PushIndex((int)HeadData_FieldIndex.MorphRace);
-                    try
-                    {
-                        item.MorphRace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "ArmorRace":
-                    errorMask?.PushIndex((int)HeadData_FieldIndex.ArmorRace);
-                    try
-                    {
-                        item.ArmorRace = FormKeyXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 default:
                     break;
             }
@@ -3401,14 +3205,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.MorphRace,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM8));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
-                writer: writer,
-                item: item.ArmorRace,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
         }
 
         public void Write(
@@ -3539,24 +3335,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                     return (int)HeadData_FieldIndex.Model;
                 }
-                case RecordTypeInts.NAM8:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MorphRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return (int)HeadData_FieldIndex.MorphRace;
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return ParseResult.Stop;
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ArmorRace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
-                    return (int)HeadData_FieldIndex.ArmorRace;
-                }
                 default:
                     return ParseResult.Stop;
             }
@@ -3661,16 +3439,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
         public IModelGetter? Model { get; private set; }
-        #region MorphRace
-        private int? _MorphRaceLocation;
-        public bool MorphRace_IsSet => _MorphRaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> MorphRace => _MorphRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MorphRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
-        #endregion
-        #region ArmorRace
-        private int? _ArmorRaceLocation;
-        public bool ArmorRace_IsSet => _ArmorRaceLocation.HasValue;
-        public IFormLinkNullable<IRaceGetter> ArmorRace => _ArmorRaceLocation.HasValue ? new FormLinkNullable<IRaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ArmorRaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IRaceGetter>.Null;
-        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -3823,18 +3591,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         package: _package,
                         recordTypeConverter: recordTypeConverter);
                     return (int)HeadData_FieldIndex.Model;
-                }
-                case RecordTypeInts.NAM8:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.MorphRace) return ParseResult.Stop;
-                    _MorphRaceLocation = (stream.Position - offset);
-                    return (int)HeadData_FieldIndex.MorphRace;
-                }
-                case RecordTypeInts.RNAM:
-                {
-                    if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.ArmorRace) return ParseResult.Stop;
-                    _ArmorRaceLocation = (stream.Position - offset);
-                    return (int)HeadData_FieldIndex.ArmorRace;
                 }
                 default:
                     return ParseResult.Stop;

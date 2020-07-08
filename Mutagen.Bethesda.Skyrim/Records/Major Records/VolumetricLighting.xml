@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="VolumetricLighting" recordType="VOLI" baseClass="SkyrimMajorRecord" objType="Record" GUID="825a2586-76f0-41c3-9ba3-138c04e53e06" ID="247">
+    <Fields>
+      <Float name="Intensity" recordType="CNAM" />
+      <Float name="CustomColorContribution" recordType="DNAM" />
+      <Float name="ColorR" max="255" min="0" recordType="ENAM" />
+      <Float name="ColorG" max="255" min="0" recordType="FNAM" />
+      <Float name="ColorB" max="255" min="0" recordType="GNAM" />
+      <Float name="DensityContribution" recordType="HNAM" />
+      <Float name="DensitySize" recordType="INAM" />
+      <Float name="DensityWindSpeed" recordType="JNAM" />
+      <Float name="DensityFallingSpeed" recordType="KNAM" />
+      <Float name="PhaseFunctionContribution" recordType="LNAM" />
+      <Float name="PhaseFunctionScattering" recordType="MNAM" />
+      <Float name="SamplingRepartitionRangeFactor" recordType="NNAM" min="0" max="1" />
+    </Fields>
   </Object>
 </Loqui>

@@ -14,6 +14,9 @@
       <List name="Grasses">
         <FormLink refName="Grass" recordType="GNAM" />
       </List>
+      <Enum name="Flags" enumName="LandscapeTexture.Flag" byteLength="4" recordType="INAM" >
+        <Versioning formVersion="43" />
+      </Enum>
     </Fields>
     <LinkInterface>IRegionTarget</LinkInterface>
   </Object>

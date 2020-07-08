@@ -46,26 +46,11 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region Width
-        public Single Width { get; set; } = default;
-        #endregion
-        #region Height
-        public Single Height { get; set; } = default;
-        #endregion
         #region Position
         public P3Float Position { get; set; } = default;
         #endregion
-        #region RotationQ1
-        public Single RotationQ1 { get; set; } = default;
-        #endregion
-        #region RotationQ2
-        public Single RotationQ2 { get; set; } = default;
-        #endregion
-        #region RotationQ3
-        public Single RotationQ3 { get; set; } = default;
-        #endregion
-        #region RotationQ4
-        public Single RotationQ4 { get; set; } = default;
+        #region Rotation
+        public P3Float Rotation { get; set; } = default;
         #endregion
 
         #region To String
@@ -236,31 +221,16 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Width = initialValue;
-                this.Height = initialValue;
                 this.Position = initialValue;
-                this.RotationQ1 = initialValue;
-                this.RotationQ2 = initialValue;
-                this.RotationQ3 = initialValue;
-                this.RotationQ4 = initialValue;
+                this.Rotation = initialValue;
             }
 
             public Mask(
-                TItem Width,
-                TItem Height,
                 TItem Position,
-                TItem RotationQ1,
-                TItem RotationQ2,
-                TItem RotationQ3,
-                TItem RotationQ4)
+                TItem Rotation)
             {
-                this.Width = Width;
-                this.Height = Height;
                 this.Position = Position;
-                this.RotationQ1 = RotationQ1;
-                this.RotationQ2 = RotationQ2;
-                this.RotationQ3 = RotationQ3;
-                this.RotationQ4 = RotationQ4;
+                this.Rotation = Rotation;
             }
 
             #pragma warning disable CS8618
@@ -272,13 +242,8 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem Width;
-            public TItem Height;
             public TItem Position;
-            public TItem RotationQ1;
-            public TItem RotationQ2;
-            public TItem RotationQ3;
-            public TItem RotationQ4;
+            public TItem Rotation;
             #endregion
 
             #region Equals
@@ -291,25 +256,15 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Width, rhs.Width)) return false;
-                if (!object.Equals(this.Height, rhs.Height)) return false;
                 if (!object.Equals(this.Position, rhs.Position)) return false;
-                if (!object.Equals(this.RotationQ1, rhs.RotationQ1)) return false;
-                if (!object.Equals(this.RotationQ2, rhs.RotationQ2)) return false;
-                if (!object.Equals(this.RotationQ3, rhs.RotationQ3)) return false;
-                if (!object.Equals(this.RotationQ4, rhs.RotationQ4)) return false;
+                if (!object.Equals(this.Rotation, rhs.Rotation)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Width);
-                hash.Add(this.Height);
                 hash.Add(this.Position);
-                hash.Add(this.RotationQ1);
-                hash.Add(this.RotationQ2);
-                hash.Add(this.RotationQ3);
-                hash.Add(this.RotationQ4);
+                hash.Add(this.Rotation);
                 return hash.ToHashCode();
             }
 
@@ -318,13 +273,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Width)) return false;
-                if (!eval(this.Height)) return false;
                 if (!eval(this.Position)) return false;
-                if (!eval(this.RotationQ1)) return false;
-                if (!eval(this.RotationQ2)) return false;
-                if (!eval(this.RotationQ3)) return false;
-                if (!eval(this.RotationQ4)) return false;
+                if (!eval(this.Rotation)) return false;
                 return true;
             }
             #endregion
@@ -332,13 +282,8 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Width)) return true;
-                if (eval(this.Height)) return true;
                 if (eval(this.Position)) return true;
-                if (eval(this.RotationQ1)) return true;
-                if (eval(this.RotationQ2)) return true;
-                if (eval(this.RotationQ3)) return true;
-                if (eval(this.RotationQ4)) return true;
+                if (eval(this.Rotation)) return true;
                 return false;
             }
             #endregion
@@ -353,13 +298,8 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Width = eval(this.Width);
-                obj.Height = eval(this.Height);
                 obj.Position = eval(this.Position);
-                obj.RotationQ1 = eval(this.RotationQ1);
-                obj.RotationQ2 = eval(this.RotationQ2);
-                obj.RotationQ3 = eval(this.RotationQ3);
-                obj.RotationQ4 = eval(this.RotationQ4);
+                obj.Rotation = eval(this.Rotation);
             }
             #endregion
 
@@ -382,33 +322,13 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Width ?? true)
-                    {
-                        fg.AppendItem(Width, "Width");
-                    }
-                    if (printMask?.Height ?? true)
-                    {
-                        fg.AppendItem(Height, "Height");
-                    }
                     if (printMask?.Position ?? true)
                     {
                         fg.AppendItem(Position, "Position");
                     }
-                    if (printMask?.RotationQ1 ?? true)
+                    if (printMask?.Rotation ?? true)
                     {
-                        fg.AppendItem(RotationQ1, "RotationQ1");
-                    }
-                    if (printMask?.RotationQ2 ?? true)
-                    {
-                        fg.AppendItem(RotationQ2, "RotationQ2");
-                    }
-                    if (printMask?.RotationQ3 ?? true)
-                    {
-                        fg.AppendItem(RotationQ3, "RotationQ3");
-                    }
-                    if (printMask?.RotationQ4 ?? true)
-                    {
-                        fg.AppendItem(RotationQ4, "RotationQ4");
+                        fg.AppendItem(Rotation, "Rotation");
                     }
                 }
                 fg.AppendLine("]");
@@ -435,13 +355,8 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? Width;
-            public Exception? Height;
             public Exception? Position;
-            public Exception? RotationQ1;
-            public Exception? RotationQ2;
-            public Exception? RotationQ3;
-            public Exception? RotationQ4;
+            public Exception? Rotation;
             #endregion
 
             #region IErrorMask
@@ -450,20 +365,10 @@ namespace Mutagen.Bethesda.Skyrim
                 Placement_FieldIndex enu = (Placement_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Width:
-                        return Width;
-                    case Placement_FieldIndex.Height:
-                        return Height;
                     case Placement_FieldIndex.Position:
                         return Position;
-                    case Placement_FieldIndex.RotationQ1:
-                        return RotationQ1;
-                    case Placement_FieldIndex.RotationQ2:
-                        return RotationQ2;
-                    case Placement_FieldIndex.RotationQ3:
-                        return RotationQ3;
-                    case Placement_FieldIndex.RotationQ4:
-                        return RotationQ4;
+                    case Placement_FieldIndex.Rotation:
+                        return Rotation;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -474,26 +379,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Placement_FieldIndex enu = (Placement_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Width:
-                        this.Width = ex;
-                        break;
-                    case Placement_FieldIndex.Height:
-                        this.Height = ex;
-                        break;
                     case Placement_FieldIndex.Position:
                         this.Position = ex;
                         break;
-                    case Placement_FieldIndex.RotationQ1:
-                        this.RotationQ1 = ex;
-                        break;
-                    case Placement_FieldIndex.RotationQ2:
-                        this.RotationQ2 = ex;
-                        break;
-                    case Placement_FieldIndex.RotationQ3:
-                        this.RotationQ3 = ex;
-                        break;
-                    case Placement_FieldIndex.RotationQ4:
-                        this.RotationQ4 = ex;
+                    case Placement_FieldIndex.Rotation:
+                        this.Rotation = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -505,26 +395,11 @@ namespace Mutagen.Bethesda.Skyrim
                 Placement_FieldIndex enu = (Placement_FieldIndex)index;
                 switch (enu)
                 {
-                    case Placement_FieldIndex.Width:
-                        this.Width = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.Height:
-                        this.Height = (Exception?)obj;
-                        break;
                     case Placement_FieldIndex.Position:
                         this.Position = (Exception?)obj;
                         break;
-                    case Placement_FieldIndex.RotationQ1:
-                        this.RotationQ1 = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.RotationQ2:
-                        this.RotationQ2 = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.RotationQ3:
-                        this.RotationQ3 = (Exception?)obj;
-                        break;
-                    case Placement_FieldIndex.RotationQ4:
-                        this.RotationQ4 = (Exception?)obj;
+                    case Placement_FieldIndex.Rotation:
+                        this.Rotation = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -534,13 +409,8 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Width != null) return true;
-                if (Height != null) return true;
                 if (Position != null) return true;
-                if (RotationQ1 != null) return true;
-                if (RotationQ2 != null) return true;
-                if (RotationQ3 != null) return true;
-                if (RotationQ4 != null) return true;
+                if (Rotation != null) return true;
                 return false;
             }
             #endregion
@@ -575,13 +445,8 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Width, "Width");
-                fg.AppendItem(Height, "Height");
                 fg.AppendItem(Position, "Position");
-                fg.AppendItem(RotationQ1, "RotationQ1");
-                fg.AppendItem(RotationQ2, "RotationQ2");
-                fg.AppendItem(RotationQ3, "RotationQ3");
-                fg.AppendItem(RotationQ4, "RotationQ4");
+                fg.AppendItem(Rotation, "Rotation");
             }
             #endregion
 
@@ -590,13 +455,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Width = this.Width.Combine(rhs.Width);
-                ret.Height = this.Height.Combine(rhs.Height);
                 ret.Position = this.Position.Combine(rhs.Position);
-                ret.RotationQ1 = this.RotationQ1.Combine(rhs.RotationQ1);
-                ret.RotationQ2 = this.RotationQ2.Combine(rhs.RotationQ2);
-                ret.RotationQ3 = this.RotationQ3.Combine(rhs.RotationQ3);
-                ret.RotationQ4 = this.RotationQ4.Combine(rhs.RotationQ4);
+                ret.Rotation = this.Rotation.Combine(rhs.Rotation);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -618,25 +478,15 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool Width;
-            public bool Height;
             public bool Position;
-            public bool RotationQ1;
-            public bool RotationQ2;
-            public bool RotationQ3;
-            public bool RotationQ4;
+            public bool Rotation;
             #endregion
 
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.Width = defaultOn;
-                this.Height = defaultOn;
                 this.Position = defaultOn;
-                this.RotationQ1 = defaultOn;
-                this.RotationQ2 = defaultOn;
-                this.RotationQ3 = defaultOn;
-                this.RotationQ4 = defaultOn;
+                this.Rotation = defaultOn;
             }
 
             #endregion
@@ -652,15 +502,14 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Width, null));
-                ret.Add((Height, null));
                 ret.Add((Position, null));
-                ret.Add((RotationQ1, null));
-                ret.Add((RotationQ2, null));
-                ret.Add((RotationQ3, null));
-                ret.Add((RotationQ4, null));
+                ret.Add((Rotation, null));
             }
         }
+        #endregion
+
+        #region Mutagen
+        public static readonly RecordType GrupRecordType = Placement_Registration.TriggeringRecordType;
         #endregion
 
         #region Binary Translation
@@ -731,19 +580,16 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IPlacement :
         IPlacementGetter,
+        IPositionRotation,
         ILoquiObjectSetter<IPlacement>
     {
-        new Single Width { get; set; }
-        new Single Height { get; set; }
         new P3Float Position { get; set; }
-        new Single RotationQ1 { get; set; }
-        new Single RotationQ2 { get; set; }
-        new Single RotationQ3 { get; set; }
-        new Single RotationQ4 { get; set; }
+        new P3Float Rotation { get; set; }
     }
 
     public partial interface IPlacementGetter :
         ILoquiObject,
+        IPositionRotationGetter,
         ILoquiObject<IPlacementGetter>,
         IXmlItem,
         IBinaryItem
@@ -755,13 +601,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Placement_Registration.Instance;
-        Single Width { get; }
-        Single Height { get; }
         P3Float Position { get; }
-        Single RotationQ1 { get; }
-        Single RotationQ2 { get; }
-        Single RotationQ3 { get; }
-        Single RotationQ4 { get; }
+        P3Float Rotation { get; }
 
     }
 
@@ -1079,13 +920,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Placement_FieldIndex
     {
-        Width = 0,
-        Height = 1,
-        Position = 2,
-        RotationQ1 = 3,
-        RotationQ2 = 4,
-        RotationQ3 = 5,
-        RotationQ4 = 6,
+        Position = 0,
+        Rotation = 1,
     }
     #endregion
 
@@ -1098,14 +934,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Skyrim.ProtocolKey,
-            msgID: 301,
+            msgID: 479,
             version: 0);
 
-        public const string GUID = "2de6bd62-66a1-461b-b6a3-4130cc82c908";
+        public const string GUID = "4b94975c-9eee-4f58-a4da-edda94e7e252";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 2;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Placement.Mask<>);
 
@@ -1135,20 +971,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "WIDTH":
-                    return (ushort)Placement_FieldIndex.Width;
-                case "HEIGHT":
-                    return (ushort)Placement_FieldIndex.Height;
                 case "POSITION":
                     return (ushort)Placement_FieldIndex.Position;
-                case "ROTATIONQ1":
-                    return (ushort)Placement_FieldIndex.RotationQ1;
-                case "ROTATIONQ2":
-                    return (ushort)Placement_FieldIndex.RotationQ2;
-                case "ROTATIONQ3":
-                    return (ushort)Placement_FieldIndex.RotationQ3;
-                case "ROTATIONQ4":
-                    return (ushort)Placement_FieldIndex.RotationQ4;
+                case "ROTATION":
+                    return (ushort)Placement_FieldIndex.Rotation;
                 default:
                     return null;
             }
@@ -1159,13 +985,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                case Placement_FieldIndex.Height:
                 case Placement_FieldIndex.Position:
-                case Placement_FieldIndex.RotationQ1:
-                case Placement_FieldIndex.RotationQ2:
-                case Placement_FieldIndex.RotationQ3:
-                case Placement_FieldIndex.RotationQ4:
+                case Placement_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1177,13 +998,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                case Placement_FieldIndex.Height:
                 case Placement_FieldIndex.Position:
-                case Placement_FieldIndex.RotationQ1:
-                case Placement_FieldIndex.RotationQ2:
-                case Placement_FieldIndex.RotationQ3:
-                case Placement_FieldIndex.RotationQ4:
+                case Placement_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1195,13 +1011,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                case Placement_FieldIndex.Height:
                 case Placement_FieldIndex.Position:
-                case Placement_FieldIndex.RotationQ1:
-                case Placement_FieldIndex.RotationQ2:
-                case Placement_FieldIndex.RotationQ3:
-                case Placement_FieldIndex.RotationQ4:
+                case Placement_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1213,20 +1024,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                    return "Width";
-                case Placement_FieldIndex.Height:
-                    return "Height";
                 case Placement_FieldIndex.Position:
                     return "Position";
-                case Placement_FieldIndex.RotationQ1:
-                    return "RotationQ1";
-                case Placement_FieldIndex.RotationQ2:
-                    return "RotationQ2";
-                case Placement_FieldIndex.RotationQ3:
-                    return "RotationQ3";
-                case Placement_FieldIndex.RotationQ4:
-                    return "RotationQ4";
+                case Placement_FieldIndex.Rotation:
+                    return "Rotation";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1237,13 +1038,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                case Placement_FieldIndex.Height:
                 case Placement_FieldIndex.Position:
-                case Placement_FieldIndex.RotationQ1:
-                case Placement_FieldIndex.RotationQ2:
-                case Placement_FieldIndex.RotationQ3:
-                case Placement_FieldIndex.RotationQ4:
+                case Placement_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1255,13 +1051,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                case Placement_FieldIndex.Height:
                 case Placement_FieldIndex.Position:
-                case Placement_FieldIndex.RotationQ1:
-                case Placement_FieldIndex.RotationQ2:
-                case Placement_FieldIndex.RotationQ3:
-                case Placement_FieldIndex.RotationQ4:
+                case Placement_FieldIndex.Rotation:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1273,26 +1064,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Placement_FieldIndex enu = (Placement_FieldIndex)index;
             switch (enu)
             {
-                case Placement_FieldIndex.Width:
-                    return typeof(Single);
-                case Placement_FieldIndex.Height:
-                    return typeof(Single);
                 case Placement_FieldIndex.Position:
                     return typeof(P3Float);
-                case Placement_FieldIndex.RotationQ1:
-                    return typeof(Single);
-                case Placement_FieldIndex.RotationQ2:
-                    return typeof(Single);
-                case Placement_FieldIndex.RotationQ3:
-                    return typeof(Single);
-                case Placement_FieldIndex.RotationQ4:
-                    return typeof(Single);
+                case Placement_FieldIndex.Rotation:
+                    return typeof(P3Float);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static readonly Type XmlWriteTranslation = typeof(PlacementXmlWriteTranslation);
+        public static readonly RecordType TriggeringRecordType = RecordTypes.DATA;
         public static readonly Type BinaryWriteTranslation = typeof(PlacementBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1335,13 +1117,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacement item)
         {
             ClearPartial();
-            item.Width = default;
-            item.Height = default;
             item.Position = default;
-            item.RotationQ1 = default;
-            item.RotationQ2 = default;
-            item.RotationQ3 = default;
-            item.RotationQ4 = default;
+            item.Rotation = default;
         }
         
         #region Xml Translation
@@ -1378,6 +1155,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
+                frame.Reader,
+                recordTypeConverter.ConvertToCustom(RecordTypes.DATA)));
             UtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
@@ -1413,13 +1193,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Width = item.Width.EqualsWithin(rhs.Width);
-            ret.Height = item.Height.EqualsWithin(rhs.Height);
             ret.Position = item.Position.Equals(rhs.Position);
-            ret.RotationQ1 = item.RotationQ1.EqualsWithin(rhs.RotationQ1);
-            ret.RotationQ2 = item.RotationQ2.EqualsWithin(rhs.RotationQ2);
-            ret.RotationQ3 = item.RotationQ3.EqualsWithin(rhs.RotationQ3);
-            ret.RotationQ4 = item.RotationQ4.EqualsWithin(rhs.RotationQ4);
+            ret.Rotation = item.Rotation.Equals(rhs.Rotation);
         }
         
         public string ToString(
@@ -1466,33 +1241,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Placement.Mask<bool>? printMask = null)
         {
-            if (printMask?.Width ?? true)
-            {
-                fg.AppendItem(item.Width, "Width");
-            }
-            if (printMask?.Height ?? true)
-            {
-                fg.AppendItem(item.Height, "Height");
-            }
             if (printMask?.Position ?? true)
             {
                 fg.AppendItem(item.Position, "Position");
             }
-            if (printMask?.RotationQ1 ?? true)
+            if (printMask?.Rotation ?? true)
             {
-                fg.AppendItem(item.RotationQ1, "RotationQ1");
-            }
-            if (printMask?.RotationQ2 ?? true)
-            {
-                fg.AppendItem(item.RotationQ2, "RotationQ2");
-            }
-            if (printMask?.RotationQ3 ?? true)
-            {
-                fg.AppendItem(item.RotationQ3, "RotationQ3");
-            }
-            if (printMask?.RotationQ4 ?? true)
-            {
-                fg.AppendItem(item.RotationQ4, "RotationQ4");
+                fg.AppendItem(item.Rotation, "Rotation");
             }
         }
         
@@ -1507,13 +1262,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacementGetter item,
             Placement.Mask<bool> mask)
         {
-            mask.Width = true;
-            mask.Height = true;
             mask.Position = true;
-            mask.RotationQ1 = true;
-            mask.RotationQ2 = true;
-            mask.RotationQ3 = true;
-            mask.RotationQ4 = true;
+            mask.Rotation = true;
         }
         
         #region Equals and Hash
@@ -1523,26 +1273,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Width.EqualsWithin(rhs.Width)) return false;
-            if (!lhs.Height.EqualsWithin(rhs.Height)) return false;
             if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.RotationQ1.EqualsWithin(rhs.RotationQ1)) return false;
-            if (!lhs.RotationQ2.EqualsWithin(rhs.RotationQ2)) return false;
-            if (!lhs.RotationQ3.EqualsWithin(rhs.RotationQ3)) return false;
-            if (!lhs.RotationQ4.EqualsWithin(rhs.RotationQ4)) return false;
+            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
             return true;
         }
         
         public virtual int GetHashCode(IPlacementGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Width);
-            hash.Add(item.Height);
             hash.Add(item.Position);
-            hash.Add(item.RotationQ1);
-            hash.Add(item.RotationQ2);
-            hash.Add(item.RotationQ3);
-            hash.Add(item.RotationQ4);
+            hash.Add(item.Rotation);
             return hash.ToHashCode();
         }
         
@@ -1575,33 +1315,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Width) ?? true))
-            {
-                item.Width = rhs.Width;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Height) ?? true))
-            {
-                item.Height = rhs.Height;
-            }
             if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
             {
                 item.Position = rhs.Position;
             }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ1) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
             {
-                item.RotationQ1 = rhs.RotationQ1;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ2) ?? true))
-            {
-                item.RotationQ2 = rhs.RotationQ2;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ3) ?? true))
-            {
-                item.RotationQ3 = rhs.RotationQ3;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ4) ?? true))
-            {
-                item.RotationQ4 = rhs.RotationQ4;
+                item.Rotation = rhs.Rotation;
             }
         }
         
@@ -1692,24 +1412,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.Width) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Width),
-                    item: item.Width,
-                    fieldIndex: (int)Placement_FieldIndex.Width,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.Height) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.Height),
-                    item: item.Height,
-                    fieldIndex: (int)Placement_FieldIndex.Height,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.Position) ?? true))
             {
                 P3FloatXmlTranslation.Instance.Write(
@@ -1719,40 +1421,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     fieldIndex: (int)Placement_FieldIndex.Position,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ1) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.Rotation) ?? true))
             {
-                FloatXmlTranslation.Instance.Write(
+                P3FloatXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.RotationQ1),
-                    item: item.RotationQ1,
-                    fieldIndex: (int)Placement_FieldIndex.RotationQ1,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ2) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RotationQ2),
-                    item: item.RotationQ2,
-                    fieldIndex: (int)Placement_FieldIndex.RotationQ2,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ3) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RotationQ3),
-                    item: item.RotationQ3,
-                    fieldIndex: (int)Placement_FieldIndex.RotationQ3,
-                    errorMask: errorMask);
-            }
-            if ((translationMask?.GetShouldTranslate((int)Placement_FieldIndex.RotationQ4) ?? true))
-            {
-                FloatXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.RotationQ4),
-                    item: item.RotationQ4,
-                    fieldIndex: (int)Placement_FieldIndex.RotationQ4,
+                    name: nameof(item.Rotation),
+                    item: item.Rotation,
+                    fieldIndex: (int)Placement_FieldIndex.Rotation,
                     errorMask: errorMask);
             }
         }
@@ -1861,42 +1536,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "Width":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.Width);
-                    try
-                    {
-                        item.Width = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "Height":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.Height);
-                    try
-                    {
-                        item.Height = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
                 case "Position":
                     errorMask?.PushIndex((int)Placement_FieldIndex.Position);
                     try
@@ -1915,65 +1554,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         errorMask?.PopIndex();
                     }
                     break;
-                case "RotationQ1":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.RotationQ1);
+                case "Rotation":
+                    errorMask?.PushIndex((int)Placement_FieldIndex.Rotation);
                     try
                     {
-                        item.RotationQ1 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RotationQ2":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.RotationQ2);
-                    try
-                    {
-                        item.RotationQ2 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RotationQ3":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.RotationQ3);
-                    try
-                    {
-                        item.RotationQ3 = FloatXmlTranslation.Instance.Parse(
-                            node: node,
-                            errorMask: errorMask);
-                    }
-                    catch (Exception ex)
-                    when (errorMask != null)
-                    {
-                        errorMask.ReportException(ex);
-                    }
-                    finally
-                    {
-                        errorMask?.PopIndex();
-                    }
-                    break;
-                case "RotationQ4":
-                    errorMask?.PushIndex((int)Placement_FieldIndex.RotationQ4);
-                    try
-                    {
-                        item.RotationQ4 = FloatXmlTranslation.Instance.Parse(
+                        item.Rotation = P3FloatXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -2162,27 +1747,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacementGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Width);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Height);
             Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RotationQ1);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RotationQ2);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RotationQ3);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.RotationQ4);
+                item: item.Rotation);
         }
 
         public void Write(
@@ -2190,9 +1760,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacementGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            WriteEmbedded(
-                item: item,
-                writer: writer);
+            using (HeaderExport.Header(
+                writer: writer,
+                record: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
+                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+            {
+                WriteEmbedded(
+                    item: item,
+                    writer: writer);
+            }
         }
 
         public void Write(
@@ -2216,13 +1792,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacement item,
             MutagenFrame frame)
         {
-            item.Width = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Height = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RotationQ1 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RotationQ2 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RotationQ3 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RotationQ4 = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }
@@ -2306,13 +1877,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Width => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single Height => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
-        public Single RotationQ1 => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single RotationQ2 => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single RotationQ3 => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single RotationQ4 => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public P3Float Rotation => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2335,10 +1901,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new PlacementBinaryOverlay(
-                bytes: stream.RemainingMemory.Slice(0, 0x24),
+                bytes: HeaderTranslation.ExtractSubrecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            int offset = stream.Position;
-            stream.Position += 0x24;
+            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.Subrecord(stream.RemainingSpan).TotalLength));
+            int offset = stream.Position + package.MetaData.Constants.SubConstants.TypeAndLengthLength;
+            stream.Position += 0x18 + package.MetaData.Constants.SubConstants.HeaderLength;
             ret.CustomFactoryEnd(
                 stream: stream,
                 finalPos: stream.Length,

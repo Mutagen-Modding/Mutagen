@@ -2935,6 +2935,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MaterialObjectBinaryWriteTranslation Instance = new MaterialObjectBinaryWriteTranslation();
 
+        static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IMaterialObjectGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IMaterialObjectGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteEmbedded(
             IMaterialObjectGetter item,
             MutagenWriter writer)
@@ -2993,10 +3006,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             writer: writer,
                             item: item.SinglePassColor,
                             binaryType: ColorBinaryType.NoAlphaFloat);
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MaterialObject.Flag>.Instance.Write(
-                            writer,
-                            item.Flags,
-                            length: 4);
+                        MaterialObjectBinaryWriteTranslation.WriteBinaryFlags(
+                            writer: writer,
+                            item: item);
                     }
                 }
             }
@@ -3121,7 +3133,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    MaterialObjectBinaryCreateTranslation.FillBinaryFlagsCustom(
+                        frame: dataFrame,
+                        item: item);
                     return (int)MaterialObject_FieldIndex.Flags;
                 }
                 default:
@@ -3133,6 +3147,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
+
+        static partial void FillBinaryFlagsCustom(
+            MutagenFrame frame,
+            IMaterialObjectInternal item);
 
     }
 
@@ -3242,8 +3260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x2C;
-        private bool _Flags_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1);
-        public MaterialObject.Flag Flags => _Flags_IsSet ? (MaterialObject.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(_FlagsLocation, 0x4)) : default;
+        public MaterialObject.Flag Flags => GetFlagsCustom();
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

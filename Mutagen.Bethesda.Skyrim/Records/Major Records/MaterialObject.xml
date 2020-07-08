@@ -18,7 +18,7 @@
           <Float name="NormalDampener" />
           <Break />
           <Color name="SinglePassColor" binaryType="NoAlphaFloat" />
-          <Enum name="Flags" enumName="MaterialObject.Flag" byteLength="4" />
+          <Enum name="Flags" enumName="MaterialObject.Flag" byteLength="4" binary="Custom" />
         </Fields>
       </Data>
     </Fields>

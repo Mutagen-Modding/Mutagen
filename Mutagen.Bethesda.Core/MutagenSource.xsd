@@ -393,13 +393,6 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="prependCount" type="xs:byte" >
-            <xs:annotation>
-              <xs:documentation>
-                Whether to add list count as an integer before the record data.  The counter is not put in its own subrecord
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

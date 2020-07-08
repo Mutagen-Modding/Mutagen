@@ -249,9 +249,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem LocationReference,
                 TItem DistantLodData,
                 TItem Scale,
-                TItem Position,
-                TItem Rotation,
-                TItem DATADataTypeState,
+                TItem Placement,
                 TItem Projectile)
             : base(
                 MajorRecordFlagsRaw: MajorRecordFlagsRaw,
@@ -276,9 +274,7 @@ namespace Mutagen.Bethesda.Skyrim
                 LocationReference: LocationReference,
                 DistantLodData: DistantLodData,
                 Scale: Scale,
-                Position: Position,
-                Rotation: Rotation,
-                DATADataTypeState: DATADataTypeState)
+                Placement: Placement)
             {
                 this.Projectile = Projectile;
             }
@@ -953,10 +949,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         LocationReference = 19,
         DistantLodData = 20,
         Scale = 21,
-        Position = 22,
-        Rotation = 23,
-        DATADataTypeState = 24,
-        Projectile = 25,
+        Placement = 22,
+        Projectile = 23,
     }
     #endregion
 
@@ -976,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort AdditionalFieldCount = 1;
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 24;
 
         public static readonly Type MaskType = typeof(PlacedFlame.Mask<>);
 
@@ -1453,11 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (PlacedFlame_FieldIndex)((int)index);
                 case APlacedTrap_FieldIndex.Scale:
                     return (PlacedFlame_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Position:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.Rotation:
-                    return (PlacedFlame_FieldIndex)((int)index);
-                case APlacedTrap_FieldIndex.DATADataTypeState:
+                case APlacedTrap_FieldIndex.Placement:
                     return (PlacedFlame_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
@@ -2038,7 +2028,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedFlameGetter item,
             MutagenWriter writer)
         {
-            APlacedTrapBinaryWriteTranslation.WriteEmbedded(
+            SkyrimMajorRecordBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
         }

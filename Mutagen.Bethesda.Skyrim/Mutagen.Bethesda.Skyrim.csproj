@@ -372,6 +372,9 @@
     <Compile Include="Records\Major Records\Key.cs">
       <DependentUpon>Key.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LandscapeTexture.cs">
+      <DependentUpon>LandscapeTexture.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LeveledItem.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
@@ -1672,9 +1675,6 @@
     <Compile Include="Records\Major Records\PlacedPrimitive_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Placement_Generated.cs">
-      <DependentUpon>PlacedObject.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Portal_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
@@ -2088,6 +2088,12 @@
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\Placement_Generated.cs">
+      <DependentUpon>Placement.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Bounding_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.16" />

@@ -119,6 +119,7 @@
       <Group name="CollisionLayers" refName="CollisionLayer" />
       <Group name="Colors" refName="ColorRecord" />
       <Group name="ReverbParameters" refName="ReverbParameters" />
+      <Group name="VolumetricLightings" refName="VolumetricLighting" />
     </Fields>
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimSE</GameReleaseOptions>

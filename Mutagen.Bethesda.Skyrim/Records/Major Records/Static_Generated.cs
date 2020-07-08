@@ -2895,7 +2895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         int FlagsVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -1 : 0;
         #endregion
         #region Unused
-        private int _UnusedLocation => FlagsVersioningOffset + 0x9;
+        private int _UnusedLocation => _DNAMLocation!.Value + FlagsVersioningOffset + 0x9;
         private bool _Unused_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
         int UnusedVersioningOffset => FlagsVersioningOffset + (_package.MajorRecord!.FormVersion!.Value < 44 ? -3 : 0);

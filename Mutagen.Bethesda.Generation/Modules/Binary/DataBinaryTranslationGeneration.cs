@@ -116,7 +116,8 @@ namespace Mutagen.Bethesda.Generation
                     {
                         passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value";
                     } 
-                    else if (passIn?.StartsWith("0x") ?? true)
+                    else if (passIn == null 
+                        || length.PassedType == BinaryTranslationModule.PassedType.Direct)
                     {
                         passIn = $"_{dataType.GetFieldData().RecordType}Location!.Value + {passIn}";
                     }
