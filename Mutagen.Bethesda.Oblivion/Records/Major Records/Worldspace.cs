@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Oblivion
                 var topCell = obj.TopCell;
                 var subCells = obj.SubCells;
                 if (subCells?.Count == 0
-                    && road != null
-                    && topCell != null) return;
+                    && road == null
+                    && topCell == null) return;
                 using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                 {
                     FormKeyBinaryTranslation.Instance.Write(
