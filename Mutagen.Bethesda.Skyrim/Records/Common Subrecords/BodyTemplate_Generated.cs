@@ -55,6 +55,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region ArmorType
         public ArmorType ArmorType { get; set; } = default;
         #endregion
+        #region ActsLike44
+        public Boolean ActsLike44 { get; set; } = default;
+        #endregion
 
         #region To String
 
@@ -227,16 +230,19 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FirstPersonFlags = initialValue;
                 this.Flags = initialValue;
                 this.ArmorType = initialValue;
+                this.ActsLike44 = initialValue;
             }
 
             public Mask(
                 TItem FirstPersonFlags,
                 TItem Flags,
-                TItem ArmorType)
+                TItem ArmorType,
+                TItem ActsLike44)
             {
                 this.FirstPersonFlags = FirstPersonFlags;
                 this.Flags = Flags;
                 this.ArmorType = ArmorType;
+                this.ActsLike44 = ActsLike44;
             }
 
             #pragma warning disable CS8618
@@ -251,6 +257,7 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem FirstPersonFlags;
             public TItem Flags;
             public TItem ArmorType;
+            public TItem ActsLike44;
             #endregion
 
             #region Equals
@@ -266,6 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.FirstPersonFlags, rhs.FirstPersonFlags)) return false;
                 if (!object.Equals(this.Flags, rhs.Flags)) return false;
                 if (!object.Equals(this.ArmorType, rhs.ArmorType)) return false;
+                if (!object.Equals(this.ActsLike44, rhs.ActsLike44)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -274,6 +282,7 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.FirstPersonFlags);
                 hash.Add(this.Flags);
                 hash.Add(this.ArmorType);
+                hash.Add(this.ActsLike44);
                 return hash.ToHashCode();
             }
 
@@ -285,6 +294,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.FirstPersonFlags)) return false;
                 if (!eval(this.Flags)) return false;
                 if (!eval(this.ArmorType)) return false;
+                if (!eval(this.ActsLike44)) return false;
                 return true;
             }
             #endregion
@@ -295,6 +305,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.FirstPersonFlags)) return true;
                 if (eval(this.Flags)) return true;
                 if (eval(this.ArmorType)) return true;
+                if (eval(this.ActsLike44)) return true;
                 return false;
             }
             #endregion
@@ -312,6 +323,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.FirstPersonFlags = eval(this.FirstPersonFlags);
                 obj.Flags = eval(this.Flags);
                 obj.ArmorType = eval(this.ArmorType);
+                obj.ActsLike44 = eval(this.ActsLike44);
             }
             #endregion
 
@@ -346,6 +358,10 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(ArmorType, "ArmorType");
                     }
+                    if (printMask?.ActsLike44 ?? true)
+                    {
+                        fg.AppendItem(ActsLike44, "ActsLike44");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -374,6 +390,7 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? FirstPersonFlags;
             public Exception? Flags;
             public Exception? ArmorType;
+            public Exception? ActsLike44;
             #endregion
 
             #region IErrorMask
@@ -388,6 +405,8 @@ namespace Mutagen.Bethesda.Skyrim
                         return Flags;
                     case BodyTemplate_FieldIndex.ArmorType:
                         return ArmorType;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        return ActsLike44;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -406,6 +425,9 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case BodyTemplate_FieldIndex.ArmorType:
                         this.ArmorType = ex;
+                        break;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        this.ActsLike44 = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -426,6 +448,9 @@ namespace Mutagen.Bethesda.Skyrim
                     case BodyTemplate_FieldIndex.ArmorType:
                         this.ArmorType = (Exception?)obj;
                         break;
+                    case BodyTemplate_FieldIndex.ActsLike44:
+                        this.ActsLike44 = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -437,6 +462,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (FirstPersonFlags != null) return true;
                 if (Flags != null) return true;
                 if (ArmorType != null) return true;
+                if (ActsLike44 != null) return true;
                 return false;
             }
             #endregion
@@ -474,6 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(FirstPersonFlags, "FirstPersonFlags");
                 fg.AppendItem(Flags, "Flags");
                 fg.AppendItem(ArmorType, "ArmorType");
+                fg.AppendItem(ActsLike44, "ActsLike44");
             }
             #endregion
 
@@ -485,6 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.FirstPersonFlags = this.FirstPersonFlags.Combine(rhs.FirstPersonFlags);
                 ret.Flags = this.Flags.Combine(rhs.Flags);
                 ret.ArmorType = this.ArmorType.Combine(rhs.ArmorType);
+                ret.ActsLike44 = this.ActsLike44.Combine(rhs.ActsLike44);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -509,6 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool FirstPersonFlags;
             public bool Flags;
             public bool ArmorType;
+            public bool ActsLike44;
             #endregion
 
             #region Ctors
@@ -517,6 +546,7 @@ namespace Mutagen.Bethesda.Skyrim
                 this.FirstPersonFlags = defaultOn;
                 this.Flags = defaultOn;
                 this.ArmorType = defaultOn;
+                this.ActsLike44 = defaultOn;
             }
 
             #endregion
@@ -535,6 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((FirstPersonFlags, null));
                 ret.Add((Flags, null));
                 ret.Add((ArmorType, null));
+                ret.Add((ActsLike44, null));
             }
         }
         #endregion
@@ -612,6 +643,7 @@ namespace Mutagen.Bethesda.Skyrim
         new BipedObjectFlag FirstPersonFlags { get; set; }
         new BodyTemplate.Flag Flags { get; set; }
         new ArmorType ArmorType { get; set; }
+        new Boolean ActsLike44 { get; set; }
     }
 
     public partial interface IBodyTemplateGetter :
@@ -630,6 +662,7 @@ namespace Mutagen.Bethesda.Skyrim
         BipedObjectFlag FirstPersonFlags { get; }
         BodyTemplate.Flag Flags { get; }
         ArmorType ArmorType { get; }
+        Boolean ActsLike44 { get; }
 
     }
 
@@ -950,6 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         FirstPersonFlags = 0,
         Flags = 1,
         ArmorType = 2,
+        ActsLike44 = 3,
     }
     #endregion
 
@@ -967,9 +1001,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "8f6a5735-ee64-4fe6-b024-fffabb2bd8e4";
 
-        public const ushort AdditionalFieldCount = 3;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(BodyTemplate.Mask<>);
 
@@ -1005,6 +1039,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return (ushort)BodyTemplate_FieldIndex.Flags;
                 case "ARMORTYPE":
                     return (ushort)BodyTemplate_FieldIndex.ArmorType;
+                case "ACTSLIKE44":
+                    return (ushort)BodyTemplate_FieldIndex.ActsLike44;
                 default:
                     return null;
             }
@@ -1018,6 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1032,6 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1046,6 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1063,6 +1102,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return "Flags";
                 case BodyTemplate_FieldIndex.ArmorType:
                     return "ArmorType";
+                case BodyTemplate_FieldIndex.ActsLike44:
+                    return "ActsLike44";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1076,6 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1090,6 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case BodyTemplate_FieldIndex.FirstPersonFlags:
                 case BodyTemplate_FieldIndex.Flags:
                 case BodyTemplate_FieldIndex.ArmorType:
+                case BodyTemplate_FieldIndex.ActsLike44:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1107,6 +1150,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     return typeof(BodyTemplate.Flag);
                 case BodyTemplate_FieldIndex.ArmorType:
                     return typeof(ArmorType);
+                case BodyTemplate_FieldIndex.ActsLike44:
+                    return typeof(Boolean);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1183,6 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FirstPersonFlags = default;
             item.Flags = default;
             item.ArmorType = default;
+            item.ActsLike44 = default;
         }
         
         #region Xml Translation
@@ -1260,6 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.FirstPersonFlags = item.FirstPersonFlags == rhs.FirstPersonFlags;
             ret.Flags = item.Flags == rhs.Flags;
             ret.ArmorType = item.ArmorType == rhs.ArmorType;
+            ret.ActsLike44 = item.ActsLike44 == rhs.ActsLike44;
         }
         
         public string ToString(
@@ -1318,6 +1365,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.ArmorType, "ArmorType");
             }
+            if (printMask?.ActsLike44 ?? true)
+            {
+                fg.AppendItem(item.ActsLike44, "ActsLike44");
+            }
         }
         
         public bool HasBeenSet(
@@ -1334,6 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             mask.FirstPersonFlags = true;
             mask.Flags = true;
             mask.ArmorType = true;
+            mask.ActsLike44 = true;
         }
         
         #region Equals and Hash
@@ -1346,6 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;
             if (lhs.Flags != rhs.Flags) return false;
             if (lhs.ArmorType != rhs.ArmorType) return false;
+            if (lhs.ActsLike44 != rhs.ActsLike44) return false;
             return true;
         }
         
@@ -1355,6 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             hash.Add(item.FirstPersonFlags);
             hash.Add(item.Flags);
             hash.Add(item.ArmorType);
+            hash.Add(item.ActsLike44);
             return hash.ToHashCode();
         }
         
@@ -1398,6 +1452,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ArmorType) ?? true))
             {
                 item.ArmorType = rhs.ArmorType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ActsLike44) ?? true))
+            {
+                item.ActsLike44 = rhs.ActsLike44;
             }
         }
         
@@ -1513,6 +1571,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     name: nameof(item.ArmorType),
                     item: item.ArmorType,
                     fieldIndex: (int)BodyTemplate_FieldIndex.ArmorType,
+                    errorMask: errorMask);
+            }
+            if ((translationMask?.GetShouldTranslate((int)BodyTemplate_FieldIndex.ActsLike44) ?? true))
+            {
+                BooleanXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.ActsLike44),
+                    item: item.ActsLike44,
+                    fieldIndex: (int)BodyTemplate_FieldIndex.ActsLike44,
                     errorMask: errorMask);
             }
         }
@@ -1662,6 +1729,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     try
                     {
                         item.ArmorType = EnumXmlTranslation<ArmorType>.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
+                case "ActsLike44":
+                    errorMask?.PushIndex((int)BodyTemplate_FieldIndex.ActsLike44);
+                    try
+                    {
+                        item.ActsLike44 = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
@@ -1854,17 +1939,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
-            if (writer.MetaData.FormVersion!.Value >= 22 && writer.MetaData.FormVersion!.Value < 44)
+            if (writer.MetaData.FormVersion!.Value < 44)
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
             }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
-                writer,
-                item.ArmorType,
-                length: 4);
+            if (writer.MetaData.FormVersion!.Value >= 22)
+            {
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                    writer,
+                    item.ArmorType,
+                    length: 4);
+            }
         }
 
         public void Write(
@@ -1905,11 +1993,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            if (frame.MetaData.FormVersion!.Value >= 22 && frame.MetaData.FormVersion!.Value < 44)
+            if (frame.MetaData.FormVersion!.Value < 44)
             {
                 item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             }
-            item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            if (frame.MetaData.FormVersion!.Value >= 22)
+            {
+                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            }
         }
 
     }
@@ -1996,9 +2087,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         #region Flags
         public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 22 || _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
+        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
         #endregion
+        #region ArmorType
         public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4));
+        int ArmorTypeVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 22 ? -4 : 0);
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

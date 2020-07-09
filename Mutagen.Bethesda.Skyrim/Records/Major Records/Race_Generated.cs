@@ -10411,6 +10411,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
+        static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
         static partial void WriteBinaryFlags2Custom(
             MutagenWriter writer,
             IRaceGetter item);
@@ -10525,13 +10538,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-            {
-                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            RaceBinaryWriteTranslation.WriteBinaryBodyTemplate(
+                writer: writer,
+                item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
@@ -11046,7 +11055,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
+                    RaceBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KWDA:
@@ -11431,6 +11442,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        static partial void FillBinaryBodyTemplateCustom(
+            MutagenFrame frame,
+            IRaceInternal item);
+
         static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IRaceInternal item);
@@ -11534,9 +11549,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkNullable<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BodyTemplate
-        private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
-        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        partial void BodyTemplateCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -12001,7 +12018,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    BodyTemplateCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
                     return (int)Race_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.KWDA:

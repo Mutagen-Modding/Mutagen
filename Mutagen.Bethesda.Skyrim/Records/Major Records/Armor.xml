@@ -29,7 +29,7 @@
           <RefDirect refName="ArmorModel" />
         </Fields>
       </Gendered>
-      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" binary="Custom" />
       <RefDirect name="Destructible" refName="Destructible" />
       <FormLink name="PickUpSound" refName="SoundDescriptor" recordType="YNAM" />
       <FormLink name="PutDownSound" refName="SoundDescriptor" recordType="ZNAM" />

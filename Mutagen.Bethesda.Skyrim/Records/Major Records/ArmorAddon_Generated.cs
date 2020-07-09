@@ -3612,6 +3612,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
+        static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
         static partial void WriteBinaryWeightSliderEnabledCustom(
             MutagenWriter writer,
             IArmorAddonGetter item);
@@ -3643,13 +3656,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-            {
-                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            ArmorAddonBinaryWriteTranslation.WriteBinaryBodyTemplate(
+                writer: writer,
+                item: item);
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Race,
@@ -3827,7 +3836,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
+                    ArmorAddonBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:
@@ -3933,6 +3944,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        static partial void FillBinaryBodyTemplateCustom(
+            MutagenFrame frame,
+            IArmorAddonInternal item);
+
         static partial void FillBinaryWeightSliderEnabledCustom(
             MutagenFrame frame,
             IArmorAddonInternal item);
@@ -4005,9 +4020,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region BodyTemplate
-        private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
-        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        partial void BodyTemplateCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         #region Race
         private int? _RaceLocation;
@@ -4150,7 +4167,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    BodyTemplateCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
                     return (int)ArmorAddon_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.RNAM:

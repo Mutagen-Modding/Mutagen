@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <!-- 
+  Note that the versioning swapover actually happens at v43, but it is inconsistent at that version stamp.
+  Custom logic is applied, and the version is artificially swapped temporarily to 44 to trigger the desired logic.
+  -->
   <Object name="BodyTemplate" recordType="BODT" objType="Subrecord" GUID="8f6a5735-ee64-4fe6-b024-fffabb2bd8e4" ID="51">
     <Fields>
       <Enum name="FirstPersonFlags" enumName="BipedObjectFlag" byteLength="4" />
       <Enum name="Flags" enumName="BodyTemplate.Flag" byteLength="4" >
-        <Versioning formVersion="22" action="Add" />
         <Versioning formVersion="44" action="Remove" />
       </Enum>
-      <Enum name="ArmorType" enumName="ArmorType" byteLength="4" />
+      <Enum name="ArmorType" enumName="ArmorType" byteLength="4" >
+        <Versioning formVersion="22" />
+      </Enum>
+      <Bool name="ActsLike44" binary="NoGeneration" />
     </Fields>
     <VersionOverride version="44">
       <Mapping From="BODT" To="BOD2" />

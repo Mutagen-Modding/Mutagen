@@ -4445,6 +4445,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
 
+        static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IArmorGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IArmorGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
         public static void WriteEmbedded(
             IArmorGetter item,
             MutagenWriter writer)
@@ -4504,13 +4517,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            if (item.BodyTemplate.TryGet(out var BodyTemplateItem))
-            {
-                ((BodyTemplateBinaryWriteTranslation)((IBinaryItem)BodyTemplateItem).BinaryWriteTranslator).Write(
-                    item: BodyTemplateItem,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter);
-            }
+            ArmorBinaryWriteTranslation.WriteBinaryBodyTemplate(
+                writer: writer,
+                item: item);
             if (item.Destructible.TryGet(out var DestructibleItem))
             {
                 ((DestructibleBinaryWriteTranslation)((IBinaryItem)DestructibleItem).BinaryWriteTranslator).Write(
@@ -4724,7 +4733,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    item.BodyTemplate = Mutagen.Bethesda.Skyrim.BodyTemplate.CreateFromBinary(frame: frame);
+                    ArmorBinaryCreateTranslation.FillBinaryBodyTemplateCustom(
+                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
+                        item: item);
                     return (int)Armor_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.DEST:
@@ -4858,6 +4869,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        static partial void FillBinaryBodyTemplateCustom(
+            MutagenFrame frame,
+            IArmorInternal item);
+
     }
 
 }
@@ -4954,9 +4969,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IGenderedItemGetter<IArmorModelGetter?>? WorldModel => _WorldModelOverlay;
         #endregion
         #region BodyTemplate
-        private RangeInt32? _BodyTemplateLocation;
-        public IBodyTemplateGetter? BodyTemplate => _BodyTemplateLocation.HasValue ? BodyTemplateBinaryOverlay.BodyTemplateFactory(new OverlayStream(_data.Slice(_BodyTemplateLocation!.Value.Min), _package), _package) : default;
-        public bool BodyTemplate_IsSet => _BodyTemplateLocation.HasValue;
+        partial void BodyTemplateCustomParse(
+            OverlayStream stream,
+            long finalPos,
+            int offset);
+        public IBodyTemplateGetter? BodyTemplate => GetBodyTemplateCustom();
         #endregion
         public IDestructibleGetter? Destructible { get; private set; }
         #region PickUpSound
@@ -5126,7 +5143,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BODT:
                 case RecordTypeInts.BOD2:
                 {
-                    _BodyTemplateLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    BodyTemplateCustomParse(
+                        stream,
+                        finalPos,
+                        offset);
                     return (int)Armor_FieldIndex.BodyTemplate;
                 }
                 case RecordTypeInts.DEST:

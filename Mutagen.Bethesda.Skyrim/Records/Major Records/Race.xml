@@ -9,7 +9,7 @@
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
-      <RefDirect name="BodyTemplate" refName="BodyTemplate" />
+      <RefDirect name="BodyTemplate" refName="BodyTemplate" binary="Custom" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
