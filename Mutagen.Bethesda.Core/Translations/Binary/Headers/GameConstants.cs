@@ -205,7 +205,12 @@ namespace Mutagen.Bethesda.Binary
                 return false;
             }
             header = ReadGroup(stream);
-            return !checkIsGroup || header.IsGroup;
+            var ret = !checkIsGroup || header.IsGroup;
+            if (!ret)
+            {
+                stream.Position -= header.HeaderLength;
+            }
+            return ret;
         }
         public GroupFrame ReadGroupFrame(IBinaryReadStream stream)
         {
