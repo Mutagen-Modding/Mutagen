@@ -2355,7 +2355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.SlotParents = BinaryOverlayList<IFormLink<IEquipTypeGetter>>.FactoryByStartIndex(
+                    this.SlotParents = BinaryOverlayList.FactoryByStartIndex<IFormLink<IEquipTypeGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

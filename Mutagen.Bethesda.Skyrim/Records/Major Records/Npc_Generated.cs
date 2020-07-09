@@ -8759,7 +8759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
+                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -8794,7 +8794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -8862,7 +8862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PRKR:
                 case RecordTypeInts.PRKZ:
                 {
-                    this.Perks = BinaryOverlayList<PerkPlacementBinaryOverlay>.FactoryByCountPerItem(
+                    this.Perks = BinaryOverlayList.FactoryByCountPerItem<PerkPlacementBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x8,
@@ -8876,7 +8876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNTO:
                 case RecordTypeInts.COCT:
                 {
-                    this.Items = BinaryOverlayList<ContainerEntryBinaryOverlay>.FactoryByCountPerItem(
+                    this.Items = BinaryOverlayList.FactoryByCountPerItem<ContainerEntryBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         countLength: 4,
@@ -8894,7 +8894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.Packages = BinaryOverlayList<IFormLink<IPackageGetter>>.FactoryByArray(
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -8909,7 +8909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -8948,7 +8948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.HeadParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
+                    this.HeadParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             break;
                         case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryOverlayList<IWorldspaceBlockGetter>.FactoryByArray(
+                            this.SubCells = BinaryOverlayList.FactoryByArray<IWorldspaceBlockGetter>(
                                 stream.RemainingMemory,
                                 _package,
                                 getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),

@@ -2813,7 +2813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    this.Branches = BinaryOverlayList<IFormLink<IDialogBranchGetter>>.FactoryByArray(
+                    this.Branches = BinaryOverlayList.FactoryByArray<IFormLink<IDialogBranchGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogBranchGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2827,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.TNAMs = BinaryOverlayList<ReadOnlyMemorySlice<Byte>>.FactoryByArray(
+                    this.TNAMs = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => p.MetaData.Constants.SubrecordMemoryFrame(s).Content,

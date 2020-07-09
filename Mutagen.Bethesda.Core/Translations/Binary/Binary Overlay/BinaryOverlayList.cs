@@ -8,29 +8,29 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public abstract class BinaryOverlayList<T>
+    public abstract class BinaryOverlayList
     {
-        public static IReadOnlyList<T> FactoryByArray(
+        public static IReadOnlyList<T> FactoryByArray<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             BinaryOverlay.SpanFactory<T> getter,
             int[] locs)
         {
-            return new BinaryOverlayListByLocationArray(
+            return new BinaryOverlayListByLocationArray<T>(
                 mem,
                 package,
                 getter,
                 locs);
         }
 
-        public static IReadOnlyList<T> FactoryByArray(
+        public static IReadOnlyList<T> FactoryByArray<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
             BinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
-            return new BinaryOverlayRecordListByLocationArray(
+            return new BinaryOverlayRecordListByLocationArray<T>(
                 mem,
                 package,
                 recordTypeConverter,
@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda.Binary
                 locs);
         }
 
-        public static IReadOnlyList<T> FactoryByStartIndex(
+        public static IReadOnlyList<T> FactoryByStartIndex<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             int itemLength,
             BinaryOverlay.SpanFactory<T> getter)
         {
-            return new BinaryOverlayListByStartIndex(
+            return new BinaryOverlayListByStartIndex<T>(
                 mem,
                 package,
                 getter,
                 itemLength);
         }
 
-        public static IReadOnlyList<T> FactoryByCount(
+        public static IReadOnlyList<T> FactoryByCount<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             RecordType subrecordType,
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
-            return new BinaryOverlayListByStartIndexWithRecord(
+            return new BinaryOverlayListByStartIndexWithRecord<T>(
                 mem,
                 package,
                 getter,
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Binary
                 skipHeader: skipHeader);
         }
 
-        public static IReadOnlyList<T> FactoryByCount(
+        public static IReadOnlyList<T> FactoryByCount<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Binary
                 };
                 stream.Position += initialHeader.TotalLength;
                 var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
-                return new BinaryOverlayListByStartIndex(
+                return new BinaryOverlayListByStartIndex<T>(
                     contentFrame.Content,
                     package,
                     getter,
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static IReadOnlyList<T>? FactoryByCountNullIfZero(
+        public static IReadOnlyList<T>? FactoryByCountNullIfZero<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Binary
                 stream.Position += initialHeader.TotalLength;
                 if (count == 0) return null;
                 var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
-                return new BinaryOverlayListByStartIndex(
+                return new BinaryOverlayListByStartIndex<T>(
                     contentFrame.Content,
                     package,
                     getter,
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static IReadOnlyList<T> FactoryByCountPerItem(
+        public static IReadOnlyList<T> FactoryByCountPerItem<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int countLength,
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static IReadOnlyList<T> FactoryByCountPerItem(
+        public static IReadOnlyList<T> FactoryByCountPerItem<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int countLength,
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static IReadOnlyList<T> FactoryByCountPerItem(
+        public static IReadOnlyList<T> FactoryByCountPerItem<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public static IReadOnlyList<T> FactoryByCount(
+        public static IReadOnlyList<T> FactoryByCount<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             ICollectionGetter<RecordType> subrecordType,
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
-            return new BinaryOverlayListByStartIndexWithRecordSet(
+            return new BinaryOverlayListByStartIndexWithRecordSet<T>(
                 mem,
                 package,
                 getter,
@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Binary
                 subrecordType);
         }
 
-        public static IReadOnlyList<T> FactoryByCount(
+        public static IReadOnlyList<T> FactoryByCount<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -333,14 +333,14 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
-            return new BinaryOverlayListByStartIndex(
+            return new BinaryOverlayListByStartIndex<T>(
                 mem,
                 package,
                 getter,
                 itemLength);
         }
 
-        public static IReadOnlyList<T> FactoryByCountLength(
+        public static IReadOnlyList<T> FactoryByCountLength<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             int itemLength,
@@ -356,14 +356,40 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException("Item count and expected size did not match.");
             }
-            return new BinaryOverlayListByStartIndex(
+            return new BinaryOverlayListByStartIndex<T>(
                 mem.Slice(countLength, checked((int)(count * itemLength))),
                 package,
                 getter,
                 itemLength);
         }
 
-        public static IReadOnlyList<T> FactoryByCount(
+        public static IReadOnlyList<string> FactoryByCountLength<T>(
+            ReadOnlyMemorySlice<byte> mem,
+            BinaryOverlayFactoryPackage package,
+            byte countLength,
+            BinaryOverlay.SpanFactory<string> getter)
+        {
+            var count = countLength switch
+            {
+                4 => BinaryPrimitives.ReadUInt32LittleEndian(mem),
+                _ => throw new NotImplementedException(),
+            };
+            int[] locs = new int[count];
+            int loc = 0;
+            for (int i = 0; i < count - 1; i++)
+            {
+                locs[i] = loc;
+                var len = BinaryPrimitives.ReadUInt16LittleEndian(mem.Slice(loc));
+                loc += len + 2;
+            }
+            return FactoryByArray(
+                mem.Slice(countLength),
+                package,
+                getter,
+                locs);
+        }
+
+        public static IReadOnlyList<T> FactoryByCount<T>(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             uint count,
@@ -377,12 +403,12 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static IReadOnlyList<T> FactoryByLazyParse(
+        public static IReadOnlyList<T> FactoryByLazyParse<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             BinaryOverlay.Factory<T> getter)
         {
-            return new BinaryOverlayLazyList(
+            return new BinaryOverlayLazyList<T>(
                 mem,
                 package,
                 (m, p) =>
@@ -399,18 +425,18 @@ namespace Mutagen.Bethesda.Binary
                 });
         }
 
-        public static IReadOnlyList<T> FactoryByLazyParse(
+        public static IReadOnlyList<T> FactoryByLazyParse<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             Func<ReadOnlyMemorySlice<byte>, BinaryOverlayFactoryPackage, IReadOnlyList<T>> getter)
         {
-            return new BinaryOverlayLazyList(
+            return new BinaryOverlayLazyList<T>(
                 mem,
                 package,
                 getter);
         }
 
-        public static IReadOnlyList<T> FactoryByLazyParse(
+        public static IReadOnlyList<T> FactoryByLazyParse<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             byte countLength,
@@ -419,7 +445,7 @@ namespace Mutagen.Bethesda.Binary
             return FactoryByLazyParse(mem.Slice(countLength), package, getter);
         }
 
-        private class BinaryOverlayListByLocationArray : IReadOnlyList<T>
+        private class BinaryOverlayListByLocationArray<T> : IReadOnlyList<T>
         {
             private int[] _locations;
             BinaryOverlayFactoryPackage _package;
@@ -453,7 +479,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        private class BinaryOverlayRecordListByLocationArray : IReadOnlyList<T>
+        private class BinaryOverlayRecordListByLocationArray<T> : IReadOnlyList<T>
         {
             private int[] _locations;
             private BinaryOverlayFactoryPackage _package;
@@ -490,7 +516,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayListByStartIndex : IReadOnlyList<T>
+        public class BinaryOverlayListByStartIndex<T> : IReadOnlyList<T>
         {
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
@@ -531,7 +557,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayListByStartIndexWithRecord : IReadOnlyList<T>
+        public class BinaryOverlayListByStartIndexWithRecord<T> : IReadOnlyList<T>
         {
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
@@ -599,7 +625,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayListByStartIndexWithRecordSet : IReadOnlyList<T>
+        public class BinaryOverlayListByStartIndexWithRecordSet<T> : IReadOnlyList<T>
         {
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
@@ -654,7 +680,7 @@ namespace Mutagen.Bethesda.Binary
             IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
         }
 
-        public class BinaryOverlayLazyList : IReadOnlyList<T>
+        public class BinaryOverlayLazyList<T> : IReadOnlyList<T>
         {
             private readonly Lazy<IReadOnlyList<T>> _list;
             private readonly ReadOnlyMemorySlice<byte> _mem;

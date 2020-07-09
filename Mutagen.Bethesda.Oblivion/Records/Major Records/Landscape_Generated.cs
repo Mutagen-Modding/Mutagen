@@ -3041,7 +3041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Textures = BinaryOverlayList<IFormLink<ILandTextureGetter>>.FactoryByStartIndex(
+                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILandTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

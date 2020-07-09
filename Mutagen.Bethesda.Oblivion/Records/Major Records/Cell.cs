@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Persistent = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -466,7 +466,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     }
                                     stream.Position += (int)majorMeta.TotalLength;
                                 }
-                                this.Temporary = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Temporary = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
                             {
                                 this._visibleWhenDistantLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.VisibleWhenDistant = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.VisibleWhenDistant = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,

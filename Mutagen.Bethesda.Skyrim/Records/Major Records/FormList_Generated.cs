@@ -2233,7 +2233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.LNAM:
                 {
-                    this.Items = BinaryOverlayList<IFormLink<ISkyrimMajorRecordGetter>>.FactoryByArray(
+                    this.Items = BinaryOverlayList.FactoryByArray<IFormLink<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

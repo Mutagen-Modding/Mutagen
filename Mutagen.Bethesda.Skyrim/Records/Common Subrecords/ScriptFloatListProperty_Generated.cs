@@ -1871,7 +1871,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Data
-        public IReadOnlyList<Single> Data => BinaryOverlayList<Single>.FactoryByCountLength(_data, _package, 4, countLength: 4, (s, p) => SpanExt.GetFloat(s));
+        public IReadOnlyList<Single> Data => BinaryOverlayList.FactoryByCountLength<Single>(_data, _package, 4, countLength: 4, (s, p) => SpanExt.GetFloat(s));
         protected int DataEndingPos;
         #endregion
         partial void CustomFactoryEnd(

@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XAPR:
                 {
-                    this.Parents = BinaryOverlayList<ActivateParentBinaryOverlay>.FactoryByArray(
+                    this.Parents = BinaryOverlayList.FactoryByArray<ActivateParentBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

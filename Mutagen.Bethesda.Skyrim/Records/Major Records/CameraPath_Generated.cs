@@ -2969,7 +2969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedPaths = BinaryOverlayList<IFormLink<ICameraPathGetter>>.FactoryByStartIndex(
+                    this.RelatedPaths = BinaryOverlayList.FactoryByStartIndex<IFormLink<ICameraPathGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2987,7 +2987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Shots = BinaryOverlayList<IFormLink<ICameraShotGetter>>.FactoryByArray(
+                    this.Shots = BinaryOverlayList.FactoryByArray<IFormLink<ICameraShotGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ICameraShotGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

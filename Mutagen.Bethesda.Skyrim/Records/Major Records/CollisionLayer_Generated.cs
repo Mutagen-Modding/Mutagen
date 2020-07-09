@@ -2780,7 +2780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 case RecordTypeInts.INTV:
                 {
-                    this.CollidesWith = BinaryOverlayList<IFormLink<ICollisionLayerGetter>>.FactoryByCountNullIfZero(
+                    this.CollidesWith = BinaryOverlayList.FactoryByCountNullIfZero<IFormLink<ICollisionLayerGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,

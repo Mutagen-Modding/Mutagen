@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         partial void ItemsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
         {
-            this.Items = BinaryOverlayList<CellBinaryOverlay>.FactoryByArray(
+            this.Items = BinaryOverlayList.FactoryByArray<CellBinaryOverlay>(
                 mem: stream.RemainingMemory,
                 package: _package,
                 recordTypeConverter: null,

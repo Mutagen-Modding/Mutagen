@@ -2271,7 +2271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Types) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Types = BinaryOverlayList<MapMarker.Type>.FactoryByStartIndex(
+                    this.Types = BinaryOverlayList.FactoryByStartIndex<MapMarker.Type>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 2,

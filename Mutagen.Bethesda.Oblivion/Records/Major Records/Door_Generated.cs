@@ -3093,7 +3093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.RandomTeleportDestinations = BinaryOverlayList<IFormLink<IPlaceGetter>>.FactoryByArray(
+                    this.RandomTeleportDestinations = BinaryOverlayList.FactoryByArray<IFormLink<IPlaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPlaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

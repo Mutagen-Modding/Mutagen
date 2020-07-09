@@ -1897,7 +1897,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region PhaseFragments
-        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList<ScenePhaseFragmentBinaryOverlay>.FactoryByLazyParse(_data.Slice(FlagsEndingPos), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
+        public IReadOnlyList<IScenePhaseFragmentGetter> PhaseFragments => BinaryOverlayList.FactoryByLazyParse<ScenePhaseFragmentBinaryOverlay>(_data.Slice(FlagsEndingPos), _package, countLength: 2, (s, p) => ScenePhaseFragmentBinaryOverlay.ScenePhaseFragmentFactory(s, p));
         protected int PhaseFragmentsEndingPos;
         #endregion
         partial void CustomFactoryEnd(

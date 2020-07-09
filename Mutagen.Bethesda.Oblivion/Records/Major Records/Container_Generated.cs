@@ -3021,7 +3021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.CNTO:
                 {
-                    this.Items = BinaryOverlayList<ContainerItemBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList.FactoryByArray<ContainerItemBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

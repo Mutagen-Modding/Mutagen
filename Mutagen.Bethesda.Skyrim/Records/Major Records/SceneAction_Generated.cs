@@ -3883,7 +3883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PNAM:
                 {
-                    this.Packages = BinaryOverlayList<IFormLink<IPackageGetter>>.FactoryByArray(
+                    this.Packages = BinaryOverlayList.FactoryByArray<IFormLink<IPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

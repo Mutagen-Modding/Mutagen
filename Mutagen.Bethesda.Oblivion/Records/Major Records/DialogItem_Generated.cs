@@ -3763,7 +3763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.NAME:
                 {
-                    this.Topics = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.Topics = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3789,7 +3789,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CTDT:
                 {
-                    this.Conditions = BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
+                    this.Conditions = BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -3803,7 +3803,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.TCLT:
                 {
-                    this.Choices = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.Choices = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3817,7 +3817,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.TCLF:
                 {
-                    this.LinkFrom = BinaryOverlayList<IFormLink<IDialogTopicGetter>>.FactoryByArray(
+                    this.LinkFrom = BinaryOverlayList.FactoryByArray<IFormLink<IDialogTopicGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogTopicGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

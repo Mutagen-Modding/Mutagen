@@ -2259,7 +2259,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Objects = BinaryOverlayList<DefaultObjectBinaryOverlay>.FactoryByStartIndex(
+                    this.Objects = BinaryOverlayList.FactoryByStartIndex<DefaultObjectBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

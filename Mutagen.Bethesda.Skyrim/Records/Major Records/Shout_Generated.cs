@@ -2729,7 +2729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.WordsOfPower = BinaryOverlayList<ShoutWordBinaryOverlay>.FactoryByArray(
+                    this.WordsOfPower = BinaryOverlayList.FactoryByArray<ShoutWordBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

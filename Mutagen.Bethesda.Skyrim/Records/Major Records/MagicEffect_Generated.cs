@@ -7299,7 +7299,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -7316,7 +7316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ESCE:
                 {
-                    this.CounterEffects = BinaryOverlayList<IFormLink<IMagicEffectGetter>>.FactoryByArray(
+                    this.CounterEffects = BinaryOverlayList.FactoryByArray<IFormLink<IMagicEffectGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IMagicEffectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -7332,7 +7332,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Sounds = BinaryOverlayList<MagicEffectSoundBinaryOverlay>.FactoryByStartIndex(
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<MagicEffectSoundBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

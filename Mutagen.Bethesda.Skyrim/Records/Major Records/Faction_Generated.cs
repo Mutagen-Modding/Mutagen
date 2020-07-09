@@ -4401,7 +4401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.XNAM:
                 {
-                    this.Relations = BinaryOverlayList<RelationBinaryOverlay>.FactoryByArray(
+                    this.Relations = BinaryOverlayList.FactoryByArray<RelationBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

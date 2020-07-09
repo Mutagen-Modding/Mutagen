@@ -3316,7 +3316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdles = BinaryOverlayList<IFormLink<IIdleRelationGetter>>.FactoryByStartIndex(
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleRelationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

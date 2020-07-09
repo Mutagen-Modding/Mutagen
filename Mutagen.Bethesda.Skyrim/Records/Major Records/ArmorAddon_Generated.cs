@@ -4231,7 +4231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MODL:
                 {
-                    this.AdditionalRaces = BinaryOverlayList<IFormLink<IRaceGetter>>.FactoryByArray(
+                    this.AdditionalRaces = BinaryOverlayList.FactoryByArray<IFormLink<IRaceGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IRaceGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

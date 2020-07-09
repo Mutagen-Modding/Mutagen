@@ -5344,7 +5344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Regions = BinaryOverlayList<IFormLink<IRegionGetter>>.FactoryByStartIndex(
+                    this.Regions = BinaryOverlayList.FactoryByStartIndex<IFormLink<IRegionGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

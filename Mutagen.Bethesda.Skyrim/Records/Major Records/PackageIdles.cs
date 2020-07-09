@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         if (count == null)
                         {
-                            this.Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByArray(
+                            this.Animations = BinaryOverlayList.FactoryByArray<IFormLink<IIdleAnimationGetter>>(
                                 mem: stream.RemainingMemory,
                                 package: _package,
                                 getter: (s, p) => new FormLink<IIdleAnimationGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             var subMeta = stream.ReadSubrecord();
                             var subLen = subMeta.ContentLength;
-                            this.Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
+                            this.Animations = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleAnimationGetter>>(
                                 mem: stream.RemainingMemory.Slice(0, subLen),
                                 package: _package,
                                 itemLength: 4,

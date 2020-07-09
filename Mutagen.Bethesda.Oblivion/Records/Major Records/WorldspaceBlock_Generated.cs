@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case RecordTypeInts.GRUP:
                 {
-                    this.Items = BinaryOverlayList<WorldspaceSubBlockBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList.FactoryByArray<WorldspaceSubBlockBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
             {
                 stream.Position = FileNameEndingPos;
-                Fragments = BinaryOverlayList<IIndexedScriptFragmentGetter>.FactoryByCount(
+                Fragments = BinaryOverlayList.FactoryByCount<IIndexedScriptFragmentGetter>(
                     stream,
                     _package,
                     stream.ReadUInt16(),

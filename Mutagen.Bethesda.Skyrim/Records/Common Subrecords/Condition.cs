@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                     includeTriggers: IncludeTriggers,
                     skipHeader: false);
                 span = span.Slice(0, stream.Position - pos);
-                return BinaryOverlayList<ConditionBinaryOverlay>.FactoryByArray(
+                return BinaryOverlayList.FactoryByArray<ConditionBinaryOverlay>(
                     mem: span,
                     package: package,
                     getter: (s, p) => ConditionBinaryOverlay.ConditionFactory(new OverlayStream(s, p), p),

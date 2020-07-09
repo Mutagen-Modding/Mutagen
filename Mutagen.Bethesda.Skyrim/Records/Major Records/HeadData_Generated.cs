@@ -3519,7 +3519,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RPRM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
-                    this.RacePresets = BinaryOverlayList<IFormLink<INpcGetter>>.FactoryByArray(
+                    this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLink<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3534,7 +3534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.AHCM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
-                    this.AvailableHairColors = BinaryOverlayList<IFormLink<IColorRecordGetter>>.FactoryByArray(
+                    this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLink<IColorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IColorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -3549,7 +3549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FTSM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
-                    this.FaceDetails = BinaryOverlayList<IFormLink<ITextureSetGetter>>.FactoryByArray(
+                    this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLink<ITextureSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

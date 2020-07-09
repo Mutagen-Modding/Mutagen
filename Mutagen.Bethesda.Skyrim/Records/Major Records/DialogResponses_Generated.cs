@@ -4407,7 +4407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TCLT:
                 {
-                    this.LinkTo = BinaryOverlayList<IFormLink<IDialogGetter>>.FactoryByArray(
+                    this.LinkTo = BinaryOverlayList.FactoryByArray<IFormLink<IDialogGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

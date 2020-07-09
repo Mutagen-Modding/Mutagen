@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Sounds = BinaryOverlayList<RegionSoundBinaryOverlay>.FactoryByStartIndex(
+                    this.Sounds = BinaryOverlayList.FactoryByStartIndex<RegionSoundBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,

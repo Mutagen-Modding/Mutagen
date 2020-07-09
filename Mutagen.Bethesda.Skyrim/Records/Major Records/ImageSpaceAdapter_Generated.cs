@@ -17330,7 +17330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.BlurRadius = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.BlurRadius = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17342,7 +17342,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DoubleVisionStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DoubleVisionStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17354,7 +17354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.TintColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.TintColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -17366,7 +17366,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.FadeColor = BinaryOverlayList<ColorFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.FadeColor = BinaryOverlayList.FactoryByStartIndex<ColorFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 20,
@@ -17378,7 +17378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17390,7 +17390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampUp = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurRampUp = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17402,7 +17402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17414,7 +17414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurRampDown = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurRampDown = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17426,7 +17426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RadialBlurDownStart = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.RadialBlurDownStart = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17438,7 +17438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17450,7 +17450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldDistance = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldDistance = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17462,7 +17462,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.DepthOfFieldRange = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.DepthOfFieldRange = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17474,7 +17474,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.MotionBlurStrength = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.MotionBlurStrength = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17486,7 +17486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrEyeAdaptSpeedMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17498,7 +17498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrEyeAdaptSpeedAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17510,7 +17510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomBlurRadiusMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17522,7 +17522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomBlurRadiusAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17534,7 +17534,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomThresholdMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17546,7 +17546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomThresholdAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomThresholdAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17558,7 +17558,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17570,7 +17570,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrBloomScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrBloomScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17582,7 +17582,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMinMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17594,7 +17594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMinAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMinAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17606,7 +17606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMaxMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17618,7 +17618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrTargetLumMaxAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrTargetLumMaxAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17630,7 +17630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSunlightScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17642,7 +17642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSunlightScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSunlightScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17654,7 +17654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSkyScaleMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17666,7 +17666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.HdrSkyScaleAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.HdrSkyScaleAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17678,7 +17678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown08 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown08 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17690,7 +17690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown48 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown48 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17702,7 +17702,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown09 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown09 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17714,7 +17714,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown49 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown49 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17726,7 +17726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17738,7 +17738,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4A = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4A = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17750,7 +17750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17762,7 +17762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4B = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4B = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17774,7 +17774,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17786,7 +17786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4C = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4C = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17798,7 +17798,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17810,7 +17810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4D = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4D = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17822,7 +17822,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17834,7 +17834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4E = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4E = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17846,7 +17846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown0F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown0F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17858,7 +17858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown4F = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown4F = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17870,7 +17870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown10 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown10 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17882,7 +17882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown50 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown50 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17894,7 +17894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicSaturationMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17906,7 +17906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicSaturationAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicSaturationAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17918,7 +17918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicBrightnessMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17930,7 +17930,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicBrightnessAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicBrightnessAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17942,7 +17942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicContrastMult = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicContrastMult = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17954,7 +17954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.CinematicContrastAdd = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.CinematicContrastAdd = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17966,7 +17966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown14 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown14 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
@@ -17978,7 +17978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Unknown54 = BinaryOverlayList<KeyFrameBinaryOverlay>.FactoryByStartIndex(
+                    this.Unknown54 = BinaryOverlayList.FactoryByStartIndex<KeyFrameBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,

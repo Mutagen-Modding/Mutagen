@@ -2804,7 +2804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.LVLO:
                 {
-                    this.Entries = BinaryOverlayList<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>.FactoryByArray(
+                    this.Entries = BinaryOverlayList.FactoryByArray<LeveledEntryBinaryOverlay<IANpcSpawnGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

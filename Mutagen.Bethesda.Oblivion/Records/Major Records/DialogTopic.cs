@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Items = BinaryOverlayList<IDialogItemGetter>.FactoryByArray(
+                this.Items = BinaryOverlayList.FactoryByArray<IDialogItemGetter>(
                     contentSpan,
                     _package,
                     getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),

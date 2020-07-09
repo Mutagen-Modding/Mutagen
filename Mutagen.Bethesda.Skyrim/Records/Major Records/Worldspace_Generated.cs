@@ -6354,7 +6354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.RNAM:
                 {
-                    this.LargeReferences = BinaryOverlayList<WorldspaceGridReferenceBinaryOverlay>.FactoryByArray(
+                    this.LargeReferences = BinaryOverlayList.FactoryByArray<WorldspaceGridReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

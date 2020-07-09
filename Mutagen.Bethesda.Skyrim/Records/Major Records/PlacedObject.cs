@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
                             stream.Position += subHeader.TotalLength;
                             break;
                         case 0x4D524C58: // XLRM
-                            LinkedRooms = BinaryOverlayList<IFormLink<IPlacedObjectGetter>>.FactoryByArray(
+                            LinkedRooms = BinaryOverlayList.FactoryByArray<IFormLink<IPlacedObjectGetter>>(
                                 stream.RemainingMemory,
                                 _package,
                                 (s, p) => new FormLink<IPlacedObjectGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

@@ -3811,7 +3811,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.ANAM:
                 {
-                    this.SoundFiles = BinaryOverlayList<String>.FactoryByArray(
+                    this.SoundFiles = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),

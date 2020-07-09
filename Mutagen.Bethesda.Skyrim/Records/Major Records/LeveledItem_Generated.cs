@@ -2740,7 +2740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.COED:
                 case RecordTypeInts.LLCT:
                 {
-                    this.Entries = BinaryOverlayList<LeveledItemEntryBinaryOverlay>.FactoryByCountPerItem(
+                    this.Entries = BinaryOverlayList.FactoryByCountPerItem<LeveledItemEntryBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         countLength: 1,

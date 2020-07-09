@@ -2240,7 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.PNAM:
                 {
-                    this.Impacts = BinaryOverlayList<ImpactDataBinaryOverlay>.FactoryByArray(
+                    this.Impacts = BinaryOverlayList.FactoryByArray<ImpactDataBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

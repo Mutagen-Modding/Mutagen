@@ -8842,7 +8842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NNAM:
                 {
-                    this.UnusedNoisemaps = BinaryOverlayList<String>.FactoryByArray(
+                    this.UnusedNoisemaps = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),

@@ -7422,7 +7422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7434,7 +7434,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellPersistentReferences = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7446,7 +7446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellPersistentReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -7458,7 +7458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7470,7 +7470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellUniques = BinaryOverlayList<LocationReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellUniques = BinaryOverlayList.FactoryByStartIndex<LocationReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7482,7 +7482,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellUnique = BinaryOverlayList<IFormLink<INpcGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLink<INpcGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -7494,7 +7494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -7506,7 +7506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellStaticReferences = BinaryOverlayList<LocationCellStaticReferenceBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<LocationCellStaticReferenceBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 16,
@@ -7518,7 +7518,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellStaticReferences = BinaryOverlayList<IFormLink<IPlacedSimpleGetter>>.FactoryByStartIndex(
+                    this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -7560,7 +7560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                    this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -7572,7 +7572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellMarkerReference = BinaryOverlayList<IFormLink<IPlacedGetter>>.FactoryByStartIndex(
+                    this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -7584,7 +7584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                    this.ActorCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7596,7 +7596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellEnablePoint = BinaryOverlayList<LocationCellEnablePointBinaryOverlay>.FactoryByStartIndex(
+                    this.LocationCellEnablePoint = BinaryOverlayList.FactoryByStartIndex<LocationCellEnablePointBinaryOverlay>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 12,
@@ -7612,7 +7612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,

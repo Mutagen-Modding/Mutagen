@@ -2015,7 +2015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     stream.Position += _package.MetaData.Constants.SubConstants.HeaderLength;
                     var count = stream.ReadUInt32();
-                    this.AlternateTextures = BinaryOverlayList<AlternateTextureBinaryOverlay>.FactoryByCount(
+                    this.AlternateTextures = BinaryOverlayList.FactoryByCount<AlternateTextureBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         count: count,

@@ -2925,7 +2925,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CNAM:
                 {
-                    this.ConnectionLineToIndices = BinaryOverlayList<UInt32>.FactoryByArray(
+                    this.ConnectionLineToIndices = BinaryOverlayList.FactoryByArray<UInt32>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryPrimitives.ReadUInt32LittleEndian(s),

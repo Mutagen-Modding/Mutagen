@@ -3346,15 +3346,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList<IFormLink<IANavigationMeshGetter>>.FactoryByCountLength(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
-        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList<LinkedDoorBinaryOverlay>.FactoryByCountLength(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
+        public IReadOnlyList<ILinkedDoorGetter> LinkedDoors => BinaryOverlayList.FactoryByCountLength<LinkedDoorBinaryOverlay>(_data.Slice(PreferredMergesEndingPos), _package, 8, countLength: 4, (s, p) => LinkedDoorBinaryOverlay.LinkedDoorFactory(s, p));
         protected int LinkedDoorsEndingPos;
         #endregion
         #region Island

@@ -2034,7 +2034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
-        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList<P2Int16>.FactoryByStartIndex(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
+        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

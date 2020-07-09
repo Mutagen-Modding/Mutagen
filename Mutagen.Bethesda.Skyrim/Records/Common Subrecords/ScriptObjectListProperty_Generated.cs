@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Objects
-        public IReadOnlyList<IScriptObjectPropertyGetter> Objects => BinaryOverlayList<ScriptObjectPropertyBinaryOverlay>.FactoryByLazyParse(_data, _package, countLength: 4, (s, p) => ScriptObjectPropertyBinaryOverlay.ScriptObjectPropertyFactory(s, p));
+        public IReadOnlyList<IScriptObjectPropertyGetter> Objects => BinaryOverlayList.FactoryByLazyParse<ScriptObjectPropertyBinaryOverlay>(_data, _package, countLength: 4, (s, p) => ScriptObjectPropertyBinaryOverlay.ScriptObjectPropertyFactory(s, p));
         protected int ObjectsEndingPos;
         #endregion
         partial void CustomFactoryEnd(

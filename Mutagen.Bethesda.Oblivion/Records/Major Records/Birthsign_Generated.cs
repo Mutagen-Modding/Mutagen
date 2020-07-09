@@ -2570,7 +2570,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList<IFormLink<ISpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

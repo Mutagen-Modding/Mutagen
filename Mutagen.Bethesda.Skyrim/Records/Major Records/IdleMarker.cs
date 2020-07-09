@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 var subHeader = stream.ReadSubrecord();
-                Animations = BinaryOverlayList<IFormLink<IIdleAnimationGetter>>.FactoryByStartIndex(
+                Animations = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleAnimationGetter>>(
                     mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
                     package: _package,
                     itemLength: 4,

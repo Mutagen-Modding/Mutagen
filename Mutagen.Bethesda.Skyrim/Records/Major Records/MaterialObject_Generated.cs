@@ -3337,7 +3337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DNAM:
                 {
-                    this.DNAMs = BinaryOverlayList<ReadOnlyMemorySlice<Byte>>.FactoryByArray(
+                    this.DNAMs = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => p.MetaData.Constants.SubrecordMemoryFrame(s).Content,

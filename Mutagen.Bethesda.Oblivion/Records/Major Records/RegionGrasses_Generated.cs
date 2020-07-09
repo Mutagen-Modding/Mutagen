@@ -1998,7 +1998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Grasses = BinaryOverlayList<IFormLink<IGrassGetter>>.FactoryByStartIndex(
+                    this.Grasses = BinaryOverlayList.FactoryByStartIndex<IFormLink<IGrassGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

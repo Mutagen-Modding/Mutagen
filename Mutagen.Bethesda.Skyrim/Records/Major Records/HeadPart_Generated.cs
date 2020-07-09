@@ -3348,7 +3348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.HNAM:
                 {
-                    this.ExtraParts = BinaryOverlayList<IFormLink<IHeadPartGetter>>.FactoryByArray(
+                    this.ExtraParts = BinaryOverlayList.FactoryByArray<IFormLink<IHeadPartGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IHeadPartGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

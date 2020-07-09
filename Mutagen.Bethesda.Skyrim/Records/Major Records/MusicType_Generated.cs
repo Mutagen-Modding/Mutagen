@@ -2625,7 +2625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Tracks = BinaryOverlayList<IFormLink<IMusicTrackGetter>>.FactoryByStartIndex(
+                    this.Tracks = BinaryOverlayList.FactoryByStartIndex<IFormLink<IMusicTrackGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,

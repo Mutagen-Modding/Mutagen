@@ -5948,7 +5948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.CNTO:
                 {
-                    this.Items = BinaryOverlayList<ItemEntryBinaryOverlay>.FactoryByArray(
+                    this.Items = BinaryOverlayList.FactoryByArray<ItemEntryBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -5962,7 +5962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByArray(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<IASpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -5978,7 +5978,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Models = BinaryOverlayList<String>.FactoryByLazyParse(
+                    this.Models = BinaryOverlayList.FactoryByLazyParse<String>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));
@@ -5997,7 +5997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SNAM:
                 {
-                    this.Factions = BinaryOverlayList<RankPlacementBinaryOverlay>.FactoryByArray(
+                    this.Factions = BinaryOverlayList.FactoryByArray<RankPlacementBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,
@@ -6026,7 +6026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.AIPackages = BinaryOverlayList<IFormLink<IAIPackageGetter>>.FactoryByArray(
+                    this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLink<IAIPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -6042,7 +6042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Animations = BinaryOverlayList<String>.FactoryByLazyParse(
+                    this.Animations = BinaryOverlayList.FactoryByLazyParse<String>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ParseUnknownLengthString(s));

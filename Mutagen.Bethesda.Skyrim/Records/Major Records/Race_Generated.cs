@@ -12000,7 +12000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList<IFormLink<IASpellGetter>>.FactoryByCountPerItem(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -12027,7 +12027,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList<IFormLink<IKeywordGetter>>.FactoryByCount(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -12061,7 +12061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.MTNM:
                 {
-                    this.MovementTypeNames = BinaryOverlayList<String>.FactoryByArray(
+                    this.MovementTypeNames = BinaryOverlayList.FactoryByArray<String>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => BinaryStringUtility.ProcessWholeToZString(p.MetaData.Constants.SubrecordMemoryFrame(s).Content),
@@ -12134,7 +12134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Hairs = BinaryOverlayList<IFormLink<IHairGetter>>.FactoryByStartIndex(
+                    this.Hairs = BinaryOverlayList.FactoryByStartIndex<IFormLink<IHairGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -12146,7 +12146,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Eyes = BinaryOverlayList<IFormLink<IEyesGetter>>.FactoryByStartIndex(
+                    this.Eyes = BinaryOverlayList.FactoryByStartIndex<IFormLink<IEyesGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -12221,7 +12221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.QNAM:
                 {
-                    this.EquipmentSlots = BinaryOverlayList<IFormLink<IEquipTypeGetter>>.FactoryByArray(
+                    this.EquipmentSlots = BinaryOverlayList.FactoryByArray<IFormLink<IEquipTypeGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IEquipTypeGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),

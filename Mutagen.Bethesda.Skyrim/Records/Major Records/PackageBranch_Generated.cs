@@ -3351,7 +3351,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PKC2:
                 {
-                    this.DataInputIndices = BinaryOverlayList<Byte>.FactoryByArray(
+                    this.DataInputIndices = BinaryOverlayList.FactoryByArray<Byte>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => s[0],
@@ -3373,7 +3373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.PFOR:
                 {
-                    this.Unknown = BinaryOverlayList<ReadOnlyMemorySlice<Byte>>.FactoryByArray(
+                    this.Unknown = BinaryOverlayList.FactoryByArray<ReadOnlyMemorySlice<Byte>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => p.MetaData.Constants.SubrecordMemoryFrame(s).Content,

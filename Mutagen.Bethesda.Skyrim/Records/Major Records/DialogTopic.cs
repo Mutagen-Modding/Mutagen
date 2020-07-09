@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
                 }
                 var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Responses = BinaryOverlayList<IDialogResponsesGetter>.FactoryByArray(
+                this.Responses = BinaryOverlayList.FactoryByArray<IDialogResponsesGetter>(
                     contentSpan,
                     _package,
                     getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),

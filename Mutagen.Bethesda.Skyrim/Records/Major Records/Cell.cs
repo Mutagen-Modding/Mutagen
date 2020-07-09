@@ -522,7 +522,7 @@ namespace Mutagen.Bethesda.Skyrim
                             {
                                 this._persistentLocation = checked((int)subGroupLocation);
                                 var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Persistent = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,
@@ -556,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
                                             case 0x4D56414E: // NAVM
                                                 if (this.InsideWorldspace)
                                                 {
-                                                    this.NavigationMeshes = BinaryOverlayList<IWorldspaceNavigationMeshGetter>.FactoryByArray(
+                                                    this.NavigationMeshes = BinaryOverlayList.FactoryByArray<IWorldspaceNavigationMeshGetter>(
                                                         mem: stream.RemainingMemory,
                                                         package: _package,
                                                         getter: (s, p) => WorldspaceNavigationMeshBinaryOverlay.WorldspaceNavigationMeshFactory(s, p),
@@ -568,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
                                                 }
                                                 else
                                                 {
-                                                    this.NavigationMeshes = BinaryOverlayList<ICellNavigationMeshGetter>.FactoryByArray(
+                                                    this.NavigationMeshes = BinaryOverlayList.FactoryByArray<ICellNavigationMeshGetter>(
                                                         mem: stream.RemainingMemory,
                                                         package: _package,
                                                         getter: (s, p) => CellNavigationMeshBinaryOverlay.CellNavigationMeshFactory(s, p),
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                     }
                                 }
-                                this.Temporary = BinaryOverlayList<IPlacedGetter>.FactoryByArray(
+                                this.Temporary = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
                                     contentSpan,
                                     _package,
                                     getter: TypicalGetter,

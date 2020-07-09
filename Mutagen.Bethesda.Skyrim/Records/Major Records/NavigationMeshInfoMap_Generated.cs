@@ -2638,7 +2638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.NVMI:
                 {
-                    this.MapInfos = BinaryOverlayList<NavigationMapInfoBinaryOverlay>.FactoryByArray(
+                    this.MapInfos = BinaryOverlayList.FactoryByArray<NavigationMapInfoBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

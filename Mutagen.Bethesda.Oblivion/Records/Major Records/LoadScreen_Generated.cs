@@ -2467,7 +2467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.LNAM:
                 {
-                    this.Locations = BinaryOverlayList<LoadScreenLocationBinaryOverlay>.FactoryByArray(
+                    this.Locations = BinaryOverlayList.FactoryByArray<LoadScreenLocationBinaryOverlay>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         recordTypeConverter: recordTypeConverter,

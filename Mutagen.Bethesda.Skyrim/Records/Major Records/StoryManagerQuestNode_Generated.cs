@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RNAM:
                 case RecordTypeInts.QNAM:
                 {
-                    this.Quests = BinaryOverlayList<StoryManagerQuestBinaryOverlay>.FactoryByCountPerItem(
+                    this.Quests = BinaryOverlayList.FactoryByCountPerItem<StoryManagerQuestBinaryOverlay>(
                         stream: stream,
                         package: _package,
                         countLength: 4,

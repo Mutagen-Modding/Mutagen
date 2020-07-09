@@ -2139,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RegionPointListData = BinaryOverlayList<P2Float>.FactoryByStartIndex(
+                    this.RegionPointListData = BinaryOverlayList.FactoryByStartIndex<P2Float>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
