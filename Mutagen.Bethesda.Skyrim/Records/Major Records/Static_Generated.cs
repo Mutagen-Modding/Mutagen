@@ -2890,15 +2890,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int _FlagsLocation => _DNAMLocation!.Value + 0x8;
-        private bool _Flags_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        private bool _Flags_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
         public Static.Flag Flags => _Flags_IsSet ? (Static.Flag)_data.Span.Slice(_FlagsLocation, 0x1)[0] : default;
-        int FlagsVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -1 : 0;
+        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -1 : 0;
         #endregion
         #region Unused
         private int _UnusedLocation => _DNAMLocation!.Value + FlagsVersioningOffset + 0x9;
-        private bool _Unused_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        private bool _Unused_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
         public ReadOnlyMemorySlice<Byte> Unused => _Unused_IsSet ? _data.Span.Slice(_UnusedLocation, 3).ToArray() : default(ReadOnlyMemorySlice<byte>);
-        int UnusedVersioningOffset => FlagsVersioningOffset + (_package.MajorRecord!.FormVersion!.Value < 44 ? -3 : 0);
+        int UnusedVersioningOffset => FlagsVersioningOffset + (_package.FormVersion!.FormVersion!.Value < 44 ? -3 : 0);
         #endregion
         #region Lod
         private RangeInt32? _LodLocation;
@@ -2932,7 +2932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret._package.MajorRecord = ret;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,

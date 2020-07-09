@@ -1996,7 +1996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public BipedObjectFlag FirstPersonFlags => (BipedObjectFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         #region Flags
         public BodyTemplate.Flag Flags => (BodyTemplate.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
-        int FlagsVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 22 || _package.MajorRecord!.FormVersion!.Value >= 44 ? -4 : 0;
+        int FlagsVersioningOffset => _package.FormVersion!.FormVersion!.Value < 22 || _package.FormVersion!.FormVersion!.Value >= 44 ? -4 : 0;
         #endregion
         public ArmorType ArmorType => (ArmorType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(FlagsVersioningOffset + 0x8, 0x4));
         partial void CustomFactoryEnd(

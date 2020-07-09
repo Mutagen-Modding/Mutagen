@@ -8738,9 +8738,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region NoiseFlowmapScale
         private int _NoiseFlowmapScaleLocation => _DNAMLocation!.Value + 0xE4;
-        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        private bool _NoiseFlowmapScale_IsSet => _DNAMLocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
         public Single NoiseFlowmapScale => _NoiseFlowmapScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseFlowmapScaleLocation, 4)) : default;
-        int NoiseFlowmapScaleVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0;
+        int NoiseFlowmapScaleVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region GNAM
         private int? _GNAMLocation;
@@ -8797,7 +8797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret._package.MajorRecord = ret;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,

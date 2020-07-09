@@ -2213,7 +2213,7 @@ namespace Mutagen.Bethesda.Generation
                         if (data.HasVersioning
                             && !lengths.Field.HasBeenSet)
                         {
-                            VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.MajorRecord!.FormVersion!.Value");
+                            VersioningModule.AddVersionOffset(fg, lengths.Field, lengths.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                             lastVersionedField = lengths.Field;
                         }
                         if (!data.HasTrigger)
@@ -2584,7 +2584,7 @@ namespace Mutagen.Bethesda.Generation
 
                         if (await obj.IsMajorRecord())
                         {
-                            fg.AppendLine("ret._package.MajorRecord = ret;");
+                            fg.AppendLine("ret._package.FormVersion = ret;");
                         }
 
                         // Parse struct section ending positions 

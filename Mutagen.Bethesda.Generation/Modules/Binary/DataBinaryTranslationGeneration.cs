@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Generation
                         data: dataType);
                     if (fieldData.HasVersioning)
                     {
-                        VersioningModule.AddVersionOffset(fg, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.MajorRecord!.FormVersion!.Value");
+                        VersioningModule.AddVersionOffset(fg, field.Field, length.FieldLength.Value, lastVersionedField, $"_package.FormVersion!.FormVersion!.Value");
                         lastVersionedField = field.Field;
                     }
                     if (length.CurLength == null)
@@ -246,7 +246,7 @@ namespace Mutagen.Bethesda.Generation
             }
             if (fieldData.HasVersioning)
             {
-                extraChecks.Append(VersioningModule.GetVersionIfCheck(fieldData, "_package.MajorRecord!.FormVersion!.Value"));
+                extraChecks.Append(VersioningModule.GetVersionIfCheck(fieldData, "_package.FormVersion!.FormVersion!.Value"));
             }
             fg.AppendLine($"private int _{typeGen.Name}Location => {posAccessor};");
             switch (typeGen.GetFieldData().BinaryOverlayFallback)

@@ -3966,9 +3966,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x10;
-        private bool _Weight_IsSet => _DATALocation.HasValue && _package.MajorRecord!.FormVersion!.Value >= 44;
+        private bool _Weight_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
         public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
-        int WeightVersioningOffset => _package.MajorRecord!.FormVersion!.Value < 44 ? -4 : 0;
+        int WeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
@@ -4001,7 +4001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 package: package);
             var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
-            ret._package.MajorRecord = ret;
+            ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret.CustomFactoryEnd(
                 stream: stream,

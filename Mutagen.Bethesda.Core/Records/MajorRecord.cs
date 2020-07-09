@@ -51,6 +51,7 @@ namespace Mutagen.Bethesda
 
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {
@@ -68,6 +69,7 @@ namespace Mutagen.Bethesda.Internals
 
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
+        ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
 
         object IDuplicatable.Duplicate(Func<FormKey> getNextFormKey, IList<(IMajorRecordCommon Record, FormKey OriginalFormKey)>? duplicatedRecordTracker)
         {

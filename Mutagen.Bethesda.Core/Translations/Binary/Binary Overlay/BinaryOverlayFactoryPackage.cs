@@ -8,12 +8,12 @@ namespace Mutagen.Bethesda.Binary
     public struct BinaryOverlayFactoryPackage
     {
         public ParsingBundle MetaData;
-        public IMajorRecordCommonGetter? MajorRecord;
+        public IFormVersionGetter? FormVersion;
 
         public BinaryOverlayFactoryPackage(ParsingBundle metaData)
         {
             this.MetaData = metaData;
-            this.MajorRecord = null;
+            this.FormVersion = null;
         }
 
         public static implicit operator ParsingBundle(BinaryOverlayFactoryPackage package)
