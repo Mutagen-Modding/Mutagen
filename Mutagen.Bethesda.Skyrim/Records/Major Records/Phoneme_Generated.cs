@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public String Name { get; set; } = string.Empty;
+        #endregion
         #region IY
         public Single IY { get; set; } = default;
         #endregion
@@ -344,6 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Name = initialValue;
                 this.IY = initialValue;
                 this.IH = initialValue;
                 this.EH = initialValue;
@@ -390,6 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
+                TItem Name,
                 TItem IY,
                 TItem IH,
                 TItem EH,
@@ -434,6 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem SHOTSIL,
                 TItem FLAP)
             {
+                this.Name = Name;
                 this.IY = IY;
                 this.IH = IH;
                 this.EH = EH;
@@ -488,6 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
+            public TItem Name;
             public TItem IY;
             public TItem IH;
             public TItem EH;
@@ -543,6 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
                 if (!object.Equals(this.IY, rhs.IY)) return false;
                 if (!object.Equals(this.IH, rhs.IH)) return false;
                 if (!object.Equals(this.EH, rhs.EH)) return false;
@@ -591,6 +599,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
                 hash.Add(this.IY);
                 hash.Add(this.IH);
                 hash.Add(this.EH);
@@ -642,6 +651,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Name)) return false;
                 if (!eval(this.IY)) return false;
                 if (!eval(this.IH)) return false;
                 if (!eval(this.EH)) return false;
@@ -692,6 +702,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Name)) return true;
                 if (eval(this.IY)) return true;
                 if (eval(this.IH)) return true;
                 if (eval(this.EH)) return true;
@@ -749,6 +760,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Name = eval(this.Name);
                 obj.IY = eval(this.IY);
                 obj.IH = eval(this.IH);
                 obj.EH = eval(this.EH);
@@ -814,6 +826,10 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
                     if (printMask?.IY ?? true)
                     {
                         fg.AppendItem(IY, "IY");
@@ -1011,6 +1027,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
+            public Exception? Name;
             public Exception? IY;
             public Exception? IH;
             public Exception? EH;
@@ -1062,6 +1079,8 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        return Name;
                     case Phoneme_FieldIndex.IY:
                         return IY;
                     case Phoneme_FieldIndex.IH:
@@ -1158,6 +1177,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
                     case Phoneme_FieldIndex.IY:
                         this.IY = ex;
                         break;
@@ -1297,6 +1319,9 @@ namespace Mutagen.Bethesda.Skyrim
                 Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
                 switch (enu)
                 {
+                    case Phoneme_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
                     case Phoneme_FieldIndex.IY:
                         this.IY = (Exception?)obj;
                         break;
@@ -1434,6 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
                 if (IY != null) return true;
                 if (IH != null) return true;
                 if (EH != null) return true;
@@ -1511,6 +1537,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Name, "Name");
                 fg.AppendItem(IY, "IY");
                 fg.AppendItem(IH, "IH");
                 fg.AppendItem(EH, "EH");
@@ -1562,6 +1589,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
                 ret.IY = this.IY.Combine(rhs.IY);
                 ret.IH = this.IH.Combine(rhs.IH);
                 ret.EH = this.EH.Combine(rhs.EH);
@@ -1626,6 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
+            public bool Name;
             public bool IY;
             public bool IH;
             public bool EH;
@@ -1674,6 +1703,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
+                this.Name = defaultOn;
                 this.IY = defaultOn;
                 this.IH = defaultOn;
                 this.EH = defaultOn;
@@ -1732,6 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Name, null));
                 ret.Add((IY, null));
                 ret.Add((IH, null));
                 ret.Add((EH, null));
@@ -1849,6 +1880,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPhonemeGetter,
         ILoquiObjectSetter<IPhoneme>
     {
+        new String Name { get; set; }
         new Single IY { get; set; }
         new Single IH { get; set; }
         new Single EH { get; set; }
@@ -1907,6 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Phoneme_Registration.Instance;
+        String Name { get; }
         Single IY { get; }
         Single IH { get; }
         Single EH { get; }
@@ -2267,49 +2300,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum Phoneme_FieldIndex
     {
-        IY = 0,
-        IH = 1,
-        EH = 2,
-        EY = 3,
-        AE = 4,
-        AA = 5,
-        AW = 6,
-        AY = 7,
-        AH = 8,
-        AO = 9,
-        OY = 10,
-        OW = 11,
-        UH = 12,
-        UW = 13,
-        ER = 14,
-        AX = 15,
-        S = 16,
-        SH = 17,
-        Z = 18,
-        ZH = 19,
-        F = 20,
-        TH = 21,
-        V = 22,
-        DH = 23,
-        M = 24,
-        N = 25,
-        NG = 26,
-        L = 27,
-        R = 28,
-        W = 29,
-        Y = 30,
-        HH = 31,
-        B = 32,
-        D = 33,
-        JH = 34,
-        G = 35,
-        P = 36,
-        T = 37,
-        K = 38,
-        CH = 39,
-        SIL = 40,
-        SHOTSIL = 41,
-        FLAP = 42,
+        Name = 0,
+        IY = 1,
+        IH = 2,
+        EH = 3,
+        EY = 4,
+        AE = 5,
+        AA = 6,
+        AW = 7,
+        AY = 8,
+        AH = 9,
+        AO = 10,
+        OY = 11,
+        OW = 12,
+        UH = 13,
+        UW = 14,
+        ER = 15,
+        AX = 16,
+        S = 17,
+        SH = 18,
+        Z = 19,
+        ZH = 20,
+        F = 21,
+        TH = 22,
+        V = 23,
+        DH = 24,
+        M = 25,
+        N = 26,
+        NG = 27,
+        L = 28,
+        R = 29,
+        W = 30,
+        Y = 31,
+        HH = 32,
+        B = 33,
+        D = 34,
+        JH = 35,
+        G = 36,
+        P = 37,
+        T = 38,
+        K = 39,
+        CH = 40,
+        SIL = 41,
+        SHOTSIL = 42,
+        FLAP = 43,
     }
     #endregion
 
@@ -2327,9 +2361,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "de2d7619-85dc-497e-b8a2-b955f9340a93";
 
-        public const ushort AdditionalFieldCount = 43;
+        public const ushort AdditionalFieldCount = 44;
 
-        public const ushort FieldCount = 43;
+        public const ushort FieldCount = 44;
 
         public static readonly Type MaskType = typeof(Phoneme.Mask<>);
 
@@ -2359,6 +2393,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
+                case "NAME":
+                    return (ushort)Phoneme_FieldIndex.Name;
                 case "IY":
                     return (ushort)Phoneme_FieldIndex.IY;
                 case "IH":
@@ -2455,6 +2491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2509,6 +2546,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2563,6 +2601,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2617,6 +2656,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
+                    return "Name";
                 case Phoneme_FieldIndex.IY:
                     return "IY";
                 case Phoneme_FieldIndex.IH:
@@ -2713,6 +2754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2767,6 +2809,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
                 case Phoneme_FieldIndex.IY:
                 case Phoneme_FieldIndex.IH:
                 case Phoneme_FieldIndex.EH:
@@ -2821,6 +2864,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Phoneme_FieldIndex enu = (Phoneme_FieldIndex)index;
             switch (enu)
             {
+                case Phoneme_FieldIndex.Name:
+                    return typeof(String);
                 case Phoneme_FieldIndex.IY:
                     return typeof(Single);
                 case Phoneme_FieldIndex.IH:
@@ -2955,6 +3000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPhoneme item)
         {
             ClearPartial();
+            item.Name = string.Empty;
             item.IY = default;
             item.IH = default;
             item.EH = default;
@@ -3069,6 +3115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
             ret.IY = item.IY.EqualsWithin(rhs.IY);
             ret.IH = item.IH.EqualsWithin(rhs.IH);
             ret.EH = item.EH.EqualsWithin(rhs.EH);
@@ -3158,6 +3205,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             Phoneme.Mask<bool>? printMask = null)
         {
+            if (printMask?.Name ?? true)
+            {
+                fg.AppendItem(item.Name, "Name");
+            }
             if (printMask?.IY ?? true)
             {
                 fg.AppendItem(item.IY, "IY");
@@ -3343,6 +3394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPhonemeGetter item,
             Phoneme.Mask<bool> mask)
         {
+            mask.Name = true;
             mask.IY = true;
             mask.IH = true;
             mask.EH = true;
@@ -3395,6 +3447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if (!string.Equals(lhs.Name, rhs.Name)) return false;
             if (!lhs.IY.EqualsWithin(rhs.IY)) return false;
             if (!lhs.IH.EqualsWithin(rhs.IH)) return false;
             if (!lhs.EH.EqualsWithin(rhs.EH)) return false;
@@ -3444,6 +3497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IPhonemeGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Name);
             hash.Add(item.IY);
             hash.Add(item.IH);
             hash.Add(item.EH);
@@ -3519,6 +3573,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
+            if ((copyMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
             if ((copyMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
             {
                 item.IY = rhs.IY;
@@ -3780,6 +3838,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
+            if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.Name) ?? true))
+            {
+                StringXmlTranslation.Instance.Write(
+                    node: node,
+                    name: nameof(item.Name),
+                    item: item.Name,
+                    fieldIndex: (int)Phoneme_FieldIndex.Name,
+                    errorMask: errorMask);
+            }
             if ((translationMask?.GetShouldTranslate((int)Phoneme_FieldIndex.IY) ?? true))
             {
                 FloatXmlTranslation.Instance.Write(
@@ -4273,6 +4340,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
+                case "Name":
+                    errorMask?.PushIndex((int)Phoneme_FieldIndex.Name);
+                    try
+                    {
+                        item.Name = StringXmlTranslation.Instance.Parse(
+                            node: node,
+                            errorMask: errorMask);
+                    }
+                    catch (Exception ex)
+                    when (errorMask != null)
+                    {
+                        errorMask.ReportException(ex);
+                    }
+                    finally
+                    {
+                        errorMask?.PopIndex();
+                    }
+                    break;
                 case "IY":
                     errorMask?.PushIndex((int)Phoneme_FieldIndex.IY);
                     try

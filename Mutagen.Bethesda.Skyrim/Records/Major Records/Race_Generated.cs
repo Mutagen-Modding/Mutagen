@@ -11149,7 +11149,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                                     r,
                                     item: out listSubItem,
-                                    parseWhole: true);
+                                    parseWhole: true,
+                                    binaryType: StringBinaryType.Plain);
                             }));
                     return (int)Race_FieldIndex.MovementTypeNames;
                 }

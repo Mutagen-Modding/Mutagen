@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordType">Repeating type to locate</param>
         /// <param name="lenParsed">The amount of data located subrecords cover</param>
         /// <returns>Array of locations of located target types</returns>
-        public static int[] FindRepeatingSubrecord(ReadOnlySpan<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
+        public static int[] ParseRepeatingSubrecord(ReadOnlySpan<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
         {
             lenParsed = 0;
             List<int> list = new List<int>();

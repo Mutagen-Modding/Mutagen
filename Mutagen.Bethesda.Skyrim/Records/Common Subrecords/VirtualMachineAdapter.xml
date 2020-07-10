@@ -53,13 +53,13 @@
       <RefList name="Objects" refName="ScriptObjectProperty" counterLength="4" />
     </Fields>
   </Object>
-  <!--<Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8a0d079d-f9de-4460-82b6-01611f36fa7a" ID="100">
+  <Object name="ScriptStringListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="8a0d079d-f9de-4460-82b6-01611f36fa7a" ID="100">
     <Fields>
-      <List name="Data">
+      <List name="Data" counterLength="4" >
         <String binaryType="PrependLengthUShort" />
       </List>
     </Fields>
-  </Object>-->
+  </Object>
   <Object name="ScriptIntListProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="55a3fbad-83ba-4d9a-bce1-c959a7226330" ID="101">
     <Fields>
       <List name="Data" counterLength="4">

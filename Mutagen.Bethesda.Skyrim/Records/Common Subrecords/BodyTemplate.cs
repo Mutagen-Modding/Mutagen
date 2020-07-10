@@ -42,6 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
                         }
                         frame.MetaData.FormVersion = 44;
                         var template = BodyTemplate.CreateFromBinary(frame);
+                        template.ActsLike44 = true;
                         frame.MetaData.FormVersion = 43;
                         return template;
                     default:
@@ -70,16 +71,6 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public bool ActsLike44 { get; private set; }
 
-            partial void CustomFactoryEnd(OverlayStream stream, int finalPos, int offset)
-            {
-                if (_package.FormVersion!.FormVersion != 43) return;
-                var pos = stream.Position;
-                stream.Position -= _data.Length - _package.MetaData.Constants.SubConstants.HeaderLength;
-                var subHeader = stream.ReadSubrecord();
-                ActsLike44 = subHeader.RecordTypeInt == RecordTypeInts.BOD2;
-                stream.Position = pos;
-            }
-
             public static IBodyTemplateGetter? CustomFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var subFrame = stream.GetSubrecordFrame();
@@ -107,6 +98,7 @@ namespace Mutagen.Bethesda.Skyrim
                             FormVersion = 44
                         };
                         var template = BodyTemplateBinaryOverlay.BodyTemplateFactory(stream, package);
+                        template.ActsLike44 = true;
                         package.FormVersion = cur;
                         return template;
                     default:

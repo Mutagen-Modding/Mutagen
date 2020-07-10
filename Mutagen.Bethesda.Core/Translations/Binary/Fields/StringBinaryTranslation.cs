@@ -25,9 +25,10 @@ namespace Mutagen.Bethesda.Binary
         public bool Parse(
             MutagenFrame frame,
             bool parseWhole,
-            out string item)
+            out string item,
+            StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            item = Parse(frame, parseWhole: parseWhole);
+            item = Parse(frame, parseWhole: parseWhole, stringBinaryType: binaryType);
             return true;
         }
 

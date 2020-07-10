@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
             {
-                var locs = UtilityTranslation.FindRepeatingSubrecord(
+                var locs = UtilityTranslation.ParseRepeatingSubrecord(
                     stream.RemainingSpan,
                     stream.MetaData.Constants,
                     RecordTypes.FNPR,

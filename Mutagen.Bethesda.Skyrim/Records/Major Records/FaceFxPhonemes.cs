@@ -212,87 +212,6 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new NotImplementedException();
             }
         }
-
-        public static Target GetTarget(string str, out bool lipMode)
-        {
-            switch (str)
-            {
-                case "Aah":
-                    lipMode = false;
-                    return Target.Aah;
-                case "LipBigAah":
-                    lipMode = true;
-                    return Target.Aah;
-                case "BigAah":
-                    lipMode = false;
-                    return Target.BigAah;
-                case "LipDST":
-                    lipMode = true;
-                    return Target.BigAah;
-                case "BMP":
-                    lipMode = false;
-                    return Target.BMP;
-                case "LipEee":
-                    lipMode = true;
-                    return Target.BMP;
-                case "ChJSh":
-                    lipMode = false;
-                    return Target.ChJSh;
-                case "LipFV":
-                    lipMode = true;
-                    return Target.ChJSh;
-                case "DST":
-                    lipMode = false;
-                    return Target.DST;
-                case "LipK":
-                    lipMode = true;
-                    return Target.DST;
-                case "Eee":
-                    lipMode = false;
-                    return Target.Eee;
-                case "LipL":
-                    lipMode = true;
-                    return Target.Eee;
-                case "Eh":
-                    lipMode = false;
-                    return Target.Eh;
-                case "LipR":
-                    lipMode = true;
-                    return Target.Eh;
-                case "FV":
-                    lipMode = false;
-                    return Target.FV;
-                case "LipTh":
-                    lipMode = true;
-                    return Target.FV;
-                case "I":
-                    lipMode = false;
-                    return Target.I;
-                case "K":
-                    lipMode = false;
-                    return Target.K;
-                case "N":
-                    lipMode = false;
-                    return Target.N;
-                case "Oh":
-                    lipMode = false;
-                    return Target.Oh;
-                case "OohQ":
-                    lipMode = false;
-                    return Target.OohQ;
-                case "R":
-                    lipMode = false;
-                    return Target.R;
-                case "Th":
-                    lipMode = false;
-                    return Target.Th;
-                case "W":
-                    lipMode = false;
-                    return Target.W;
-                default:
-                    throw new ArgumentException($"Unknown Face String: {str}");
-            }
-        }
     }
 
     namespace Internals
@@ -300,64 +219,85 @@ namespace Mutagen.Bethesda.Skyrim
         public partial class FaceFxPhonemesBinaryCreateTranslation
         {
             public static readonly IReadOnlyList<Target> Targets = EnumExt.GetValues<Target>().ToExtendedList();
+            public static readonly IReadOnlyList<(Target Target, string Name)> TargetWithNames;
             public static readonly int TargetSize = EnumExt.GetSize<Target>();
             public static readonly IEnumerable<Phoneme.Slot> Slots = EnumExt.GetValues<Phoneme.Slot>();
             public static readonly int SlotSize = EnumExt.GetSize<Phoneme.Slot>();
 
+            static FaceFxPhonemesBinaryCreateTranslation()
+            {
+                TargetWithNames = Targets.Select(t =>
+                {
+                    return (t, t.GetString(lipMode: false));
+                }).ToExtendedList();
+            }
+
+            public static bool IsTypical(string str)
+            {
+                switch (str)
+                {
+                    case "Aah":
+                    case "BigAah":
+                    case "BMP":
+                    case "ChJSh":
+                    case "DST":
+                    case "Eee":
+                    case "Eh":
+                    case "FV":
+                    case "I":
+                    case "K":
+                    case "N":
+                    case "Oh":
+                    case "OohQ":
+                    case "R":
+                    case "Th":
+                    case "W":
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
             public static void ParseFaceFxPhonemes(MutagenFrame frame, IFaceFxPhonemes item)
             {
                 var meta = frame.Reader.GetSubrecord();
-                IReadOnlyList<Target>? targets;
-                bool? lipMode = null;
+                IReadOnlyList<(Target Target, string Name)>? targets;
 
                 if (meta.RecordType == RecordTypes.PHTN)
                 {
-                    var targetAccumulation = new List<Target>();
+                    var targetAccumulation = new List<(Target Target, string Name)>();
                     targets = targetAccumulation;
-                    HashSet<Target> set = new HashSet<Target>();
+                    var set = new HashSet<Target>();
 
-                    void Add(List<Target> targets, Target target)
+                    void Add(List<(Target Target, string Name)> targets, Target target, string name)
                     {
                         if (!set.Add(target))
                         {
                             throw new ArgumentException("Already added target during listing parse.");
                         }
-                        targets.Add(target);
-                    }
-
-                    void SetLipMode(bool on)
-                    {
-                        if (lipMode == null)
-                        {
-                            lipMode = on;
-                        }
-                        else if (lipMode != on)
-                        {
-                            throw new ArgumentException("Conflicting Lip Modes.");
-                        }
+                        targets.Add((target, name));
                     }
 
                     var subFrame = frame.Reader.GetSubrecordFrame();
+                    int i = 0;
                     while (subFrame.Header.RecordType == RecordTypes.PHTN)
                     {
                         var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content);
-                        Add(targetAccumulation, FaceFxPhonemesMixIn.GetTarget(str, out var isLip));
-                        SetLipMode(isLip);
+                        Add(targetAccumulation, (Target)i++, str);
                         frame.Position += subFrame.Header.TotalLength;
                         if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
                     }
+
+                    item.ForceNames = true;
                 }
                 else if (meta.RecordType == RecordTypes.PHWT)
                 {
-                    targets = Targets;
+                    targets = TargetWithNames;
                 }
                 else
                 {
                     throw new ArgumentException($"Unexpected header: {meta.RecordType}");
                 }
-
-                // Set lip mode
-                item.LipMode = lipMode ?? false;
 
                 // Read in all the slots
                 var expectedSize = targets.Count * 4;
@@ -377,8 +317,11 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < targets.Count; i++)
                 {
                     var target = targets[i];
-                    var phoneme = new Phoneme();
-                    item.Set(target, phoneme);
+                    var phoneme = new Phoneme()
+                    {
+                        Name = target.Name
+                    };
+                    item.Set(target.Target, phoneme);
                     foreach (var slot in Slots)
                     {
                         var mem = slots[(int)slot];
@@ -398,17 +341,18 @@ namespace Mutagen.Bethesda.Skyrim
                     phonemes[(int)target] = item.GetGetter(target);
                 }
                 if (!phonemes.Any(p => p != null)) return;
-                var lipMode = item.LipMode;
+                var force = item.ForceNames;
                 var hasAll = phonemes.All(p => p != null);
-                if (!hasAll || lipMode)
+                if (!hasAll || force)
                 {
                     for (int i = 0; i < phonemes.Length; i++)
                     {
-                        if (phonemes[i] == null) continue;
+                        var phoneme = phonemes[i];
+                        if (phoneme == null) continue;
                         var target = (Target)i;
                         using (HeaderExport.Subrecord(writer, RecordTypes.PHTN))
                         {
-                            writer.Write(target.GetString(lipMode), StringBinaryType.NullTerminate);
+                            writer.Write(phoneme.Name, StringBinaryType.NullTerminate);
                         }
                     }
                 }
@@ -429,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FaceFxPhonemesBinaryOverlay
         {
-            public bool LipMode => throw new NotImplementedException();
+            public bool ForceNames => throw new NotImplementedException();
 
             public IPhonemeGetter? Aah_LipBigAah => throw new NotImplementedException();
 

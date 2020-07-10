@@ -202,7 +202,7 @@
   </Object>
   <Object name="FaceFxPhonemes" objType="Subrecord" GUID="b965bdb9-1d8c-4efe-8cfa-2f35cd13370a" ID="70">
     <Fields>
-      <Bool name="LipMode" binary="NoGeneration" />
+      <Bool name="ForceNames" binary="NoGeneration" />
       <RefDirect name="Aah_LipBigAah" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
       <RefDirect name="BigAah_LipDST" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
       <RefDirect name="BMP_LipEee" hasBeenSet="True" refName="Phoneme" binary="NoGeneration" />
@@ -223,6 +223,7 @@
   </Object>
   <Object name="Phoneme" objType="Subrecord" GUID="de2d7619-85dc-497e-b8a2-b955f9340a93" ID="71">
     <Fields>
+      <String name="Name" binary="NoGeneration" />
       <Float name="IY" binary="NoGeneration" />
       <Float name="IH" binary="NoGeneration" />
       <Float name="EH" binary="NoGeneration" />

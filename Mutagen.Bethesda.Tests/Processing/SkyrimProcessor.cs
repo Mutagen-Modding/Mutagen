@@ -22,7 +22,6 @@ namespace Mutagen.Bethesda.Tests
             base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
             ProcessGameSettings(stream, formID, recType, loc);
-            ProcessRaces(stream, formID, recType, loc);
             ProcessFurniture(stream, formID, recType, loc);
             ProcessNpcs(stream, formID, recType, loc);
             ProcessRegions(stream, formID, recType, loc);
@@ -37,6 +36,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessImageSpaceAdapters(stream, formID, recType, loc);
             ProcessLoadScreens(stream, formID, recType, loc);
             ProcessActivators(stream, formID, recType, loc);
+            ProcessWeathers(stream, formID, recType, loc);
         }
 
         private void ProcessGameSettings(
@@ -56,52 +56,6 @@ namespace Mutagen.Bethesda.Tests
             if (dataIndex == null) return;
             stream.Position = loc.Min + majorFrame.Header.HeaderLength + dataIndex.Value;
             ProcessZeroFloat(stream);
-        }
-
-        private void ProcessRaces(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!Race_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordFrame();
-            ProcessPhonemes(stream, formID, majorFrame, loc);
-        }
-
-        private void ProcessPhonemes(
-            IMutagenReadStream stream,
-            FormID formID,
-            MajorRecordFrame majorFrame,
-            RangeInt64 loc)
-        {
-            var phonemeListLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, new RecordType("PHTN"));
-            if (phonemeListLoc == null) return;
-            stream.Position = loc.Min + phonemeListLoc.Value + majorFrame.Header.HeaderLength;
-
-            var phonemeSpan = majorFrame.Content.Slice(phonemeListLoc.Value);
-            var finds = UtilityTranslation.FindRepeatingSubrecord(
-                phonemeSpan,
-                this.Meta,
-                new RecordType("PHTN"),
-                out var lenParsed);
-            if (finds?.Length != 16) return;
-            HashSet<FaceFxPhonemes.Target> targets = new HashSet<FaceFxPhonemes.Target>();
-            targets.Add(EnumExt.GetValues<FaceFxPhonemes.Target>());
-            foreach (var find in finds)
-            {
-                var subRecord = this.Meta.SubrecordFrame(phonemeSpan.Slice(find));
-                var str = BinaryStringUtility.ProcessWholeToZString(subRecord.Content);
-                var target = FaceFxPhonemesMixIn.GetTarget(str, out var lipMode);
-                if (lipMode) return;
-                targets.Remove(target);
-            }
-            if (targets.Count > 0) return;
-
-            // Remove fully populated phonemes list
-            this._Instructions.SetRemove(RangeInt64.FactoryFromLength(stream.Position, lenParsed));
-            ModifyLengths(stream, -lenParsed, formID, loc.Min, null);
         }
 
         private void ProcessFurniture(
@@ -488,7 +442,7 @@ namespace Mutagen.Bethesda.Tests
                     ScriptProperty.Type.Float => new ScriptFloatProperty(),
                     ScriptProperty.Type.Bool => new ScriptBoolProperty(),
                     ScriptProperty.Type.ArrayOfObject => new ScriptObjectListProperty(),
-                    //ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
+                    ScriptProperty.Type.ArrayOfString => new ScriptStringListProperty(),
                     ScriptProperty.Type.ArrayOfInt => new ScriptIntListProperty(),
                     ScriptProperty.Type.ArrayOfFloat => new ScriptFloatListProperty(),
                     ScriptProperty.Type.ArrayOfBool => new ScriptBoolListProperty(),
@@ -733,7 +687,7 @@ namespace Mutagen.Bethesda.Tests
                     anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
                 }
 
-                var unamLocs = UtilityTranslation.FindRepeatingSubrecord(
+                var unamLocs = UtilityTranslation.ParseRepeatingSubrecord(
                     majorFrame.Content.Slice(curLoc),
                     stream.MetaData.Constants,
                     unam,
@@ -999,6 +953,29 @@ namespace Mutagen.Bethesda.Tests
                 out var vmadPos,
                 out var objectFormat,
                 out var processedLen);
+        }
+
+        private void ProcessWeathers(
+            IMutagenReadStream stream,
+            FormID formID,
+            RecordType recType,
+            RangeInt64 loc)
+        {
+            if (!Weather_Registration.TriggeringRecordType.Equals(recType)) return;
+
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+
+            var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.SNAM);
+            if (pos != null)
+            {
+                var locs = UtilityTranslation.ParseRepeatingSubrecord(majorFrame.Content.Slice(pos.Value), stream.MetaData.Constants, RecordTypes.SNAM, out var _);
+                foreach (var snam in locs)
+                {
+                    stream.Position = loc.Min + majorFrame.Header.HeaderLength + stream.MetaData.Constants.SubConstants.HeaderLength + snam + pos.Value;
+                    ProcessFormIDOverflow(stream, loc: null);
+                }
+            }
         }
 
         protected override void PreProcessorJobs(IMutagenReadStream stream)

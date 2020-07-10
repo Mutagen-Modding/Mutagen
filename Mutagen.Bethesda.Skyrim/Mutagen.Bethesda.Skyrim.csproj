@@ -2094,6 +2094,9 @@
     <Compile Include="Records\Major Records\Bounding_Generated.cs">
       <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptStringListProperty_Generated.cs">
+      <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.16" />

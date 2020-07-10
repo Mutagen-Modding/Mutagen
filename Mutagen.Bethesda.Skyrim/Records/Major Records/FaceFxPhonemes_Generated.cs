@@ -47,8 +47,8 @@ namespace Mutagen.Bethesda.Skyrim
         partial void CustomCtor();
         #endregion
 
-        #region LipMode
-        public Boolean LipMode { get; set; } = default;
+        #region ForceNames
+        public Boolean ForceNames { get; set; } = default;
         #endregion
         #region Aah_LipBigAah
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -395,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.LipMode = initialValue;
+                this.ForceNames = initialValue;
                 this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
                 this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(initialValue, new Phoneme.Mask<TItem>(initialValue));
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             public Mask(
-                TItem LipMode,
+                TItem ForceNames,
                 TItem Aah_LipBigAah,
                 TItem BigAah_LipDST,
                 TItem BMP_LipEee,
@@ -433,7 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem Th,
                 TItem W)
             {
-                this.LipMode = LipMode;
+                this.ForceNames = ForceNames;
                 this.Aah_LipBigAah = new MaskItem<TItem, Phoneme.Mask<TItem>?>(Aah_LipBigAah, new Phoneme.Mask<TItem>(Aah_LipBigAah));
                 this.BigAah_LipDST = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BigAah_LipDST, new Phoneme.Mask<TItem>(BigAah_LipDST));
                 this.BMP_LipEee = new MaskItem<TItem, Phoneme.Mask<TItem>?>(BMP_LipEee, new Phoneme.Mask<TItem>(BMP_LipEee));
@@ -461,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public TItem LipMode;
+            public TItem ForceNames;
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? Aah_LipBigAah { get; set; }
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? BigAah_LipDST { get; set; }
             public MaskItem<TItem, Phoneme.Mask<TItem>?>? BMP_LipEee { get; set; }
@@ -490,7 +490,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.LipMode, rhs.LipMode)) return false;
+                if (!object.Equals(this.ForceNames, rhs.ForceNames)) return false;
                 if (!object.Equals(this.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
                 if (!object.Equals(this.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
                 if (!object.Equals(this.BMP_LipEee, rhs.BMP_LipEee)) return false;
@@ -512,7 +512,7 @@ namespace Mutagen.Bethesda.Skyrim
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.LipMode);
+                hash.Add(this.ForceNames);
                 hash.Add(this.Aah_LipBigAah);
                 hash.Add(this.BigAah_LipDST);
                 hash.Add(this.BMP_LipEee);
@@ -537,7 +537,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.LipMode)) return false;
+                if (!eval(this.ForceNames)) return false;
                 if (Aah_LipBigAah != null)
                 {
                     if (!eval(this.Aah_LipBigAah.Overall)) return false;
@@ -625,7 +625,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.LipMode)) return true;
+                if (eval(this.ForceNames)) return true;
                 if (Aah_LipBigAah != null)
                 {
                     if (eval(this.Aah_LipBigAah.Overall)) return true;
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.LipMode = eval(this.LipMode);
+                obj.ForceNames = eval(this.ForceNames);
                 obj.Aah_LipBigAah = this.Aah_LipBigAah == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.Aah_LipBigAah.Overall), this.Aah_LipBigAah.Specific?.Translate(eval));
                 obj.BigAah_LipDST = this.BigAah_LipDST == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BigAah_LipDST.Overall), this.BigAah_LipDST.Specific?.Translate(eval));
                 obj.BMP_LipEee = this.BMP_LipEee == null ? null : new MaskItem<R, Phoneme.Mask<R>?>(eval(this.BMP_LipEee.Overall), this.BMP_LipEee.Specific?.Translate(eval));
@@ -759,9 +759,9 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.LipMode ?? true)
+                    if (printMask?.ForceNames ?? true)
                     {
-                        fg.AppendItem(LipMode, "LipMode");
+                        fg.AppendItem(ForceNames, "ForceNames");
                     }
                     if (printMask?.Aah_LipBigAah?.Overall ?? true)
                     {
@@ -852,7 +852,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public Exception? LipMode;
+            public Exception? ForceNames;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? Aah_LipBigAah;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? BigAah_LipDST;
             public MaskItem<Exception?, Phoneme.ErrorMask?>? BMP_LipEee;
@@ -877,8 +877,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        return LipMode;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        return ForceNames;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         return Aah_LipBigAah;
                     case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
@@ -921,8 +921,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        this.LipMode = ex;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        this.ForceNames = ex;
                         break;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         this.Aah_LipBigAah = new MaskItem<Exception?, Phoneme.ErrorMask?>(ex, null);
@@ -982,8 +982,8 @@ namespace Mutagen.Bethesda.Skyrim
                 FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
                 switch (enu)
                 {
-                    case FaceFxPhonemes_FieldIndex.LipMode:
-                        this.LipMode = (Exception?)obj;
+                    case FaceFxPhonemes_FieldIndex.ForceNames:
+                        this.ForceNames = (Exception?)obj;
                         break;
                     case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                         this.Aah_LipBigAah = (MaskItem<Exception?, Phoneme.ErrorMask?>?)obj;
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (LipMode != null) return true;
+                if (ForceNames != null) return true;
                 if (Aah_LipBigAah != null) return true;
                 if (BigAah_LipDST != null) return true;
                 if (BMP_LipEee != null) return true;
@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(LipMode, "LipMode");
+                fg.AppendItem(ForceNames, "ForceNames");
                 Aah_LipBigAah?.ToString(fg);
                 BigAah_LipDST?.ToString(fg);
                 BMP_LipEee?.ToString(fg);
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.LipMode = this.LipMode.Combine(rhs.LipMode);
+                ret.ForceNames = this.ForceNames.Combine(rhs.ForceNames);
                 ret.Aah_LipBigAah = this.Aah_LipBigAah.Combine(rhs.Aah_LipBigAah, (l, r) => l.Combine(r));
                 ret.BigAah_LipDST = this.BigAah_LipDST.Combine(rhs.BigAah_LipDST, (l, r) => l.Combine(r));
                 ret.BMP_LipEee = this.BMP_LipEee.Combine(rhs.BMP_LipEee, (l, r) => l.Combine(r));
@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool LipMode;
+            public bool ForceNames;
             public MaskItem<bool, Phoneme.TranslationMask?> Aah_LipBigAah;
             public MaskItem<bool, Phoneme.TranslationMask?> BigAah_LipDST;
             public MaskItem<bool, Phoneme.TranslationMask?> BMP_LipEee;
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.LipMode = defaultOn;
+                this.ForceNames = defaultOn;
                 this.Aah_LipBigAah = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
                 this.BigAah_LipDST = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
                 this.BMP_LipEee = new MaskItem<bool, Phoneme.TranslationMask?>(defaultOn, null);
@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((LipMode, null));
+                ret.Add((ForceNames, null));
                 ret.Add((Aah_LipBigAah?.Overall ?? true, Aah_LipBigAah?.Specific?.GetCrystal()));
                 ret.Add((BigAah_LipDST?.Overall ?? true, BigAah_LipDST?.Specific?.GetCrystal()));
                 ret.Add((BMP_LipEee?.Overall ?? true, BMP_LipEee?.Specific?.GetCrystal()));
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFaceFxPhonemesGetter,
         ILoquiObjectSetter<IFaceFxPhonemes>
     {
-        new Boolean LipMode { get; set; }
+        new Boolean ForceNames { get; set; }
         new Phoneme? Aah_LipBigAah { get; set; }
         new Phoneme? BigAah_LipDST { get; set; }
         new Phoneme? BMP_LipEee { get; set; }
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => FaceFxPhonemes_Registration.Instance;
-        Boolean LipMode { get; }
+        Boolean ForceNames { get; }
         IPhonemeGetter? Aah_LipBigAah { get; }
         IPhonemeGetter? BigAah_LipDST { get; }
         IPhonemeGetter? BMP_LipEee { get; }
@@ -1666,7 +1666,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum FaceFxPhonemes_FieldIndex
     {
-        LipMode = 0,
+        ForceNames = 0,
         Aah_LipBigAah = 1,
         BigAah_LipDST = 2,
         BMP_LipEee = 3,
@@ -1732,8 +1732,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (str.Upper)
             {
-                case "LIPMODE":
-                    return (ushort)FaceFxPhonemes_FieldIndex.LipMode;
+                case "FORCENAMES":
+                    return (ushort)FaceFxPhonemes_FieldIndex.ForceNames;
                 case "AAH_LIPBIGAAH":
                     return (ushort)FaceFxPhonemes_FieldIndex.Aah_LipBigAah;
                 case "BIGAAH_LIPDST":
@@ -1776,7 +1776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1821,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case FaceFxPhonemes_FieldIndex.Th:
                 case FaceFxPhonemes_FieldIndex.W:
                     return true;
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1833,7 +1833,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1861,8 +1861,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
-                    return "LipMode";
+                case FaceFxPhonemes_FieldIndex.ForceNames:
+                    return "ForceNames";
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                     return "Aah_LipBigAah";
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                 case FaceFxPhonemes_FieldIndex.BigAah_LipDST:
                 case FaceFxPhonemes_FieldIndex.BMP_LipEee:
@@ -1961,7 +1961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FaceFxPhonemes_FieldIndex enu = (FaceFxPhonemes_FieldIndex)index;
             switch (enu)
             {
-                case FaceFxPhonemes_FieldIndex.LipMode:
+                case FaceFxPhonemes_FieldIndex.ForceNames:
                     return typeof(Boolean);
                 case FaceFxPhonemes_FieldIndex.Aah_LipBigAah:
                     return typeof(Phoneme);
@@ -2043,7 +2043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFaceFxPhonemes item)
         {
             ClearPartial();
-            item.LipMode = default;
+            item.ForceNames = default;
             item.Aah_LipBigAah = null;
             item.BigAah_LipDST = null;
             item.BMP_LipEee = null;
@@ -2131,7 +2131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.LipMode = item.LipMode == rhs.LipMode;
+            ret.ForceNames = item.ForceNames == rhs.ForceNames;
             ret.Aah_LipBigAah = EqualsMaskHelper.EqualsHelper(
                 item.Aah_LipBigAah,
                 rhs.Aah_LipBigAah,
@@ -2258,9 +2258,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             FaceFxPhonemes.Mask<bool>? printMask = null)
         {
-            if (printMask?.LipMode ?? true)
+            if (printMask?.ForceNames ?? true)
             {
-                fg.AppendItem(item.LipMode, "LipMode");
+                fg.AppendItem(item.ForceNames, "ForceNames");
             }
             if ((printMask?.Aah_LipBigAah?.Overall ?? true)
                 && item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahItem))
@@ -2387,7 +2387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFaceFxPhonemesGetter item,
             FaceFxPhonemes.Mask<bool> mask)
         {
-            mask.LipMode = true;
+            mask.ForceNames = true;
             var itemAah_LipBigAah = item.Aah_LipBigAah;
             mask.Aah_LipBigAah = new MaskItem<bool, Phoneme.Mask<bool>?>(itemAah_LipBigAah != null, itemAah_LipBigAah?.GetHasBeenSetMask());
             var itemBigAah_LipDST = item.BigAah_LipDST;
@@ -2429,7 +2429,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.LipMode != rhs.LipMode) return false;
+            if (lhs.ForceNames != rhs.ForceNames) return false;
             if (!object.Equals(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
             if (!object.Equals(lhs.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
             if (!object.Equals(lhs.BMP_LipEee, rhs.BMP_LipEee)) return false;
@@ -2452,7 +2452,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual int GetHashCode(IFaceFxPhonemesGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.LipMode);
+            hash.Add(item.ForceNames);
             if (item.Aah_LipBigAah.TryGet(out var Aah_LipBigAahitem))
             {
                 hash.Add(Aah_LipBigAahitem);
@@ -2549,9 +2549,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
             {
-                item.LipMode = rhs.LipMode;
+                item.ForceNames = rhs.ForceNames;
             }
             if ((copyMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
             {
@@ -3058,13 +3058,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.LipMode) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
             {
                 BooleanXmlTranslation.Instance.Write(
                     node: node,
-                    name: nameof(item.LipMode),
-                    item: item.LipMode,
-                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.LipMode,
+                    name: nameof(item.ForceNames),
+                    item: item.ForceNames,
+                    fieldIndex: (int)FaceFxPhonemes_FieldIndex.ForceNames,
                     errorMask: errorMask);
             }
             if ((item.Aah_LipBigAah != null)
@@ -3397,11 +3397,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             switch (name)
             {
-                case "LipMode":
-                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.LipMode);
+                case "ForceNames":
+                    errorMask?.PushIndex((int)FaceFxPhonemes_FieldIndex.ForceNames);
                     try
                     {
-                        item.LipMode = BooleanXmlTranslation.Instance.Parse(
+                        item.ForceNames = BooleanXmlTranslation.Instance.Parse(
                             node: node,
                             errorMask: errorMask);
                     }
