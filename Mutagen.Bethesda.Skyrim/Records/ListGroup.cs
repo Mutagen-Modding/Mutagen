@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
                 IListGroupGetter<T> item)
-                where T : class, ICellBlockGetter, IXmlItem, IBinaryItem
+                where T : class, ICellBlockGetter, IBinaryItem
             {
                 Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                     writer,

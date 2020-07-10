@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
     public abstract class AGroup<T> : IEnumerable<T>, IGroupCommon<T>
-        where T : IMajorRecordInternal, IXmlItem, IBinaryItem
+        where T : IMajorRecordInternal, IBinaryItem
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<T, FormKey> ProtectedCache { get; }

@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
-                where T : class, ISkyrimMajorRecordGetter, IXmlItem, IBinaryItem
+                where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
                 if (group.RecordCache.Count == 0) return;
                 var cuts = group.Records.Cut(CutCount).ToArray();

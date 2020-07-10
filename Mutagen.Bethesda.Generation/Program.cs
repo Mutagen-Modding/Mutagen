@@ -52,20 +52,8 @@ namespace Mutagen.Bethesda.Generation
                 ToStringDefault = false,
             };
             gen.AddTypicalTypeAssociations();
-            var xmlGen = new MutagenXmlModule(gen);
-            gen.Add(xmlGen);
             gen.Add(gen.MaskModule);
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
-            xmlGen.ShouldGenerateXSD = false;
-            xmlGen.AddTypeAssociation<FormLinkType>(new FormLinkXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
-            xmlGen.AddTypeAssociation<FormKeyType>(new PrimitiveXmlTranslationGeneration<FormKey>());
-            xmlGen.AddTypeAssociation<ModKeyType>(new PrimitiveXmlTranslationGeneration<ModKey>());
-            xmlGen.AddTypeAssociation<RecordTypeType>(new PrimitiveXmlTranslationGeneration<RecordType>());
-            xmlGen.AddTypeAssociation<DataType>(new DataTypeXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<GenderedType>(new GenderedTypeXmlTranslationGeneration());
-            xmlGen.AddTypeAssociation<Loqui.Generation.StringType>(new StringXmlTranslationGeneration(), overrideExisting: true);
-            xmlGen.AddTypeAssociation<Mutagen.Bethesda.Generation.StringType>(new StringXmlTranslationGeneration());
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());
