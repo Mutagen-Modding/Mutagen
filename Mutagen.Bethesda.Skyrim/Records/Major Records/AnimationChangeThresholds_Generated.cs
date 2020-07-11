@@ -1291,9 +1291,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Directional => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single MovementSpeed => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single RotationSpeed => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Directional => _data.Slice(0x0, 0x4).Float();
+        public Single MovementSpeed => _data.Slice(0x4, 0x4).Float();
+        public Single RotationSpeed => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

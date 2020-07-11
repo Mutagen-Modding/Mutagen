@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HoursUntilReset
         private int? _HoursUntilResetLocation;
-        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

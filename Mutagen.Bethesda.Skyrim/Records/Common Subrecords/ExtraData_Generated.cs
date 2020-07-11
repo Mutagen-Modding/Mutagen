@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public IOwnerTargetGetter Owner => GetOwnerCustom(location: 0x0);
-        public Single ItemCondition => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single ItemCondition => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

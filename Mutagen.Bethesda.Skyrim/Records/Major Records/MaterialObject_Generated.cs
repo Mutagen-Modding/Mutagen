@@ -2329,22 +2329,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FalloffScale
         private int _FalloffScaleLocation => _DATALocation!.Value;
         private bool _FalloffScale_IsSet => _DATALocation.HasValue;
-        public Single FalloffScale => _FalloffScale_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffScaleLocation, 4)) : default;
+        public Single FalloffScale => _FalloffScale_IsSet ? _data.Slice(_FalloffScaleLocation, 4).Float() : default;
         #endregion
         #region FalloffBias
         private int _FalloffBiasLocation => _DATALocation!.Value + 0x4;
         private bool _FalloffBias_IsSet => _DATALocation.HasValue;
-        public Single FalloffBias => _FalloffBias_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffBiasLocation, 4)) : default;
+        public Single FalloffBias => _FalloffBias_IsSet ? _data.Slice(_FalloffBiasLocation, 4).Float() : default;
         #endregion
         #region NoiseUvScale
         private int _NoiseUvScaleLocation => _DATALocation!.Value + 0x8;
         private bool _NoiseUvScale_IsSet => _DATALocation.HasValue;
-        public Single NoiseUvScale => _NoiseUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_NoiseUvScaleLocation, 4)) : default;
+        public Single NoiseUvScale => _NoiseUvScale_IsSet ? _data.Slice(_NoiseUvScaleLocation, 4).Float() : default;
         #endregion
         #region MaterialUvScale
         private int _MaterialUvScaleLocation => _DATALocation!.Value + 0xC;
         private bool _MaterialUvScale_IsSet => _DATALocation.HasValue;
-        public Single MaterialUvScale => _MaterialUvScale_IsSet ? SpanExt.GetFloat(_data.Slice(_MaterialUvScaleLocation, 4)) : default;
+        public Single MaterialUvScale => _MaterialUvScale_IsSet ? _data.Slice(_MaterialUvScaleLocation, 4).Float() : default;
         #endregion
         #region ProjectionVector
         private int _ProjectionVectorLocation => _DATALocation!.Value + 0x10;
@@ -2354,7 +2354,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region NormalDampener
         private int _NormalDampenerLocation => _DATALocation!.Value + 0x1C;
         private bool _NormalDampener_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0);
-        public Single NormalDampener => _NormalDampener_IsSet ? SpanExt.GetFloat(_data.Slice(_NormalDampenerLocation, 4)) : default;
+        public Single NormalDampener => _NormalDampener_IsSet ? _data.Slice(_NormalDampenerLocation, 4).Float() : default;
         #endregion
         #region SinglePassColor
         private int _SinglePassColorLocation => _DATALocation!.Value + 0x20;

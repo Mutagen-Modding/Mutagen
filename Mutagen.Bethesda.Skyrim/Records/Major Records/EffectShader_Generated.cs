@@ -8374,47 +8374,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillAlphaFadeInTime
         private int _FillAlphaFadeInTimeLocation => _DATALocation!.Value + 0x14;
         private bool _FillAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaFadeInTimeLocation, 4)) : default;
+        public Single FillAlphaFadeInTime => _FillAlphaFadeInTime_IsSet ? _data.Slice(_FillAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaTime
         private int _FillFullAlphaTimeLocation => _DATALocation!.Value + 0x18;
         private bool _FillFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFullAlphaTimeLocation, 4)) : default;
+        public Single FillFullAlphaTime => _FillFullAlphaTime_IsSet ? _data.Slice(_FillFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region FillFadeOutTime
         private int _FillFadeOutTimeLocation => _DATALocation!.Value + 0x1C;
         private bool _FillFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFadeOutTimeLocation, 4)) : default;
+        public Single FillFadeOutTime => _FillFadeOutTime_IsSet ? _data.Slice(_FillFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region FillPersistentAlphaRatio
         private int _FillPersistentAlphaRatioLocation => _DATALocation!.Value + 0x20;
         private bool _FillPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillPersistentAlphaRatioLocation, 4)) : default;
+        public Single FillPersistentAlphaRatio => _FillPersistentAlphaRatio_IsSet ? _data.Slice(_FillPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseAmplitude
         private int _FillAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x24;
         private bool _FillAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single FillAlphaPulseAmplitude => _FillAlphaPulseAmplitude_IsSet ? _data.Slice(_FillAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FillAlphaPulseFrequency
         private int _FillAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x28;
         private bool _FillAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_FillAlphaPulseFrequencyLocation, 4)) : default;
+        public Single FillAlphaPulseFrequency => _FillAlphaPulseFrequency_IsSet ? _data.Slice(_FillAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedU
         private int _FillTextureAnimationSpeedULocation => _DATALocation!.Value + 0x2C;
         private bool _FillTextureAnimationSpeedU_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureAnimationSpeedULocation, 4)) : default;
+        public Single FillTextureAnimationSpeedU => _FillTextureAnimationSpeedU_IsSet ? _data.Slice(_FillTextureAnimationSpeedULocation, 4).Float() : default;
         #endregion
         #region FillTextureAnimationSpeedV
         private int _FillTextureAnimationSpeedVLocation => _DATALocation!.Value + 0x30;
         private bool _FillTextureAnimationSpeedV_IsSet => _DATALocation.HasValue;
-        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureAnimationSpeedVLocation, 4)) : default;
+        public Single FillTextureAnimationSpeedV => _FillTextureAnimationSpeedV_IsSet ? _data.Slice(_FillTextureAnimationSpeedVLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFallOff
         private int _EdgeEffectFallOffLocation => _DATALocation!.Value + 0x34;
         private bool _EdgeEffectFallOff_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFallOffLocation, 4)) : default;
+        public Single EdgeEffectFallOff => _EdgeEffectFallOff_IsSet ? _data.Slice(_EdgeEffectFallOffLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectColor
         private int _EdgeEffectColorLocation => _DATALocation!.Value + 0x38;
@@ -8424,42 +8424,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EdgeEffectAlphaFadeInTime
         private int _EdgeEffectAlphaFadeInTimeLocation => _DATALocation!.Value + 0x3C;
         private bool _EdgeEffectAlphaFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeInTime => _EdgeEffectAlphaFadeInTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaTime
         private int _EdgeEffectFullAlphaTimeLocation => _DATALocation!.Value + 0x40;
         private bool _EdgeEffectFullAlphaTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaTimeLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaTime => _EdgeEffectFullAlphaTime_IsSet ? _data.Slice(_EdgeEffectFullAlphaTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaFadeOutTime
         private int _EdgeEffectAlphaFadeOutTimeLocation => _DATALocation!.Value + 0x44;
         private bool _EdgeEffectAlphaFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4)) : default;
+        public Single EdgeEffectAlphaFadeOutTime => _EdgeEffectAlphaFadeOutTime_IsSet ? _data.Slice(_EdgeEffectAlphaFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectPersistentAlphaRatio
         private int _EdgeEffectPersistentAlphaRatioLocation => _DATALocation!.Value + 0x48;
         private bool _EdgeEffectPersistentAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectPersistentAlphaRatio => _EdgeEffectPersistentAlphaRatio_IsSet ? _data.Slice(_EdgeEffectPersistentAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseAmplitude
         private int _EdgeEffectAlphaPulseAmplitudeLocation => _DATALocation!.Value + 0x4C;
         private bool _EdgeEffectAlphaPulseAmplitude_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseAmplitude => _EdgeEffectAlphaPulseAmplitude_IsSet ? _data.Slice(_EdgeEffectAlphaPulseAmplitudeLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectAlphaPulseFrequency
         private int _EdgeEffectAlphaPulseFrequencyLocation => _DATALocation!.Value + 0x50;
         private bool _EdgeEffectAlphaPulseFrequency_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4)) : default;
+        public Single EdgeEffectAlphaPulseFrequency => _EdgeEffectAlphaPulseFrequency_IsSet ? _data.Slice(_EdgeEffectAlphaPulseFrequencyLocation, 4).Float() : default;
         #endregion
         #region FillFullAlphaRatio
         private int _FillFullAlphaRatioLocation => _DATALocation!.Value + 0x54;
         private bool _FillFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_FillFullAlphaRatioLocation, 4)) : default;
+        public Single FillFullAlphaRatio => _FillFullAlphaRatio_IsSet ? _data.Slice(_FillFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region EdgeEffectFullAlphaRatio
         private int _EdgeEffectFullAlphaRatioLocation => _DATALocation!.Value + 0x58;
         private bool _EdgeEffectFullAlphaRatio_IsSet => _DATALocation.HasValue;
-        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeEffectFullAlphaRatioLocation, 4)) : default;
+        public Single EdgeEffectFullAlphaRatio => _EdgeEffectFullAlphaRatio_IsSet ? _data.Slice(_EdgeEffectFullAlphaRatioLocation, 4).Float() : default;
         #endregion
         #region MembraneDestBlendMode
         private int _MembraneDestBlendModeLocation => _DATALocation!.Value + 0x5C;
@@ -8489,97 +8489,97 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ParticleBirthRampUpTime
         private int _ParticleBirthRampUpTimeLocation => _DATALocation!.Value + 0x70;
         private bool _ParticleBirthRampUpTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleBirthRampUpTimeLocation, 4)) : default;
+        public Single ParticleBirthRampUpTime => _ParticleBirthRampUpTime_IsSet ? _data.Slice(_ParticleBirthRampUpTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthTime
         private int _ParticleFullBirthTimeLocation => _DATALocation!.Value + 0x74;
         private bool _ParticleFullBirthTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleFullBirthTimeLocation, 4)) : default;
+        public Single ParticleFullBirthTime => _ParticleFullBirthTime_IsSet ? _data.Slice(_ParticleFullBirthTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleBirthRampDownTime
         private int _ParticleBirthRampDownTimeLocation => _DATALocation!.Value + 0x78;
         private bool _ParticleBirthRampDownTime_IsSet => _DATALocation.HasValue;
-        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleBirthRampDownTimeLocation, 4)) : default;
+        public Single ParticleBirthRampDownTime => _ParticleBirthRampDownTime_IsSet ? _data.Slice(_ParticleBirthRampDownTimeLocation, 4).Float() : default;
         #endregion
         #region ParticleFullBirthRatio
         private int _ParticleFullBirthRatioLocation => _DATALocation!.Value + 0x7C;
         private bool _ParticleFullBirthRatio_IsSet => _DATALocation.HasValue;
-        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleFullBirthRatioLocation, 4)) : default;
+        public Single ParticleFullBirthRatio => _ParticleFullBirthRatio_IsSet ? _data.Slice(_ParticleFullBirthRatioLocation, 4).Float() : default;
         #endregion
         #region ParticlePeristentCount
         private int _ParticlePeristentCountLocation => _DATALocation!.Value + 0x80;
         private bool _ParticlePeristentCount_IsSet => _DATALocation.HasValue;
-        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticlePeristentCountLocation, 4)) : default;
+        public Single ParticlePeristentCount => _ParticlePeristentCount_IsSet ? _data.Slice(_ParticlePeristentCountLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetime
         private int _ParticleLifetimeLocation => _DATALocation!.Value + 0x84;
         private bool _ParticleLifetime_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetime => _ParticleLifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleLifetimeLocation, 4)) : default;
+        public Single ParticleLifetime => _ParticleLifetime_IsSet ? _data.Slice(_ParticleLifetimeLocation, 4).Float() : default;
         #endregion
         #region ParticleLifetimePlusMinus
         private int _ParticleLifetimePlusMinusLocation => _DATALocation!.Value + 0x88;
         private bool _ParticleLifetimePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleLifetimePlusMinusLocation, 4)) : default;
+        public Single ParticleLifetimePlusMinus => _ParticleLifetimePlusMinus_IsSet ? _data.Slice(_ParticleLifetimePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormal
         private int _ParticleInitialSpeedAlongNormalLocation => _DATALocation!.Value + 0x8C;
         private bool _ParticleInitialSpeedAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialSpeedAlongNormalLocation, 4)) : default;
+        public Single ParticleInitialSpeedAlongNormal => _ParticleInitialSpeedAlongNormal_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleAccelerationAlongNormal
         private int _ParticleAccelerationAlongNormalLocation => _DATALocation!.Value + 0x90;
         private bool _ParticleAccelerationAlongNormal_IsSet => _DATALocation.HasValue;
-        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAccelerationAlongNormalLocation, 4)) : default;
+        public Single ParticleAccelerationAlongNormal => _ParticleAccelerationAlongNormal_IsSet ? _data.Slice(_ParticleAccelerationAlongNormalLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity1
         private int _ParticleInitialVelocity1Location => _DATALocation!.Value + 0x94;
         private bool _ParticleInitialVelocity1_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity1Location, 4)) : default;
+        public Single ParticleInitialVelocity1 => _ParticleInitialVelocity1_IsSet ? _data.Slice(_ParticleInitialVelocity1Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity2
         private int _ParticleInitialVelocity2Location => _DATALocation!.Value + 0x98;
         private bool _ParticleInitialVelocity2_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity2Location, 4)) : default;
+        public Single ParticleInitialVelocity2 => _ParticleInitialVelocity2_IsSet ? _data.Slice(_ParticleInitialVelocity2Location, 4).Float() : default;
         #endregion
         #region ParticleInitialVelocity3
         private int _ParticleInitialVelocity3Location => _DATALocation!.Value + 0x9C;
         private bool _ParticleInitialVelocity3_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialVelocity3Location, 4)) : default;
+        public Single ParticleInitialVelocity3 => _ParticleInitialVelocity3_IsSet ? _data.Slice(_ParticleInitialVelocity3Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration1
         private int _ParticleAcceleration1Location => _DATALocation!.Value + 0xA0;
         private bool _ParticleAcceleration1_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration1Location, 4)) : default;
+        public Single ParticleAcceleration1 => _ParticleAcceleration1_IsSet ? _data.Slice(_ParticleAcceleration1Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration2
         private int _ParticleAcceleration2Location => _DATALocation!.Value + 0xA4;
         private bool _ParticleAcceleration2_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration2Location, 4)) : default;
+        public Single ParticleAcceleration2 => _ParticleAcceleration2_IsSet ? _data.Slice(_ParticleAcceleration2Location, 4).Float() : default;
         #endregion
         #region ParticleAcceleration3
         private int _ParticleAcceleration3Location => _DATALocation!.Value + 0xA8;
         private bool _ParticleAcceleration3_IsSet => _DATALocation.HasValue;
-        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleAcceleration3Location, 4)) : default;
+        public Single ParticleAcceleration3 => _ParticleAcceleration3_IsSet ? _data.Slice(_ParticleAcceleration3Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1
         private int _ParticleScaleKey1Location => _DATALocation!.Value + 0xAC;
         private bool _ParticleScaleKey1_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey1Location, 4)) : default;
+        public Single ParticleScaleKey1 => _ParticleScaleKey1_IsSet ? _data.Slice(_ParticleScaleKey1Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2
         private int _ParticleScaleKey2Location => _DATALocation!.Value + 0xB0;
         private bool _ParticleScaleKey2_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey2Location, 4)) : default;
+        public Single ParticleScaleKey2 => _ParticleScaleKey2_IsSet ? _data.Slice(_ParticleScaleKey2Location, 4).Float() : default;
         #endregion
         #region ParticleScaleKey1Time
         private int _ParticleScaleKey1TimeLocation => _DATALocation!.Value + 0xB4;
         private bool _ParticleScaleKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey1TimeLocation, 4)) : default;
+        public Single ParticleScaleKey1Time => _ParticleScaleKey1Time_IsSet ? _data.Slice(_ParticleScaleKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleScaleKey2Time
         private int _ParticleScaleKey2TimeLocation => _DATALocation!.Value + 0xB8;
         private bool _ParticleScaleKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleScaleKey2TimeLocation, 4)) : default;
+        public Single ParticleScaleKey2Time => _ParticleScaleKey2Time_IsSet ? _data.Slice(_ParticleScaleKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey1
         private int _ColorKey1Location => _DATALocation!.Value + 0xBC;
@@ -8599,57 +8599,57 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ColorKey1Alpha
         private int _ColorKey1AlphaLocation => _DATALocation!.Value + 0xC8;
         private bool _ColorKey1Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1AlphaLocation, 4)) : default;
+        public Single ColorKey1Alpha => _ColorKey1Alpha_IsSet ? _data.Slice(_ColorKey1AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Alpha
         private int _ColorKey2AlphaLocation => _DATALocation!.Value + 0xCC;
         private bool _ColorKey2Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2AlphaLocation, 4)) : default;
+        public Single ColorKey2Alpha => _ColorKey2Alpha_IsSet ? _data.Slice(_ColorKey2AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Alpha
         private int _ColorKey3AlphaLocation => _DATALocation!.Value + 0xD0;
         private bool _ColorKey3Alpha_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3AlphaLocation, 4)) : default;
+        public Single ColorKey3Alpha => _ColorKey3Alpha_IsSet ? _data.Slice(_ColorKey3AlphaLocation, 4).Float() : default;
         #endregion
         #region ColorKey1Time
         private int _ColorKey1TimeLocation => _DATALocation!.Value + 0xD4;
         private bool _ColorKey1Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey1Time => _ColorKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey1TimeLocation, 4)) : default;
+        public Single ColorKey1Time => _ColorKey1Time_IsSet ? _data.Slice(_ColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey2Time
         private int _ColorKey2TimeLocation => _DATALocation!.Value + 0xD8;
         private bool _ColorKey2Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey2Time => _ColorKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey2TimeLocation, 4)) : default;
+        public Single ColorKey2Time => _ColorKey2Time_IsSet ? _data.Slice(_ColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region ColorKey3Time
         private int _ColorKey3TimeLocation => _DATALocation!.Value + 0xDC;
         private bool _ColorKey3Time_IsSet => _DATALocation.HasValue;
-        public Single ColorKey3Time => _ColorKey3Time_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorKey3TimeLocation, 4)) : default;
+        public Single ColorKey3Time => _ColorKey3Time_IsSet ? _data.Slice(_ColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialSpeedAlongNormalPlusMinus
         private int _ParticleInitialSpeedAlongNormalPlusMinusLocation => _DATALocation!.Value + 0xE0;
         private bool _ParticleInitialSpeedAlongNormalPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4)) : default;
+        public Single ParticleInitialSpeedAlongNormalPlusMinus => _ParticleInitialSpeedAlongNormalPlusMinus_IsSet ? _data.Slice(_ParticleInitialSpeedAlongNormalPlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegree
         private int _ParticleInitialRotationDegreeLocation => _DATALocation!.Value + 0xE4;
         private bool _ParticleInitialRotationDegree_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialRotationDegreeLocation, 4)) : default;
+        public Single ParticleInitialRotationDegree => _ParticleInitialRotationDegree_IsSet ? _data.Slice(_ParticleInitialRotationDegreeLocation, 4).Float() : default;
         #endregion
         #region ParticleInitialRotationDegreePlusMinus
         private int _ParticleInitialRotationDegreePlusMinusLocation => _DATALocation!.Value + 0xE8;
         private bool _ParticleInitialRotationDegreePlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4)) : default;
+        public Single ParticleInitialRotationDegreePlusMinus => _ParticleInitialRotationDegreePlusMinus_IsSet ? _data.Slice(_ParticleInitialRotationDegreePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSec
         private int _ParticleRotationSpeedDegreePerSecLocation => _DATALocation!.Value + 0xEC;
         private bool _ParticleRotationSpeedDegreePerSec_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4)) : default;
+        public Single ParticleRotationSpeedDegreePerSec => _ParticleRotationSpeedDegreePerSec_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecLocation, 4).Float() : default;
         #endregion
         #region ParticleRotationSpeedDegreePerSecPlusMinus
         private int _ParticleRotationSpeedDegreePerSecPlusMinusLocation => _DATALocation!.Value + 0xF0;
         private bool _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet => _DATALocation.HasValue;
-        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4)) : default;
+        public Single ParticleRotationSpeedDegreePerSecPlusMinus => _ParticleRotationSpeedDegreePerSecPlusMinus_IsSet ? _data.Slice(_ParticleRotationSpeedDegreePerSecPlusMinusLocation, 4).Float() : default;
         #endregion
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
@@ -8659,27 +8659,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
         private bool _HolesStartTime_IsSet => _DATALocation.HasValue;
-        public Single HolesStartTime => _HolesStartTime_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesStartTimeLocation, 4)) : default;
+        public Single HolesStartTime => _HolesStartTime_IsSet ? _data.Slice(_HolesStartTimeLocation, 4).Float() : default;
         #endregion
         #region HolesEndTime
         private int _HolesEndTimeLocation => _DATALocation!.Value + 0xFC;
         private bool _HolesEndTime_IsSet => _DATALocation.HasValue;
-        public Single HolesEndTime => _HolesEndTime_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesEndTimeLocation, 4)) : default;
+        public Single HolesEndTime => _HolesEndTime_IsSet ? _data.Slice(_HolesEndTimeLocation, 4).Float() : default;
         #endregion
         #region HolesStartValue
         private int _HolesStartValueLocation => _DATALocation!.Value + 0x100;
         private bool _HolesStartValue_IsSet => _DATALocation.HasValue;
-        public Single HolesStartValue => _HolesStartValue_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesStartValueLocation, 4)) : default;
+        public Single HolesStartValue => _HolesStartValue_IsSet ? _data.Slice(_HolesStartValueLocation, 4).Float() : default;
         #endregion
         #region HolesEndValue
         private int _HolesEndValueLocation => _DATALocation!.Value + 0x104;
         private bool _HolesEndValue_IsSet => _DATALocation.HasValue;
-        public Single HolesEndValue => _HolesEndValue_IsSet ? SpanExt.GetFloat(_data.Slice(_HolesEndValueLocation, 4)) : default;
+        public Single HolesEndValue => _HolesEndValue_IsSet ? _data.Slice(_HolesEndValueLocation, 4).Float() : default;
         #endregion
         #region EdgeWidth
         private int _EdgeWidthLocation => _DATALocation!.Value + 0x108;
         private bool _EdgeWidth_IsSet => _DATALocation.HasValue;
-        public Single EdgeWidth => _EdgeWidth_IsSet ? SpanExt.GetFloat(_data.Slice(_EdgeWidthLocation, 4)) : default;
+        public Single EdgeWidth => _EdgeWidth_IsSet ? _data.Slice(_EdgeWidthLocation, 4).Float() : default;
         #endregion
         #region EdgeColor
         private int _EdgeColorLocation => _DATALocation!.Value + 0x10C;
@@ -8689,7 +8689,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ExplosionWindSpeed
         private int _ExplosionWindSpeedLocation => _DATALocation!.Value + 0x110;
         private bool _ExplosionWindSpeed_IsSet => _DATALocation.HasValue;
-        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionWindSpeedLocation, 4)) : default;
+        public Single ExplosionWindSpeed => _ExplosionWindSpeed_IsSet ? _data.Slice(_ExplosionWindSpeedLocation, 4).Float() : default;
         #endregion
         #region TextureCountU
         private int _TextureCountULocation => _DATALocation!.Value + 0x114;
@@ -8704,32 +8704,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddonModelsFadeInTime
         private int _AddonModelsFadeInTimeLocation => _DATALocation!.Value + 0x11C;
         private bool _AddonModelsFadeInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsFadeInTimeLocation, 4)) : default;
+        public Single AddonModelsFadeInTime => _AddonModelsFadeInTime_IsSet ? _data.Slice(_AddonModelsFadeInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsFadeOutTime
         private int _AddonModelsFadeOutTimeLocation => _DATALocation!.Value + 0x120;
         private bool _AddonModelsFadeOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsFadeOutTimeLocation, 4)) : default;
+        public Single AddonModelsFadeOutTime => _AddonModelsFadeOutTime_IsSet ? _data.Slice(_AddonModelsFadeOutTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleStart
         private int _AddonModelsScaleStartLocation => _DATALocation!.Value + 0x124;
         private bool _AddonModelsScaleStart_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleStartLocation, 4)) : default;
+        public Single AddonModelsScaleStart => _AddonModelsScaleStart_IsSet ? _data.Slice(_AddonModelsScaleStartLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleEnd
         private int _AddonModelsScaleEndLocation => _DATALocation!.Value + 0x128;
         private bool _AddonModelsScaleEnd_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleEndLocation, 4)) : default;
+        public Single AddonModelsScaleEnd => _AddonModelsScaleEnd_IsSet ? _data.Slice(_AddonModelsScaleEndLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleInTime
         private int _AddonModelsScaleInTimeLocation => _DATALocation!.Value + 0x12C;
         private bool _AddonModelsScaleInTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleInTimeLocation, 4)) : default;
+        public Single AddonModelsScaleInTime => _AddonModelsScaleInTime_IsSet ? _data.Slice(_AddonModelsScaleInTimeLocation, 4).Float() : default;
         #endregion
         #region AddonModelsScaleOutTime
         private int _AddonModelsScaleOutTimeLocation => _DATALocation!.Value + 0x130;
         private bool _AddonModelsScaleOutTime_IsSet => _DATALocation.HasValue;
-        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? SpanExt.GetFloat(_data.Slice(_AddonModelsScaleOutTimeLocation, 4)) : default;
+        public Single AddonModelsScaleOutTime => _AddonModelsScaleOutTime_IsSet ? _data.Slice(_AddonModelsScaleOutTimeLocation, 4).Float() : default;
         #endregion
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
@@ -8749,47 +8749,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillColorKey1Scale
         private int _FillColorKey1ScaleLocation => _DATALocation!.Value + 0x140;
         private bool _FillColorKey1Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey1ScaleLocation, 4)) : default;
+        public Single FillColorKey1Scale => _FillColorKey1Scale_IsSet ? _data.Slice(_FillColorKey1ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Scale
         private int _FillColorKey2ScaleLocation => _DATALocation!.Value + 0x144;
         private bool _FillColorKey2Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey2ScaleLocation, 4)) : default;
+        public Single FillColorKey2Scale => _FillColorKey2Scale_IsSet ? _data.Slice(_FillColorKey2ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Scale
         private int _FillColorKey3ScaleLocation => _DATALocation!.Value + 0x148;
         private bool _FillColorKey3Scale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey3ScaleLocation, 4)) : default;
+        public Single FillColorKey3Scale => _FillColorKey3Scale_IsSet ? _data.Slice(_FillColorKey3ScaleLocation, 4).Float() : default;
         #endregion
         #region FillColorKey1Time
         private int _FillColorKey1TimeLocation => _DATALocation!.Value + 0x14C;
         private bool _FillColorKey1Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey1TimeLocation, 4)) : default;
+        public Single FillColorKey1Time => _FillColorKey1Time_IsSet ? _data.Slice(_FillColorKey1TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey2Time
         private int _FillColorKey2TimeLocation => _DATALocation!.Value + 0x150;
         private bool _FillColorKey2Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey2TimeLocation, 4)) : default;
+        public Single FillColorKey2Time => _FillColorKey2Time_IsSet ? _data.Slice(_FillColorKey2TimeLocation, 4).Float() : default;
         #endregion
         #region FillColorKey3Time
         private int _FillColorKey3TimeLocation => _DATALocation!.Value + 0x154;
         private bool _FillColorKey3Time_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break1);
-        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? SpanExt.GetFloat(_data.Slice(_FillColorKey3TimeLocation, 4)) : default;
+        public Single FillColorKey3Time => _FillColorKey3Time_IsSet ? _data.Slice(_FillColorKey3TimeLocation, 4).Float() : default;
         #endregion
         #region ColorScale
         private int _ColorScaleLocation => _DATALocation!.Value + 0x158;
         private bool _ColorScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single ColorScale => _ColorScale_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorScaleLocation, 4)) : default;
+        public Single ColorScale => _ColorScale_IsSet ? _data.Slice(_ColorScaleLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffset
         private int _BirthPositionOffsetLocation => _DATALocation!.Value + 0x15C;
         private bool _BirthPositionOffset_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? SpanExt.GetFloat(_data.Slice(_BirthPositionOffsetLocation, 4)) : default;
+        public Single BirthPositionOffset => _BirthPositionOffset_IsSet ? _data.Slice(_BirthPositionOffsetLocation, 4).Float() : default;
         #endregion
         #region BirthPositionOffsetRangePlusMinus
         private int _BirthPositionOffsetRangePlusMinusLocation => _DATALocation!.Value + 0x160;
         private bool _BirthPositionOffsetRangePlusMinus_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? SpanExt.GetFloat(_data.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4)) : default;
+        public Single BirthPositionOffsetRangePlusMinus => _BirthPositionOffsetRangePlusMinus_IsSet ? _data.Slice(_BirthPositionOffsetRangePlusMinusLocation, 4).Float() : default;
         #endregion
         #region ParticleAnimatedStartFrame
         private int _ParticleAnimatedStartFrameLocation => _DATALocation!.Value + 0x164;
@@ -8834,12 +8834,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FillTextureScaleU
         private int _FillTextureScaleULocation => _DATALocation!.Value + 0x184;
         private bool _FillTextureScaleU_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureScaleULocation, 4)) : default;
+        public Single FillTextureScaleU => _FillTextureScaleU_IsSet ? _data.Slice(_FillTextureScaleULocation, 4).Float() : default;
         #endregion
         #region FillTextureScaleV
         private int _FillTextureScaleVLocation => _DATALocation!.Value + 0x188;
         private bool _FillTextureScaleV_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2);
-        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? SpanExt.GetFloat(_data.Slice(_FillTextureScaleVLocation, 4)) : default;
+        public Single FillTextureScaleV => _FillTextureScaleV_IsSet ? _data.Slice(_FillTextureScaleVLocation, 4).Float() : default;
         #endregion
         #region SceneGraphEmitDepthLimit
         private int _SceneGraphEmitDepthLimitLocation => _DATALocation!.Value + 0x18C;

@@ -8709,8 +8709,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!_Height_IsSet) return new GenderedItem<Single>(default, default);
                 var data = _data.Span.Slice(_HeightLocation);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion
@@ -8724,8 +8724,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!_Weight_IsSet) return new GenderedItem<Single>(default, default);
                 var data = _data.Span.Slice(_WeightLocation);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion
@@ -8744,22 +8744,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseCarryWeight
         private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
         private bool _BaseCarryWeight_IsSet => _DATALocation.HasValue;
-        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCarryWeightLocation, 4)) : default;
+        public Single BaseCarryWeight => _BaseCarryWeight_IsSet ? _data.Slice(_BaseCarryWeightLocation, 4).Float() : default;
         #endregion
         #region BaseMass
         private int _BaseMassLocation => _DATALocation!.Value + 0x34;
         private bool _BaseMass_IsSet => _DATALocation.HasValue;
-        public Single BaseMass => _BaseMass_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseMassLocation, 4)) : default;
+        public Single BaseMass => _BaseMass_IsSet ? _data.Slice(_BaseMassLocation, 4).Float() : default;
         #endregion
         #region AccelerationRate
         private int _AccelerationRateLocation => _DATALocation!.Value + 0x38;
         private bool _AccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AccelerationRate => _AccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AccelerationRateLocation, 4)) : default;
+        public Single AccelerationRate => _AccelerationRate_IsSet ? _data.Slice(_AccelerationRateLocation, 4).Float() : default;
         #endregion
         #region DecelerationRate
         private int _DecelerationRateLocation => _DATALocation!.Value + 0x3C;
         private bool _DecelerationRate_IsSet => _DATALocation.HasValue;
-        public Single DecelerationRate => _DecelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_DecelerationRateLocation, 4)) : default;
+        public Single DecelerationRate => _DecelerationRate_IsSet ? _data.Slice(_DecelerationRateLocation, 4).Float() : default;
         #endregion
         #region Size
         private int _SizeLocation => _DATALocation!.Value + 0x40;
@@ -8779,7 +8779,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region InjuredHealthPercent
         private int _InjuredHealthPercentLocation => _DATALocation!.Value + 0x4C;
         private bool _InjuredHealthPercent_IsSet => _DATALocation.HasValue;
-        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? SpanExt.GetFloat(_data.Slice(_InjuredHealthPercentLocation, 4)) : default;
+        public Single InjuredHealthPercent => _InjuredHealthPercent_IsSet ? _data.Slice(_InjuredHealthPercentLocation, 4).Float() : default;
         #endregion
         #region ShieldBipedObject
         private int _ShieldBipedObjectLocation => _DATALocation!.Value + 0x50;
@@ -8797,12 +8797,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region UnarmedDamage
         private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;
         private bool _UnarmedDamage_IsSet => _DATALocation.HasValue;
-        public Single UnarmedDamage => _UnarmedDamage_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedDamageLocation, 4)) : default;
+        public Single UnarmedDamage => _UnarmedDamage_IsSet ? _data.Slice(_UnarmedDamageLocation, 4).Float() : default;
         #endregion
         #region UnarmedReach
         private int _UnarmedReachLocation => _DATALocation!.Value + 0x64;
         private bool _UnarmedReach_IsSet => _DATALocation.HasValue;
-        public Single UnarmedReach => _UnarmedReach_IsSet ? SpanExt.GetFloat(_data.Slice(_UnarmedReachLocation, 4)) : default;
+        public Single UnarmedReach => _UnarmedReach_IsSet ? _data.Slice(_UnarmedReachLocation, 4).Float() : default;
         #endregion
         #region BodyBipedObject
         private int _BodyBipedObjectLocation => _DATALocation!.Value + 0x68;
@@ -8812,22 +8812,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AimAngleTolerance
         private int _AimAngleToleranceLocation => _DATALocation!.Value + 0x6C;
         private bool _AimAngleTolerance_IsSet => _DATALocation.HasValue;
-        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AimAngleToleranceLocation, 4)) : default;
+        public Single AimAngleTolerance => _AimAngleTolerance_IsSet ? _data.Slice(_AimAngleToleranceLocation, 4).Float() : default;
         #endregion
         #region FlightRadius
         private int _FlightRadiusLocation => _DATALocation!.Value + 0x70;
         private bool _FlightRadius_IsSet => _DATALocation.HasValue;
-        public Single FlightRadius => _FlightRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_FlightRadiusLocation, 4)) : default;
+        public Single FlightRadius => _FlightRadius_IsSet ? _data.Slice(_FlightRadiusLocation, 4).Float() : default;
         #endregion
         #region AngularAccelerationRate
         private int _AngularAccelerationRateLocation => _DATALocation!.Value + 0x74;
         private bool _AngularAccelerationRate_IsSet => _DATALocation.HasValue;
-        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularAccelerationRateLocation, 4)) : default;
+        public Single AngularAccelerationRate => _AngularAccelerationRate_IsSet ? _data.Slice(_AngularAccelerationRateLocation, 4).Float() : default;
         #endregion
         #region AngularTolerance
         private int _AngularToleranceLocation => _DATALocation!.Value + 0x78;
         private bool _AngularTolerance_IsSet => _DATALocation.HasValue;
-        public Single AngularTolerance => _AngularTolerance_IsSet ? SpanExt.GetFloat(_data.Slice(_AngularToleranceLocation, 4)) : default;
+        public Single AngularTolerance => _AngularTolerance_IsSet ? _data.Slice(_AngularToleranceLocation, 4).Float() : default;
         #endregion
         #region Flags2
         partial void Flags2CustomParse(
@@ -8893,11 +8893,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FacegenMainClamp
         private int? _FacegenMainClampLocation;
-        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants)) : default;
+        public Single FacegenMainClamp => _FacegenMainClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenMainClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region FacegenFaceClamp
         private int? _FacegenFaceClampLocation;
-        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants)) : default;
+        public Single FacegenFaceClamp => _FacegenFaceClampLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FacegenFaceClampLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region AttackRace
         private int? _AttackRaceLocation;

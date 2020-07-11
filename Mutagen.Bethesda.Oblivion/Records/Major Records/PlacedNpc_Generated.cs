@@ -2342,7 +2342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public ILocationGetter? Location { get; private set; }
         partial void CustomFactoryEnd(

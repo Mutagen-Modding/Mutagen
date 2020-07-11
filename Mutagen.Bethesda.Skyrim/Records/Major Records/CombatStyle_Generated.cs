@@ -2758,52 +2758,52 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region OffensiveMult
         private int _OffensiveMultLocation => _CSGDLocation!.Value;
         private bool _OffensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single OffensiveMult => _OffensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_OffensiveMultLocation, 4)) : default;
+        public Single OffensiveMult => _OffensiveMult_IsSet ? _data.Slice(_OffensiveMultLocation, 4).Float() : default;
         #endregion
         #region DefensiveMult
         private int _DefensiveMultLocation => _CSGDLocation!.Value + 0x4;
         private bool _DefensiveMult_IsSet => _CSGDLocation.HasValue;
-        public Single DefensiveMult => _DefensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_DefensiveMultLocation, 4)) : default;
+        public Single DefensiveMult => _DefensiveMult_IsSet ? _data.Slice(_DefensiveMultLocation, 4).Float() : default;
         #endregion
         #region GroupOffensiveMult
         private int _GroupOffensiveMultLocation => _CSGDLocation!.Value + 0x8;
         private bool _GroupOffensiveMult_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? SpanExt.GetFloat(_data.Slice(_GroupOffensiveMultLocation, 4)) : default;
+        public Single GroupOffensiveMult => _GroupOffensiveMult_IsSet ? _data.Slice(_GroupOffensiveMultLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMelee
         private int _EquipmentScoreMultMeleeLocation => _CSGDLocation!.Value + 0xC;
         private bool _EquipmentScoreMultMelee_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultMeleeLocation, 4)) : default;
+        public Single EquipmentScoreMultMelee => _EquipmentScoreMultMelee_IsSet ? _data.Slice(_EquipmentScoreMultMeleeLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultMagic
         private int _EquipmentScoreMultMagicLocation => _CSGDLocation!.Value + 0x10;
         private bool _EquipmentScoreMultMagic_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultMagicLocation, 4)) : default;
+        public Single EquipmentScoreMultMagic => _EquipmentScoreMultMagic_IsSet ? _data.Slice(_EquipmentScoreMultMagicLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultRanged
         private int _EquipmentScoreMultRangedLocation => _CSGDLocation!.Value + 0x14;
         private bool _EquipmentScoreMultRanged_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultRangedLocation, 4)) : default;
+        public Single EquipmentScoreMultRanged => _EquipmentScoreMultRanged_IsSet ? _data.Slice(_EquipmentScoreMultRangedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultShout
         private int _EquipmentScoreMultShoutLocation => _CSGDLocation!.Value + 0x18;
         private bool _EquipmentScoreMultShout_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultShoutLocation, 4)) : default;
+        public Single EquipmentScoreMultShout => _EquipmentScoreMultShout_IsSet ? _data.Slice(_EquipmentScoreMultShoutLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultUnarmed
         private int _EquipmentScoreMultUnarmedLocation => _CSGDLocation!.Value + 0x1C;
         private bool _EquipmentScoreMultUnarmed_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0);
-        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultUnarmedLocation, 4)) : default;
+        public Single EquipmentScoreMultUnarmed => _EquipmentScoreMultUnarmed_IsSet ? _data.Slice(_EquipmentScoreMultUnarmedLocation, 4).Float() : default;
         #endregion
         #region EquipmentScoreMultStaff
         private int _EquipmentScoreMultStaffLocation => _CSGDLocation!.Value + 0x20;
         private bool _EquipmentScoreMultStaff_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? SpanExt.GetFloat(_data.Slice(_EquipmentScoreMultStaffLocation, 4)) : default;
+        public Single EquipmentScoreMultStaff => _EquipmentScoreMultStaff_IsSet ? _data.Slice(_EquipmentScoreMultStaffLocation, 4).Float() : default;
         #endregion
         #region AvoidThreatChance
         private int _AvoidThreatChanceLocation => _CSGDLocation!.Value + 0x24;
         private bool _AvoidThreatChance_IsSet => _CSGDLocation.HasValue && !CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1);
-        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? SpanExt.GetFloat(_data.Slice(_AvoidThreatChanceLocation, 4)) : default;
+        public Single AvoidThreatChance => _AvoidThreatChance_IsSet ? _data.Slice(_AvoidThreatChanceLocation, 4).Float() : default;
         #endregion
         #region CSMD
         private int? _CSMDLocation;
@@ -2821,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LongRangeStrafeMult
         private int? _LongRangeStrafeMultLocation;
-        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? LongRangeStrafeMult => _LongRangeStrafeMultLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LongRangeStrafeMultLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flight
         private RangeInt32? _FlightLocation;

@@ -1355,8 +1355,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public AlchemicalApparatus.ApparatusType Type => (AlchemicalApparatus.ApparatusType)_data.Span.Slice(0x0, 0x1)[0];
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x1, 0x4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(0x5, 0x4));
-        public Single Quality => SpanExt.GetFloat(_data.Slice(0x9, 0x4));
+        public Single Weight => _data.Slice(0x5, 0x4).Float();
+        public Single Quality => _data.Slice(0x9, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1361,8 +1361,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single From => SpanExt.GetFloat(_data.Slice(0x2, 0x4));
-        public Single To => SpanExt.GetFloat(_data.Slice(0x6, 0x4));
+        public Single From => _data.Slice(0x2, 0x4).Float();
+        public Single To => _data.Slice(0x6, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

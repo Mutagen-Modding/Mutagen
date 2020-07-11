@@ -2979,7 +2979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ChargeTime
         private int _ChargeTimeLocation => _SPITLocation!.Value + 0xC;
         private bool _ChargeTime_IsSet => _SPITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ChargeTimeLocation, 4)) : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _data.Slice(_ChargeTimeLocation, 4).Float() : default;
         #endregion
         #region CastType
         private int _CastTypeLocation => _SPITLocation!.Value + 0x10;
@@ -2994,12 +2994,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region CastDuration
         private int _CastDurationLocation => _SPITLocation!.Value + 0x18;
         private bool _CastDuration_IsSet => _SPITLocation.HasValue;
-        public Single CastDuration => _CastDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_CastDurationLocation, 4)) : default;
+        public Single CastDuration => _CastDuration_IsSet ? _data.Slice(_CastDurationLocation, 4).Float() : default;
         #endregion
         #region Range
         private int _RangeLocation => _SPITLocation!.Value + 0x1C;
         private bool _Range_IsSet => _SPITLocation.HasValue;
-        public Single Range => _Range_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeLocation, 4)) : default;
+        public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region HalfCostPerk
         private int _HalfCostPerkLocation => _SPITLocation!.Value + 0x20;

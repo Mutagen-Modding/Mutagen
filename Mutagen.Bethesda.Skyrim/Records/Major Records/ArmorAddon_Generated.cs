@@ -2953,7 +2953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region WeaponAdjust
         private int _WeaponAdjustLocation => _DNAMLocation!.Value + 0x8;
         private bool _WeaponAdjust_IsSet => _DNAMLocation.HasValue;
-        public Single WeaponAdjust => _WeaponAdjust_IsSet ? SpanExt.GetFloat(_data.Slice(_WeaponAdjustLocation, 4)) : default;
+        public Single WeaponAdjust => _WeaponAdjust_IsSet ? _data.Slice(_WeaponAdjustLocation, 4).Float() : default;
         #endregion
         #region WorldModel
         private IGenderedItemGetter<IModelGetter?>? _WorldModelOverlay;

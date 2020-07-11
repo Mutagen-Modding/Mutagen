@@ -2283,25 +2283,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single NoseLongVsShort => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single NoseUpVsDown => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single JawUpVsDown => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single JawNarrowVsWide => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single JawForwardVsBack => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single CheeksUpVsDown => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single CheeksForwardVsBack => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single EyesUpVsDown => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single EyesInVsOut => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        public Single BrowsUpVsDown => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
-        public Single BrowsInVsOut => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
-        public Single BrowsForwardVsBack => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
-        public Single LipsUpVsDown => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
-        public Single LipsInVsOut => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
-        public Single ChinNarrowVsWide => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
-        public Single ChinUpVsDown => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
-        public Single ChinUnderbiteVsOverbite => SpanExt.GetFloat(_data.Slice(0x40, 0x4));
-        public Single EyesForwardVsBack => SpanExt.GetFloat(_data.Slice(0x44, 0x4));
-        public Single Unknown => SpanExt.GetFloat(_data.Slice(0x48, 0x4));
+        public Single NoseLongVsShort => _data.Slice(0x0, 0x4).Float();
+        public Single NoseUpVsDown => _data.Slice(0x4, 0x4).Float();
+        public Single JawUpVsDown => _data.Slice(0x8, 0x4).Float();
+        public Single JawNarrowVsWide => _data.Slice(0xC, 0x4).Float();
+        public Single JawForwardVsBack => _data.Slice(0x10, 0x4).Float();
+        public Single CheeksUpVsDown => _data.Slice(0x14, 0x4).Float();
+        public Single CheeksForwardVsBack => _data.Slice(0x18, 0x4).Float();
+        public Single EyesUpVsDown => _data.Slice(0x1C, 0x4).Float();
+        public Single EyesInVsOut => _data.Slice(0x20, 0x4).Float();
+        public Single BrowsUpVsDown => _data.Slice(0x24, 0x4).Float();
+        public Single BrowsInVsOut => _data.Slice(0x28, 0x4).Float();
+        public Single BrowsForwardVsBack => _data.Slice(0x2C, 0x4).Float();
+        public Single LipsUpVsDown => _data.Slice(0x30, 0x4).Float();
+        public Single LipsInVsOut => _data.Slice(0x34, 0x4).Float();
+        public Single ChinNarrowVsWide => _data.Slice(0x38, 0x4).Float();
+        public Single ChinUpVsDown => _data.Slice(0x3C, 0x4).Float();
+        public Single ChinUnderbiteVsOverbite => _data.Slice(0x40, 0x4).Float();
+        public Single EyesForwardVsBack => _data.Slice(0x44, 0x4).Float();
+        public Single Unknown => _data.Slice(0x48, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

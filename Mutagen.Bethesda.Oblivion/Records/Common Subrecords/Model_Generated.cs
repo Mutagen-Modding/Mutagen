@@ -1350,7 +1350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region BoundRadius
         private int? _BoundRadiusLocation;
-        public Single BoundRadius => _BoundRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _BoundRadiusLocation.Value, _package.MetaData.Constants)) : default;
+        public Single BoundRadius => _BoundRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BoundRadiusLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Hashes
         private int? _HashesLocation;

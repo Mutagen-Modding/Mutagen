@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public PerkModifyValue.ModificationType Modification => (PerkModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
         #region Value
         private int? _ValueLocation;
-        public Single Value => _ValueLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ValueLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ValueLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

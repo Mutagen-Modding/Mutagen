@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public ref struct SubrecordFrame
     {
-        private readonly SubrecordHeader _header { get; }
+        private readonly SubrecordHeader _header;
         
         /// <summary>
         /// Raw bytes of both header and content data

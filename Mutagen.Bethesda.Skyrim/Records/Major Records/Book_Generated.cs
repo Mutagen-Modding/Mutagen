@@ -3265,7 +3265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0xC;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         #region InventoryArt
         private int? _InventoryArtLocation;

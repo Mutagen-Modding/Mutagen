@@ -13751,7 +13751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Duration
         private int _DurationLocation => _DNAMLocation!.Value + 0x4;
         private bool _Duration_IsSet => _DNAMLocation.HasValue;
-        public Single Duration => _Duration_IsSet ? SpanExt.GetFloat(_data.Slice(_DurationLocation, 4)) : default;
+        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Counts1
         partial void Counts1CustomParse(

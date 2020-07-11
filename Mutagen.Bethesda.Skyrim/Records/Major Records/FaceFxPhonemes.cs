@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
                     foreach (var slot in Slots)
                     {
                         var mem = slots[(int)slot];
-                        phoneme.Set(slot, SpanExt.GetFloat(mem.Slice(i * 4, 4)));
+                        phoneme.Set(slot, mem.Slice(i * 4, 4).Float());
                     }
                 }
             }

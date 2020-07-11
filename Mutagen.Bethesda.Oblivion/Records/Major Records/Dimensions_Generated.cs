@@ -1229,8 +1229,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Width => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single Height => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single Width => _data.Slice(0x0, 0x4).Float();
+        public Single Height => _data.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

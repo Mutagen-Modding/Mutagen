@@ -1973,20 +1973,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single EyeAdaptSpeed => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single BlurRadius => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single BlurPasses => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single EmissiveMult => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single TargetLum => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single UpperLumClamp => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single BrightScale => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single BrightClamp => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single LumRampNoTex => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        public Single LumRampMin => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
-        public Single LumRampMax => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
-        public Single SunlightDimmer => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
-        public Single GrassDimmer => SpanExt.GetFloat(_data.Slice(0x30, 0x4));
-        public Single TreeDimmer => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
+        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
+        public Single BlurRadius => _data.Slice(0x4, 0x4).Float();
+        public Single BlurPasses => _data.Slice(0x8, 0x4).Float();
+        public Single EmissiveMult => _data.Slice(0xC, 0x4).Float();
+        public Single TargetLum => _data.Slice(0x10, 0x4).Float();
+        public Single UpperLumClamp => _data.Slice(0x14, 0x4).Float();
+        public Single BrightScale => _data.Slice(0x18, 0x4).Float();
+        public Single BrightClamp => _data.Slice(0x1C, 0x4).Float();
+        public Single LumRampNoTex => _data.Slice(0x20, 0x4).Float();
+        public Single LumRampMin => _data.Slice(0x24, 0x4).Float();
+        public Single LumRampMax => _data.Slice(0x28, 0x4).Float();
+        public Single SunlightDimmer => _data.Slice(0x2C, 0x4).Float();
+        public Single GrassDimmer => _data.Slice(0x30, 0x4).Float();
+        public Single TreeDimmer => _data.Slice(0x34, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

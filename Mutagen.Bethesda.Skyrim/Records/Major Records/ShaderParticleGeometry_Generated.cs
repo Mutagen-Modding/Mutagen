@@ -2273,37 +2273,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region GravityVelocity
         private int _GravityVelocityLocation => _DATALocation!.Value;
         private bool _GravityVelocity_IsSet => _DATALocation.HasValue;
-        public Single GravityVelocity => _GravityVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityVelocityLocation, 4)) : default;
+        public Single GravityVelocity => _GravityVelocity_IsSet ? _data.Slice(_GravityVelocityLocation, 4).Float() : default;
         #endregion
         #region RotationVelocity
         private int _RotationVelocityLocation => _DATALocation!.Value + 0x4;
         private bool _RotationVelocity_IsSet => _DATALocation.HasValue;
-        public Single RotationVelocity => _RotationVelocity_IsSet ? SpanExt.GetFloat(_data.Slice(_RotationVelocityLocation, 4)) : default;
+        public Single RotationVelocity => _RotationVelocity_IsSet ? _data.Slice(_RotationVelocityLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeX
         private int _ParticleSizeXLocation => _DATALocation!.Value + 0x8;
         private bool _ParticleSizeX_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeX => _ParticleSizeX_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeXLocation, 4)) : default;
+        public Single ParticleSizeX => _ParticleSizeX_IsSet ? _data.Slice(_ParticleSizeXLocation, 4).Float() : default;
         #endregion
         #region ParticleSizeY
         private int _ParticleSizeYLocation => _DATALocation!.Value + 0xC;
         private bool _ParticleSizeY_IsSet => _DATALocation.HasValue;
-        public Single ParticleSizeY => _ParticleSizeY_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleSizeYLocation, 4)) : default;
+        public Single ParticleSizeY => _ParticleSizeY_IsSet ? _data.Slice(_ParticleSizeYLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMin
         private int _CenterOffsetMinLocation => _DATALocation!.Value + 0x10;
         private bool _CenterOffsetMin_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMinLocation, 4)) : default;
+        public Single CenterOffsetMin => _CenterOffsetMin_IsSet ? _data.Slice(_CenterOffsetMinLocation, 4).Float() : default;
         #endregion
         #region CenterOffsetMax
         private int _CenterOffsetMaxLocation => _DATALocation!.Value + 0x14;
         private bool _CenterOffsetMax_IsSet => _DATALocation.HasValue;
-        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? SpanExt.GetFloat(_data.Slice(_CenterOffsetMaxLocation, 4)) : default;
+        public Single CenterOffsetMax => _CenterOffsetMax_IsSet ? _data.Slice(_CenterOffsetMaxLocation, 4).Float() : default;
         #endregion
         #region InitialRotationRange
         private int _InitialRotationRangeLocation => _DATALocation!.Value + 0x18;
         private bool _InitialRotationRange_IsSet => _DATALocation.HasValue;
-        public Single InitialRotationRange => _InitialRotationRange_IsSet ? SpanExt.GetFloat(_data.Slice(_InitialRotationRangeLocation, 4)) : default;
+        public Single InitialRotationRange => _InitialRotationRange_IsSet ? _data.Slice(_InitialRotationRangeLocation, 4).Float() : default;
         #endregion
         #region NumSubtexturesX
         private int _NumSubtexturesXLocation => _DATALocation!.Value + 0x1C;
@@ -2328,7 +2328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ParticleDensity
         private int _ParticleDensityLocation => _DATALocation!.Value + 0x2C;
         private bool _ParticleDensity_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0);
-        public Single ParticleDensity => _ParticleDensity_IsSet ? SpanExt.GetFloat(_data.Slice(_ParticleDensityLocation, 4)) : default;
+        public Single ParticleDensity => _ParticleDensity_IsSet ? _data.Slice(_ParticleDensityLocation, 4).Float() : default;
         #endregion
         #region ParticleTexture
         private int? _ParticleTextureLocation;

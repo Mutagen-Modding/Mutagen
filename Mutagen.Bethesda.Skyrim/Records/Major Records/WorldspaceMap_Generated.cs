@@ -1553,9 +1553,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
         public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
         public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
-        public Single CameraMinHeight => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single CameraMaxHeight => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single CameraInitialPitch => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single CameraMinHeight => _data.Slice(0x10, 0x4).Float();
+        public Single CameraMaxHeight => _data.Slice(0x14, 0x4).Float();
+        public Single CameraInitialPitch => _data.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

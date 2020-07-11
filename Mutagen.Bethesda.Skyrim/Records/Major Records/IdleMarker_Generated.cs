@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region IdleTimer
         private int? _IdleTimerLocation;
-        public Single? IdleTimer => _IdleTimerLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimerLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? IdleTimer => _IdleTimerLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimerLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Animations
         partial void AnimationsCustomParse(

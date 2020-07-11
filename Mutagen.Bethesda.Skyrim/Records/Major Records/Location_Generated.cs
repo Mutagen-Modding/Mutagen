@@ -5739,7 +5739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
-        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? WorldLocationRadius => _WorldLocationRadiusLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationRadiusLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;

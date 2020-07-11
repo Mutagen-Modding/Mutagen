@@ -1787,17 +1787,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single LeftWalk => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single LeftRun => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single RightWalk => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single RightRun => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single ForwardWalk => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single ForwardRun => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single BackWalk => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single BackRun => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single RotateWalk => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        public Single RotateRun => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
-        public Single Unknown => SpanExt.GetFloat(_data.Slice(0x28, 0x4));
+        public Single LeftWalk => _data.Slice(0x0, 0x4).Float();
+        public Single LeftRun => _data.Slice(0x4, 0x4).Float();
+        public Single RightWalk => _data.Slice(0x8, 0x4).Float();
+        public Single RightRun => _data.Slice(0xC, 0x4).Float();
+        public Single ForwardWalk => _data.Slice(0x10, 0x4).Float();
+        public Single ForwardRun => _data.Slice(0x14, 0x4).Float();
+        public Single BackWalk => _data.Slice(0x18, 0x4).Float();
+        public Single BackRun => _data.Slice(0x1C, 0x4).Float();
+        public Single RotateWalk => _data.Slice(0x20, 0x4).Float();
+        public Single RotateRun => _data.Slice(0x24, 0x4).Float();
+        public Single Unknown => _data.Slice(0x28, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -123,9 +123,9 @@ namespace Mutagen.Bethesda.Tests
             if (qnam != null)
             {
                 // Standardize float rounding errors
-                var r = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value, 4)));
-                var g = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value + 4, 4)));
-                var b = IBinaryStreamExt.GetColorByte(SpanExt.GetFloat(majorFrame.Content.Slice(qnam.Value + 8, 4)));
+                var r = IBinaryStreamExt.GetColorByte(majorFrame.Content.Slice(qnam.Value, 4).Float());
+                var g = IBinaryStreamExt.GetColorByte(majorFrame.Content.Slice(qnam.Value + 4, 4).Float());
+                var b = IBinaryStreamExt.GetColorByte(majorFrame.Content.Slice(qnam.Value + 8, 4).Float());
                 byte[] bytes = new byte[12];
                 using var writer = new MutagenWriter(new MemoryStream(bytes), stream.MetaData.Constants);
                 writer.Write(r / 255f);

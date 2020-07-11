@@ -3749,7 +3749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x4;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         #region ArmorRating
         private int? _ArmorRatingLocation;

@@ -1846,10 +1846,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public UInt16 UnitFromWaterAmount => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Fluff2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Grass.UnitFromWaterType UnitFromWaterMode => (Grass.UnitFromWaterType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
-        public Single PositionRange => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single HeightRange => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single ColorRange => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single WavePeriod => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single PositionRange => _data.Slice(0xC, 0x4).Float();
+        public Single HeightRange => _data.Slice(0x10, 0x4).Float();
+        public Single ColorRange => _data.Slice(0x14, 0x4).Float();
+        public Single WavePeriod => _data.Slice(0x18, 0x4).Float();
         public Grass.GrassFlag Flags => (Grass.GrassFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x1C, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -1704,14 +1704,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CombatStyleFlight.VersioningBreaks Versioning { get; private set; }
-        public Single HoverChance => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single DiveBombChance => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single GroundAttackChance => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single HoverTime => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single GroundAttackTime => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single PerchAttackChance => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single PerchAttackTime => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single FlyingAttackChance => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public Single HoverChance => _data.Slice(0x0, 0x4).Float();
+        public Single DiveBombChance => _data.Slice(0x4, 0x4).Float();
+        public Single GroundAttackChance => _data.Slice(0x8, 0x4).Float();
+        public Single HoverTime => _data.Slice(0xC, 0x4).Float();
+        public Single GroundAttackTime => _data.Slice(0x10, 0x4).Float();
+        public Single PerchAttackChance => _data.Slice(0x14, 0x4).Float();
+        public Single PerchAttackTime => _data.Slice(0x18, 0x4).Float();
+        public Single FlyingAttackChance => _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -2301,7 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InitialScale
         private int? _InitialScaleLocation;
-        public Single? InitialScale => _InitialScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? InitialScale => _InitialScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _InitialScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region InitialRotation
         private int? _InitialRotationLocation;

@@ -2450,7 +2450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ChargeTime
         private int _ChargeTimeLocation => _ENITLocation!.Value + 0x18;
         private bool _ChargeTime_IsSet => _ENITLocation.HasValue;
-        public Single ChargeTime => _ChargeTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ChargeTimeLocation, 4)) : default;
+        public Single ChargeTime => _ChargeTime_IsSet ? _data.Slice(_ChargeTimeLocation, 4).Float() : default;
         #endregion
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value + 0x1C;

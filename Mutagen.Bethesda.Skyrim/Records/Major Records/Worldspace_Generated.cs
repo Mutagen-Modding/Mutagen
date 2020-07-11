@@ -4711,7 +4711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LodWaterHeight
         private int? _LodWaterHeightLocation;
-        public Single? LodWaterHeight => _LodWaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _LodWaterHeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? LodWaterHeight => _LodWaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LodWaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region LandDefaults
         private RangeInt32? _LandDefaultsLocation;
@@ -4735,7 +4735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DistantLodMultiplier
         private int? _DistantLodMultiplierLocation;
-        public Single? DistantLodMultiplier => _DistantLodMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DistantLodMultiplierLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DistantLodMultiplier => _DistantLodMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DistantLodMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

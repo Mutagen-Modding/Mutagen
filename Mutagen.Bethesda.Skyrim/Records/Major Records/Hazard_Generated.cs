@@ -2489,22 +2489,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value + 0x4;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? SpanExt.GetFloat(_data.Slice(_RadiusLocation, 4)) : default;
+        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DATALocation!.Value + 0x8;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_LifetimeLocation, 4)) : default;
+        public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceRadius
         private int _ImageSpaceRadiusLocation => _DATALocation!.Value + 0xC;
         private bool _ImageSpaceRadius_IsSet => _DATALocation.HasValue;
-        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_ImageSpaceRadiusLocation, 4)) : default;
+        public Single ImageSpaceRadius => _ImageSpaceRadius_IsSet ? _data.Slice(_ImageSpaceRadiusLocation, 4).Float() : default;
         #endregion
         #region TargetInterval
         private int _TargetIntervalLocation => _DATALocation!.Value + 0x10;
         private bool _TargetInterval_IsSet => _DATALocation.HasValue;
-        public Single TargetInterval => _TargetInterval_IsSet ? SpanExt.GetFloat(_data.Slice(_TargetIntervalLocation, 4)) : default;
+        public Single TargetInterval => _TargetInterval_IsSet ? _data.Slice(_TargetIntervalLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x14;

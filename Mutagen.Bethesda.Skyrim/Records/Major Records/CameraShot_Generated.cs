@@ -2378,37 +2378,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TimeMultiplierPlayer
         private int _TimeMultiplierPlayerLocation => _DATALocation!.Value + 0x10;
         private bool _TimeMultiplierPlayer_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? SpanExt.GetFloat(_data.Slice(_TimeMultiplierPlayerLocation, 4)) : default;
+        public Single TimeMultiplierPlayer => _TimeMultiplierPlayer_IsSet ? _data.Slice(_TimeMultiplierPlayerLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierTarget
         private int _TimeMultiplierTargetLocation => _DATALocation!.Value + 0x14;
         private bool _TimeMultiplierTarget_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? SpanExt.GetFloat(_data.Slice(_TimeMultiplierTargetLocation, 4)) : default;
+        public Single TimeMultiplierTarget => _TimeMultiplierTarget_IsSet ? _data.Slice(_TimeMultiplierTargetLocation, 4).Float() : default;
         #endregion
         #region TimeMultiplierGlobal
         private int _TimeMultiplierGlobalLocation => _DATALocation!.Value + 0x18;
         private bool _TimeMultiplierGlobal_IsSet => _DATALocation.HasValue;
-        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? SpanExt.GetFloat(_data.Slice(_TimeMultiplierGlobalLocation, 4)) : default;
+        public Single TimeMultiplierGlobal => _TimeMultiplierGlobal_IsSet ? _data.Slice(_TimeMultiplierGlobalLocation, 4).Float() : default;
         #endregion
         #region MaxTime
         private int _MaxTimeLocation => _DATALocation!.Value + 0x1C;
         private bool _MaxTime_IsSet => _DATALocation.HasValue;
-        public Single MaxTime => _MaxTime_IsSet ? SpanExt.GetFloat(_data.Slice(_MaxTimeLocation, 4)) : default;
+        public Single MaxTime => _MaxTime_IsSet ? _data.Slice(_MaxTimeLocation, 4).Float() : default;
         #endregion
         #region MinTime
         private int _MinTimeLocation => _DATALocation!.Value + 0x20;
         private bool _MinTime_IsSet => _DATALocation.HasValue;
-        public Single MinTime => _MinTime_IsSet ? SpanExt.GetFloat(_data.Slice(_MinTimeLocation, 4)) : default;
+        public Single MinTime => _MinTime_IsSet ? _data.Slice(_MinTimeLocation, 4).Float() : default;
         #endregion
         #region TargetPercentBetweenActors
         private int _TargetPercentBetweenActorsLocation => _DATALocation!.Value + 0x24;
         private bool _TargetPercentBetweenActors_IsSet => _DATALocation.HasValue;
-        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? SpanExt.GetFloat(_data.Slice(_TargetPercentBetweenActorsLocation, 4)) : default;
+        public Single TargetPercentBetweenActors => _TargetPercentBetweenActors_IsSet ? _data.Slice(_TargetPercentBetweenActorsLocation, 4).Float() : default;
         #endregion
         #region NearTargetDistance
         private int _NearTargetDistanceLocation => _DATALocation!.Value + 0x28;
         private bool _NearTargetDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0);
-        public Single NearTargetDistance => _NearTargetDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_NearTargetDistanceLocation, 4)) : default;
+        public Single NearTargetDistance => _NearTargetDistance_IsSet ? _data.Slice(_NearTargetDistanceLocation, 4).Float() : default;
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;

@@ -6599,11 +6599,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Height
         private int? _HeightLocation;
-        public Single Height => _HeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Height => _HeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region SoundLevel
         private int? _SoundLevelLocation;

@@ -2497,11 +2497,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Duration
         private int? _DurationLocation;
-        public Single? Duration => _DurationLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Duration => _DurationLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DurationLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FadeOut
         private int? _FadeOutLocation;
-        public Single? FadeOut => _FadeOutLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? FadeOut => _FadeOutLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeOutLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region TrackFilename
         private int? _TrackFilenameLocation;
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => SpanExt.GetFloat(s));
+                        getter: (s, p) => s.Float());
                     stream.Position += subLen;
                     return (int)MusicTrack_FieldIndex.CuePoints;
                 }

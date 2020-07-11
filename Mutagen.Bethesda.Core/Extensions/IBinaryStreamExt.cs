@@ -65,16 +65,16 @@ namespace Mutagen.Bethesda.Binary
                         alpha: span[3]);
                 case ColorBinaryType.NoAlphaFloat:
                     return Color.FromArgb(
-                        red: GetColorByte(SpanExt.GetFloat(span.Slice(0, 4))),
-                        green: GetColorByte(SpanExt.GetFloat(span.Slice(4, 4))),
-                        blue: GetColorByte(SpanExt.GetFloat(span.Slice(8, 4))),
+                        red: GetColorByte(span.Slice(0, 4).Float()),
+                        green: GetColorByte(span.Slice(4, 4).Float()),
+                        blue: GetColorByte(span.Slice(8, 4).Float()),
                         alpha: 0);
                 case ColorBinaryType.AlphaFloat:
                     return Color.FromArgb(
-                        red: GetColorByte(SpanExt.GetFloat(span.Slice(0, 4))),
-                        green: GetColorByte(SpanExt.GetFloat(span.Slice(4, 4))),
-                        blue: GetColorByte(SpanExt.GetFloat(span.Slice(8, 4))),
-                        alpha: GetColorByte(SpanExt.GetFloat(span.Slice(12, 4))));
+                        red: GetColorByte(span.Slice(0, 4).Float()),
+                        green: GetColorByte(span.Slice(4, 4).Float()),
+                        blue: GetColorByte(span.Slice(8, 4).Float()),
+                        alpha: GetColorByte(span.Slice(12, 4).Float()));
                 default:
                     throw new NotImplementedException();
             }

@@ -236,10 +236,10 @@ namespace Mutagen.Bethesda.Skyrim
                                     b.Data = subRecord.Content[0] > 0;
                                     break;
                                 case PackageDataFloat f:
-                                    f.Data = SpanExt.GetFloat(subRecord.Content);
+                                    f.Data = subRecord.Content.Float();
                                     break;
                                 case PackageDataObjectList f:
-                                    f.Data = SpanExt.GetFloat(subRecord.Content);
+                                    f.Data = subRecord.Content.Float();
                                     break;
                                 case PackageDataInt i:
                                     i.Data = BinaryPrimitives.ReadUInt32LittleEndian(subRecord.Content);

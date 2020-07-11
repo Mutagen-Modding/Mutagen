@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Version => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single Version => _data.Slice(0x0, 0x4).Float();
         public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(

@@ -1500,7 +1500,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Data
         private int? _DataLocation;
-        public Single? Data => _DataLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Data => _DataLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

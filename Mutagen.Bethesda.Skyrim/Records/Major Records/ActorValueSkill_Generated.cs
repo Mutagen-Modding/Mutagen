@@ -1353,10 +1353,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single UseMult => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single OffsetMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single ImproveMult => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single ImproveOffset => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single UseMult => _data.Slice(0x0, 0x4).Float();
+        public Single OffsetMult => _data.Slice(0x4, 0x4).Float();
+        public Single ImproveMult => _data.Slice(0x8, 0x4).Float();
+        public Single ImproveOffset => _data.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

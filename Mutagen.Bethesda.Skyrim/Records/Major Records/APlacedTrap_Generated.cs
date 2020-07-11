@@ -3490,11 +3490,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IOwnershipGetter? Ownership { get; private set; }
         #region HeadTrackingWeight
         private int? _HeadTrackingWeightLocation;
-        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? HeadTrackingWeight => _HeadTrackingWeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HeadTrackingWeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region FavorCost
         private int? _FavorCostLocation;
-        public Single? FavorCost => _FavorCostLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? FavorCost => _FavorCostLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FavorCostLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IWaterReflectionGetter> Reflections { get; private set; } = ListExt.Empty<WaterReflectionBinaryOverlay>();
         public IReadOnlyList<ILinkedReferencesGetter> LinkedReferences { get; private set; } = ListExt.Empty<LinkedReferencesBinaryOverlay>();
@@ -3527,7 +3527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyList<Single>? DistantLodData { get; private set; }
         #region Scale
         private int? _ScaleLocation;
-        public Single? Scale => _ScaleLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Scale => _ScaleLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScaleLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Placement
         private RangeInt32? _PlacementLocation;
@@ -3680,7 +3680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
-                        getter: (s, p) => SpanExt.GetFloat(s));
+                        getter: (s, p) => s.Float());
                     stream.Position += subLen;
                     return (int)APlacedTrap_FieldIndex.DistantLodData;
                 }

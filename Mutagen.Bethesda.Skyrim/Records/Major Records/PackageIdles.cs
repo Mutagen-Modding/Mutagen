@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     else if (subRecord.RecordType == RecordTypes.IDLT)
                     {
-                        item.TimerSetting = SpanExt.GetFloat(subRecord.Content);
+                        item.TimerSetting = subRecord.Content.Float();
                         frame.Position += subRecord.TotalLength;
                     }
                     else
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     else if (subRecord.RecordType == RecordTypes.IDLT)
                     {
-                        _timerSetting = SpanExt.GetFloat(subRecord.Content);
+                        _timerSetting = subRecord.Content.Float();
                         stream.Position += subRecord.TotalLength;
                     }
                     else

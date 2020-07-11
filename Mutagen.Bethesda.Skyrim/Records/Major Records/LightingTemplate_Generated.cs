@@ -3082,12 +3082,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogNear
         private int _FogNearLocation => _DATALocation!.Value + 0xC;
         private bool _FogNear_IsSet => _DATALocation.HasValue;
-        public Single FogNear => _FogNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogNearLocation, 4)) : default;
+        public Single FogNear => _FogNear_IsSet ? _data.Slice(_FogNearLocation, 4).Float() : default;
         #endregion
         #region FogFar
         private int _FogFarLocation => _DATALocation!.Value + 0x10;
         private bool _FogFar_IsSet => _DATALocation.HasValue;
-        public Single FogFar => _FogFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogFarLocation, 4)) : default;
+        public Single FogFar => _FogFar_IsSet ? _data.Slice(_FogFarLocation, 4).Float() : default;
         #endregion
         #region DirectionalRotationXY
         private int _DirectionalRotationXYLocation => _DATALocation!.Value + 0x14;
@@ -3102,17 +3102,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DirectionalFade
         private int _DirectionalFadeLocation => _DATALocation!.Value + 0x1C;
         private bool _DirectionalFade_IsSet => _DATALocation.HasValue;
-        public Single DirectionalFade => _DirectionalFade_IsSet ? SpanExt.GetFloat(_data.Slice(_DirectionalFadeLocation, 4)) : default;
+        public Single DirectionalFade => _DirectionalFade_IsSet ? _data.Slice(_DirectionalFadeLocation, 4).Float() : default;
         #endregion
         #region FogClipDistance
         private int _FogClipDistanceLocation => _DATALocation!.Value + 0x20;
         private bool _FogClipDistance_IsSet => _DATALocation.HasValue;
-        public Single FogClipDistance => _FogClipDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_FogClipDistanceLocation, 4)) : default;
+        public Single FogClipDistance => _FogClipDistance_IsSet ? _data.Slice(_FogClipDistanceLocation, 4).Float() : default;
         #endregion
         #region FogPower
         private int _FogPowerLocation => _DATALocation!.Value + 0x24;
         private bool _FogPower_IsSet => _DATALocation.HasValue;
-        public Single FogPower => _FogPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogPowerLocation, 4)) : default;
+        public Single FogPower => _FogPower_IsSet ? _data.Slice(_FogPowerLocation, 4).Float() : default;
         #endregion
         #region AmbientDirectionalXPlus
         private int _AmbientDirectionalXPlusLocation => _DATALocation!.Value + 0x28;
@@ -3152,7 +3152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AmbientScale
         private int _AmbientScaleLocation => _DATALocation!.Value + 0x44;
         private bool _AmbientScale_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break0);
-        public Single AmbientScale => _AmbientScale_IsSet ? SpanExt.GetFloat(_data.Slice(_AmbientScaleLocation, 4)) : default;
+        public Single AmbientScale => _AmbientScale_IsSet ? _data.Slice(_AmbientScaleLocation, 4).Float() : default;
         #endregion
         #region FogFarColor
         private int _FogFarColorLocation => _DATALocation!.Value + 0x48;
@@ -3162,17 +3162,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogMax
         private int _FogMaxLocation => _DATALocation!.Value + 0x4C;
         private bool _FogMax_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
-        public Single FogMax => _FogMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogMaxLocation, 4)) : default;
+        public Single FogMax => _FogMax_IsSet ? _data.Slice(_FogMaxLocation, 4).Float() : default;
         #endregion
         #region LightFadeStartDistance
         private int _LightFadeStartDistanceLocation => _DATALocation!.Value + 0x50;
         private bool _LightFadeStartDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
-        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_LightFadeStartDistanceLocation, 4)) : default;
+        public Single LightFadeStartDistance => _LightFadeStartDistance_IsSet ? _data.Slice(_LightFadeStartDistanceLocation, 4).Float() : default;
         #endregion
         #region LightFadeEndDistance
         private int _LightFadeEndDistanceLocation => _DATALocation!.Value + 0x54;
         private bool _LightFadeEndDistance_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(LightingTemplate.DATADataType.Break1);
-        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? SpanExt.GetFloat(_data.Slice(_LightFadeEndDistanceLocation, 4)) : default;
+        public Single LightFadeEndDistance => _LightFadeEndDistance_IsSet ? _data.Slice(_LightFadeEndDistanceLocation, 4).Float() : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _DATALocation!.Value + 0x58;

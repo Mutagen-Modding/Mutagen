@@ -3078,32 +3078,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FalloffExponent
         private int _FalloffExponentLocation => _DATALocation!.Value + 0x10;
         private bool _FalloffExponent_IsSet => _DATALocation.HasValue;
-        public Single FalloffExponent => _FalloffExponent_IsSet ? SpanExt.GetFloat(_data.Slice(_FalloffExponentLocation, 4)) : default;
+        public Single FalloffExponent => _FalloffExponent_IsSet ? _data.Slice(_FalloffExponentLocation, 4).Float() : default;
         #endregion
         #region FOV
         private int _FOVLocation => _DATALocation!.Value + 0x14;
         private bool _FOV_IsSet => _DATALocation.HasValue;
-        public Single FOV => _FOV_IsSet ? SpanExt.GetFloat(_data.Slice(_FOVLocation, 4)) : default;
+        public Single FOV => _FOV_IsSet ? _data.Slice(_FOVLocation, 4).Float() : default;
         #endregion
         #region NearClip
         private int _NearClipLocation => _DATALocation!.Value + 0x18;
         private bool _NearClip_IsSet => _DATALocation.HasValue;
-        public Single NearClip => _NearClip_IsSet ? SpanExt.GetFloat(_data.Slice(_NearClipLocation, 4)) : default;
+        public Single NearClip => _NearClip_IsSet ? _data.Slice(_NearClipLocation, 4).Float() : default;
         #endregion
         #region FlickerPeriod
         private int _FlickerPeriodLocation => _DATALocation!.Value + 0x1C;
         private bool _FlickerPeriod_IsSet => _DATALocation.HasValue;
-        public Single FlickerPeriod => _FlickerPeriod_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerPeriodLocation, 4)) : default;
+        public Single FlickerPeriod => _FlickerPeriod_IsSet ? _data.Slice(_FlickerPeriodLocation, 4).Float() : default;
         #endregion
         #region FlickerIntensityAmplitude
         private int _FlickerIntensityAmplitudeLocation => _DATALocation!.Value + 0x20;
         private bool _FlickerIntensityAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerIntensityAmplitudeLocation, 4)) : default;
+        public Single FlickerIntensityAmplitude => _FlickerIntensityAmplitude_IsSet ? _data.Slice(_FlickerIntensityAmplitudeLocation, 4).Float() : default;
         #endregion
         #region FlickerMovementAmplitude
         private int _FlickerMovementAmplitudeLocation => _DATALocation!.Value + 0x24;
         private bool _FlickerMovementAmplitude_IsSet => _DATALocation.HasValue;
-        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_FlickerMovementAmplitudeLocation, 4)) : default;
+        public Single FlickerMovementAmplitude => _FlickerMovementAmplitude_IsSet ? _data.Slice(_FlickerMovementAmplitudeLocation, 4).Float() : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0x28;
@@ -3113,11 +3113,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x2C;
         private bool _Weight_IsSet => _DATALocation.HasValue;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         #endregion
         #region FadeValue
         private int? _FadeValueLocation;
-        public Single FadeValue => _FadeValueLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _FadeValueLocation.Value, _package.MetaData.Constants)) : default;
+        public Single FadeValue => _FadeValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _FadeValueLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Sound
         private int? _SoundLocation;

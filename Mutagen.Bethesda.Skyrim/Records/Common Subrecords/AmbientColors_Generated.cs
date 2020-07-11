@@ -1673,7 +1673,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color DirectionalZPlus => _data.Slice(0x10, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalZMinus => _data.Slice(0x14, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color Specular => _data.Slice(0x18, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single Scale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public Single Scale => _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

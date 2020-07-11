@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unused => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public Single PercentMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single PercentMult => _data.Slice(0x4, 0x4).Float();
         public CriticalData.Flag Flags => (CriticalData.Flag)_data.Span.Slice(0x8, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x9, 0x3).ToArray();
         #region Unused3

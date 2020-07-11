@@ -1357,8 +1357,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Book.BookFlag Flags => (Book.BookFlag)_data.Span.Slice(0x0, 0x1)[0];
         public Skill Teaches => (Skill)_data.Span.Slice(0x1, 0x1)[0];
-        public Single Value => SpanExt.GetFloat(_data.Slice(0x2, 0x4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(0x6, 0x4));
+        public Single Value => _data.Slice(0x2, 0x4).Float();
+        public Single Weight => _data.Slice(0x6, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

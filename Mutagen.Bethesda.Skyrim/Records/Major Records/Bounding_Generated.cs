@@ -1525,13 +1525,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Width => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single Height => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single Width => _data.Slice(0x0, 0x4).Float();
+        public Single Height => _data.Slice(0x4, 0x4).Float();
         public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
-        public Single RotationQ1 => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single RotationQ2 => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single RotationQ3 => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single RotationQ4 => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single RotationQ1 => _data.Slice(0x14, 0x4).Float();
+        public Single RotationQ2 => _data.Slice(0x18, 0x4).Float();
+        public Single RotationQ3 => _data.Slice(0x1C, 0x4).Float();
+        public Single RotationQ4 => _data.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

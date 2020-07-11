@@ -2514,22 +2514,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PositionRange
         private int _PositionRangeLocation => _DATALocation!.Value + 0xC;
         private bool _PositionRange_IsSet => _DATALocation.HasValue;
-        public Single PositionRange => _PositionRange_IsSet ? SpanExt.GetFloat(_data.Slice(_PositionRangeLocation, 4)) : default;
+        public Single PositionRange => _PositionRange_IsSet ? _data.Slice(_PositionRangeLocation, 4).Float() : default;
         #endregion
         #region HeightRange
         private int _HeightRangeLocation => _DATALocation!.Value + 0x10;
         private bool _HeightRange_IsSet => _DATALocation.HasValue;
-        public Single HeightRange => _HeightRange_IsSet ? SpanExt.GetFloat(_data.Slice(_HeightRangeLocation, 4)) : default;
+        public Single HeightRange => _HeightRange_IsSet ? _data.Slice(_HeightRangeLocation, 4).Float() : default;
         #endregion
         #region ColorRange
         private int _ColorRangeLocation => _DATALocation!.Value + 0x14;
         private bool _ColorRange_IsSet => _DATALocation.HasValue;
-        public Single ColorRange => _ColorRange_IsSet ? SpanExt.GetFloat(_data.Slice(_ColorRangeLocation, 4)) : default;
+        public Single ColorRange => _ColorRange_IsSet ? _data.Slice(_ColorRangeLocation, 4).Float() : default;
         #endregion
         #region WavePeriod
         private int _WavePeriodLocation => _DATALocation!.Value + 0x18;
         private bool _WavePeriod_IsSet => _DATALocation.HasValue;
-        public Single WavePeriod => _WavePeriod_IsSet ? SpanExt.GetFloat(_data.Slice(_WavePeriodLocation, 4)) : default;
+        public Single WavePeriod => _WavePeriod_IsSet ? _data.Slice(_WavePeriodLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x1C;

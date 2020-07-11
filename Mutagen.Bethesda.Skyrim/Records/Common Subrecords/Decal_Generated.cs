@@ -1785,13 +1785,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single MinWidth => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single MaxWidth => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single MinHeight => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single Depth => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single Shininess => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single ParallaxScale => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single MinWidth => _data.Slice(0x0, 0x4).Float();
+        public Single MaxWidth => _data.Slice(0x4, 0x4).Float();
+        public Single MinHeight => _data.Slice(0x8, 0x4).Float();
+        public Single MaxHeight => _data.Slice(0xC, 0x4).Float();
+        public Single Depth => _data.Slice(0x10, 0x4).Float();
+        public Single Shininess => _data.Slice(0x14, 0x4).Float();
+        public Single ParallaxScale => _data.Slice(0x18, 0x4).Float();
         public Byte ParallaxPasses => _data.Span[0x1C];
         public Decal.Flag Flags => (Decal.Flag)_data.Span.Slice(0x1D, 0x1)[0];
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1E, 0x2));

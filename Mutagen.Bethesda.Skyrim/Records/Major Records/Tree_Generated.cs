@@ -2524,12 +2524,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TrunkFlexibility
         private int _TrunkFlexibilityLocation => _CNAMLocation!.Value;
         private bool _TrunkFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_TrunkFlexibilityLocation, 4)) : default;
+        public Single TrunkFlexibility => _TrunkFlexibility_IsSet ? _data.Slice(_TrunkFlexibilityLocation, 4).Float() : default;
         #endregion
         #region BranchFlexibility
         private int _BranchFlexibilityLocation => _CNAMLocation!.Value + 0x4;
         private bool _BranchFlexibility_IsSet => _CNAMLocation.HasValue;
-        public Single BranchFlexibility => _BranchFlexibility_IsSet ? SpanExt.GetFloat(_data.Slice(_BranchFlexibilityLocation, 4)) : default;
+        public Single BranchFlexibility => _BranchFlexibility_IsSet ? _data.Slice(_BranchFlexibilityLocation, 4).Float() : default;
         #endregion
         #region Unknown
         private int _UnknownLocation => _CNAMLocation!.Value + 0x8;
@@ -2539,12 +2539,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LeafAmplitude
         private int _LeafAmplitudeLocation => _CNAMLocation!.Value + 0x28;
         private bool _LeafAmplitude_IsSet => _CNAMLocation.HasValue;
-        public Single LeafAmplitude => _LeafAmplitude_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafAmplitudeLocation, 4)) : default;
+        public Single LeafAmplitude => _LeafAmplitude_IsSet ? _data.Slice(_LeafAmplitudeLocation, 4).Float() : default;
         #endregion
         #region LeafFrequency
         private int _LeafFrequencyLocation => _CNAMLocation!.Value + 0x2C;
         private bool _LeafFrequency_IsSet => _CNAMLocation.HasValue;
-        public Single LeafFrequency => _LeafFrequency_IsSet ? SpanExt.GetFloat(_data.Slice(_LeafFrequencyLocation, 4)) : default;
+        public Single LeafFrequency => _LeafFrequency_IsSet ? _data.Slice(_LeafFrequencyLocation, 4).Float() : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

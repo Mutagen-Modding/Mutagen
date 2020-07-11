@@ -2646,7 +2646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TimerSeconds
         private int? _TimerSecondsLocation;
-        public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _TimerSecondsLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? TimerSeconds => _TimerSecondsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _TimerSecondsLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IFormLink<IPackageGetter>> Packages { get; private set; } = ListExt.Empty<IFormLink<IPackageGetter>>();
         #region Topic
@@ -2660,11 +2660,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region LoopingMax
         private int? _LoopingMaxLocation;
-        public Single? LoopingMax => _LoopingMaxLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMaxLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? LoopingMax => _LoopingMaxLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMaxLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region LoopingMin
         private int? _LoopingMinLocation;
-        public Single? LoopingMin => _LoopingMinLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMinLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? LoopingMin => _LoopingMinLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _LoopingMinLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Emotion
         private int? _EmotionLocation;

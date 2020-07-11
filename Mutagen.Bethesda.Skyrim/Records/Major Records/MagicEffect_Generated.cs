@@ -5124,7 +5124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseCost
         private int _BaseCostLocation => _DATALocation!.Value + 0x4;
         private bool _BaseCost_IsSet => _DATALocation.HasValue;
-        public Single BaseCost => _BaseCost_IsSet ? SpanExt.GetFloat(_data.Slice(_BaseCostLocation, 4)) : default;
+        public Single BaseCost => _BaseCost_IsSet ? _data.Slice(_BaseCostLocation, 4).Float() : default;
         #endregion
         #region AssociatedItem
         partial void AssociatedItemCustomParse(
@@ -5159,7 +5159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TaperWeight
         private int _TaperWeightLocation => _DATALocation!.Value + 0x1C;
         private bool _TaperWeight_IsSet => _DATALocation.HasValue;
-        public Single TaperWeight => _TaperWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperWeightLocation, 4)) : default;
+        public Single TaperWeight => _TaperWeight_IsSet ? _data.Slice(_TaperWeightLocation, 4).Float() : default;
         #endregion
         #region HitShader
         private int _HitShaderLocation => _DATALocation!.Value + 0x20;
@@ -5184,22 +5184,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SpellmakingCastingTime
         private int _SpellmakingCastingTimeLocation => _DATALocation!.Value + 0x30;
         private bool _SpellmakingCastingTime_IsSet => _DATALocation.HasValue;
-        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? SpanExt.GetFloat(_data.Slice(_SpellmakingCastingTimeLocation, 4)) : default;
+        public Single SpellmakingCastingTime => _SpellmakingCastingTime_IsSet ? _data.Slice(_SpellmakingCastingTimeLocation, 4).Float() : default;
         #endregion
         #region TaperCurve
         private int _TaperCurveLocation => _DATALocation!.Value + 0x34;
         private bool _TaperCurve_IsSet => _DATALocation.HasValue;
-        public Single TaperCurve => _TaperCurve_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperCurveLocation, 4)) : default;
+        public Single TaperCurve => _TaperCurve_IsSet ? _data.Slice(_TaperCurveLocation, 4).Float() : default;
         #endregion
         #region TaperDuration
         private int _TaperDurationLocation => _DATALocation!.Value + 0x38;
         private bool _TaperDuration_IsSet => _DATALocation.HasValue;
-        public Single TaperDuration => _TaperDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_TaperDurationLocation, 4)) : default;
+        public Single TaperDuration => _TaperDuration_IsSet ? _data.Slice(_TaperDurationLocation, 4).Float() : default;
         #endregion
         #region SecondActorValueWeight
         private int _SecondActorValueWeightLocation => _DATALocation!.Value + 0x3C;
         private bool _SecondActorValueWeight_IsSet => _DATALocation.HasValue;
-        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? SpanExt.GetFloat(_data.Slice(_SecondActorValueWeightLocation, 4)) : default;
+        public Single SecondActorValueWeight => _SecondActorValueWeight_IsSet ? _data.Slice(_SecondActorValueWeightLocation, 4).Float() : default;
         #endregion
         #region Archetype
         private int _ArchetypeLocation => _DATALocation!.Value + 0x40;
@@ -5248,7 +5248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SkillUsageMultiplier
         private int _SkillUsageMultiplierLocation => _DATALocation!.Value + 0x68;
         private bool _SkillUsageMultiplier_IsSet => _DATALocation.HasValue;
-        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? SpanExt.GetFloat(_data.Slice(_SkillUsageMultiplierLocation, 4)) : default;
+        public Single SkillUsageMultiplier => _SkillUsageMultiplier_IsSet ? _data.Slice(_SkillUsageMultiplierLocation, 4).Float() : default;
         #endregion
         #region DualCastArt
         private int _DualCastArtLocation => _DATALocation!.Value + 0x6C;
@@ -5258,7 +5258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DualCastScale
         private int _DualCastScaleLocation => _DATALocation!.Value + 0x70;
         private bool _DualCastScale_IsSet => _DATALocation.HasValue;
-        public Single DualCastScale => _DualCastScale_IsSet ? SpanExt.GetFloat(_data.Slice(_DualCastScaleLocation, 4)) : default;
+        public Single DualCastScale => _DualCastScale_IsSet ? _data.Slice(_DualCastScaleLocation, 4).Float() : default;
         #endregion
         #region EnchantArt
         private int _EnchantArtLocation => _DATALocation!.Value + 0x74;
@@ -5298,12 +5298,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ScriptEffectAIScore
         private int _ScriptEffectAIScoreLocation => _DATALocation!.Value + 0x90;
         private bool _ScriptEffectAIScore_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIScoreLocation, 4)) : default;
+        public Single ScriptEffectAIScore => _ScriptEffectAIScore_IsSet ? _data.Slice(_ScriptEffectAIScoreLocation, 4).Float() : default;
         #endregion
         #region ScriptEffectAIDelayTime
         private int _ScriptEffectAIDelayTimeLocation => _DATALocation!.Value + 0x94;
         private bool _ScriptEffectAIDelayTime_IsSet => _DATALocation.HasValue;
-        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? SpanExt.GetFloat(_data.Slice(_ScriptEffectAIDelayTimeLocation, 4)) : default;
+        public Single ScriptEffectAIDelayTime => _ScriptEffectAIDelayTime_IsSet ? _data.Slice(_ScriptEffectAIDelayTimeLocation, 4).Float() : default;
         #endregion
         public IReadOnlyList<IFormLink<IMagicEffectGetter>> CounterEffects { get; private set; } = ListExt.Empty<IFormLink<IMagicEffectGetter>>();
         public IReadOnlyList<IMagicEffectSoundGetter>? Sounds { get; private set; }

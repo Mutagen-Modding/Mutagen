@@ -1587,9 +1587,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public ImageSpaceDepthOfField.VersioningBreaks Versioning { get; private set; }
-        public Single Strength => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single Distance => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single Range => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Strength => _data.Slice(0x0, 0x4).Float();
+        public Single Distance => _data.Slice(0x4, 0x4).Float();
+        public Single Range => _data.Slice(0x8, 0x4).Float();
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xC, 0x2));
         #region BlurRadius
         public Byte BlurRadius => GetBlurRadiusCustom(location: 0xE);

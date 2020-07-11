@@ -2594,7 +2594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Duration
         private int _DurationLocation => _DATALocation!.Value;
         private bool _Duration_IsSet => _DATALocation.HasValue;
-        public Single Duration => _Duration_IsSet ? SpanExt.GetFloat(_data.Slice(_DurationLocation, 4)) : default;
+        public Single Duration => _Duration_IsSet ? _data.Slice(_DurationLocation, 4).Float() : default;
         #endregion
         #region Orientation
         private int _OrientationLocation => _DATALocation!.Value + 0x4;
@@ -2604,12 +2604,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AngleThreshold
         private int _AngleThresholdLocation => _DATALocation!.Value + 0x8;
         private bool _AngleThreshold_IsSet => _DATALocation.HasValue;
-        public Single AngleThreshold => _AngleThreshold_IsSet ? SpanExt.GetFloat(_data.Slice(_AngleThresholdLocation, 4)) : default;
+        public Single AngleThreshold => _AngleThreshold_IsSet ? _data.Slice(_AngleThresholdLocation, 4).Float() : default;
         #endregion
         #region PlacementRadius
         private int _PlacementRadiusLocation => _DATALocation!.Value + 0xC;
         private bool _PlacementRadius_IsSet => _DATALocation.HasValue;
-        public Single PlacementRadius => _PlacementRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_PlacementRadiusLocation, 4)) : default;
+        public Single PlacementRadius => _PlacementRadius_IsSet ? _data.Slice(_PlacementRadiusLocation, 4).Float() : default;
         #endregion
         #region SoundLevel
         private int _SoundLevelLocation => _DATALocation!.Value + 0x10;

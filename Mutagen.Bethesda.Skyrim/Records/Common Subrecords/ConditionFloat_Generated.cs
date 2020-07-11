@@ -1369,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single ComparisonValue => _data.Slice(0x4, 0x4).Float();
         #region Data
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;

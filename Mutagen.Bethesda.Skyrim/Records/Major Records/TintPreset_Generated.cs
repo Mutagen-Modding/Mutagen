@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region DefaultValue
         private int? _DefaultValueLocation;
-        public Single? DefaultValue => _DefaultValueLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultValueLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DefaultValue => _DefaultValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Index
         private int? _IndexLocation;

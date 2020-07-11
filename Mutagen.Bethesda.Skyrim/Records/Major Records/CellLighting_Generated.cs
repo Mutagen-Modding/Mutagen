@@ -2607,13 +2607,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color FogNearColor => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogNear => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single FogFar => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single FogNear => _data.Slice(0xC, 0x4).Float();
+        public Single FogFar => _data.Slice(0x10, 0x4).Float();
         public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single DirectionalFade => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single FogClipDistance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        public Single FogPower => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public Single DirectionalFade => _data.Slice(0x1C, 0x4).Float();
+        public Single FogClipDistance => _data.Slice(0x20, 0x4).Float();
+        public Single FogPower => _data.Slice(0x24, 0x4).Float();
         public Color AmbientDirectionalXPlus => _data.Slice(0x28, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientDirectionalXMinus => _data.Slice(0x2C, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientDirectionalYPlus => _data.Slice(0x30, 0x4).ReadColor(ColorBinaryType.Alpha);
@@ -2621,11 +2621,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Color AmbientDirectionalZPlus => _data.Slice(0x38, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientDirectionalZMinus => _data.Slice(0x3C, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color AmbientSpecular => _data.Slice(0x40, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single AmbientScale => SpanExt.GetFloat(_data.Slice(0x44, 0x4));
+        public Single AmbientScale => _data.Slice(0x44, 0x4).Float();
         public Color FogFarColor => _data.Slice(0x48, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogMax => SpanExt.GetFloat(_data.Slice(0x4C, 0x4));
-        public Single LightFadeBegin => SpanExt.GetFloat(_data.Slice(0x50, 0x4));
-        public Single LightFadeEnd => SpanExt.GetFloat(_data.Slice(0x54, 0x4));
+        public Single FogMax => _data.Slice(0x4C, 0x4).Float();
+        public Single LightFadeBegin => _data.Slice(0x50, 0x4).Float();
+        public Single LightFadeEnd => _data.Slice(0x54, 0x4).Float();
         public CellLighting.Inherit Inherits => (CellLighting.Inherit)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

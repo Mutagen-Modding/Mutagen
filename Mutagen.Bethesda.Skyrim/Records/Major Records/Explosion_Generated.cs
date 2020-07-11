@@ -2990,27 +2990,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Force
         private int _ForceLocation => _DATALocation!.Value + 0x18;
         private bool _Force_IsSet => _DATALocation.HasValue;
-        public Single Force => _Force_IsSet ? SpanExt.GetFloat(_data.Slice(_ForceLocation, 4)) : default;
+        public Single Force => _Force_IsSet ? _data.Slice(_ForceLocation, 4).Float() : default;
         #endregion
         #region Damage
         private int _DamageLocation => _DATALocation!.Value + 0x1C;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageLocation, 4)) : default;
+        public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Radius
         private int _RadiusLocation => _DATALocation!.Value + 0x20;
         private bool _Radius_IsSet => _DATALocation.HasValue;
-        public Single Radius => _Radius_IsSet ? SpanExt.GetFloat(_data.Slice(_RadiusLocation, 4)) : default;
+        public Single Radius => _Radius_IsSet ? _data.Slice(_RadiusLocation, 4).Float() : default;
         #endregion
         #region ISRadius
         private int _ISRadiusLocation => _DATALocation!.Value + 0x24;
         private bool _ISRadius_IsSet => _DATALocation.HasValue;
-        public Single ISRadius => _ISRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_ISRadiusLocation, 4)) : default;
+        public Single ISRadius => _ISRadius_IsSet ? _data.Slice(_ISRadiusLocation, 4).Float() : default;
         #endregion
         #region VerticalOffsetMult
         private int _VerticalOffsetMultLocation => _DATALocation!.Value + 0x28;
         private bool _VerticalOffsetMult_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(Explosion.DATADataType.Break0);
-        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? SpanExt.GetFloat(_data.Slice(_VerticalOffsetMultLocation, 4)) : default;
+        public Single VerticalOffsetMult => _VerticalOffsetMult_IsSet ? _data.Slice(_VerticalOffsetMultLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x2C;

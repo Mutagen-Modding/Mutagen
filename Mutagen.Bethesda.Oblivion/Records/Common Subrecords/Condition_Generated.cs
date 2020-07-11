@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int offset);
         #endregion
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x1, 0x3).ToArray();
-        public Single ComparisonValue => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single ComparisonValue => _data.Slice(0x4, 0x4).Float();
         public Function Function => (Function)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         public Int32 FirstParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xC, 0x4));
         public Int32 SecondParameter => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));

@@ -2918,7 +2918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Damage
         private int _DamageLocation => _DATALocation!.Value + 0x8;
         private bool _Damage_IsSet => _DATALocation.HasValue;
-        public Single Damage => _Damage_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageLocation, 4)) : default;
+        public Single Damage => _Damage_IsSet ? _data.Slice(_DamageLocation, 4).Float() : default;
         #endregion
         #region Value
         private int _ValueLocation => _DATALocation!.Value + 0xC;
@@ -2928,7 +2928,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Weight
         private int _WeightLocation => _DATALocation!.Value + 0x10;
         private bool _Weight_IsSet => _DATALocation.HasValue && _package.FormVersion!.FormVersion!.Value >= 44;
-        public Single Weight => _Weight_IsSet ? SpanExt.GetFloat(_data.Slice(_WeightLocation, 4)) : default;
+        public Single Weight => _Weight_IsSet ? _data.Slice(_WeightLocation, 4).Float() : default;
         int WeightVersioningOffset => _package.FormVersion!.FormVersion!.Value < 44 ? -4 : 0;
         #endregion
         #region ShortName

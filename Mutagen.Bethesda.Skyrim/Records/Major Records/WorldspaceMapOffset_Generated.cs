@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Scale => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
+        public Single Scale => _data.Slice(0x0, 0x4).Float();
         public P3Float CellOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -2088,7 +2088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MaxAngle
         private int _MaxAngleLocation => _DNAMLocation!.Value;
         private bool _MaxAngle_IsSet => _DNAMLocation.HasValue;
-        public Single MaxAngle => _MaxAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_MaxAngleLocation, 4)) : default;
+        public Single MaxAngle => _MaxAngle_IsSet ? _data.Slice(_MaxAngleLocation, 4).Float() : default;
         #endregion
         #region Material
         private int _MaterialLocation => _DNAMLocation!.Value + 0x4;

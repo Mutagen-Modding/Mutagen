@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Binary
         public static P3Float Read(ReadOnlySpan<byte> span)
         {
             return new P3Float(
-                SpanExt.GetFloat(span),
-                SpanExt.GetFloat(span.Slice(4)),
-                SpanExt.GetFloat(span.Slice(8)));
+                span.Float(),
+                span.Slice(4).Float(),
+                span.Slice(8).Float());
         }
     }
 }

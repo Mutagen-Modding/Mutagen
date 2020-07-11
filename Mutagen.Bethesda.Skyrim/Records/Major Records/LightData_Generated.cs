@@ -1486,10 +1486,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public LightData.VersioningBreaks Versioning { get; private set; }
-        public Single FovOffset => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single FadeOffset => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single EndDistanceCap => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single ShadowDepthBias => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single FovOffset => _data.Slice(0x0, 0x4).Float();
+        public Single FadeOffset => _data.Slice(0x4, 0x4).Float();
+        public Single EndDistanceCap => _data.Slice(0x8, 0x4).Float();
+        public Single ShadowDepthBias => _data.Slice(0xC, 0x4).Float();
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

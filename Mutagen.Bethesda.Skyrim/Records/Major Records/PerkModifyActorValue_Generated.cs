@@ -1426,7 +1426,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public ActorValueExtended ActorValue => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
-        public Single Value => SpanExt.GetFloat(_data.Slice(0x6, 0x4));
+        public Single Value => _data.Slice(0x6, 0x4).Float();
         public PerkModifyActorValue.ModificationType Modification => (PerkModifyActorValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xA, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

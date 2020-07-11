@@ -4983,7 +4983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region WaterHeight
         private int? _WaterHeightLocation;
-        public Single? WaterHeight => _WaterHeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? WaterHeight => _WaterHeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WaterHeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region WaterNoiseTexture
         private int? _WaterNoiseTextureLocation;

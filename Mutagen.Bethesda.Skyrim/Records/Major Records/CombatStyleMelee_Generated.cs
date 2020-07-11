@@ -1674,14 +1674,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public CombatStyleMelee.VersioningBreaks Versioning { get; private set; }
-        public Single AttackStaggeredMult => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single PowerAttackStaggeredMult => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single PowerAttackBlockingMult => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single BashMult => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single BashRecoilMult => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single BashAttackMult => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single BashPowerAttackMult => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single SpecialAttackMult => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
+        public Single AttackStaggeredMult => _data.Slice(0x0, 0x4).Float();
+        public Single PowerAttackStaggeredMult => _data.Slice(0x4, 0x4).Float();
+        public Single PowerAttackBlockingMult => _data.Slice(0x8, 0x4).Float();
+        public Single BashMult => _data.Slice(0xC, 0x4).Float();
+        public Single BashRecoilMult => _data.Slice(0x10, 0x4).Float();
+        public Single BashAttackMult => _data.Slice(0x14, 0x4).Float();
+        public Single BashPowerAttackMult => _data.Slice(0x18, 0x4).Float();
+        public Single SpecialAttackMult => _data.Slice(0x1C, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -1229,8 +1229,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single DefaultLandHeight => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single DefaultWaterHeight => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
+        public Single DefaultLandHeight => _data.Slice(0x0, 0x4).Float();
+        public Single DefaultWaterHeight => _data.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

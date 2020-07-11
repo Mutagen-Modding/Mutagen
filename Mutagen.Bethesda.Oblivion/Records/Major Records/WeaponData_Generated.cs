@@ -1598,12 +1598,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public Weapon.WeaponType Type => (Weapon.WeaponType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public Single Speed => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single Reach => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Speed => _data.Slice(0x4, 0x4).Float();
+        public Single Reach => _data.Slice(0x8, 0x4).Float();
         public Weapon.WeaponFlag Flags => (Weapon.WeaponFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public UInt32 Value => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x10, 0x4));
         public UInt32 Health => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
-        public Single Weight => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single Weight => _data.Slice(0x18, 0x4).Float();
         public UInt16 Damage => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x1C, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,

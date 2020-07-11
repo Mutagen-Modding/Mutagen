@@ -1353,10 +1353,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single DayNear => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single DayFar => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single NightNear => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single NightFar => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single DayNear => _data.Slice(0x0, 0x4).Float();
+        public Single DayFar => _data.Slice(0x4, 0x4).Float();
+        public Single NightNear => _data.Slice(0x8, 0x4).Float();
+        public Single NightFar => _data.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

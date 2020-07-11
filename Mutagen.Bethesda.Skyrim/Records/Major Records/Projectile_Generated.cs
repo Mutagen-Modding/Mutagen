@@ -3682,17 +3682,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Gravity
         private int _GravityLocation => _DATALocation!.Value + 0x4;
         private bool _Gravity_IsSet => _DATALocation.HasValue;
-        public Single Gravity => _Gravity_IsSet ? SpanExt.GetFloat(_data.Slice(_GravityLocation, 4)) : default;
+        public Single Gravity => _Gravity_IsSet ? _data.Slice(_GravityLocation, 4).Float() : default;
         #endregion
         #region Speed
         private int _SpeedLocation => _DATALocation!.Value + 0x8;
         private bool _Speed_IsSet => _DATALocation.HasValue;
-        public Single Speed => _Speed_IsSet ? SpanExt.GetFloat(_data.Slice(_SpeedLocation, 4)) : default;
+        public Single Speed => _Speed_IsSet ? _data.Slice(_SpeedLocation, 4).Float() : default;
         #endregion
         #region Range
         private int _RangeLocation => _DATALocation!.Value + 0xC;
         private bool _Range_IsSet => _DATALocation.HasValue;
-        public Single Range => _Range_IsSet ? SpanExt.GetFloat(_data.Slice(_RangeLocation, 4)) : default;
+        public Single Range => _Range_IsSet ? _data.Slice(_RangeLocation, 4).Float() : default;
         #endregion
         #region Light
         private int _LightLocation => _DATALocation!.Value + 0x10;
@@ -3707,17 +3707,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TracerChance
         private int _TracerChanceLocation => _DATALocation!.Value + 0x18;
         private bool _TracerChance_IsSet => _DATALocation.HasValue;
-        public Single TracerChance => _TracerChance_IsSet ? SpanExt.GetFloat(_data.Slice(_TracerChanceLocation, 4)) : default;
+        public Single TracerChance => _TracerChance_IsSet ? _data.Slice(_TracerChanceLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerProximity
         private int _ExplosionAltTriggerProximityLocation => _DATALocation!.Value + 0x1C;
         private bool _ExplosionAltTriggerProximity_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionAltTriggerProximityLocation, 4)) : default;
+        public Single ExplosionAltTriggerProximity => _ExplosionAltTriggerProximity_IsSet ? _data.Slice(_ExplosionAltTriggerProximityLocation, 4).Float() : default;
         #endregion
         #region ExplosionAltTriggerTimer
         private int _ExplosionAltTriggerTimerLocation => _DATALocation!.Value + 0x20;
         private bool _ExplosionAltTriggerTimer_IsSet => _DATALocation.HasValue;
-        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplosionAltTriggerTimerLocation, 4)) : default;
+        public Single ExplosionAltTriggerTimer => _ExplosionAltTriggerTimer_IsSet ? _data.Slice(_ExplosionAltTriggerTimerLocation, 4).Float() : default;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value + 0x24;
@@ -3732,17 +3732,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region MuzzleFlashDuration
         private int _MuzzleFlashDurationLocation => _DATALocation!.Value + 0x2C;
         private bool _MuzzleFlashDuration_IsSet => _DATALocation.HasValue;
-        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_MuzzleFlashDurationLocation, 4)) : default;
+        public Single MuzzleFlashDuration => _MuzzleFlashDuration_IsSet ? _data.Slice(_MuzzleFlashDurationLocation, 4).Float() : default;
         #endregion
         #region FadeDuration
         private int _FadeDurationLocation => _DATALocation!.Value + 0x30;
         private bool _FadeDuration_IsSet => _DATALocation.HasValue;
-        public Single FadeDuration => _FadeDuration_IsSet ? SpanExt.GetFloat(_data.Slice(_FadeDurationLocation, 4)) : default;
+        public Single FadeDuration => _FadeDuration_IsSet ? _data.Slice(_FadeDurationLocation, 4).Float() : default;
         #endregion
         #region ImpactForce
         private int _ImpactForceLocation => _DATALocation!.Value + 0x34;
         private bool _ImpactForce_IsSet => _DATALocation.HasValue;
-        public Single ImpactForce => _ImpactForce_IsSet ? SpanExt.GetFloat(_data.Slice(_ImpactForceLocation, 4)) : default;
+        public Single ImpactForce => _ImpactForce_IsSet ? _data.Slice(_ImpactForceLocation, 4).Float() : default;
         #endregion
         #region CountdownSound
         private int _CountdownSoundLocation => _DATALocation!.Value + 0x38;
@@ -3762,22 +3762,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ConeSpread
         private int _ConeSpreadLocation => _DATALocation!.Value + 0x44;
         private bool _ConeSpread_IsSet => _DATALocation.HasValue;
-        public Single ConeSpread => _ConeSpread_IsSet ? SpanExt.GetFloat(_data.Slice(_ConeSpreadLocation, 4)) : default;
+        public Single ConeSpread => _ConeSpread_IsSet ? _data.Slice(_ConeSpreadLocation, 4).Float() : default;
         #endregion
         #region CollisionRadius
         private int _CollisionRadiusLocation => _DATALocation!.Value + 0x48;
         private bool _CollisionRadius_IsSet => _DATALocation.HasValue;
-        public Single CollisionRadius => _CollisionRadius_IsSet ? SpanExt.GetFloat(_data.Slice(_CollisionRadiusLocation, 4)) : default;
+        public Single CollisionRadius => _CollisionRadius_IsSet ? _data.Slice(_CollisionRadiusLocation, 4).Float() : default;
         #endregion
         #region Lifetime
         private int _LifetimeLocation => _DATALocation!.Value + 0x4C;
         private bool _Lifetime_IsSet => _DATALocation.HasValue;
-        public Single Lifetime => _Lifetime_IsSet ? SpanExt.GetFloat(_data.Slice(_LifetimeLocation, 4)) : default;
+        public Single Lifetime => _Lifetime_IsSet ? _data.Slice(_LifetimeLocation, 4).Float() : default;
         #endregion
         #region RelaunchInterval
         private int _RelaunchIntervalLocation => _DATALocation!.Value + 0x50;
         private bool _RelaunchInterval_IsSet => _DATALocation.HasValue;
-        public Single RelaunchInterval => _RelaunchInterval_IsSet ? SpanExt.GetFloat(_data.Slice(_RelaunchIntervalLocation, 4)) : default;
+        public Single RelaunchInterval => _RelaunchInterval_IsSet ? _data.Slice(_RelaunchIntervalLocation, 4).Float() : default;
         #endregion
         #region DecalData
         private int _DecalDataLocation => _DATALocation!.Value + 0x54;

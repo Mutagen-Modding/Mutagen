@@ -1421,8 +1421,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ActorValue Action => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public ActorValue Attribute => (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         public Specialization Specialization => (Specialization)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
-        public Single UseValueFirst => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single UseValueSecond => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single UseValueFirst => _data.Slice(0xC, 0x4).Float();
+        public Single UseValueSecond => _data.Slice(0x10, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

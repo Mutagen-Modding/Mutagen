@@ -2022,8 +2022,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 var data = _data.Span.Slice(0x12, 8);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion
@@ -2034,8 +2034,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 var data = _data.Span.Slice(0x1A, 8);
                 return new GenderedItem<Single>(
-                    SpanExt.GetFloat(data),
-                    SpanExt.GetFloat(data.Slice(4)));
+                    data.Float(),
+                    data.Slice(4).Float());
             }
         }
         #endregion

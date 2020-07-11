@@ -1694,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region IdleTime
         private int? _IdleTimeLocation;
-        public Single IdleTime => _IdleTimeLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimeLocation.Value, _package.MetaData.Constants)) : default;
+        public Single IdleTime => _IdleTimeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IdleTimeLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region PatrolScriptMarker
         partial void PatrolScriptMarkerCustomParse(

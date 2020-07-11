@@ -2776,29 +2776,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public WeaponAnimationType AnimationType => (WeaponAnimationType)_data.Span.Slice(0x0, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public Single Speed => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single Reach => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Speed => _data.Slice(0x4, 0x4).Float();
+        public Single Reach => _data.Slice(0x8, 0x4).Float();
         public WeaponData.Flag Flags => GetFlagsCustom(location: 0xC);
         public Int16 Unused2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xE, 0x2));
-        public Single SightFOV => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single SightFOV => _data.Slice(0x10, 0x4).Float();
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         public Byte BaseVATStoHitChance => _data.Span[0x18];
         public WeaponData.AttackAnimationType AttackAnimation => (WeaponData.AttackAnimationType)_data.Span.Slice(0x19, 0x1)[0];
         public Byte NumProjectiles => _data.Span[0x1A];
         public Byte EmbeddedWeaponAV => _data.Span[0x1B];
-        public Single RangeMin => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single RangeMax => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single RangeMin => _data.Slice(0x1C, 0x4).Float();
+        public Single RangeMax => _data.Slice(0x20, 0x4).Float();
         public WeaponData.OnHitType OnHit => (WeaponData.OnHitType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x24, 0x4));
         #region Flags2
         partial void Flags2CustomParse(
             OverlayStream stream,
             int offset);
         #endregion
-        public Single AnimationAttackMult => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
+        public Single AnimationAttackMult => _data.Slice(0x2C, 0x4).Float();
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x30, 0x4));
-        public Single RumbleLeftMotorStrength => SpanExt.GetFloat(_data.Slice(0x34, 0x4));
-        public Single RumbleRightMotorStrength => SpanExt.GetFloat(_data.Slice(0x38, 0x4));
-        public Single RumbleDuration => SpanExt.GetFloat(_data.Slice(0x3C, 0x4));
+        public Single RumbleLeftMotorStrength => _data.Slice(0x34, 0x4).Float();
+        public Single RumbleRightMotorStrength => _data.Slice(0x38, 0x4).Float();
+        public Single RumbleDuration => _data.Slice(0x3C, 0x4).Float();
         public ReadOnlyMemorySlice<Byte> Unknown3 => _data.Span.Slice(0x40, 0xC).ToArray();
         #region Skill
         public Skill? Skill
@@ -2814,7 +2814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Int64 Unknown4 => BinaryPrimitives.ReadInt64LittleEndian(_data.Slice(0x50, 0x8));
         public ActorValueExtended Resist => (ActorValueExtended)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x58, 0x4));
         public Int32 Unknown5 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x5C, 0x4));
-        public Single Stagger => SpanExt.GetFloat(_data.Slice(0x60, 0x4));
+        public Single Stagger => _data.Slice(0x60, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

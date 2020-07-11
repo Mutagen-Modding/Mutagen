@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Could not find FLTV.");
             }
-            g.RawFloat = majorMeta.Content.Slice(fltvLoc.Value).GetFloat();
+            g.RawFloat = majorMeta.Content.Slice(fltvLoc.Value).Float();
 
             // Skip to end
             frame.Reader.Position = initialPos + majorMeta.TotalLength;

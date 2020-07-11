@@ -3186,7 +3186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         private int? _ENITLocation;
         public Ingestible.ENITDataType ENITDataTypeState { get; private set; }
@@ -3208,7 +3208,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddictionChance
         private int _AddictionChanceLocation => _ENITLocation!.Value + 0xC;
         private bool _AddictionChance_IsSet => _ENITLocation.HasValue;
-        public Single AddictionChance => _AddictionChance_IsSet ? SpanExt.GetFloat(_data.Slice(_AddictionChanceLocation, 4)) : default;
+        public Single AddictionChance => _AddictionChance_IsSet ? _data.Slice(_AddictionChanceLocation, 4).Float() : default;
         #endregion
         #region ConsumeSound
         private int _ConsumeSoundLocation => _ENITLocation!.Value + 0x10;

@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLink<IWordOfPowerGetter> Word => new FormLink<IWordOfPowerGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public IFormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
-        public Single RecoveryTime => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single RecoveryTime => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

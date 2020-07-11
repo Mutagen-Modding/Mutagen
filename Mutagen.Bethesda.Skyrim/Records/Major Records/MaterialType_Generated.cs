@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Buoyancy
         private int? _BuoyancyLocation;
-        public Single? Buoyancy => _BuoyancyLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _BuoyancyLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Buoyancy => _BuoyancyLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _BuoyancyLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

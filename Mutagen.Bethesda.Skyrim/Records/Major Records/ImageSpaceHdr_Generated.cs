@@ -1663,15 +1663,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single EyeAdaptSpeed => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single BloomBlurRadius => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single BloomThreshold => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single BloomScale => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single ReceiveBloomThreshold => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
-        public Single White => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single SunlightScale => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single SkyScale => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single EyeAdaptStrength => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single EyeAdaptSpeed => _data.Slice(0x0, 0x4).Float();
+        public Single BloomBlurRadius => _data.Slice(0x4, 0x4).Float();
+        public Single BloomThreshold => _data.Slice(0x8, 0x4).Float();
+        public Single BloomScale => _data.Slice(0xC, 0x4).Float();
+        public Single ReceiveBloomThreshold => _data.Slice(0x10, 0x4).Float();
+        public Single White => _data.Slice(0x14, 0x4).Float();
+        public Single SunlightScale => _data.Slice(0x18, 0x4).Float();
+        public Single SkyScale => _data.Slice(0x1C, 0x4).Float();
+        public Single EyeAdaptStrength => _data.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

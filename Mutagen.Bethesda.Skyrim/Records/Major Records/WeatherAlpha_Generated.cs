@@ -1339,10 +1339,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single Sunrise => SpanExt.GetFloat(_data.Slice(0x0, 0x4));
-        public Single Day => SpanExt.GetFloat(_data.Slice(0x4, 0x4));
-        public Single Sunset => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
-        public Single Night => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
+        public Single Sunrise => _data.Slice(0x0, 0x4).Float();
+        public Single Day => _data.Slice(0x4, 0x4).Float();
+        public Single Sunset => _data.Slice(0x8, 0x4).Float();
+        public Single Night => _data.Slice(0xC, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

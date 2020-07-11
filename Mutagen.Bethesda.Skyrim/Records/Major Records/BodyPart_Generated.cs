@@ -3336,7 +3336,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DamageMult
         private int _DamageMultLocation => _BPNDLocation!.Value;
         private bool _DamageMult_IsSet => _BPNDLocation.HasValue;
-        public Single DamageMult => _DamageMult_IsSet ? SpanExt.GetFloat(_data.Slice(_DamageMultLocation, 4)) : default;
+        public Single DamageMult => _DamageMult_IsSet ? _data.Slice(_DamageMultLocation, 4).Float() : default;
         #endregion
         #region Flags
         private int _FlagsLocation => _BPNDLocation!.Value + 0x4;
@@ -3386,12 +3386,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region TrackingMaxAngle
         private int _TrackingMaxAngleLocation => _BPNDLocation!.Value + 0x14;
         private bool _TrackingMaxAngle_IsSet => _BPNDLocation.HasValue;
-        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? SpanExt.GetFloat(_data.Slice(_TrackingMaxAngleLocation, 4)) : default;
+        public Single TrackingMaxAngle => _TrackingMaxAngle_IsSet ? _data.Slice(_TrackingMaxAngleLocation, 4).Float() : default;
         #endregion
         #region ExplodableDebrisScale
         private int _ExplodableDebrisScaleLocation => _BPNDLocation!.Value + 0x18;
         private bool _ExplodableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? SpanExt.GetFloat(_data.Slice(_ExplodableDebrisScaleLocation, 4)) : default;
+        public Single ExplodableDebrisScale => _ExplodableDebrisScale_IsSet ? _data.Slice(_ExplodableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region SeverableDebrisCount
         private int _SeverableDebrisCountLocation => _BPNDLocation!.Value + 0x1C;
@@ -3411,7 +3411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region SeverableDebrisScale
         private int _SeverableDebrisScaleLocation => _BPNDLocation!.Value + 0x28;
         private bool _SeverableDebrisScale_IsSet => _BPNDLocation.HasValue;
-        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? SpanExt.GetFloat(_data.Slice(_SeverableDebrisScaleLocation, 4)) : default;
+        public Single SeverableDebrisScale => _SeverableDebrisScale_IsSet ? _data.Slice(_SeverableDebrisScaleLocation, 4).Float() : default;
         #endregion
         #region GorePositioning
         private int _GorePositioningLocation => _BPNDLocation!.Value + 0x2C;
@@ -3451,7 +3451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region LimbReplacementScale
         private int _LimbReplacementScaleLocation => _BPNDLocation!.Value + 0x50;
         private bool _LimbReplacementScale_IsSet => _BPNDLocation.HasValue;
-        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? SpanExt.GetFloat(_data.Slice(_LimbReplacementScaleLocation, 4)) : default;
+        public Single LimbReplacementScale => _LimbReplacementScale_IsSet ? _data.Slice(_LimbReplacementScaleLocation, 4).Float() : default;
         #endregion
         #region LimbReplacementModel
         private int? _LimbReplacementModelLocation;

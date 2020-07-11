@@ -1663,12 +1663,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Color AmbientColor => _data.Slice(0x0, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color DirectionalColor => _data.Slice(0x4, 0x4).ReadColor(ColorBinaryType.Alpha);
         public Color FogColor => _data.Slice(0x8, 0x4).ReadColor(ColorBinaryType.Alpha);
-        public Single FogNear => SpanExt.GetFloat(_data.Slice(0xC, 0x4));
-        public Single FogFar => SpanExt.GetFloat(_data.Slice(0x10, 0x4));
+        public Single FogNear => _data.Slice(0xC, 0x4).Float();
+        public Single FogFar => _data.Slice(0x10, 0x4).Float();
         public Int32 DirectionalRotationXY => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x14, 0x4));
         public Int32 DirectionalRotationZ => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x18, 0x4));
-        public Single DirectionalFade => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single FogClipDistance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
+        public Single DirectionalFade => _data.Slice(0x1C, 0x4).Float();
+        public Single FogClipDistance => _data.Slice(0x20, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

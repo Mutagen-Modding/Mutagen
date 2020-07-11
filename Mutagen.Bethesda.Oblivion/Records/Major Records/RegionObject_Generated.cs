@@ -2164,18 +2164,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLink<IOblivionMajorRecordGetter> Object => new FormLink<IOblivionMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
-        public Single Density => SpanExt.GetFloat(_data.Slice(0x8, 0x4));
+        public Single Density => _data.Slice(0x8, 0x4).Float();
         public Byte Clustering => _data.Span[0xC];
         public Byte MinSlope => _data.Span[0xD];
         public Byte MaxSlope => _data.Span[0xE];
         public RegionObject.Flag Flags => (RegionObject.Flag)_data.Span.Slice(0xF, 0x1)[0];
         public UInt16 RadiusWrtPercent => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x10, 0x2));
         public UInt16 Radius => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x12, 0x2));
-        public Single MinHeight => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single MaxHeight => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
-        public Single Sink => SpanExt.GetFloat(_data.Slice(0x1C, 0x4));
-        public Single SinkVariance => SpanExt.GetFloat(_data.Slice(0x20, 0x4));
-        public Single SizeVariance => SpanExt.GetFloat(_data.Slice(0x24, 0x4));
+        public Single MinHeight => _data.Slice(0x14, 0x4).Float();
+        public Single MaxHeight => _data.Slice(0x18, 0x4).Float();
+        public Single Sink => _data.Slice(0x1C, 0x4).Float();
+        public Single SinkVariance => _data.Slice(0x20, 0x4).Float();
+        public Single SizeVariance => _data.Slice(0x24, 0x4).Float();
         public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(0x28, 0x6));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x2E, 0x6).ToArray();
         partial void CustomFactoryEnd(

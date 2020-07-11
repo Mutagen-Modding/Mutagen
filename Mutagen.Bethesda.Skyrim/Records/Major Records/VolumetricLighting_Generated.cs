@@ -2248,51 +2248,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Intensity
         private int? _IntensityLocation;
-        public Single? Intensity => _IntensityLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _IntensityLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Intensity => _IntensityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _IntensityLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region CustomColorContribution
         private int? _CustomColorContributionLocation;
-        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _CustomColorContributionLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? CustomColorContribution => _CustomColorContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CustomColorContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorR
         private int? _ColorRLocation;
-        public Single? ColorR => _ColorRLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? ColorR => _ColorRLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorRLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorG
         private int? _ColorGLocation;
-        public Single? ColorG => _ColorGLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorGLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? ColorG => _ColorGLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorGLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region ColorB
         private int? _ColorBLocation;
-        public Single? ColorB => _ColorBLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _ColorBLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? ColorB => _ColorBLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ColorBLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityContribution
         private int? _DensityContributionLocation;
-        public Single? DensityContribution => _DensityContributionLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DensityContributionLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DensityContribution => _DensityContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensitySize
         private int? _DensitySizeLocation;
-        public Single? DensitySize => _DensitySizeLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DensitySizeLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DensitySize => _DensitySizeLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensitySizeLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityWindSpeed
         private int? _DensityWindSpeedLocation;
-        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DensityWindSpeedLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DensityWindSpeed => _DensityWindSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityWindSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region DensityFallingSpeed
         private int? _DensityFallingSpeedLocation;
-        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? DensityFallingSpeed => _DensityFallingSpeedLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _DensityFallingSpeedLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionContribution
         private int? _PhaseFunctionContributionLocation;
-        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? PhaseFunctionContribution => _PhaseFunctionContributionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionContributionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region PhaseFunctionScattering
         private int? _PhaseFunctionScatteringLocation;
-        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? PhaseFunctionScattering => _PhaseFunctionScatteringLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PhaseFunctionScatteringLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region SamplingRepartitionRangeFactor
         private int? _SamplingRepartitionRangeFactorLocation;
-        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? SamplingRepartitionRangeFactor => _SamplingRepartitionRangeFactorLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _SamplingRepartitionRangeFactorLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

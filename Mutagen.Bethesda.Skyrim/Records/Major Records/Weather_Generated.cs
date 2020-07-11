@@ -7225,42 +7225,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region FogDistanceDayNear
         private int _FogDistanceDayNearLocation => _FNAMLocation!.Value;
         private bool _FogDistanceDayNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayNearLocation, 4)) : default;
+        public Single FogDistanceDayNear => _FogDistanceDayNear_IsSet ? _data.Slice(_FogDistanceDayNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayFar
         private int _FogDistanceDayFarLocation => _FNAMLocation!.Value + 0x4;
         private bool _FogDistanceDayFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayFarLocation, 4)) : default;
+        public Single FogDistanceDayFar => _FogDistanceDayFar_IsSet ? _data.Slice(_FogDistanceDayFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightNear
         private int _FogDistanceNightNearLocation => _FNAMLocation!.Value + 0x8;
         private bool _FogDistanceNightNear_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightNearLocation, 4)) : default;
+        public Single FogDistanceNightNear => _FogDistanceNightNear_IsSet ? _data.Slice(_FogDistanceNightNearLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightFar
         private int _FogDistanceNightFarLocation => _FNAMLocation!.Value + 0xC;
         private bool _FogDistanceNightFar_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightFarLocation, 4)) : default;
+        public Single FogDistanceNightFar => _FogDistanceNightFar_IsSet ? _data.Slice(_FogDistanceNightFarLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayPower
         private int _FogDistanceDayPowerLocation => _FNAMLocation!.Value + 0x10;
         private bool _FogDistanceDayPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayPowerLocation, 4)) : default;
+        public Single FogDistanceDayPower => _FogDistanceDayPower_IsSet ? _data.Slice(_FogDistanceDayPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightPower
         private int _FogDistanceNightPowerLocation => _FNAMLocation!.Value + 0x14;
         private bool _FogDistanceNightPower_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightPowerLocation, 4)) : default;
+        public Single FogDistanceNightPower => _FogDistanceNightPower_IsSet ? _data.Slice(_FogDistanceNightPowerLocation, 4).Float() : default;
         #endregion
         #region FogDistanceDayMax
         private int _FogDistanceDayMaxLocation => _FNAMLocation!.Value + 0x18;
         private bool _FogDistanceDayMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceDayMaxLocation, 4)) : default;
+        public Single FogDistanceDayMax => _FogDistanceDayMax_IsSet ? _data.Slice(_FogDistanceDayMaxLocation, 4).Float() : default;
         #endregion
         #region FogDistanceNightMax
         private int _FogDistanceNightMaxLocation => _FNAMLocation!.Value + 0x1C;
         private bool _FogDistanceNightMax_IsSet => _FNAMLocation.HasValue;
-        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? SpanExt.GetFloat(_data.Slice(_FogDistanceNightMaxLocation, 4)) : default;
+        public Single FogDistanceNightMax => _FogDistanceNightMax_IsSet ? _data.Slice(_FogDistanceNightMaxLocation, 4).Float() : default;
         #endregion
         private int? _DATALocation;
         public Weather.DATADataType DATADataTypeState { get; private set; }

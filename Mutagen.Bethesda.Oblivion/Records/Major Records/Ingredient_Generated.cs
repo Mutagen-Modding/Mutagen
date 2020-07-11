@@ -2217,7 +2217,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Weight
         private int? _WeightLocation;
-        public Single? Weight => _WeightLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? Weight => _WeightLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _WeightLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region Data
         private RangeInt32? _DataLocation;

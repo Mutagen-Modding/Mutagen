@@ -2535,7 +2535,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Priority
         private int? _PriorityLocation;
-        public Single Priority => _PriorityLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants)) : default;
+        public Single Priority => _PriorityLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _PriorityLocation.Value, _package.MetaData.Constants).Float() : default;
         #endregion
         #region Branch
         private int? _BranchLocation;

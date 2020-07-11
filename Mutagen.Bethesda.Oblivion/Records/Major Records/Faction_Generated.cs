@@ -2011,7 +2011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region CrimeGoldMultiplier
         private int? _CrimeGoldMultiplierLocation;
-        public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? CrimeGoldMultiplier => _CrimeGoldMultiplierLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _CrimeGoldMultiplierLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
         partial void CustomFactoryEnd(

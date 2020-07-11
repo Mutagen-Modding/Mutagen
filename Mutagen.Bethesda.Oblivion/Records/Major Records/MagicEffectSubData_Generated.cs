@@ -1571,8 +1571,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IFormLink<ISoundGetter> BoltSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public IFormLink<ISoundGetter> HitSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         public IFormLink<ISoundGetter> AreaSound => new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x10, 0x4))));
-        public Single ConstantEffectEnchantmentFactor => SpanExt.GetFloat(_data.Slice(0x14, 0x4));
-        public Single ConstantEffectBarterFactor => SpanExt.GetFloat(_data.Slice(0x18, 0x4));
+        public Single ConstantEffectEnchantmentFactor => _data.Slice(0x14, 0x4).Float();
+        public Single ConstantEffectBarterFactor => _data.Slice(0x18, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

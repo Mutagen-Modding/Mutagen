@@ -1953,11 +1953,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HorizontalPosition
         private int? _HorizontalPositionLocation;
-        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _HorizontalPositionLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? HorizontalPosition => _HorizontalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HorizontalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region VerticalPosition
         private int? _VerticalPositionLocation;
-        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? SpanExt.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _VerticalPositionLocation.Value, _package.MetaData.Constants)) : default(Single?);
+        public Single? VerticalPosition => _VerticalPositionLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VerticalPositionLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;

@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x26, 0x2));
         public UInt16 Stamina => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x28, 0x2));
         public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2A, 0x2));
-        public Single FarAwayModelDistance => SpanExt.GetFloat(_data.Slice(0x2C, 0x4));
+        public Single FarAwayModelDistance => _data.Slice(0x2C, 0x4).Float();
         public Byte GearedUpWeapons => _data.Span[0x30];
         public ReadOnlyMemorySlice<Byte> Unused2 => _data.Span.Slice(0x31, 0x3).ToArray();
         partial void CustomFactoryEnd(
