@@ -33,12 +33,12 @@ namespace Mutagen.Bethesda.Binary
         public static char GetGlobalChar(MajorRecordFrame frame)
         {
             var subrecordSpan = frame.Content;
-            var fnamLocation = UtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Header.Meta, FNAM);
+            var fnamLocation = UtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
             if (fnamLocation == null)
             {
                 throw new ArgumentException($"Could not find FNAM.");
             }
-            var fnamMeta = frame.Header.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation.Value));
+            var fnamMeta = frame.Meta.SubrecordFrame(subrecordSpan.Slice(fnamLocation.Value));
             if (fnamMeta.Content.Length != 1)
             {
                 throw new ArgumentException($"FNAM had non 1 length: {fnamMeta.Content.Length}");
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var initialPos = frame.Position;
             var majorMeta = frame.GetMajorRecordFrame();
-            if (majorMeta.Header.RecordType != GLOB)
+            if (majorMeta.RecordType != GLOB)
             {
                 throw new ArgumentException();
             }
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
             g.RawFloat = majorMeta.Content.Slice(fltvLoc.Value).GetFloat();
 
             // Skip to end
-            frame.Reader.Position = initialPos + majorMeta.Header.TotalLength;
+            frame.Reader.Position = initialPos + majorMeta.TotalLength;
             return g;
         }
 

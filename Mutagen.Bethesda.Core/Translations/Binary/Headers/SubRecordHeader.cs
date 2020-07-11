@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Bytes overlaid onto
         /// </summary>
-        public ReadOnlySpan<byte> Span { get; }
+        public ReadOnlySpan<byte> HeaderData { get; }
 
         /// <summary>
         /// Constructor
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Binary
         public SubrecordHeader(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Meta = meta;
-            this.Span = span.Slice(0, meta.SubConstants.HeaderLength);
+            this.HeaderData = span.Slice(0, meta.SubConstants.HeaderLength);
         }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => new RecordType(this.RecordTypeInt);
         
-        public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4));
+        public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
         
         /// <summary>
         /// The length explicitly contained in the length bytes of the header
         /// Note that for Sub Records, this is equivalent to ContentLength
         /// </summary>
-        public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.Span.Slice(4, 2));
+        public ushort RecordLength => BinaryPrimitives.ReadUInt16LittleEndian(this.HeaderData.Slice(4, 2));
         
         /// <summary>
         /// The length of the content of the Sub Record, excluding the header bytes.
@@ -74,10 +74,7 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public ref struct SubrecordFrame
     {
-        /// <summary>
-        /// Header ref struct for accessing header data
-        /// </summary>
-        public SubrecordHeader Header { get; }
+        private readonly SubrecordHeader _header { get; }
         
         /// <summary>
         /// Raw bytes of both header and content data
@@ -87,12 +84,12 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Total length of the Sub Record, including the header and its content.
         /// </summary>
-        public int TotalLength => this.Content.Length + this.Header.HeaderLength;
+        public int TotalLength => this.Content.Length + this._header.HeaderLength;
         
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
 
         /// <summary>
         /// Constructor
@@ -101,8 +98,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public SubrecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
-            this.Header = meta.Subrecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = meta.Subrecord(span);
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
 
         /// <summary>
@@ -112,12 +109,52 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public SubrecordFrame(SubrecordHeader header, ReadOnlySpan<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = header;
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
 
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => this._header.ToString();
+
+        #region Header Forwarding
+        /// <summary>
+        /// Game metadata to use as reference for alignment
+        /// </summary>
+        public GameConstants Meta => _header.Meta;
+
+        /// <summary>
+        /// Raw bytes of header
+        /// </summary>
+        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
+
+        /// <summary>
+        /// Game release associated with header
+        /// </summary>
+        public GameRelease Release => _header.Release;
+
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
+        public sbyte HeaderLength => _header.HeaderLength;
+
+        /// <summary>
+        /// RecordType of the header
+        /// </summary>
+        public RecordType RecordType => _header.RecordType;
+
+        public int RecordTypeInt => _header.RecordTypeInt;
+
+        /// <summary>
+        /// The length explicitly contained in the length bytes of the header
+        /// Note that for Sub Records, this is equivalent to ContentLength
+        /// </summary>
+        public ushort RecordLength => _header.RecordLength;
+
+        /// <summary>
+        /// The length of the content of the Sub Record, excluding the header bytes.
+        /// </summary>
+        public ushort ContentLength => (ushort)Content.Length;
+        #endregion
     }
 
     /// <summary>
@@ -126,10 +163,7 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public ref struct SubrecordMemoryFrame
     {
-        /// <summary>
-        /// Header ref struct for accessing header data
-        /// </summary>
-        public SubrecordHeader Header { get; }
+        private readonly SubrecordHeader _header;
         
         /// <summary>
         /// Raw bytes of both header and content data
@@ -139,12 +173,12 @@ namespace Mutagen.Bethesda.Binary
         /// <summary> 
         /// Total length of the Sub Record, including the header and its content. 
         /// </summary> 
-        public int TotalLength => this.Content.Length + this.Header.HeaderLength;
+        public int TotalLength => this.Content.Length + this._header.HeaderLength;
 
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
 
         /// <summary>
         /// Constructor
@@ -153,8 +187,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public SubrecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta.Subrecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = meta.Subrecord(span);
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
 
         /// <summary>
@@ -164,11 +198,51 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public SubrecordMemoryFrame(SubrecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = header;
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
         
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => this._header.ToString();
+
+        #region Header Forwarding
+        /// <summary>
+        /// Game metadata to use as reference for alignment
+        /// </summary>
+        public GameConstants Meta => _header.Meta;
+
+        /// <summary>
+        /// Raw bytes of header
+        /// </summary>
+        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
+
+        /// <summary>
+        /// Game release associated with header
+        /// </summary>
+        public GameRelease Release => _header.Release;
+
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
+        public sbyte HeaderLength => _header.HeaderLength;
+
+        /// <summary>
+        /// RecordType of the header
+        /// </summary>
+        public RecordType RecordType => _header.RecordType;
+
+        public int RecordTypeInt => _header.RecordTypeInt;
+
+        /// <summary>
+        /// The length explicitly contained in the length bytes of the header
+        /// Note that for Sub Records, this is equivalent to ContentLength
+        /// </summary>
+        public ushort RecordLength => _header.RecordLength;
+
+        /// <summary>
+        /// The length of the content of the Sub Record, excluding the header bytes.
+        /// </summary>
+        public ushort ContentLength => (ushort)Content.Length;
+        #endregion
     }
 }

@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var subHeader = frame.GetSubrecordFrame();
-            var recType = subHeader.Header.RecordType;
+            var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
                 var count = countLengthLength switch
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl)
         {
             var subHeader = frame.GetSubrecordFrame();
-            var recType = subHeader.Header.RecordType;
+            var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
                 var count = countLengthLength switch
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var subHeader = frame.GetSubrecordFrame();
-            var recType = subHeader.Header.RecordType;
+            var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
                 var count = countLengthLength switch
@@ -583,7 +583,7 @@ namespace Mutagen.Bethesda.Binary
             BinarySubParseDelegate<T> transl)
         {
             var subHeader = frame.GetSubrecordFrame();
-            var recType = subHeader.Header.RecordType;
+            var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
                 var count = countLengthLength switch
@@ -618,7 +618,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter? recordTypeConverter = null)
         {
             var subHeader = frame.GetSubrecordFrame();
-            var recType = subHeader.Header.RecordType;
+            var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
                 var count = countLengthLength switch

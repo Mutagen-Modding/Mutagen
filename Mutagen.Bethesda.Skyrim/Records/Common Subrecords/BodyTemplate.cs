@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var subFrame = frame.GetSubrecordFrame();
                 var version = frame.MetaData.FormVersion!.Value;
-                switch (subFrame.Header.RecordTypeInt)
+                switch (subFrame.RecordTypeInt)
                 {
                     case RecordTypeInts.BODT:
                         if (version >= 44)
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var subFrame = stream.GetSubrecordFrame();
                 var version = package.FormVersion!.FormVersion!.Value;
-                switch (subFrame.Header.RecordTypeInt)
+                switch (subFrame.RecordTypeInt)
                 {
                     case RecordTypeInts.BODT:
                         if (version >= 44)

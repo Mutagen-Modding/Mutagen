@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 3; i++)
                 {
                     var subRecord = frame.GetSubrecordFrame();
-                    if (subRecord.Header.RecordType == RecordTypes.IDLC)
+                    if (subRecord.RecordType == RecordTypes.IDLC)
                     {
                         // Counter start
                         if (subRecord.Content.Length != 1)
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
                         count = subRecord.Content[0];
                         frame.Position += subRecord.TotalLength;
                     }
-                    else if (subRecord.Header.RecordType == RecordTypes.IDLA)
+                    else if (subRecord.RecordType == RecordTypes.IDLA)
                     {
                         if (count == null)
                         {
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                         }
                     }
-                    else if (subRecord.Header.RecordType == RecordTypes.IDLT)
+                    else if (subRecord.RecordType == RecordTypes.IDLT)
                     {
                         item.TimerSetting = SpanExt.GetFloat(subRecord.Content);
                         frame.Position += subRecord.TotalLength;
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 3; i++)
                 {
                     var subRecord = stream.GetSubrecordFrame();
-                    if (subRecord.Header.RecordType == RecordTypes.IDLC)
+                    if (subRecord.RecordType == RecordTypes.IDLC)
                     {
                         // Counter start
                         if (subRecord.Content.Length != 1)
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                         count = subRecord.Content[0];
                         stream.Position += subRecord.TotalLength;
                     }
-                    else if (subRecord.Header.RecordType == RecordTypes.IDLA)
+                    else if (subRecord.RecordType == RecordTypes.IDLA)
                     {
                         if (count == null)
                         {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
                             stream.Position += subLen;
                         }
                     }
-                    else if (subRecord.Header.RecordType == RecordTypes.IDLT)
+                    else if (subRecord.RecordType == RecordTypes.IDLT)
                     {
                         _timerSetting = SpanExt.GetFloat(subRecord.Content);
                         stream.Position += subRecord.TotalLength;

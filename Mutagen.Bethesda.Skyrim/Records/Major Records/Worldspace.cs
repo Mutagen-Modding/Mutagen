@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
                 {
                     obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedSpan);
-                    obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.Span.Slice(groupHeader.HeaderLength - 4));
+                    obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.HeaderData.Slice(groupHeader.HeaderLength - 4));
                     var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeSpan, frame.MetaData.MasterReferences!);
                     if (formKey != obj.FormKey)
                     {

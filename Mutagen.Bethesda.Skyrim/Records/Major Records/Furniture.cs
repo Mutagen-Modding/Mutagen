@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (loc == null) continue;
 
                         var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc.Value));
-                        switch (subMeta.Header.RecordTypeInt)
+                        switch (subMeta.RecordTypeInt)
                         {
                             case 0x304D414E: // NAM0
                                 marker.DisabledEntryPoints = new EntryPoints()
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 marker.MarkerKeyword = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
                                 break;
                             default:
-                                throw new ArgumentException($"Unexpected record type: {subMeta.Header.RecordType}");
+                                throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");
                         }
                     }
 

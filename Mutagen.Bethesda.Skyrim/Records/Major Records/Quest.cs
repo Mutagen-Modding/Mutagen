@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
             {
                 var nextHeader = frame.ReadSubrecordFrame();
-                if (nextHeader.Header.RecordType != RecordTypes.NEXT
+                if (nextHeader.RecordType != RecordTypes.NEXT
                     || nextHeader.Content.Length != 0)
                 {
                     throw new ArgumentException("Unexpected NEXT header");
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Skyrim
             partial void UnusedConditionsLogicCustomParse(OverlayStream stream, int offset)
             {
                 var nextHeader = stream.ReadSubrecordFrame();
-                if (nextHeader.Header.RecordType != RecordTypes.NEXT
+                if (nextHeader.RecordType != RecordTypes.NEXT
                     || nextHeader.Content.Length != 0)
                 {
                     throw new ArgumentException("Unexpected NEXT header");

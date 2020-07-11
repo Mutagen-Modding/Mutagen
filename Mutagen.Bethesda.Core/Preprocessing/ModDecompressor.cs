@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Preprocessing
                     var decompressed = frame.Decompress();
                     var decompressedLen = decompressed.TotalLength;
                     var lengthDiff = decompressedLen - len;
-                    var majorMetaSpan = majorMeta.Span.ToArray();
+                    var majorMetaSpan = majorMeta.HeaderData.ToArray();
 
                     // Write major Meta
                     var writableMajorMeta = meta.Constants.MajorRecordWritable(majorMetaSpan.AsSpan());

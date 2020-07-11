@@ -67,14 +67,14 @@ namespace Mutagen.Bethesda.Skyrim
             static void ParseRegionData(MutagenFrame frame, IRegionInternal item)
             {
                 var rdatFrame = frame.Reader.GetSubrecordFrame();
-                int len = rdatFrame.Header.TotalLength;
+                int len = rdatFrame.TotalLength;
                 var subMeta = frame.Reader.GetSubrecord(offset: len);
                 var recType = subMeta.RecordType;
                 if (recType == RecordTypes.ICON)
                 {
                     len += subMeta.TotalLength;
                     // Skip icon subrecord for now
-                    subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.Header.TotalLength + subMeta.TotalLength);
+                    subMeta = frame.Reader.GetSubrecord(offset: rdatFrame.TotalLength + subMeta.TotalLength);
                 }
                 RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
                 if (IsExpected(dataType, recType))
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
                 int loc = stream.Position - offset;
                 var rdatFrame = stream.ReadSubrecordFrame();
                 RegionData.RegionDataType dataType = (RegionData.RegionDataType)BinaryPrimitives.ReadUInt32LittleEndian(rdatFrame.Content);
-                var len = rdatFrame.Header.TotalLength;
+                var len = rdatFrame.TotalLength;
                 if (!stream.Complete)
                 {
                     var contentMeta = stream.GetSubrecord();
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.Skyrim
                         var totalLen = contentMeta.TotalLength;
                         len += totalLen;
                         // Skip icon subrecord for now
-                        contentMeta = stream.GetSubrecord(offset: rdatFrame.Header.TotalLength + totalLen);
+                        contentMeta = stream.GetSubrecord(offset: rdatFrame.TotalLength + totalLen);
                     }
                     if (RegionBinaryCreateTranslation.IsExpected(dataType, contentMeta.RecordType))
                     {

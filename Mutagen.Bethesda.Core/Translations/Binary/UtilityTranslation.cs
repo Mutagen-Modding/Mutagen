@@ -772,10 +772,10 @@ namespace Mutagen.Bethesda
         {
             if (!loc.HasValue) return null;
             var header = constants.SubrecordMemoryFrame(bytes[loc.Value..]);
-            if (header.Header.RecordType == overflowType)
+            if (header.RecordType == overflowType)
             {
                 return bytes.Slice(
-                    loc.Value + header.Header.TotalLength + header.Header.HeaderLength,
+                    loc.Value + header.TotalLength + header.HeaderLength,
                     checked((int)BinaryPrimitives.ReadUInt32LittleEndian(header.Content)));
             }
             else

@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var types = new List<string>(expectedCount);
                 while (stream.TryReadSubrecordFrame(out var subRecord))
                 {
-                    switch (subRecord.Header.RecordTypeInt)
+                    switch (subRecord.RecordTypeInt)
                     {
                         case 0x4D414E41: // ANAM
                             types.Add(BinaryStringUtility.ProcessWholeToZString(subRecord.Content));
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
                 var packages = new List<APackageData>(expectedCount);
                 while (stream.TryGetSubrecordFrame(out var subRecord))
                 {
-                    switch (subRecord.Header.RecordTypeInt)
+                    switch (subRecord.RecordTypeInt)
                     {
                         case 0x4D414E55: // UNAM
                             var index = (sbyte)subRecord.Content[0];
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Skyrim
                 while (itemIndex < expectedCount)
                 {
                     if (!stream.TryGetSubrecordFrame(out var subRecord)) break;
-                    switch (subRecord.Header.RecordTypeInt)
+                    switch (subRecord.RecordTypeInt)
                     {
                         case 0x4D414E41: // ANAM
                             lastPackage = packages[++itemIndex];
@@ -271,7 +271,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             if (lastPackage is PackageDataTarget target)
                             {
-                                stream.Position += subRecord.Header.HeaderLength;
+                                stream.Position += subRecord.HeaderLength;
                                 target.Target = APackageTarget.CreateFromBinary(new MutagenFrame(stream));
                             }
                             else
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Skyrim
                             }
                             if (lastPackage is PackageDataLocation loc)
                             {
-                                stream.Position += subRecord.Header.HeaderLength;
+                                stream.Position += subRecord.HeaderLength;
                                 loc.Location = Mutagen.Bethesda.Skyrim.LocationTargetRadius.CreateFromBinary(new MutagenFrame(stream));
                             }
                             else
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
                 APackageData? lastPackage = null;
                 while (stream.TryGetSubrecordFrame(out var subRecord))
                 {
-                    switch (subRecord.Header.RecordTypeInt)
+                    switch (subRecord.RecordTypeInt)
                     {
                         case 0x4D414E55: // UNAM
                             lastPackage = dict.TryCreateValue((sbyte)subRecord.Content[0]);

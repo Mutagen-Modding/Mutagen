@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Bytes overlaid onto
         /// </summary>
-        public ReadOnlySpan<byte> Span { get; }
+        public ReadOnlySpan<byte> HeaderData { get; }
 
         /// <summary>
         /// Constructor
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Binary
         public GroupHeader(GameConstants meta, ReadOnlySpan<byte> span)
         {
             this.Meta = meta;
-            this.Span = span.Slice(0, meta.GroupConstants.HeaderLength);
+            this.HeaderData = span.Slice(0, meta.GroupConstants.HeaderLength);
         }
 
         /// <summary>
@@ -47,18 +47,18 @@ namespace Mutagen.Bethesda.Binary
         /// RecordType of the Group header.
         /// Should always be GRUP, unless struct is overlaid on bad data.
         /// </summary>
-        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(0, 4)));
+        public RecordType RecordType => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4)));
         
         /// <summary>
         /// The length explicitly contained in the length bytes of the header
         /// Note that for Groups, this is equivalent to TotalLength
         /// </summary>
-        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.Span.Slice(4, 4));
+        public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, 4));
         
         /// <summary>
         /// The raw bytes of the RecordType of the records contained by the Group
         /// </summary>
-        public ReadOnlySpan<byte> ContainedRecordTypeSpan => this.Span.Slice(8, 4);
+        public ReadOnlySpan<byte> ContainedRecordTypeSpan => this.HeaderData.Slice(8, 4);
         
         /// <summary>
         /// The RecordType of the records contained by the Group
@@ -70,12 +70,12 @@ namespace Mutagen.Bethesda.Binary
         /// Since each game has its own Group Enum, this field is offered as an int that should
         /// be casted to the appropriate enum for use.
         /// </summary>
-        public int GroupType => BinaryPrimitives.ReadInt32LittleEndian(this.Span.Slice(12, 4));
+        public int GroupType => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(12, 4));
         
         /// <summary>
         /// The raw bytes of the last modified data
         /// </summary>
-        public ReadOnlySpan<byte> LastModifiedSpan => this.Span.Slice(16, 4);
+        public ReadOnlySpan<byte> LastModifiedSpan => this.HeaderData.Slice(16, 4);
         
         /// <summary>
         /// Total length of the Group, including the header and its content.
@@ -112,10 +112,7 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public ref struct GroupFrame
     {
-        /// <summary>
-        /// Header ref struct for accessing header data
-        /// </summary>
-        public GroupHeader Header { get; }
+        private readonly GroupHeader _header { get; }
         
         /// <summary>
         /// Raw bytes of both header and content data
@@ -125,12 +122,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
-
-        /// <summary> 
-        /// The length that the header itself takes 
-        /// </summary> 
-        public sbyte HeaderLength => Header.HeaderLength;
+        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
 
         /// <summary> 
         /// Total length of the Group Record, including the header and its content. 
@@ -144,8 +136,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public GroupFrame(GameConstants meta, ReadOnlySpan<byte> span)
         {
-            this.Header = meta.Group(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = meta.Group(span);
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
 
         /// <summary>
@@ -155,12 +147,86 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
         public GroupFrame(GroupHeader header, ReadOnlySpan<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = header;
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
         
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => this._header.ToString();
+
+        #region Header Forwarding
+        public GameConstants Meta => _header.Meta;
+
+        /// <summary>
+        /// Raw bytes of header data
+        /// </summary>
+        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
+
+        /// <summary>
+        /// Game release associated with header
+        /// </summary>
+        public GameRelease Release => _header.Release;
+
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
+        public sbyte HeaderLength => _header.HeaderLength;
+
+        /// <summary>
+        /// RecordType of the Group header.
+        /// Should always be GRUP, unless struct is overlaid on bad data.
+        /// </summary>
+        public RecordType RecordType => _header.RecordType;
+
+        /// <summary>
+        /// The length explicitly contained in the length bytes of the header
+        /// Note that for Groups, this is equivalent to TotalLength
+        /// </summary>
+        public uint RecordLength => _header.RecordLength;
+
+        /// <summary>
+        /// The raw bytes of the RecordType of the records contained by the Group
+        /// </summary>
+        public ReadOnlySpan<byte> ContainedRecordTypeSpan => _header.ContainedRecordTypeSpan;
+
+        /// <summary>
+        /// The RecordType of the records contained by the Group
+        /// </summary>
+        public RecordType ContainedRecordType => _header.ContainedRecordType;
+
+        /// <summary>
+        /// The integer representing a Group's Type enum.
+        /// Since each game has its own Group Enum, this field is offered as an int that should
+        /// be casted to the appropriate enum for use.
+        /// </summary>
+        public int GroupType => _header.GroupType;
+
+        /// <summary>
+        /// The raw bytes of the last modified data
+        /// </summary>
+        public ReadOnlySpan<byte> LastModifiedSpan => _header.LastModifiedSpan;
+
+        /// <summary>
+        /// True if RecordType == "GRUP".
+        /// Should always be true, unless struct is overlaid on bad data.
+        /// </summary>
+        public bool IsGroup => _header.IsGroup;
+
+        /// <summary>
+        /// The length of the content of the Group, excluding the header bytes.
+        /// </summary>
+        public uint ContentLength => (uint)Content.Length;
+
+        /// <summary>
+        /// The length of the RecordType and the length bytes
+        /// </summary>
+        public int TypeAndLengthLength => _header.TypeAndLengthLength;
+
+        /// <summary>
+        /// True if GroupType is marked as top level. (GroupType == 0)
+        /// </summary>
+        public bool IsTopLevel => _header.IsTopLevel;
+        #endregion
     }
 
     /// <summary>
@@ -169,20 +235,12 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public ref struct GroupMemoryFrame
     {
-        /// <summary>
-        /// Header ref struct for accessing header data
-        /// </summary>
-        public GroupHeader Header { get; }
+        private readonly GroupHeader _header;
         
         /// <summary>
         /// Raw bytes of both header and content data
         /// </summary>
         public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-
-        /// <summary> 
-        /// The length that the header itself takes 
-        /// </summary> 
-        public sbyte HeaderLength => Header.HeaderLength;
 
         /// <summary> 
         /// Total length of the Group Record, including the header and its content. 
@@ -192,7 +250,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this.Header.HeaderLength, checked((int)this.Header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
 
         /// <summary>
         /// Constructor
@@ -201,8 +259,8 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
         public GroupMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = meta.Group(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = meta.Group(span);
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
 
         /// <summary>
@@ -212,11 +270,85 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
         public GroupMemoryFrame(GroupHeader header, ReadOnlyMemorySlice<byte> span)
         {
-            this.Header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this.Header.TotalLength));
+            this._header = header;
+            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
         }
         
         /// <inheritdoc/>
-        public override string ToString() => this.Header.ToString();
+        public override string ToString() => this._header.ToString();
+
+        #region Header Forwarding
+        public GameConstants Meta => _header.Meta;
+
+        /// <summary>
+        /// Raw bytes of header data
+        /// </summary>
+        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
+
+        /// <summary>
+        /// Game release associated with header
+        /// </summary>
+        public GameRelease Release => _header.Release;
+
+        /// <summary>
+        /// The length that the header itself takes
+        /// </summary>
+        public sbyte HeaderLength => _header.HeaderLength;
+
+        /// <summary>
+        /// RecordType of the Group header.
+        /// Should always be GRUP, unless struct is overlaid on bad data.
+        /// </summary>
+        public RecordType RecordType => _header.RecordType;
+
+        /// <summary>
+        /// The length explicitly contained in the length bytes of the header
+        /// Note that for Groups, this is equivalent to TotalLength
+        /// </summary>
+        public uint RecordLength => _header.RecordLength;
+
+        /// <summary>
+        /// The raw bytes of the RecordType of the records contained by the Group
+        /// </summary>
+        public ReadOnlySpan<byte> ContainedRecordTypeSpan => _header.ContainedRecordTypeSpan;
+
+        /// <summary>
+        /// The RecordType of the records contained by the Group
+        /// </summary>
+        public RecordType ContainedRecordType => _header.ContainedRecordType;
+
+        /// <summary>
+        /// The integer representing a Group's Type enum.
+        /// Since each game has its own Group Enum, this field is offered as an int that should
+        /// be casted to the appropriate enum for use.
+        /// </summary>
+        public int GroupType => _header.GroupType;
+
+        /// <summary>
+        /// The raw bytes of the last modified data
+        /// </summary>
+        public ReadOnlySpan<byte> LastModifiedSpan => _header.LastModifiedSpan;
+
+        /// <summary>
+        /// True if RecordType == "GRUP".
+        /// Should always be true, unless struct is overlaid on bad data.
+        /// </summary>
+        public bool IsGroup => _header.IsGroup;
+
+        /// <summary>
+        /// The length of the content of the Group, excluding the header bytes.
+        /// </summary>
+        public uint ContentLength => (uint)Content.Length;
+
+        /// <summary>
+        /// The length of the RecordType and the length bytes
+        /// </summary>
+        public int TypeAndLengthLength => _header.TypeAndLengthLength;
+
+        /// <summary>
+        /// True if GroupType is marked as top level. (GroupType == 0)
+        /// </summary>
+        public bool IsTopLevel => _header.IsTopLevel;
+        #endregion
     }
 }

@@ -280,11 +280,11 @@ namespace Mutagen.Bethesda.Skyrim
 
                     var subFrame = frame.Reader.GetSubrecordFrame();
                     int i = 0;
-                    while (subFrame.Header.RecordType == RecordTypes.PHTN)
+                    while (subFrame.RecordType == RecordTypes.PHTN)
                     {
                         var str = BinaryStringUtility.ProcessWholeToZString(subFrame.Content);
                         Add(targetAccumulation, (Target)i++, str);
-                        frame.Position += subFrame.Header.TotalLength;
+                        frame.Position += subFrame.TotalLength;
                         if (!frame.Reader.TryGetSubrecordFrame(out subFrame)) break;
                     }
 

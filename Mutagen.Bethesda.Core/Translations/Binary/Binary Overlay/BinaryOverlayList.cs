@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
-            var recType = initialHeader.Header.RecordType;
+            var recType = initialHeader.RecordType;
             if (recType == countType)
             {
                 var count = countLength switch
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
-            var recType = initialHeader.Header.RecordType;
+            var recType = initialHeader.RecordType;
             if (recType == countType)
             {
                 var count = countLength switch
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
-            var recType = initialHeader.Header.RecordType;
+            var recType = initialHeader.RecordType;
             if (recType == countType)
             {
                 var count = countLength switch
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
-            var recType = initialHeader.Header.RecordType;
+            var recType = initialHeader.RecordType;
             if (recType == countType)
             {
                 var count = countLength switch
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
-            var recType = initialHeader.Header.RecordType;
+            var recType = initialHeader.RecordType;
             if (recType == countType)
             {
                 var count = countLength switch

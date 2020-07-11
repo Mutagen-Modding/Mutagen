@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
                     obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
-                    obj.UnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.Span.Slice(groupMeta.Span.Length - 4));
+                    obj.UnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                     frame.Position += groupMeta.HeaderLength;
                     if (formKey != obj.FormKey)
                     {
@@ -137,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
-                obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.Span.Slice(groupMeta.Span.Length - 4));
+                obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 obj.Persistent.AddRange(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                         frame: frame,
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
-                obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.Span.Slice(groupMeta.Span.Length - 4));
+                obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>

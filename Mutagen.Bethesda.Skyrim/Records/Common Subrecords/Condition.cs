@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (!frame.MetaData.Constants.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
                 if (!(item is IFunctionConditionData funcData)) return;
-                switch (subMeta.Header.RecordType.TypeInt)
+                switch (subMeta.RecordType.TypeInt)
                 {
                     case 0x31534943: // CIS1
                         funcData.ParameterOneString = BinaryStringUtility.ProcessWholeToZString(subMeta.Content);
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
                     default:
                         return;
                 }
-                frame.Position += subMeta.Header.TotalLength;
+                frame.Position += subMeta.TotalLength;
             }
         }
 
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var subRecMeta = package.MetaData.Constants.GetSubrecordFrame(stream);
-                if (subRecMeta.Header.RecordType != RecordTypes.CTDA)
+                if (subRecMeta.RecordType != RecordTypes.CTDA)
                 {
                     throw new ArgumentException();
                 }
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
                 var counterMeta = package.MetaData.Constants.ReadSubrecordFrame(stream);
-                if (counterMeta.Header.RecordType != RecordTypes.CITC
+                if (counterMeta.RecordType != RecordTypes.CITC
                     || counterMeta.Content.Length != 4)
                 {
                     throw new ArgumentException();

@@ -126,8 +126,8 @@ namespace Mutagen.Bethesda.Tests
             if (edidLoc == null) return;
             ProcessStringTermination(
                 stream,
-                loc.Min + majorFrame.Header.HeaderLength + edidLoc.Value,
-                majorFrame.Header.FormID);
+                loc.Min + majorFrame.HeaderLength + edidLoc.Value,
+                majorFrame.FormID);
         }
 
         public void ProcessMajorRecordFormIDOverflow(
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Tests
             // Extra content pass null terminator.  Trim
             this._Instructions.SetRemove(
                 section: RangeInt64.FactoryFromLength(
-                    subrecordLoc + subFrame.Header.HeaderLength + nullIndex + 1,
+                    subrecordLoc + subFrame.HeaderLength + nullIndex + 1,
                     subFrame.Content.Length - nullIndex));
             ProcessSubrecordLengths(
                 stream: stream,
@@ -294,20 +294,20 @@ namespace Mutagen.Bethesda.Tests
             int sizeChange = 0;
             while (pos < frame.Content.Length)
             {
-                var subRec = frame.Header.Meta.SubrecordFrame(frame.Content.Slice(pos));
-                if (subRec.Header.RecordType == counterType)
+                var subRec = frame.Meta.SubrecordFrame(frame.Content.Slice(pos));
+                if (subRec.RecordType == counterType)
                 {
                     prevWasCounter = true;
                     pos += subRec.TotalLength;
                     continue;
                 }
-                if (subRec.Header.RecordType != containedType)
+                if (subRec.RecordType != containedType)
                 {
                     prevWasCounter = false;
                     pos += subRec.TotalLength;
                     continue;
                 }
-                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Header.Meta, containedType, out var numPassed);
+                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
                 // Found contained record
                 if (!prevWasCounter)
                 {
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda.Tests
                     BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan().Slice(6), numPassed);
                     // Add counter
                     _Instructions.SetAddition(
-                        loc.Min + frame.Header.HeaderLength + pos,
+                        loc.Min + frame.HeaderLength + pos,
                         bytes);
                     sizeChange += 10;
 
@@ -609,17 +609,17 @@ namespace Mutagen.Bethesda.Tests
         {
             var offender = UtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
-                majorFrame.Header.Meta,
+                majorFrame.Meta,
                 recordTypes: offendingIndices.ToGetter());
             if (offender == null) return false;
             var limit = UtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
-                majorFrame.Header.Meta,
+                majorFrame.Meta,
                 recordTypes: offendingLimits.ToGetter());
             if (limit == null) return false;
             long? locToMove = UtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
-                majorFrame.Header.Meta,
+                majorFrame.Meta,
                 recordTypes: locationsToMove.ToGetter());
             if (locToMove == null)
             {
@@ -634,9 +634,9 @@ namespace Mutagen.Bethesda.Tests
                 }
                 this._Instructions.SetMove(
                     section: new RangeInt64(
-                        loc.Min + majorFrame.Header.HeaderLength + offender,
-                        loc.Min + majorFrame.Header.HeaderLength + limit - 1),
-                    loc: loc.Min + majorFrame.Header.HeaderLength + locToMove.Value);
+                        loc.Min + majorFrame.HeaderLength + offender,
+                        loc.Min + majorFrame.HeaderLength + limit - 1),
+                    loc: loc.Min + majorFrame.HeaderLength + locToMove.Value);
                 return true;
             }
             return false;
