@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -23,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
         protected byte _NumMasters;
         protected string SourcePath;
         protected TempFolder TempFolder;
+        public bool DoMultithreading = true;
         public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
 
         public Processor()
@@ -30,7 +32,7 @@ namespace Mutagen.Bethesda.Tests
             this.Meta = GameConstants.Get(this.GameRelease);
         }
 
-        public void Process(
+        public async Task Process(
             TempFolder tmpFolder,
             string sourcePath,
             string preprocessedPath,
@@ -43,18 +45,20 @@ namespace Mutagen.Bethesda.Tests
             this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameRelease);
             this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
 
-            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
+            var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
+            IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, this.GameRelease);
+            using (var stream = streamGetter())
             {
                 foreach (var grup in this._AlignedFileLocs.GrupLocations.And(this._AlignedFileLocs.ListedRecords.Keys))
                 {
-                    reader.Position = grup + 4;
-                    this._LengthTracker[grup] = reader.ReadUInt32();
+                    stream.Position = grup + 4;
+                    this._LengthTracker[grup] = stream.ReadUInt32();
                 }
-            }
 
-            using (var stream = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
-            {
-                this.PreProcessorJobs(stream);
+                await this.PreProcessorJobs(streamGetter);
+
+                await Task.WhenAll(ExtraJobs(streamGetter));
+
                 foreach (var rec in this._SourceFileLocs.ListedRecords)
                 {
                     this.AddDynamicProcessorInstructions(
@@ -62,14 +66,11 @@ namespace Mutagen.Bethesda.Tests
                         formID: rec.Value.FormID,
                         recType: rec.Value.Record);
                 }
-            }
 
-            using (var reader = new MutagenBinaryReadStream(preprocessedPath, this.GameRelease))
-            {
                 foreach (var grup in this._LengthTracker)
                 {
-                    reader.Position = grup.Key + 4;
-                    if (grup.Value == reader.ReadUInt32()) continue;
+                    stream.Position = grup.Key + 4;
+                    if (grup.Value == stream.ReadUInt32()) continue;
                     this._Instructions.SetSubstitution(
                         loc: grup.Key + 4,
                         sub: BitConverter.GetBytes(grup.Value));
@@ -96,9 +97,13 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        protected virtual void PreProcessorJobs(IMutagenReadStream stream)
+        protected virtual async Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
         {
-            RemoveEmptyGroups(stream);
+        }
+
+        protected virtual IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
+        {
+            yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
         }
 
         protected virtual void AddDynamicProcessorInstructions(
@@ -266,8 +271,9 @@ namespace Mutagen.Bethesda.Tests
                 outBytes);
         }
 
-        public void RemoveEmptyGroups(IMutagenReadStream stream)
+        public void RemoveEmptyGroups(Func<IMutagenReadStream> streamGetter)
         {
+            using var stream = streamGetter();
             foreach (var loc in this._AlignedFileLocs.GrupLocations)
             {
                 stream.Position = loc;

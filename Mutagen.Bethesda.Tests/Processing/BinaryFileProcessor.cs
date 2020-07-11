@@ -16,42 +16,39 @@ namespace Mutagen.Bethesda.Tests
         #region Config
         public class Config
         {
-            internal SortedList<long, byte[]> _additions;
-            internal SortedList<long, byte> _substitutions;
-            internal RangeCollection _moveRanges;
-            internal Dictionary<RangeInt64, long> _moves;
-            internal Dictionary<long, List<RangeInt64>> _sameLocMoves;
+            internal SortedList<long, byte[]> _additions = new SortedList<long, byte[]>();
+            internal SortedList<long, byte> _substitutions = new SortedList<long, byte>();
+            internal RangeCollection _moveRanges = new RangeCollection();
+            internal Dictionary<RangeInt64, long> _moves = new Dictionary<RangeInt64, long>();
+            internal Dictionary<long, List<RangeInt64>> _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
 
             public void SetSubstitution(long loc, byte sub)
             {
-                if (_substitutions == null)
+                lock (_substitutions)
                 {
-                    _substitutions = new SortedList<long, byte>();
+                    _substitutions[loc] = sub;
                 }
-                _substitutions[loc] = sub;
             }
 
             public void SetSubstitution(long loc, byte[] sub)
             {
-                if (_substitutions == null)
+                lock (_substitutions)
                 {
-                    _substitutions = new SortedList<long, byte>();
-                }
-                for (long i = 0; i < sub.Length; i++)
-                {
-                    _substitutions[loc + i] = sub[i];
+                    for (long i = 0; i < sub.Length; i++)
+                    {
+                        _substitutions[loc + i] = sub[i];
+                    }
                 }
             }
 
             public void SetAddition(long loc, byte[] addition)
             {
-                if (_additions == null)
+                lock (_additions)
                 {
-                    _additions = new SortedList<long, byte[]>();
+                    _additions[loc] = addition;
                 }
-                _additions[loc] = addition;
             }
 
             public void SetRemove(RangeInt64 section)
@@ -69,22 +66,19 @@ namespace Mutagen.Bethesda.Tests
                 {
                     throw new NotImplementedException("Cannot move a section earlier in the stream, within the move itself, or into the same spot");
                 }
-                if (_moves == null)
+                lock (_moves)
                 {
-                    _moveRanges = new RangeCollection();
-                    _moves = new Dictionary<RangeInt64, long>();
-                    _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
-                }
-                if (_moveRanges.Collides(section))
-                {
-                    throw new ArgumentException("Can not have colliding moves.");
-                }
-                _moveRanges.Add(section);
-                _moves[section] = loc;
-                _sameLocMoves.TryCreateValue(loc).Add(section);
-                if (_moveRanges.IsEncapsulated(loc))
-                {
-                    throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");
+                    if (_moveRanges.Collides(section))
+                    {
+                        throw new ArgumentException("Can not have colliding moves.");
+                    }
+                    _moveRanges.Add(section);
+                    _moves[section] = loc;
+                    _sameLocMoves.TryCreateValue(loc).Add(section);
+                    if (_moveRanges.IsEncapsulated(loc))
+                    {
+                        throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");
+                    }
                 }
             }
         }

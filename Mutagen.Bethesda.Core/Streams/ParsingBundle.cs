@@ -54,5 +54,15 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Constants = constants;
         }
+
+        public static implicit operator ParsingBundle(GameRelease release)
+        {
+            return new ParsingBundle(GameConstants.Get(release));
+        }
+
+        public static implicit operator ParsingBundle(GameConstants constants)
+        {
+            return new ParsingBundle(constants);
+        }
     }
 }

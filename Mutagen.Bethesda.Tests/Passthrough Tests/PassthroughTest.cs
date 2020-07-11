@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Tests
                 var processor = this.ProcessorFactory();
                 if (processor != null)
                 {
-                    processor.Process(
+                    await processor.Process(
                         tmpFolder: tmp,
                         sourcePath: this.FilePath.Path,
                         preprocessedPath: alignedPath,

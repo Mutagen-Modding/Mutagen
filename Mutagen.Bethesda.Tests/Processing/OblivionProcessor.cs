@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -52,18 +53,22 @@ namespace Mutagen.Bethesda.Tests
             ProcessSigilStone(stream, formID, recType, loc);
         }
 
-        protected override void PreProcessorJobs(
-            IMutagenReadStream stream)
+        protected override async Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
         {
-            base.PreProcessorJobs(stream);
-            foreach (var rec in this._SourceFileLocs.ListedRecords)
-            {
-                LookForMagicEffects(
-                    stream: stream,
-                    formID: rec.Value.FormID,
-                    recType: rec.Value.Record,
-                    loc: this._AlignedFileLocs[rec.Value.FormID]);
-            }
+            await Task.WhenAll(
+                base.PreProcessorJobs(streamGetter),
+                TaskExt.Run(DoMultithreading, () =>
+                {
+                    using var stream = streamGetter();
+                    foreach (var rec in this._SourceFileLocs.ListedRecords)
+                    {
+                        LookForMagicEffects(
+                            stream: stream,
+                            formID: rec.Value.FormID,
+                            recType: rec.Value.Record,
+                            loc: this._AlignedFileLocs[rec.Value.FormID]);
+                    }
+                }));
         }
 
         private void ProcessNPC(

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Skyrim;
@@ -978,10 +979,19 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        protected override void PreProcessorJobs(IMutagenReadStream stream)
+        protected override IEnumerable<Task> ExtraJobs(Func<IMutagenReadStream> streamGetter)
         {
-            base.PreProcessorJobs(stream);
-            ProcessStringsFilesIndices(stream, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, ModKey.Factory(Path.GetFileName(this.SourcePath)));
+            foreach (var t in base.ExtraJobs(streamGetter))
+            {
+                yield return t;
+            }
+            foreach (var source in EnumExt.GetValues<StringsSource>())
+            {
+                yield return TaskExt.Run(DoMultithreading, () =>
+                {
+                    return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.Factory(Path.GetFileName(this.SourcePath)));
+                });
+            }
         }
 
         public void PerkStringHandler(
@@ -1024,108 +1034,120 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private void ProcessStringsFilesIndices(IMutagenReadStream stream, DirectoryInfo dataFolder, Language language, ModKey modKey)
+        private async Task ProcessStringsFilesIndices(Func<IMutagenReadStream> streamGetter, DirectoryInfo dataFolder, Language language, StringsSource source, ModKey modKey)
         {
-            ProcessStringsFiles(
-                modKey,
-                dataFolder,
-                language,
-                StringsSource.Normal,
-                RenumberStringsFileEntries(
-                    modKey,
-                    stream,
-                    dataFolder,
-                    language,
-                    StringsSource.Normal,
-                    new RecordType[] { "ACTI", "FULL" },
-                    new RecordType[] { "APPA", "FULL" },
-                    new RecordType[] { "AMMO", "FULL" },
-                    new RecordType[] { "ARMO", "FULL" },
-                    new RecordType[] { "BOOK", "FULL" },
-                    new RecordType[] { "CLAS", "FULL" },
-                    new RecordType[] { "EYES", "FULL" },
-                    new RecordType[] { "CONT", "FULL" },
-                    new RecordType[] { "DOOR", "FULL" },
-                    new RecordType[] { "FACT", "FULL" },
-                    new RecordType[] { "FURN", "FULL" },
-                    new RecordType[] { "HAZD", "FULL" },
-                    new RecordType[] { "HDPT", "FULL" },
-                    new RecordType[] { "ALCH", "FULL" },
-                    new RecordType[] { "INGR", "FULL" },
-                    new RecordType[] { "LIGH", "FULL" },
-                    new RecordType[] { "MGEF", "FULL", "DNAM" },
-                    new RecordType[] { "MISC", "FULL" },
-                    new RecordType[] { "MSTT", "FULL" },
-                    new RecordType[] { "NPC_", "FULL" },
-                    new RecordType[] { "ENCH", "FULL" },
-                    new RecordType[] { "PROJ", "FULL" },
-                    new RecordType[] { "RACE", "FULL" },
-                    new RecordType[] { "SCRL", "FULL" },
-                    new RecordType[] { "SLGM", "FULL" },
-                    new RecordType[] { "SPEL", "FULL" },
-                    new RecordType[] { "TACT", "FULL" },
-                    new RecordType[] { "TREE", "FULL" },
-                    new RecordType[] { "WEAP", "FULL" },
-                    new RecordType[] { "FLOR", "FULL" },
-                    new RecordType[] { "KEYM", "FULL" },
-                    new RecordType[] { "CELL", "FULL" },
-                    new RecordType[] { "REFR", "FULL" },
-                    new RecordType[] { "WRLD", "FULL" },
-                    new RecordType[] { "DIAL", "FULL" },
-                    new RecordType[] { "INFO", "RNAM" },
-                    new RecordType[] { "QUST", "FULL", "NNAM" },
-                    new RecordType[] { "WATR", "FULL" },
-                    new RecordType[] { "EXPL", "FULL" },
-                    new StringsAlignmentCustom("PERK", PerkStringHandler),
-                    new RecordType[] { "BPTD", "BPTN" },
-                    new RecordType[] { "AVIF", "FULL" },
-                    new RecordType[] { "LCTN", "FULL" },
-                    new RecordType[] { "MESG", "FULL", "ITXT" },
-                    new RecordType[] { "WOOP", "FULL", "TNAM" },
-                    new RecordType[] { "SHOU", "FULL" },
-                    new RecordType[] { "SNCT", "FULL" },
-                    new RecordType[] { "CLFM", "FULL" }
-                ));
-            ProcessStringsFiles(
-                modKey,
-                dataFolder,
-                language,
-                StringsSource.DL,
-                RenumberStringsFileEntries(
-                    modKey,
-                    stream,
-                    dataFolder,
-                    language,
-                    StringsSource.DL,
-                    new RecordType[] { "SCRL", "DESC" },
-                    new RecordType[] { "APPA", "DESC" },
-                    new RecordType[] { "AMMO", "DESC" },
-                    new RecordType[] { "ARMO", "DESC" },
-                    new RecordType[] { "ALCH", "DESC" },
-                    new RecordType[] { "WEAP", "DESC" },
-                    new RecordType[] { "BOOK", "DESC" },
-                    new RecordType[] { "QUST", "CNAM" },
-                    new RecordType[] { "LSCR", "DESC" },
-                    new RecordType[] { "PERK", "DESC" },
-                    new RecordType[] { "AVIF", "DESC" },
-                    new RecordType[] { "MESG", "DESC" },
-                    new RecordType[] { "SHOU", "DESC" },
-                    new RecordType[] { "COLL", "DESC" }
-                ));
-            ProcessStringsFiles(
-                modKey,
-                dataFolder,
-                language,
-                StringsSource.IL,
-                RenumberStringsFileEntries(
-                    modKey,
-                    stream,
-                    dataFolder,
-                    language,
-                    StringsSource.IL,
-                    new RecordType[] { "DIAL" },
-                    new RecordType[] { "INFO", "NAM1" }
-                ));
+            using var stream = streamGetter();
+            switch (source)
+            {
+                case StringsSource.Normal:
+                    ProcessStringsFiles(
+                        modKey,
+                        dataFolder,
+                        language,
+                        source,
+                        RenumberStringsFileEntries(
+                            modKey,
+                            stream,
+                            dataFolder,
+                            language,
+                            source,
+                            new RecordType[] { "ACTI", "FULL" },
+                            new RecordType[] { "APPA", "FULL" },
+                            new RecordType[] { "AMMO", "FULL" },
+                            new RecordType[] { "ARMO", "FULL" },
+                            new RecordType[] { "BOOK", "FULL" },
+                            new RecordType[] { "CLAS", "FULL" },
+                            new RecordType[] { "EYES", "FULL" },
+                            new RecordType[] { "CONT", "FULL" },
+                            new RecordType[] { "DOOR", "FULL" },
+                            new RecordType[] { "FACT", "FULL" },
+                            new RecordType[] { "FURN", "FULL" },
+                            new RecordType[] { "HAZD", "FULL" },
+                            new RecordType[] { "HDPT", "FULL" },
+                            new RecordType[] { "ALCH", "FULL" },
+                            new RecordType[] { "INGR", "FULL" },
+                            new RecordType[] { "LIGH", "FULL" },
+                            new RecordType[] { "MGEF", "FULL", "DNAM" },
+                            new RecordType[] { "MISC", "FULL" },
+                            new RecordType[] { "MSTT", "FULL" },
+                            new RecordType[] { "NPC_", "FULL" },
+                            new RecordType[] { "ENCH", "FULL" },
+                            new RecordType[] { "PROJ", "FULL" },
+                            new RecordType[] { "RACE", "FULL" },
+                            new RecordType[] { "SCRL", "FULL" },
+                            new RecordType[] { "SLGM", "FULL" },
+                            new RecordType[] { "SPEL", "FULL" },
+                            new RecordType[] { "TACT", "FULL" },
+                            new RecordType[] { "TREE", "FULL" },
+                            new RecordType[] { "WEAP", "FULL" },
+                            new RecordType[] { "FLOR", "FULL" },
+                            new RecordType[] { "KEYM", "FULL" },
+                            new RecordType[] { "CELL", "FULL" },
+                            new RecordType[] { "REFR", "FULL" },
+                            new RecordType[] { "WRLD", "FULL" },
+                            new RecordType[] { "DIAL", "FULL" },
+                            new RecordType[] { "INFO", "RNAM" },
+                            new RecordType[] { "QUST", "FULL", "NNAM" },
+                            new RecordType[] { "WATR", "FULL" },
+                            new RecordType[] { "EXPL", "FULL" },
+                            new StringsAlignmentCustom("PERK", PerkStringHandler),
+                            new RecordType[] { "BPTD", "BPTN" },
+                            new RecordType[] { "AVIF", "FULL" },
+                            new RecordType[] { "LCTN", "FULL" },
+                            new RecordType[] { "MESG", "FULL", "ITXT" },
+                            new RecordType[] { "WOOP", "FULL", "TNAM" },
+                            new RecordType[] { "SHOU", "FULL" },
+                            new RecordType[] { "SNCT", "FULL" },
+                            new RecordType[] { "CLFM", "FULL" }
+                        ));
+                    break;
+                case StringsSource.DL:
+                    ProcessStringsFiles(
+                        modKey,
+                        dataFolder,
+                        language,
+                        StringsSource.DL,
+                        RenumberStringsFileEntries(
+                            modKey,
+                            stream,
+                            dataFolder,
+                            language,
+                            StringsSource.DL,
+                            new RecordType[] { "SCRL", "DESC" },
+                            new RecordType[] { "APPA", "DESC" },
+                            new RecordType[] { "AMMO", "DESC" },
+                            new RecordType[] { "ARMO", "DESC" },
+                            new RecordType[] { "ALCH", "DESC" },
+                            new RecordType[] { "WEAP", "DESC" },
+                            new RecordType[] { "BOOK", "DESC" },
+                            new RecordType[] { "QUST", "CNAM" },
+                            new RecordType[] { "LSCR", "DESC" },
+                            new RecordType[] { "PERK", "DESC" },
+                            new RecordType[] { "AVIF", "DESC" },
+                            new RecordType[] { "MESG", "DESC" },
+                            new RecordType[] { "SHOU", "DESC" },
+                            new RecordType[] { "COLL", "DESC" }
+                        ));
+                    break;
+                case StringsSource.IL:
+                    ProcessStringsFiles(
+                        modKey,
+                        dataFolder,
+                        language,
+                        StringsSource.IL,
+                        RenumberStringsFileEntries(
+                            modKey,
+                            stream,
+                            dataFolder,
+                            language,
+                            StringsSource.IL,
+                            new RecordType[] { "DIAL" },
+                            new RecordType[] { "INFO", "NAM1" }
+                        ));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
