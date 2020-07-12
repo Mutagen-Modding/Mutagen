@@ -223,11 +223,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 sizeChange,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessDialogs(
@@ -330,11 +329,10 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("COCT"),
                 new RecordType("CNTO"));
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 sizeChange,
-                loc.Min,
-                formID);
+                loc.Min);
 
             FixVMADFormIDs(
                 majorFrame,
@@ -555,11 +553,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 sizeChange,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessNavmeshes(

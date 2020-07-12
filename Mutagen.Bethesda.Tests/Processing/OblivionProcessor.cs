@@ -162,11 +162,10 @@ namespace Mutagen.Bethesda.Tests
             this._Instructions.SetRemove(dataRange);
             amount -= (int)dataRange.Width;
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessRegions(
@@ -239,11 +238,10 @@ namespace Mutagen.Bethesda.Tests
                 amount -= (int)iconLoc.Width;
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessPlacedObject(
@@ -256,8 +254,8 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var majorRecordFrame = stream.ReadMajorRecordFrame();
-            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
+            var majorFrame = stream.ReadMajorRecordFrame();
+            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
                 && xlocFrame.ContentLength == 16)
             {
                 this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 4;
@@ -271,7 +269,7 @@ namespace Mutagen.Bethesda.Tests
                         removeStart + 3));
                 amount -= 4;
             }
-            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame, out var xsedLoc))
+            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame, out var xsedLoc))
             {
                 stream.Position = loc.Min + xsedLoc;
                 stream.Position += 4;
@@ -291,7 +289,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex))
+            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex))
             {
                 stream.Position = loc.Min + dataIndex + dataFrame.HeaderLength;
                 ProcessZeroFloat(stream);
@@ -302,7 +300,7 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelFrame, out var xtelIndex))
+            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelFrame, out var xtelIndex))
             {
                 stream.Position = loc.Min + xtelIndex + xtelFrame.HeaderLength + 4;
                 ProcessZeroFloat(stream);
@@ -313,11 +311,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessPlacedCreature(
@@ -330,9 +327,9 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var majorRecordFrame = stream.ReadMajorRecordFrame();
+            var majorFrame = stream.ReadMajorRecordFrame();
 
-            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
+            if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
                 stream.Position = loc.Min + datIndex + datRec.HeaderLength;
                 ProcessZeroFloat(stream);
@@ -343,11 +340,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessPlacedNPC(
@@ -360,9 +356,9 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var majorRecordFrame = stream.ReadMajorRecordFrame();
+            var majorFrame = stream.ReadMajorRecordFrame();
 
-            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
+            if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
                 stream.Position = loc.Min + datIndex + datRec.HeaderLength;
                 ProcessZeroFloat(stream);
@@ -373,11 +369,10 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessCells(
@@ -446,11 +441,10 @@ namespace Mutagen.Bethesda.Tests
                 amount -= diff;
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessIdleAnimations(
@@ -475,11 +469,10 @@ namespace Mutagen.Bethesda.Tests
                 amount += 4;
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessAIPackages(
@@ -524,11 +517,10 @@ namespace Mutagen.Bethesda.Tests
                 amount += 4;
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessCombatStyle(
@@ -645,11 +637,10 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            ProcessSubrecordLengths(
-                stream,
+            ProcessLengths(
+                majorFrame,
                 amount,
-                loc.Min,
-                formID);
+                loc.Min);
         }
 
         private void ProcessGameSettings(
