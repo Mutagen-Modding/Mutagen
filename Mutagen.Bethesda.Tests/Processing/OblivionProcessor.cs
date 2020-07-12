@@ -14,7 +14,6 @@ namespace Mutagen.Bethesda.Tests
     public class OblivionProcessor : Processor
     {
         public override GameRelease GameRelease => GameRelease.Oblivion;
-        private HashSet<string> magicEffectEDIDs = new HashSet<string>();
 
         #region Dynamic Processing
         /*
@@ -27,7 +26,7 @@ namespace Mutagen.Bethesda.Tests
         {
             base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
-            ProcessNPC(stream, recType,loc);
+            ProcessNPC(stream, recType, loc);
             ProcessCreature(stream, recType, loc);
             ProcessLeveledItemDataFields(stream, formID, recType, loc);
             ProcessRegions(stream, formID, recType, loc);
@@ -46,29 +45,6 @@ namespace Mutagen.Bethesda.Tests
             ProcessLights(stream, formID, recType, loc);
             ProcessSpell(stream, formID, recType, loc);
             ProcessMisindexedRecords(stream, formID, loc);
-            ProcessMagicEffects(stream, formID, recType, loc);
-            ProcessEnchantments(stream, formID, recType, loc);
-            ProcessIngredient(stream, formID, recType, loc);
-            ProcessPotion(stream, formID, recType, loc);
-            ProcessSigilStone(stream, formID, recType, loc);
-        }
-
-        protected override async Task PreProcessorJobs(Func<IMutagenReadStream> streamGetter)
-        {
-            await Task.WhenAll(
-                base.PreProcessorJobs(streamGetter),
-                TaskExt.Run(DoMultithreading, () =>
-                {
-                    using var stream = streamGetter();
-                    foreach (var rec in this._SourceFileLocs.ListedRecords)
-                    {
-                        LookForMagicEffects(
-                            stream: stream,
-                            formID: rec.Value.FormID,
-                            recType: rec.Value.Record,
-                            loc: this._AlignedFileLocs[rec.Value.FormID]);
-                    }
-                }));
         }
 
         private void ProcessNPC(
@@ -143,27 +119,26 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!RecordTypes.LVLI.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = str.IndexOf("DATA");
-            if (dataIndex == -1) return;
+            var majorFrame = stream.ReadMajorRecordFrame();
+            if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex)) return;
 
             int amount = 0;
-            var dataFlag = str[dataIndex + 6];
+            var dataFlag = dataFrame.AsUInt8();
             if (dataFlag == 1)
             {
-                var index = str.IndexOf("LVLD");
-                index += 7;
+                var lvld = majorFrame.LocateSubrecord(RecordTypes.LVLD, out var index);
+                index += lvld.HeaderLength + 1;
                 this._Instructions.SetAddition(
                     loc: index + loc.Min,
                     addition: new byte[]
                     {
-                            (byte)'L',
-                            (byte)'V',
-                            (byte)'L',
-                            (byte)'F',
-                            0x1,
-                            0x0,
-                            0x2
+                        (byte)'L',
+                        (byte)'V',
+                        (byte)'L',
+                        (byte)'F',
+                        0x1,
+                        0x0,
+                        0x2
                     });
                 amount += 7;
             }
@@ -202,23 +177,23 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!RecordTypes.REGN.Equals(recType)) return;
             stream.Position = loc.Min;
-            var lenToRead = (int)loc.Width + Meta.MajorConstants.HeaderLength;
-            var str = stream.ReadZString(lenToRead);
+            var majorFrame = stream.ReadMajorRecordFrame();
+            if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, out var rdatFrame, out var rdatIndex)) return;
             int amount = 0;
-            var rdatIndex = str.IndexOf("RDAT");
-            if (rdatIndex == -1) return;
             SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
-            while (rdatIndex != -1)
+            bool foundNext = true;
+            while (foundNext)
             {
-                var nextRdat = str.IndexOf("RDAT", rdatIndex + 1);
-                stream.Position = rdatIndex + 6 + loc.Min;
-                var index = stream.ReadUInt32();
+                foundNext = majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, offset: rdatIndex + rdatFrame.TotalLength, out var nextRdatFrame, out var nextRdatIndex);
+                var index = rdatFrame.Content.UInt32();
                 rdats[index] =
                     new RangeInt64(
                         rdatIndex + loc.Min,
-                        nextRdat == -1 ? loc.Max : nextRdat - 1 + loc.Min);
-                rdatIndex = nextRdat;
+                        foundNext ? nextRdatIndex - 1 + loc.Min : loc.Max);
+                rdatFrame = nextRdatFrame;
+                rdatIndex = nextRdatIndex;
             }
+
             foreach (var item in rdats.Reverse())
             {
                 if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
@@ -229,15 +204,11 @@ namespace Mutagen.Bethesda.Tests
 
             if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
             { // Need to create icon record
-                var edidIndex = str.IndexOf("EDID");
-                if (edidIndex == -1)
+                if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc))
                 {
                     throw new ArgumentException();
                 }
-                stream.Position = edidIndex + loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength;
-                var edidLen = stream.ReadUInt16();
-                stream.Position += edidLen;
-                var locToPlace = stream.Position;
+                var locToPlace = loc.Min + edidLoc + edidFrame.TotalLength;
 
                 // Get icon string
                 var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
@@ -275,8 +246,6 @@ namespace Mutagen.Bethesda.Tests
                 formID);
         }
 
-        private static byte[] ZeroFloat = new byte[] { 0, 0, 0, 0x80 };
-
         private void ProcessPlacedObject(
             IMutagenReadStream stream,
             FormID formID,
@@ -287,39 +256,32 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width);
-            var datIndex = str.IndexOf("XLOC");
-            if (datIndex != -1)
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
+            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
+                && xlocFrame.ContentLength == 16)
             {
-                stream.Position = loc.Min + datIndex;
-                stream.Position += 4;
-                var len = stream.ReadUInt16();
-                if (len == 16)
-                {
-                    this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 4;
-                    var removeStart = loc.Min + datIndex + 6 + 12;
-                    this._Instructions.SetSubstitution(
-                        loc: loc.Min + datIndex + 4,
-                        sub: new byte[] { 12, 0 });
-                    this._Instructions.SetRemove(
-                        section: new RangeInt64(
-                            removeStart,
-                            removeStart + 3));
-                    amount -= 4;
-                }
+                this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 4;
+                var removeStart = loc.Min + xlocLoc + xlocFrame.HeaderLength + 12;
+                this._Instructions.SetSubstitution(
+                    loc: loc.Min + xlocLoc + 4,
+                    sub: new byte[] { 12, 0 });
+                this._Instructions.SetRemove(
+                    section: new RangeInt64(
+                        removeStart,
+                        removeStart + 3));
+                amount -= 4;
             }
-            datIndex = str.IndexOf("XSED");
-            if (datIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame, out var xsedLoc))
             {
-                stream.Position = loc.Min + datIndex;
+                stream.Position = loc.Min + xsedLoc;
                 stream.Position += 4;
                 var len = stream.ReadUInt16();
                 if (len == 4)
                 {
                     this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 3;
-                    var removeStart = loc.Min + datIndex + 6 + 1;
+                    var removeStart = loc.Min + xsedLoc + xsedFrame.HeaderLength + 1;
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + datIndex + 4,
+                        loc: loc.Min + xsedLoc + 4,
                         sub: new byte[] { 1, 0 });
                     this._Instructions.SetRemove(
                         section: new RangeInt64(
@@ -329,10 +291,9 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            datIndex = str.IndexOf("DATA");
-            if (datIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex))
             {
-                stream.Position = loc.Min + datIndex + 6;
+                stream.Position = loc.Min + dataIndex + dataFrame.HeaderLength;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
@@ -341,10 +302,9 @@ namespace Mutagen.Bethesda.Tests
                 ProcessZeroFloat(stream);
             }
 
-            datIndex = str.IndexOf("XTEL");
-            if (datIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecordFrame(RecordTypes.XTEL, out var xtelFrame, out var xtelIndex))
             {
-                stream.Position = loc.Min + datIndex + 6 + 4;
+                stream.Position = loc.Min + xtelIndex + xtelFrame.HeaderLength + 4;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
@@ -370,12 +330,11 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width);
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
 
-            var datIndex = str.IndexOf("DATA");
-            if (datIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
-                stream.Position = loc.Min + datIndex + 6;
+                stream.Position = loc.Min + datIndex + datRec.HeaderLength;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
@@ -401,12 +360,11 @@ namespace Mutagen.Bethesda.Tests
 
             int amount = 0;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width);
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
 
-            var datIndex = str.IndexOf("DATA");
-            if (datIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
-                stream.Position = loc.Min + datIndex + 6;
+                stream.Position = loc.Min + datIndex + datRec.HeaderLength;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
@@ -430,8 +388,8 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!RecordTypes.CELL.Equals(recType)) return;
             CleanEmptyCellGroups(
-                stream, 
-                formID, 
+                stream,
+                formID,
                 loc,
                 numSubGroups: 3);
         }
@@ -458,31 +416,29 @@ namespace Mutagen.Bethesda.Tests
             if (!RecordTypes.INFO.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = -1;
+            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
-            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
                 this._Instructions.SetSubstitution(
-                    loc: dataIndex + loc.Min + 3,
+                    loc: ctdt.Location + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
                 this._Instructions.SetAddition(
                     addition: new byte[4],
-                    loc: dataIndex + loc.Min + 0x1A);
+                    loc: ctdt.Location + loc.Min + 0x1A);
                 amount += 4;
             }
 
-            dataIndex = -1;
-            while ((dataIndex = str.IndexOf("SCHD", dataIndex + 1)) != -1)
+            foreach (var schd in majorFrame.FindEnumerateSubrecords(RecordTypes.SCHD))
             {
-                stream.Position = loc.Min + dataIndex + 4;
+                stream.Position = loc.Min + schd.Location + 4;
                 var existingLen = stream.ReadUInt16();
                 var diff = existingLen - 0x14;
                 this._Instructions.SetSubstitution(
-                    loc: dataIndex + loc.Min + 3,
+                    loc: schd.Location + loc.Min + 3,
                     sub: new byte[] { (byte)'R', 0x14 });
                 if (diff == 0) continue;
-                var locToRemove = loc.Min + dataIndex + 6 + 0x14;
+                var locToRemove = loc.Min + schd.Location + schd.Subrecord.HeaderLength + 0x14;
                 this._Instructions.SetRemove(
                     section: new RangeInt64(
                         locToRemove,
@@ -506,17 +462,16 @@ namespace Mutagen.Bethesda.Tests
             if (!RecordTypes.IDLE.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = -1;
+            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
-            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
                 this._Instructions.SetSubstitution(
-                    loc: dataIndex + loc.Min + 3,
+                    loc: ctdt.Location + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
                 this._Instructions.SetAddition(
                     addition: new byte[4],
-                    loc: dataIndex + loc.Min + 0x1A);
+                    loc: ctdt.Location + loc.Min + 0x1A);
                 amount += 4;
             }
 
@@ -536,41 +491,37 @@ namespace Mutagen.Bethesda.Tests
             if (!RecordTypes.PACK.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = -1;
+            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
-            while ((dataIndex = str.IndexOf("CTDT", dataIndex + 1)) != -1)
+            foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
                 this._Instructions.SetSubstitution(
-                    loc: dataIndex + loc.Min + 3,
+                    loc: ctdt.Location + loc.Min + 3,
                     sub: new byte[] { (byte)'A', 0x18 });
                 this._Instructions.SetAddition(
                     addition: new byte[4],
-                    loc: dataIndex + loc.Min + 0x1A);
+                    loc: ctdt.Location + loc.Min + 0x1A);
                 amount += 4;
             }
 
-            if ((dataIndex = str.IndexOf("PKDT", dataIndex + 1)) != -1)
+            foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.PKDT))
             {
-                stream.Position = loc.Min + dataIndex + 4;
-                var len = stream.ReadUInt16();
-                if (len == 4)
-                {
-                    this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + 4,
-                        sub: new byte[] { 0x8 });
-                    var first1 = stream.ReadUInt8();
-                    var first2 = stream.ReadUInt8();
-                    var second1 = stream.ReadUInt8();
-                    var second2 = stream.ReadUInt8();
-                    this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + 6,
-                        sub: new byte[] { first1, first2, 0, 0 });
-                    this._Instructions.SetAddition(
-                        loc: loc.Min + dataIndex + 10,
-                        addition: new byte[] { second1, 0, 0, 0 });
-                    amount += 4;
-                }
+                if (ctdt.Subrecord.ContentLength != 4) continue;
+                this._Instructions.SetSubstitution(
+                    loc: loc.Min + ctdt.Location + 4,
+                    sub: new byte[] { 0x8 });
+                stream.Position = loc.Min + ctdt.Location + ctdt.Subrecord.HeaderLength;
+                var first1 = stream.ReadUInt8();
+                var first2 = stream.ReadUInt8();
+                var second1 = stream.ReadUInt8();
+                var second2 = stream.ReadUInt8();
+                this._Instructions.SetSubstitution(
+                    loc: loc.Min + ctdt.Location + 6,
+                    sub: new byte[] { first1, first2, 0, 0 });
+                this._Instructions.SetAddition(
+                    loc: loc.Min + ctdt.Location + 10,
+                    addition: new byte[] { second1, 0, 0, 0 });
+                amount += 4;
             }
 
             ProcessSubrecordLengths(
@@ -588,41 +539,39 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!CombatStyle_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = str.IndexOf("CSTD");
-            stream.Position = loc.Min + dataIndex + 4;
-            var len = stream.ReadUInt16();
-            if (dataIndex != -1)
+            var majorFrame = stream.ReadMajorRecordFrame();
+            if (majorFrame.TryLocateSubrecord(RecordTypes.CSTD, out var ctsd, out var ctsdLoc))
             {
+                var len = ctsd.ContentLength;
                 var move = 2;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + move);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + move);
                 move = 38;
                 if (len < 2 + move) return;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + move);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + move);
                 move = 53;
                 if (len < 3 + move) return;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + 53);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + 53);
                 move = 69;
                 if (len < 3 + move) return;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + 69);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + 69);
                 move = 82;
                 if (len < 2 + move) return;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + 82);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + 82);
                 move = 113;
                 if (len < 3 + move) return;
                 this._Instructions.SetSubstitution(
                     sub: new byte[] { 0, 0, 0 },
-                    loc: loc.Min + dataIndex + 6 + 113);
+                    loc: loc.Min + ctsdLoc + ctsd.HeaderLength + 113);
             }
         }
 
@@ -634,21 +583,19 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Water_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            var dataIndex = str.IndexOf("DATA");
-            stream.Position = loc.Min + dataIndex + 4;
+            var majorFrame = stream.ReadMajorRecordFrame();
             var amount = 0;
-            var len = stream.ReadUInt16();
-            if (dataIndex != -1)
+            if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec, out var dataLoc))
             {
+                var len = dataRec.ContentLength;
                 if (len == 0x02)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: loc.Min + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
-                            loc: loc.Min + dataIndex + 6,
+                            loc: loc.Min + dataLoc + dataRec.HeaderLength,
                             length: 2));
                     amount -= 2;
                 }
@@ -656,11 +603,11 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x56)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: loc.Min + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x54, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
-                            loc: loc.Min + dataIndex + 6 + 0x54,
+                            loc: loc.Min + dataLoc + dataRec.HeaderLength + 0x54,
                             length: 2));
                     amount -= 2;
                 }
@@ -668,11 +615,11 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x2A)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: loc.Min + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x28, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
-                            loc: loc.Min + dataIndex + 6 + 0x28,
+                            loc: loc.Min + dataLoc + dataRec.HeaderLength + 0x28,
                             length: 2));
                     amount -= 2;
                 }
@@ -680,11 +627,11 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x3E)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: loc.Min + dataIndex + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: loc.Min + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x3C, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
-                            loc: loc.Min + dataIndex + 6 + 0x3C,
+                            loc: loc.Min + dataLoc + dataRec.HeaderLength + 0x3C,
                             length: 2));
                     amount -= 2;
                 }
@@ -694,7 +641,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     this._Instructions.SetSubstitution(
                         sub: new byte[] { 0, 0, 0 },
-                        loc: loc.Min + dataIndex + 6 + move);
+                        loc: loc.Min + dataLoc + dataRec.HeaderLength + move);
                 }
             }
 
@@ -713,16 +660,15 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!GameSetting_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
 
-            var edidIndex = str.IndexOf("EDID");
-            stream.Position = loc.Min + edidIndex + 6;
+            var edidRec = majorRecordFrame.LocateSubrecord("EDID", out var edidIndex);
+            stream.Position = loc.Min + edidIndex + edidRec.HeaderLength;
             if ((char)stream.ReadUInt8() != 'f') return;
 
-            var dataIndex = str.IndexOf("DATA");
-            if (dataIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
-                stream.Position = loc.Min + dataIndex + 6;
+                stream.Position = loc.Min + datIndex + datRec.HeaderLength;
                 ProcessZeroFloat(stream);
             }
         }
@@ -735,12 +681,11 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Book_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
 
-            var dataIndex = str.IndexOf("DATA");
-            if (dataIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
-                stream.Position = loc.Min + dataIndex + 8;
+                stream.Position = loc.Min + datIndex + datRec.HeaderLength + 2;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
             }
@@ -754,12 +699,11 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Light_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
 
-            var dataIndex = str.IndexOf("DATA");
-            if (dataIndex != -1)
+            if (majorRecordFrame.TryLocateSubrecord(RecordTypes.DATA, out var datRec, out var datIndex))
             {
-                stream.Position = loc.Min + dataIndex + 6 + 16;
+                stream.Position = loc.Min + datIndex + datRec.HeaderLength + 16;
                 ProcessZeroFloat(stream);
                 ProcessZeroFloat(stream);
                 stream.Position += 4;
@@ -775,16 +719,14 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!SpellUnleveled_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-            foreach (var scitIndex in IterateTypes(str, new RecordType("SCIT")))
+            var majorRecordFrame = stream.ReadMajorRecordFrame();
+            foreach (var scit in majorRecordFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
             {
-                stream.Position = loc.Min + scitIndex + 4;
-                var len = stream.ReadUInt16();
+                stream.Position = loc.Min + scit.Location + scit.Subrecord.HeaderLength;
                 ProcessFormID(
                     stream,
-                    pos: loc.Min + scitIndex + 6);
+                    pos: stream.Position);
             }
-            ProcessEffectsList(stream, formID, recType, loc);
         }
 
         private void AlignRecords(
@@ -793,16 +735,14 @@ namespace Mutagen.Bethesda.Tests
             IEnumerable<RecordType> rectypes)
         {
             stream.Position = loc.Min;
-            var bytes = stream.ReadSpan((int)loc.Width, readSafe: false);
-            var str = BinaryStringUtility.ToZString(bytes);
+            var majorFrame = stream.ReadMajorRecordFrame();
             List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
             int recTypeIndex = -1;
             foreach (var rec in rectypes)
             {
                 recTypeIndex++;
-                var index = str.IndexOf(rec.Type, Meta.MajorConstants.HeaderLength);
-                if (index == -1) continue;
-                list.Add((rec, recTypeIndex, index));
+                if (!majorFrame.TryLocateSubrecord(rec, out var subRec, out var subLoc)) continue;
+                list.Add((rec, recTypeIndex, subLoc));
             }
             if (list.Count == 0) return;
             List<int> locs = new List<int>(list.OrderBy((l) => l.loc).Select((l) => l.loc));
@@ -815,7 +755,7 @@ namespace Mutagen.Bethesda.Tests
                 int len;
                 if (locIndex == locs.Count - 1)
                 {
-                    len = str.Length - item.loc;
+                    len = checked((int)(majorFrame.TotalLength - item.loc));
                 }
                 else
                 {
@@ -829,7 +769,7 @@ namespace Mutagen.Bethesda.Tests
                 var data = new byte[len];
                 for (int index = 0; index < len; index++)
                 {
-                    data[index] = bytes[item.loc + index];
+                    data[index] = majorFrame.HeaderAndContentData[item.loc + index];
                 }
                 this._Instructions.SetSubstitution(
                     loc: start + loc.Min,
@@ -869,146 +809,6 @@ namespace Mutagen.Bethesda.Tests
                 yield return dataIndex;
                 index = dataIndex + 4;
             }
-        }
-
-        private void LookForMagicEffects(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.MGEF.Equals(recType)) return;
-
-            stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-
-            var edidIndex = str.IndexOf("EDID");
-            if (edidIndex != -1)
-            {
-                stream.Position = loc.Min + edidIndex;
-                stream.Position += 4;
-                var len = stream.ReadUInt16();
-                var edid = stream.ReadZString(len - 1);
-                magicEffectEDIDs.Add(edid);
-            }
-        }
-
-        private void ProcessMagicEDID(
-            IMutagenReadStream stream)
-        {
-            return; // Disabled now that EDID links no longer auto-clear
-            //var startLoc = stream.Position;
-            //var edid = stream.ReadZString(4);
-            //if (!magicEffectEDIDs.Contains(edid))
-            //{
-            //    this._Instructions.SetSubstitution(
-            //        startLoc,
-            //        new byte[4]);
-            //}
-        }
-
-        private void ProcessMagicEffects(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.MGEF.Equals(recType)) return;
-
-            stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-
-            var edidForms = str.IndexOf("ESCE");
-            if (edidForms != -1)
-            {
-                stream.Position = loc.Min + edidForms;
-                stream.Position += 4;
-                var len = stream.ReadUInt16();
-                if (len % 4 != 0)
-                {
-                    throw new ArgumentException();
-                }
-                while (len > 0)
-                {
-                    ProcessMagicEDID(
-                        stream);
-                    len -= 4;
-                }
-            }
-        }
-
-        private void ProcessEffectsList(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            stream.Position = loc.Min;
-            var str = stream.ReadZString((int)loc.Width + Meta.MajorConstants.HeaderLength);
-
-            foreach (var index in IterateTypes(str, new RecordType("EFIT")))
-            {
-                stream.Position = loc.Min + index + 6;
-                ProcessMagicEDID(
-                    stream);
-            }
-
-            foreach (var index in IterateTypes(str, new RecordType("EFID")))
-            {
-                stream.Position = loc.Min + index + 6;
-                ProcessMagicEDID(
-                    stream);
-            }
-
-            foreach (var index in IterateTypes(str, new RecordType("SCIT")))
-            {
-                stream.Position = loc.Min + index + 4;
-                var len = stream.ReadUInt16();
-                if (len <= 4) continue;
-                stream.Position = loc.Min + index + 14;
-                ProcessMagicEDID(
-                    stream);
-            }
-        }
-
-        private void ProcessEnchantments(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.ENCH.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, loc);
-        }
-
-        private void ProcessIngredient(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.INGR.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, loc);
-        }
-
-        private void ProcessPotion(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.ALCH.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, loc);
-        }
-
-        private void ProcessSigilStone(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
-            RangeInt64 loc)
-        {
-            if (!RecordTypes.SGST.Equals(recType)) return;
-            ProcessEffectsList(stream, formID, recType, loc);
         }
         #endregion
     }
