@@ -1,8 +1,10 @@
 using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -289,7 +291,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
     /// </summary>
-    public struct MajorRecordFrame
+    public struct MajorRecordFrame : IEnumerable<SubrecordFrame>
     {
         private readonly MajorRecordHeader _header;
         
@@ -332,6 +334,43 @@ namespace Mutagen.Bethesda.Binary
 
         /// <inheritdoc/>
         public override string ToString() => this._header.ToString();
+
+        public IEnumerable<int> EnumerateSubrecordLocations()
+        {
+            int loc = Meta.MajorConstants.HeaderLength;
+            while (loc < HeaderAndContentData.Length)
+            {
+                yield return loc;
+                var subHeader = new SubrecordHeader(Meta, HeaderAndContentData.Slice(loc));
+                loc += subHeader.TotalLength;
+            }
+        }
+
+        public IEnumerable<(int Location, SubrecordFrame Subrecord)> EnumerateSubrecordFrames()
+        {
+            foreach (var loc in EnumerateSubrecordLocations())
+            {
+                yield return (loc, new SubrecordFrame(Meta, HeaderAndContentData.Slice(loc)));
+            }
+        }
+
+        public IEnumerable<(int Location, SubrecordHeader Subrecord)> EnumerateSubrecords()
+        {
+            foreach (var loc in EnumerateSubrecordLocations())
+            {
+                yield return (loc, new SubrecordHeader(Meta, HeaderAndContentData.Slice(loc)));
+            }
+        }
+
+        public IEnumerator<SubrecordFrame> GetEnumerator()
+        {
+            foreach (var loc in EnumerateSubrecordLocations())
+            {
+                yield return new SubrecordFrame(Meta, HeaderAndContentData.Slice(loc));
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         #region Header Forwarding
         /// <summary>

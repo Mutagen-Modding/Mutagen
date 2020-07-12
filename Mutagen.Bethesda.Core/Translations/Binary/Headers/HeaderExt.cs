@@ -196,5 +196,24 @@ namespace Mutagen.Bethesda.Binary
             return frame;
         }
         #endregion
+
+        #region Iterate
+        public static IEnumerable<(int Location, SubrecordFrame Subrecord)> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, RecordType type, bool onlyFirstSet = false)
+        {
+            bool encountered = false;
+            foreach (var (Location, Subrecord) in majorFrame.EnumerateSubrecordFrames())
+            {
+                if (Subrecord.RecordType == type)
+                {
+                    encountered = true;
+                    yield return (Location, Subrecord);
+                }
+                else if (onlyFirstSet && encountered)
+                {
+                    yield break;
+                }
+            }
+        }
+        #endregion
     }
 }
