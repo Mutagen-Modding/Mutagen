@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordType">Repeating type to locate</param>
         /// <param name="lenParsed">The amount of data located subrecords cover</param>
         /// <returns>Array of locations of located target types</returns>
-        public static int[] ParseRepeatingSubrecord(ReadOnlySpan<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
+        public static int[] ParseRepeatingSubrecord(ReadOnlyMemorySlice<byte> span, GameConstants meta, RecordType recordType, out int lenParsed)
         {
             lenParsed = 0;
             List<int> list = new List<int>();
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda
         /// <param name="recordTypes">Record types to locate</param>
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindFirstSubrecords(ReadOnlySpan<byte> data, GameConstants meta, params RecordType[] recordTypes)
+        public static int?[] FindFirstSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, params RecordType[] recordTypes)
         {
             int loc = 0;
             int?[] ret = new int?[recordTypes.Length];
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda
         /// <param name="meta">Metadata to use in subrecord parsing</param>
         /// <param name="lenParsed">Amount of data contained in located records</param>
         /// <returns>Array of found record locations</returns>
-        public static int?[] FindNextSubrecords(ReadOnlySpan<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
+        public static int?[] FindNextSubrecords(ReadOnlyMemorySlice<byte> data, GameConstants meta, out int lenParsed, params RecordType[] recordTypes)
         {
             return FindNextSubrecords(
                 data: data,
@@ -520,7 +520,7 @@ namespace Mutagen.Bethesda
         /// <param name="stopOnAlreadyEncounteredRecord">Whether to stop looking if encountering a record type that has already been seen</param>
         /// <returns>Array of found record locations</returns>
         public static int?[] FindNextSubrecords(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             out int lenParsed,
             bool stopOnAlreadyEncounteredRecord,
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int? FindFirstSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             RecordType recordType,
             bool navigateToContent = false,
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int? FindFirstSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             ICollectionGetter<RecordType> recordTypes,
             bool navigateToContent = false,
@@ -622,7 +622,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int[] FindAllOfSubrecord(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             RecordType recordType,
             bool navigateToContent = false)
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda
         }
 
         public static int[] FindAllOfSubrecords(
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants meta,
             ICollectionGetter<RecordType> recordTypes,
             bool navigateToContent = false)
@@ -740,12 +740,12 @@ namespace Mutagen.Bethesda
 
         public static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)
         {
-            while (meta.TryReadSubrecordFrame(stream, recordType, out var _))
+            while (stream.TryReadSubrecordFrame(meta, recordType, out var _))
             {
             }
         }
 
-        public static int SkipPastAll(ReadOnlySpan<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
+        public static int SkipPastAll(ReadOnlyMemorySlice<byte> data, GameConstants constants, RecordType toSkip, out int numRecordsPassed)
         {
             var pos = 0;
             numRecordsPassed = 0;
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda
             RecordType overflowType)
         {
             if (!loc.HasValue) return null;
-            var header = constants.SubrecordMemoryFrame(bytes[loc.Value..]);
+            var header = constants.SubrecordFrame(bytes[loc.Value..]);
             if (header.RecordType == overflowType)
             {
                 return bytes.Slice(
@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda
             int? existingLoc,
             OverlayStream stream,
             int offset,
-            ReadOnlySpan<byte> data,
+            ReadOnlyMemorySlice<byte> data,
             GameConstants constants)
         {
             if (existingLoc.HasValue)

@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
             {
                 var locs = UtilityTranslation.ParseRepeatingSubrecord(
-                    stream.RemainingSpan,
+                    stream.RemainingMemory,
                     stream.MetaData.Constants,
                     RecordTypes.FNPR,
                     out var parsed);
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var marker = getter(i);
 
                     var loc = locs[i];
-                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingSpan.Slice(loc));
+                    var subMeta = stream.MetaData.Constants.SubrecordFrame(stream.RemainingMemory.Slice(loc));
                     marker.EntryPoints = new EntryPoints()
                     {
                         Type = (Furniture.AnimationType)BinaryPrimitives.ReadUInt16LittleEndian(subMeta.Content),

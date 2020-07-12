@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Index
         private int? _IndexLocation;
-        public Race.BodyIndex? Index => _IndexLocation.HasValue ? (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyIndex?);
+        public Race.BodyIndex? Index => _IndexLocation.HasValue ? (Race.BodyIndex)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IndexLocation!.Value, _package.MetaData.Constants)) : default(Race.BodyIndex?);
         #endregion
         #region Icon
         private int? _IconLocation;

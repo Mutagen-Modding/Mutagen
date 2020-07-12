@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FindFirstSubrecords_Empty()
         {
             var b = new byte[0];
-            var ret = UtilityTranslation.FindFirstSubrecords(b.AsSpan(), GameConstants.Oblivion, FirstTypicalType, SecondTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(b, GameConstants.Oblivion, FirstTypicalType, SecondTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Null(ret[0]);
             Assert.Null(ret[1]);
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FindFirstSubrecords_Typical()
         {
-            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical().Span, GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Equal(SecondTypicalLocation, ret[0]);
             Assert.Equal(FirstTypicalLocation, ret[1]);
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FindFirstSubrecords_Single()
         {
-            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical().Span, GameConstants.Oblivion, SecondTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetTypical(), GameConstants.Oblivion, SecondTypicalType);
             Assert.Single(ret);
             Assert.Equal(SecondTypicalLocation, ret[0]);
         }
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void FindFirstSubrecords_Duplicate()
         {
-            var ret = UtilityTranslation.FindFirstSubrecords(GetDuplicate().Span, GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
+            var ret = UtilityTranslation.FindFirstSubrecords(GetDuplicate(), GameConstants.Oblivion, SecondTypicalType, FirstTypicalType);
             Assert.Equal(2, ret.Length);
             Assert.Equal(SecondTypicalLocation, ret[0]);
             Assert.Equal(FirstTypicalLocation, ret[1]);
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void FindFirstSubrecord_Empty()
         {
             var b = new byte[0];
-            Assert.Null(UtilityTranslation.FindFirstSubrecord(b.AsSpan(), GameConstants.Oblivion, SecondTypicalType));
+            Assert.Null(UtilityTranslation.FindFirstSubrecord(b, GameConstants.Oblivion, SecondTypicalType));
         }
 
         [Fact]

@@ -1969,7 +1969,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<ConditionBinaryOverlay>();
         #region AnimationGroupSection
         private int? _AnimationGroupSectionLocation;
-        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordSpan(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
+        public IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection => _AnimationGroupSectionLocation.HasValue ? (IdleAnimation.AnimationGroupSectionEnum)HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationGroupSectionLocation!.Value, _package.MetaData.Constants)[0] : default(IdleAnimation.AnimationGroupSectionEnum?);
         #endregion
         public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? RelatedIdleAnimations { get; private set; }
         partial void CustomFactoryEnd(
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new IdleAnimationBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

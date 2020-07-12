@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Binary
                     _ => throw new NotImplementedException(),
                 };
                 stream.Position += initialHeader.TotalLength;
-                var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
+                var contentFrame = stream.ReadSubrecordFrame(subrecordType);
                 return new BinaryOverlayListByStartIndex<T>(
                     contentFrame.Content,
                     package,
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Binary
                 };
                 stream.Position += initialHeader.TotalLength;
                 if (count == 0) return null;
-                var contentFrame = package.MetaData.Constants.ReadSubrecordMemoryFrame(stream, subrecordType);
+                var contentFrame = stream.ReadSubrecordFrame(subrecordType);
                 return new BinaryOverlayListByStartIndex<T>(
                     contentFrame.Content,
                     package,

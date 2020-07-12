@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var loc = _bipedObjectNamesLoc.Value;
                     for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
                     {
-                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc).Span, RecordTypes.NAME);
+                        var subHeader = _package.MetaData.Constants.SubrecordFrame(_data.Slice(loc), RecordTypes.NAME);
                         BipedObject type = (BipedObject)i;
                         var val = BinaryStringUtility.ProcessWholeToZString(subHeader.Content);
                         if (!string.IsNullOrEmpty(val))

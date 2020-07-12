@@ -64,5 +64,10 @@ namespace Mutagen.Bethesda.Binary
         {
             return new ParsingBundle(constants);
         }
+
+        public static implicit operator GameConstants(ParsingBundle bundle)
+        {
+            return bundle.Constants;
+        }
     }
 }

@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// A ref struct that overlays on top of bytes that is able to retrive Mod header data on demand.
     /// </summary>
-    public ref struct ModHeader
+    public struct ModHeader
     {
         /// <summary>
         /// Game metadata to use as reference for alignment
@@ -18,14 +19,14 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Bytes overlaid onto
         /// </summary>
-        public ReadOnlySpan<byte> Span { get; }
+        public ReadOnlyMemorySlice<byte> Span { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
         /// <param name="span">Span to overlay on, aligned to the start of the Group's header</param>
-        public ModHeader(GameConstants meta, ReadOnlySpan<byte> span)
+        public ModHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Meta = meta;
             this.Span = span.Slice(0, meta.ModHeaderLength);

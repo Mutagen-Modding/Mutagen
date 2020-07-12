@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeader headerMeta = package.MetaData.Constants.GetMod(stream);
+            ModHeader headerMeta = stream.GetMod(package);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
             stream.Position = (int)headerMeta.TotalLength;
             while (!stream.Complete)
             {
-                GroupHeader groupMeta = package.MetaData.Constants.GetGroup(stream);
+                GroupHeader groupMeta = stream.GetGroup(package);
                 if (!groupMeta.IsGroup)
                 {
                     throw new ArgumentException("Did not see GRUP header as expected.");

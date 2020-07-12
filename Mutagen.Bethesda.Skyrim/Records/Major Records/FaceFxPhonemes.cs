@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ReadOnlyMemorySlice<byte>[] slots = new ReadOnlyMemorySlice<byte>[SlotSize];
                 for (int i = 0; i < SlotSize; i++)
                 {
-                    var subMetaFrame = frame.Reader.ReadSubrecordMemoryFrame(RecordTypes.PHWT);
+                    var subMetaFrame = frame.Reader.ReadSubrecordFrame(RecordTypes.PHWT);
                     var content = subMetaFrame.Content;
                     if (content.Length != expectedSize)
                     {

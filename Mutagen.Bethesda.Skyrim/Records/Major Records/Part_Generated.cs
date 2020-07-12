@@ -1281,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region PartType
         private int? _PartTypeLocation;
-        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
+        public Part.PartTypeEnum? PartType => _PartTypeLocation.HasValue ? (Part.PartTypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PartTypeLocation!.Value, _package.MetaData.Constants)) : default(Part.PartTypeEnum?);
         #endregion
         #region FileName
         private int? _FileNameLocation;

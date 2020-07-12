@@ -1343,11 +1343,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public SceneActor.Flag? Flags => _FlagsLocation.HasValue ? (SceneActor.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.Flag?);
+        public SceneActor.Flag? Flags => _FlagsLocation.HasValue ? (SceneActor.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.Flag?);
         #endregion
         #region BehaviorFlags
         private int? _BehaviorFlagsLocation;
-        public SceneActor.BehaviorFlag? BehaviorFlags => _BehaviorFlagsLocation.HasValue ? (SceneActor.BehaviorFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _BehaviorFlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.BehaviorFlag?);
+        public SceneActor.BehaviorFlag? BehaviorFlags => _BehaviorFlagsLocation.HasValue ? (SceneActor.BehaviorFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BehaviorFlagsLocation!.Value, _package.MetaData.Constants)) : default(SceneActor.BehaviorFlag?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

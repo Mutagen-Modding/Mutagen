@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Skill
         private int? _SkillLocation;
-        public ActorValue? Skill => _SkillLocation.HasValue ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _SkillLocation!.Value, _package.MetaData.Constants)) : default(ActorValue?);
+        public ActorValue? Skill => _SkillLocation.HasValue ? (ActorValue)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkillLocation!.Value, _package.MetaData.Constants)) : default(ActorValue?);
         #endregion
         #region Description
         private int? _DescriptionLocation;
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new SkillRecordBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!RecordTypes.NPC_.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame();
+            var majorFrame = stream.ReadMajorRecordFrame();
             this.DynamicMove(
                 majorFrame,
                 loc,

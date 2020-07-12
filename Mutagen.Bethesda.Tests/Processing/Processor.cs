@@ -284,7 +284,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public int FixMissingCounters(
-            MajorRecordMemoryFrame frame,
+            MajorRecordFrame frame,
             RangeInt64 loc,
             RecordType counterType,
             RecordType containedType)
@@ -502,8 +502,7 @@ namespace Mutagen.Bethesda.Tests
             var majorHeader = stream.ReadMajorRecord();
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
-            var blockGroup = stream.ReadGroup();
-            if (!blockGroup.IsGroup) return;
+            if (!stream.TryReadGroup(out var blockGroup)) return;
             var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
             if (blockGrupType != GroupTypeEnum.CellChildren) return;
             if (blockGroup.ContentLength == 0)
@@ -516,8 +515,7 @@ namespace Mutagen.Bethesda.Tests
                 for (int i = 0; i < numSubGroups; i++)
                 {
                     var subBlockGroupPos = stream.Position;
-                    var subBlockGroup = stream.ReadGroup();
-                    if (!subBlockGroup.IsGroup) break;
+                    if (!stream.TryReadGroup(out var subBlockGroup)) break;
                     switch ((GroupTypeEnum)subBlockGroup.GroupType)
                     {
                         case GroupTypeEnum.CellPersistentChildren:
@@ -573,8 +571,7 @@ namespace Mutagen.Bethesda.Tests
             var majorHeader = stream.ReadMajorRecord();
             stream.Position += majorHeader.ContentLength;
             var blockGroupPos = stream.Position;
-            var blockGroup = stream.ReadGroup();
-            if (!blockGroup.IsGroup) return;
+            if (!stream.TryReadGroup(out var blockGroup)) return;
             var blockGrupType = (GroupTypeEnum)blockGroup.GroupType;
             if (blockGrupType != GroupTypeEnum.TopicChildren) return;
             if (blockGroup.ContentLength == 0)
@@ -600,7 +597,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         protected bool DynamicMove(
-            MajorRecordMemoryFrame majorFrame,
+            MajorRecordFrame majorFrame,
             RangeInt64 loc,
             ICollection<RecordType> offendingIndices,
             ICollection<RecordType> offendingLimits,

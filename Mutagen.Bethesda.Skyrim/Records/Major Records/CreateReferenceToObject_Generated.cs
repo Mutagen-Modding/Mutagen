@@ -1478,7 +1478,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Object
         private int? _ObjectLocation;
         public bool Object_IsSet => _ObjectLocation.HasValue;
-        public IFormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
+        public IFormLink<ISkyrimMajorRecordGetter> Object => _ObjectLocation.HasValue ? new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ObjectLocation.Value, _package.MetaData.Constants)))) : FormLink<ISkyrimMajorRecordGetter>.Null;
         #endregion
         private int? _ALCALocation;
         public CreateReferenceToObject.ALCADataType ALCADataTypeState { get; private set; }
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Level
         private int? _LevelLocation;
-        public Level Level => _LevelLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LevelLocation!.Value, _package.MetaData.Constants)) : default(Level);
+        public Level Level => _LevelLocation.HasValue ? (Level)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LevelLocation!.Value, _package.MetaData.Constants)) : default(Level);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

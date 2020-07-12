@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void XnamMarkerCustomParse(OverlayStream stream, long finalPos, int offset)
             {
-                var xnam = stream.ReadSubrecordMemoryFrame();
+                var xnam = stream.ReadSubrecordFrame();
                 _xnam = xnam.Content;
                 this.ProcedureTree = this.ParseRepeatedTypelessSubrecord<PackageBranchBinaryOverlay>(
                     stream: stream,

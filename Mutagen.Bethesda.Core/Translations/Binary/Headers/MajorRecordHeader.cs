@@ -8,9 +8,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Binary
 {
     /// <summary>
-    /// A ref struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
+    /// A struct that overlays on top of bytes that is able to retrive Major Record header data on demand.
     /// </summary>
-    public ref struct MajorRecordHeader
+    public struct MajorRecordHeader
     {
         /// <summary>
         /// Game metadata to use as reference for alignment
@@ -20,14 +20,14 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Bytes overlaid onto
         /// </summary>
-        public ReadOnlySpan<byte> HeaderData { get; }
+        public ReadOnlyMemorySlice<byte> HeaderData { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
         /// <param name="span">Span to overlay on, aligned to the start of the Major Record's header</param>
-        public MajorRecordHeader(GameConstants meta, ReadOnlySpan<byte> span)
+        public MajorRecordHeader(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this.Meta = meta;
             this.HeaderData = span.Slice(0, meta.MajorConstants.HeaderLength);
@@ -287,21 +287,21 @@ namespace Mutagen.Bethesda.Binary
     }
     
     /// <summary>
-    /// A ref struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+    /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
     /// </summary>
-    public ref struct MajorRecordFrame
+    public struct MajorRecordFrame
     {
         private readonly MajorRecordHeader _header;
         
         /// <summary>
         /// Raw bytes of both header and content data
         /// </summary>
-        public ReadOnlySpan<byte> HeaderAndContentData { get; }
+        public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
         
         /// <summary>
         /// Raw bytes of the content data, excluding the header
         /// </summary>
-        public ReadOnlySpan<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
+        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
 
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="meta">Game metadata to use as reference for alignment</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordFrame(GameConstants meta, ReadOnlySpan<byte> span)
+        public MajorRecordFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
         {
             this._header = meta.MajorRecord(span);
             this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="header">Existing MajorRecordHeader struct</param>
         /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordFrame(MajorRecordHeader header, ReadOnlySpan<byte> span)
+        public MajorRecordFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span)
         {
             this._header = header;
             this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
@@ -337,123 +337,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Raw bytes of header
         /// </summary>
-        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
-
-        /// <summary>
-        /// Game metadata to use as reference for alignment
-        /// </summary>
-        public GameConstants Meta => _header.Meta;
-
-        /// <summary>
-        /// Game release associated with header
-        /// </summary>
-        public GameRelease Release => _header.Release;
-
-        /// <summary>
-        /// The length that the header itself takes
-        /// </summary>
-        public sbyte HeaderLength => _header.HeaderLength;
-
-        /// <summary>
-        /// RecordType of the header
-        /// </summary>
-        public RecordType RecordType => _header.RecordType;
-
-        /// <summary>
-        /// The length explicitly contained in the length bytes of the header
-        /// Note that for Major Records, this is equivalent to ContentLength
-        /// </summary>
-        public uint RecordLength => _header.RecordLength;
-
-        /// <summary>
-        /// The length of the content of the Group, excluding the header bytes.
-        /// </summary>
-        public uint ContentLength => (uint)Content.Length;
-
-        /// <summary>
-        /// The integer representing a Major Record's flags enum.
-        /// Since each game has its own flag Enum, this field is offered as an int that should
-        /// be casted to the appropriate enum for use.
-        /// </summary>
-        public int MajorRecordFlags => _header.MajorRecordFlags;
-
-        /// <summary>
-        /// FormID of the Major Record
-        /// </summary>
-        public FormID FormID => _header.FormID;
-
-        /// <summary>
-        /// Version control of the Major Record
-        /// </summary>
-        public int VersionControl => _header.VersionControl;
-
-        /// <summary>
-        /// Whether the compression flag is on
-        /// </summary>
-        public bool IsCompressed => _header.IsCompressed;
-
-        /// <summary>
-        /// Returns the Form Version of the Major Record
-        /// </summary>
-        public short? FormVersion => _header.FormVersion;
-
-        /// <summary>
-        /// Returns the second Version Control of the Major Record
-        /// </summary>
-        public short? VersionControl2 => _header.VersionControl2;
-        #endregion
-    }
-
-    /// <summary>
-    /// A ref struct that overlays on top of bytes that is able to retrive Major Record data on demand.
-    /// Unlike MajorRecordFrame, this struct exposes its data members as MemorySlices instead of Spans
-    /// </summary>
-    public ref struct MajorRecordMemoryFrame
-    {
-        private readonly MajorRecordHeader _header;
-        
-        /// <summary>
-        /// Raw bytes of both header and content data
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> HeaderAndContentData { get; }
-
-        /// <summary>
-        /// Total length of the Major Record, including the header and its content.
-        /// </summary>
-        public long TotalLength => this._header.HeaderLength + Content.Length;
-
-        /// <summary>
-        /// Raw bytes of the content data, excluding the header
-        /// </summary>
-        public ReadOnlyMemorySlice<byte> Content => HeaderAndContentData.Slice(this._header.HeaderLength, checked((int)this._header.ContentLength));
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="meta">Game metadata to use as reference for alignment</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordMemoryFrame(GameConstants meta, ReadOnlyMemorySlice<byte> span)
-        {
-            this._header = meta.MajorRecord(span);
-            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="header">Existing MajorRecordHeader struct</param>
-        /// <param name="span">Span to overlay on, aligned to the start of the header</param>
-        public MajorRecordMemoryFrame(MajorRecordHeader header, ReadOnlyMemorySlice<byte> span)
-        {
-            this._header = header;
-            this.HeaderAndContentData = span.Slice(0, checked((int)this._header.TotalLength));
-        }
-
-        #region Header Forwarding
-        /// <summary>
-        /// Raw bytes of header
-        /// </summary>
-        public ReadOnlySpan<byte> HeaderData => _header.HeaderData;
+        public ReadOnlyMemorySlice<byte> HeaderData => _header.HeaderData;
 
         /// <summary>
         /// Game metadata to use as reference for alignment

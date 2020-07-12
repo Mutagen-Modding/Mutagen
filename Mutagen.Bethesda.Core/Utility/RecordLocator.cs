@@ -209,10 +209,6 @@ namespace Mutagen.Bethesda
         {
             var grupLoc = reader.Position;
             GroupHeader groupMeta = reader.GetGroup();
-            if (!groupMeta.IsGroup)
-            {
-                throw new ArgumentException();
-            }
             fileLocs.GrupLocations.Add(reader.Position);
             var grupRec = grupRecOverride ?? groupMeta.ContainedRecordType;
 
@@ -233,7 +229,7 @@ namespace Mutagen.Bethesda
                     var targetRec = majorRecordMeta.RecordType;
                     if (targetRec != grupRec)
                     {
-                        if (IsSubLevelGRUP(frame.GetGroup()))
+                        if (IsSubLevelGRUP(frame.GetGroup(checkIsGroup: false)))
                         {
                             parentGroupLocations.Push(grupLoc);
                             HandleSubLevelGRUP(
@@ -394,10 +390,6 @@ namespace Mutagen.Bethesda
             {
                 var grupLoc = frame.Position;
                 var groupMeta = frame.GetGroup();
-                if (!groupMeta.IsGroup)
-                {
-                    throw new ArgumentException();
-                }
                 fileLocs.GrupLocations.Add(grupLoc);
                 switch ((GroupTypeEnum)groupMeta.GroupType)
                 {

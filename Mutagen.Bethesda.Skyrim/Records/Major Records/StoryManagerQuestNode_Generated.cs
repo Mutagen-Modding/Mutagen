@@ -1903,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        public StoryManagerQuestNode.QuestFlag? Flags => _FlagsLocation.HasValue ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerQuestNode.QuestFlag?);
+        public StoryManagerQuestNode.QuestFlag? Flags => _FlagsLocation.HasValue ? (StoryManagerQuestNode.QuestFlag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(StoryManagerQuestNode.QuestFlag?);
         #endregion
         #region MaxConcurrentQuests
         private int? _MaxConcurrentQuestsLocation;
@@ -1939,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new StoryManagerQuestNodeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

@@ -133,11 +133,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (_IconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _IconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _IconLocation.Value, _package.MetaData.Constants));
             }
             if (_SecondaryIconLocation.HasValue)
             {
-                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordSpan(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
+                return BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryIconLocation.Value, _package.MetaData.Constants));
             }
             return default;
         }

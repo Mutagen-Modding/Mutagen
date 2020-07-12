@@ -1682,12 +1682,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region MaskType
         private int? _MaskTypeLocation;
-        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _MaskTypeLocation!.Value, _package.MetaData.Constants)) : default(TintAssets.TintMaskType?);
+        public TintAssets.TintMaskType? MaskType => _MaskTypeLocation.HasValue ? (TintAssets.TintMaskType)BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaskTypeLocation!.Value, _package.MetaData.Constants)) : default(TintAssets.TintMaskType?);
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
         public bool PresetDefault_IsSet => _PresetDefaultLocation.HasValue;
-        public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomFactoryEnd(

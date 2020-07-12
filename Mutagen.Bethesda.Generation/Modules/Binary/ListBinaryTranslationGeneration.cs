@@ -855,7 +855,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"mem: stream.RemainingMemory");
                             args.Add($"package: _package");
-                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordMemoryFrame(s).Content", "p")}");
+                            args.Add($"getter: (s, p) => {subGen.GenerateForTypicalWrapper(objGen, list.SubTypeGeneration, $"p.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubrecordFrame(s).Content", "p")}");
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,

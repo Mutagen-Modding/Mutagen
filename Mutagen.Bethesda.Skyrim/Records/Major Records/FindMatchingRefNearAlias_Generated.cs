@@ -1302,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Type
         private int? _TypeLocation;
-        public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
+        public FindMatchingRefNearAlias.TypeEnum? Type => _TypeLocation.HasValue ? (FindMatchingRefNearAlias.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(FindMatchingRefNearAlias.TypeEnum?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

@@ -165,14 +165,14 @@ namespace Mutagen.Bethesda
                 Dictionary<FormKey, int> locationDict = new Dictionary<FormKey, int>();
 
                 stream.Position -= package.MetaData.Constants.GroupConstants.HeaderLength;
-                var groupMeta = package.MetaData.Constants.GetGroup(stream);
+                var groupMeta = stream.GetGroup(package.MetaData);
                 var finalPos = stream.Position + groupMeta.TotalLength;
                 stream.Position += package.MetaData.Constants.GroupConstants.HeaderLength;
                 // Parse MajorRecord locations
                 ObjectType? lastParsed = default;
                 while (stream.Position < finalPos)
                 {
-                    VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingSpan);
+                    VariableHeader varMeta = package.MetaData.Constants.NextRecordVariableMeta(stream.RemainingMemory);
                     if (varMeta.IsGroup)
                     {
                         if (lastParsed != ObjectType.Record)
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda
                     }
                     else
                     {
-                        MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingSpan);
+                        MajorRecordHeader majorMeta = package.MetaData.Constants.MajorRecord(stream.RemainingMemory);
                         if (majorMeta.RecordType != GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE)
                         {
                             throw new DataMisalignedException("Unexpected type encountered when parsing MajorRecord locations: " + majorMeta.RecordType);

@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Flags
         private int? _FlagsLocation;
-        public VoiceType.Flag Flags => _FlagsLocation.HasValue ? (VoiceType.Flag)HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(VoiceType.Flag);
+        public VoiceType.Flag Flags => _FlagsLocation.HasValue ? (VoiceType.Flag)HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)[0] : default(VoiceType.Flag);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new VoiceTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

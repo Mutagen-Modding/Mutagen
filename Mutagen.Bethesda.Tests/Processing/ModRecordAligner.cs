@@ -509,9 +509,8 @@ namespace Mutagen.Bethesda.Tests
                         var startPos = reader.Position;
                         reader.Position += cellMajorMeta.HeaderLength;
                         var grupPos = reader.Position;
-                        var cellSubGroupMeta = reader.GetGroup();
                         long cellGroupLen = 0;
-                        if (cellSubGroupMeta.IsGroup
+                        if (reader.TryGetGroup(out var cellSubGroupMeta)
                             && cellSubGroupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                         {
                             cellGroupLen = cellSubGroupMeta.TotalLength;

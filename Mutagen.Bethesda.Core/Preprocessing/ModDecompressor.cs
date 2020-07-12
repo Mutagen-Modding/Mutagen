@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Preprocessing
 
                 // If complete overall, return
                 if (inputStream.Complete) break;
-                var majorMeta = inputStream.ReadMajorRecord();
+                var majorMeta = inputStream.ReadMajorRecord(readSafe: true);
                 var len = majorMeta.ContentLength;
                 using (var frame = MutagenFrame.ByLength(
                     reader: inputStream,

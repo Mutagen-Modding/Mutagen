@@ -117,8 +117,8 @@ namespace Mutagen.Bethesda.Oblivion
                 if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
                 if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
                 {
-                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedSpan);
-                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeSpan, frame.MetaData.MasterReferences!);
+                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
+                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
                     if (formKey != obj.FormKey)
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
             private int? _TopCellLocation;
             public ICellGetter? TopCell => _TopCellLocation.HasValue ? CellBinaryOverlay.CellFactory(new OverlayStream(_grupData!.Value.Slice(_TopCellLocation!.Value), _package), _package) : default;
 
-            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int SubCellsTimestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
             public IReadOnlyList<IWorldspaceBlockGetter> SubCells { get; private set; } = ListExt.Empty<IWorldspaceBlockGetter>();
 
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Oblivion
                 var groupMeta = stream.GetGroup();
                 if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan)))
+                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }

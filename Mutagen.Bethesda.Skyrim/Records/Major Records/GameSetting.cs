@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter recordTypeConverter)
         {
             var majorMeta = frame.GetMajorRecord();
-            var settingType = GameSettingUtility.GetGameSettingType(frame.GetSpan(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
+            var settingType = GameSettingUtility.GetGameSettingType(frame.GetMemory(checked((int)majorMeta.TotalLength)), frame.MetaData.Constants);
             if (settingType.Failed)
             {
                 throw new ArgumentException($"Error splitting to desired GameSetting type at position {frame.Position}: {settingType.Reason}");
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter recordTypeConverter)
             {
-                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingSpan, package.MetaData.Constants);
+                var settingType = GameSettingUtility.GetGameSettingType(stream.RemainingMemory, package.MetaData.Constants);
                 if (settingType.Failed)
                 {
                     throw new ArgumentException($"Error splitting to desired GameSetting type: {settingType.Reason}");

@@ -296,27 +296,21 @@ namespace Mutagen.Bethesda.Binary
             return ret;
         }
 
-        public static ReadOnlySpan<byte> ExtractSubrecordSpan(ReadOnlySpan<byte> span, int loc, GameConstants meta)
+        public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta)
         {
             var subMeta = meta.Subrecord(span.Slice(loc));
             return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
         }
 
-        public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, int loc, GameConstants meta)
-        {
-            var subMeta = meta.Subrecord(span.Span.Slice(loc));
-            return span.Slice(loc + subMeta.HeaderLength, subMeta.ContentLength);
-        }
-
         public static ReadOnlyMemorySlice<byte> ExtractSubrecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
-            var subMeta = meta.Subrecord(span.Span);
+            var subMeta = meta.Subrecord(span);
             return span.Slice(subMeta.HeaderLength, subMeta.ContentLength);
         }
 
         public static ReadOnlyMemorySlice<byte> ExtractRecordMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
-            var majorMeta = meta.MajorRecord(span.Span);
+            var majorMeta = meta.MajorRecord(span);
             var len = majorMeta.ContentLength;
             len += (byte)meta.MajorConstants.LengthAfterLength;
             return span.Slice(meta.MajorConstants.TypeAndLengthLength, checked((int)len));
@@ -324,7 +318,7 @@ namespace Mutagen.Bethesda.Binary
 
         public static ReadOnlyMemorySlice<byte> ExtractGroupMemory(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
-            var groupMeta = meta.Group(span.Span);
+            var groupMeta = meta.Group(span);
             var len = groupMeta.ContentLength;
             len += (byte)meta.GroupConstants.LengthAfterLength;
             return span.Slice(meta.GroupConstants.TypeAndLengthLength, checked((int)len));

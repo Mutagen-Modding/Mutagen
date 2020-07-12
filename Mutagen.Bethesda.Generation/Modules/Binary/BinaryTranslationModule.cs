@@ -2475,7 +2475,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {
-                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}(stream).RecordType);");
+                            fg.AppendLine($"var nextRecord = recordTypeConverter.ConvertToCustom(stream.Get{(obj.GetObjectType() == ObjectType.Subrecord ? "Subrecord" : "MajorRecord")}().RecordType);");
                             fg.AppendLine($"switch (nextRecord.TypeInt)");
                             using (new BraceWrapper(fg))
                             {
@@ -2564,15 +2564,15 @@ namespace Mutagen.Bethesda.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Subrecord:
-                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Subrecord(stream.RemainingSpan).TotalLength));");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetSubrecord().TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.SubConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Record:
-                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorRecord(stream.RemainingSpan).TotalLength));");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.MajorConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Group:
-                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.Group(stream.RemainingSpan).TotalLength));");
+                                    fg.AppendLine($"var finalPos = checked((int)(stream.Position + stream.GetGroup().TotalLength));");
                                     fg.AppendLine($"int offset = stream.Position + package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.GroupConstants.TypeAndLengthLength;");
                                     break;
                                 case ObjectType.Mod:
@@ -3108,7 +3108,7 @@ namespace Mutagen.Bethesda.Generation
                                 fg.AppendLine($"case RecordTypeInts.{endMarkerType}: // End Marker");
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.ReadSubrecordFrame(stream);");
+                                    fg.AppendLine($"stream.ReadSubrecordFrame();");
                                     fg.AppendLine($"return {nameof(ParseResult)}.Stop;");
                                 }
                             }

@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MajorMemoryFrameTryLocateSubrecord()
         {
-            var majorFrame = new MajorRecordMemoryFrame(GameConstants.Oblivion, _majorBytes);
+            var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, _majorBytes);
             Assert.True(majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var _, out var loc));
             Assert.Equal(DataPos, loc);
         }
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MajorMemoryFrameTryLocateSubrecordFrame()
         {
-            var majorFrame = new MajorRecordMemoryFrame(GameConstants.Oblivion, _majorBytes);
+            var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, _majorBytes);
             Assert.True(majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var subFrame, out var loc));
             Assert.Equal(DataPos, loc);
             Assert.Equal(DataValue, subFrame.AsInt32());
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MajorMemoryFrameLocateSubrecord()
         {
-            var majorFrame = new MajorRecordMemoryFrame(GameConstants.Oblivion, _majorBytes);
+            var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, _majorBytes);
             majorFrame.LocateSubrecord(RecordTypes.DATA, out var loc);
             Assert.Equal(DataPos, loc);
         }
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void MajorMemoryFrameLocateSubrecordFrame()
         {
-            var majorFrame = new MajorRecordMemoryFrame(GameConstants.Oblivion, _majorBytes);
+            var majorFrame = new MajorRecordFrame(GameConstants.Oblivion, _majorBytes);
             var subFrame = majorFrame.LocateSubrecordFrame(RecordTypes.DATA, out var loc);
             Assert.Equal(DataPos, loc);
             Assert.Equal(DataValue, subFrame.AsInt32());

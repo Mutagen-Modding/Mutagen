@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Furniture_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             // Find and store marker data
             var data = new Dictionary<int, ReadOnlyMemorySlice<byte>>();
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Npc_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var qnam = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.QNAM, navigateToContent: true);
             if (qnam != null)
@@ -155,7 +155,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!Region_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.RDAT, navigateToContent: false);
             if (rdat == null) return;
@@ -204,7 +204,7 @@ namespace Mutagen.Bethesda.Tests
 
             // Process odd length changing flags
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
             var sizeChange = 0;
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Tests
 
             // Reset misnumbered counter
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.TIFC);
             if (pos != null)
@@ -253,8 +253,7 @@ namespace Mutagen.Bethesda.Tests
                 var count = BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content);
 
                 uint actualCount = 0;
-                var groupFrame = stream.ReadGroupFrame();
-                if (groupFrame.IsGroup)
+                if (stream.TryReadGroupFrame(out var groupFrame))
                 {
                     int groupPos = 0;
                     while (groupPos < groupFrame.Content.Length)
@@ -286,7 +285,7 @@ namespace Mutagen.Bethesda.Tests
 
             // Process next alias ID subrecords to align to their current contents
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
             var content = majorFrame.Content;
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.ANAM);
@@ -345,7 +344,7 @@ namespace Mutagen.Bethesda.Tests
                 out var processedLen);
             if (vmadPos != null)
             {
-                var vmadFrame = Meta.SubrecordMemoryFrame(majorFrame.Content.Slice(vmadPos.Value));
+                var vmadFrame = Meta.SubrecordFrame(majorFrame.Content.Slice(vmadPos.Value));
                 stream = new MutagenInterfaceReadStream(
                     new MutagenMemoryReadStream(vmadFrame.Content, new ParsingBundle(GameRelease)),
                     new ParsingBundle(GameRelease))
@@ -386,7 +385,7 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void FixVMADFormIDs(
-            MajorRecordMemoryFrame frame,
+            MajorRecordFrame frame,
             RangeInt64 loc,
             out int? vmadPos,
             out ushort objectFormat,
@@ -502,7 +501,7 @@ namespace Mutagen.Bethesda.Tests
                 && !PlacedMissile_Registration.TriggeringRecordType.Equals(recType)
                 && !PlacedTrap_Registration.TriggeringRecordType.Equals(recType)) return;
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
             var sizeChange = 0;
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
@@ -572,7 +571,7 @@ namespace Mutagen.Bethesda.Tests
             if (!RecordTypes.NAVM.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.NVNM);
             if (pos != null)
@@ -596,7 +595,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Package_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             // Reorder Idle subrecords
 
@@ -786,7 +785,7 @@ namespace Mutagen.Bethesda.Tests
             if (!EffectShader_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
@@ -846,7 +845,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Explosion_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.DATA);
             if (pos != null)
@@ -872,7 +871,7 @@ namespace Mutagen.Bethesda.Tests
             if (!ImageSpaceAdapter_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             int subLoc = 0;
             void ProcessKeyframe(int contentLen)
@@ -925,7 +924,7 @@ namespace Mutagen.Bethesda.Tests
             if (!LoadScreen_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.XNAM);
             if (pos != null)
@@ -946,7 +945,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Activator_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             FixVMADFormIDs(
                 majorFrame,
@@ -965,7 +964,7 @@ namespace Mutagen.Bethesda.Tests
             if (!Weather_Registration.TriggeringRecordType.Equals(recType)) return;
 
             stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordMemoryFrame(readSafe: true);
+            var majorFrame = stream.ReadMajorRecordFrame();
 
             var pos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.SNAM);
             if (pos != null)

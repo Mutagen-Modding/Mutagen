@@ -1572,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Flags
         private int? _FlagsLocation;
-        public QuestObjective.Flag? Flags => _FlagsLocation.HasValue ? (QuestObjective.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestObjective.Flag?);
+        public QuestObjective.Flag? Flags => _FlagsLocation.HasValue ? (QuestObjective.Flag)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FlagsLocation!.Value, _package.MetaData.Constants)) : default(QuestObjective.Flag?);
         #endregion
         #region DisplayText
         private int? _DisplayTextLocation;

@@ -2080,7 +2080,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Script
         private int? _ScriptLocation;
         public bool Script_IsSet => _ScriptLocation.HasValue;
-        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -2089,11 +2089,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
+        public SoulLevel? MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulLevel)HeaderTranslation.ExtractSubrecordMemory(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulLevel?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2120,7 +2120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new SoulGemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

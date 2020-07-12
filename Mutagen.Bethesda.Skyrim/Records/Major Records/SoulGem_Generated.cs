@@ -2769,12 +2769,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region PickUpSound
         private int? _PickUpSoundLocation;
         public bool PickUpSound_IsSet => _PickUpSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PickUpSound => _PickUpSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PickUpSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         #region PutDownSound
         private int? _PutDownSoundLocation;
         public bool PutDownSound_IsSet => _PutDownSoundLocation.HasValue;
-        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullable<ISoundDescriptorGetter> PutDownSound => _PutDownSoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PutDownSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
         private int? _DATALocation;
@@ -2791,16 +2791,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ContainedSoul
         private int? _ContainedSoulLocation;
-        public SoulGem.Level ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordSpan(_data, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
+        public SoulGem.Level ContainedSoul => _ContainedSoulLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordMemory(_data, _ContainedSoulLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
         #endregion
         #region MaximumCapacity
         private int? _MaximumCapacityLocation;
-        public SoulGem.Level MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordSpan(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
+        public SoulGem.Level MaximumCapacity => _MaximumCapacityLocation.HasValue ? (SoulGem.Level)HeaderTranslation.ExtractSubrecordMemory(_data, _MaximumCapacityLocation!.Value, _package.MetaData.Constants)[0] : default(SoulGem.Level);
         #endregion
         #region LinkedTo
         private int? _LinkedToLocation;
         public bool LinkedTo_IsSet => _LinkedToLocation.HasValue;
-        public IFormLinkNullable<ISoulGemGetter> LinkedTo => _LinkedToLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _LinkedToLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
+        public IFormLinkNullable<ISoulGemGetter> LinkedTo => _LinkedToLocation.HasValue ? new FormLinkNullable<ISoulGemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _LinkedToLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoulGemGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2827,7 +2827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new SoulGemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

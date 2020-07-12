@@ -66,8 +66,8 @@ namespace Mutagen.Bethesda.Binary
             this.HeaderIncludedInLength = type == ObjectType.Group;
         }
 
-        public VariableHeader VariableMeta(ReadOnlySpan<byte> span) => new VariableHeader(this, span);
-        public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetSpan(this.HeaderLength, offset));
-        public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadSpan(this.HeaderLength));
+        public VariableHeader VariableMeta(ReadOnlyMemorySlice<byte> span) => new VariableHeader(this, span);
+        public VariableHeader GetVariableMeta(IBinaryReadStream stream, int offset = 0) => new VariableHeader(this, stream.GetMemory(this.HeaderLength, offset));
+        public VariableHeader ReadVariableMeta(IBinaryReadStream stream) => new VariableHeader(this, stream.ReadMemory(this.HeaderLength));
     }
 }

@@ -1668,7 +1668,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Model { get; private set; }
         #region Type
         private int? _TypeLocation;
-        public ArtObject.TypeEnum? Type => _TypeLocation.HasValue ? (ArtObject.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ArtObject.TypeEnum?);
+        public ArtObject.TypeEnum? Type => _TypeLocation.HasValue ? (ArtObject.TypeEnum)BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)) : default(ArtObject.TypeEnum?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1695,7 +1695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var ret = new ArtObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

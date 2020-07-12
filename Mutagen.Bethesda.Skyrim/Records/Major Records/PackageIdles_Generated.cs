@@ -1493,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Type
         private int? _TypeLocation;
-        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordSpan(_data, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
+        public PackageIdles.Types Type => _TypeLocation.HasValue ? (PackageIdles.Types)HeaderTranslation.ExtractSubrecordMemory(_data, _TypeLocation!.Value, _package.MetaData.Constants)[0] : default(PackageIdles.Types);
         #endregion
         #region TimerSetting
         partial void TimerSettingCustomParse(

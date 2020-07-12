@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.13.8" />
     <PackageReference Include="Loqui" Version="1.1.16" />
-    <PackageReference Include="Noggog.CSharpExt" Version="1.0.29" />
+    <PackageReference Include="Noggog.CSharpExt" Version="1.0.30" />
     <PackageReference Include="Wabbajack.Compression.BSA" Version="2.1.0" />
   </ItemGroup>
   <PropertyGroup>
@@ -80,6 +80,7 @@
     <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\HeaderExt.cs" />
+    <Compile Include="Translations\Binary\Headers\StreamHeaderMixIn.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />

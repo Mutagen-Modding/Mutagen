@@ -141,7 +141,7 @@ namespace Mutagen.Bethesda
         /// <param name="span">Data beginning at the start of a major record</param>
         /// <param name="meta">Game meta information to use in parsing</param>
         /// <returns>A response of the GameSettingType if found, or a reason if not.</returns>
-        public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlySpan<byte> span, GameConstants meta)
+        public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecordFrame(span);
             var edidLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);

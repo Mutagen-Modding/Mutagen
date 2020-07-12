@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var index = (MorphEnum)BinaryPrimitives.ReadInt32LittleEndian(indexFrame.Content);
                     var morph = new Morph()
                     {
-                        Data = dataFrame.Content.ToArray()
+                        Data = dataFrame.Content.Span.ToArray()
                     };
                     switch (index)
                     {

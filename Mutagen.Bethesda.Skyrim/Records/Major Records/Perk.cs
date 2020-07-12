@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
                             ReadOnlyMemorySlice<byte>? epf3 = null;
                             ReadOnlyMemorySlice<byte>? epfd = null;
                             ReadOnlyMemorySlice<byte>? epft = null;
-                            while (stream.TryReadSubrecordMemoryFrame(out var subFrame, readSafe: true))
+                            while (stream.TryReadSubrecordFrame(out var subFrame))
                             {
                                 switch (subFrame.RecordTypeInt)
                                 {

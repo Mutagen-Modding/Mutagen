@@ -81,12 +81,11 @@ namespace Mutagen.Bethesda.Skyrim
             private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
             {
                 if (frame.Reader.Complete) return;
-                var groupMeta = frame.GetGroup();
-                if (!groupMeta.IsGroup) return;
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (!frame.TryGetGroup(out var groupMeta)) return;
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                     obj.UnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                     frame.Position += groupMeta.HeaderLength;
                     if (formKey != obj.FormKey)
@@ -131,12 +130,12 @@ namespace Mutagen.Bethesda.Skyrim
                 ICellInternal obj)
             {
                 var groupMeta = frame.ReadGroup();
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 obj.Persistent.AddRange(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
@@ -220,12 +219,12 @@ namespace Mutagen.Bethesda.Skyrim
             static void ParseTemporary(MutagenFrame frame, ICellInternal obj)
             {
                 var groupMeta = frame.ReadGroup();
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (formKey != obj.FormKey)
                 {
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
-                obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedSpan);
+                obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
@@ -383,14 +382,14 @@ namespace Mutagen.Bethesda.Skyrim
             private int? _landscapeLocation;
             public ILandscapeGetter? Landscape => _landscapeLocation.HasValue ? LandscapeBinaryOverlay.LandscapeFactory(new OverlayStream(_grupData!.Value.Slice(_landscapeLocation!.Value), _package), _package) : default;
 
-            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedSpan) : 0;
+            public int Timestamp => _grupData != null ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData.Value).LastModifiedData) : 0;
 
             private int? _persistentLocation;
-            public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedSpan) : 0;
+            public int PersistentTimestamp => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_persistentLocation.Value)).LastModifiedData) : 0;
             public IReadOnlyList<IPlacedGetter> Persistent { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             private int? _temporaryLocation;
-            public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedSpan) : 0;
+            public int TemporaryTimestamp => _temporaryLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_package.MetaData.Constants.Group(_grupData!.Value.Slice(_temporaryLocation.Value)).LastModifiedData) : 0;
             public IReadOnlyList<IPlacedGetter> Temporary { get; private set; } = ListExt.Empty<IPlacedGetter>();
 
             public int PersistentUnknownGroupData => _persistentLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(_grupData!.Value.Slice(_persistentLocation.Value + 20)) : 0;
@@ -405,15 +404,15 @@ namespace Mutagen.Bethesda.Skyrim
                 var startingPos = stream.Position;
                 while (!stream.Complete)
                 {
-                    var cellMeta = package.MetaData.Constants.GetMajorRecord(stream);
+                    var cellMeta = stream.GetMajorRecord();
                     if (cellMeta.RecordType != RecordTypes.CELL) break;
                     ret.Add(stream.Position - startingPos);
                     stream.Position += (int)cellMeta.TotalLength;
                     if (stream.Complete) break;
-                    var grupMeta = package.MetaData.Constants.GetGroup(stream);
-                    if (grupMeta.IsGroup && (grupMeta.GroupType == (int)GroupTypeEnum.CellChildren))
+                    if (stream.TryGetGroup(out var groupMeta)
+                        && groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                     {
-                        stream.Position += (int)grupMeta.TotalLength;
+                        stream.Position += (int)groupMeta.TotalLength;
                     }
                 }
                 return ret.ToArray();
@@ -432,7 +431,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     InsideWorldspace = insideWorldspace
                 };
-                var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+                var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingMemory).TotalLength));
                 int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
                 stream.Position += 0x10 + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
                 ret.CustomFactoryEnd(
@@ -456,9 +455,8 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (stream.Complete) return;
                 var startPos = stream.Position;
-                var groupMeta = stream.GetGroup();
-                if (!groupMeta.IsGroup) return;
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeSpan));
+                if (!stream.TryGetGroup(out var groupMeta)) return;
+                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
                 if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                 {
                     if (formKey != this.FormKey)

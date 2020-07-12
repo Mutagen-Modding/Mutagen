@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void CustomStringImports(MutagenFrame frame, IConditionData item)
             {
-                if (!frame.MetaData.Constants.TryGetSubrecordFrame(frame.Reader, out var subMeta)) return;
+                if (!frame.Reader.TryGetSubrecordFrame(out var subMeta)) return;
                 if (!(item is IFunctionConditionData funcData)) return;
                 switch (subMeta.RecordType.TypeInt)
                 {
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static ConditionBinaryOverlay ConditionFactory(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
-                var subRecMeta = package.MetaData.Constants.GetSubrecordFrame(stream);
+                var subRecMeta = stream.GetSubrecordFrame();
                 if (subRecMeta.RecordType != RecordTypes.CTDA)
                 {
                     throw new ArgumentException();
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static IReadOnlyList<ConditionBinaryOverlay> ConstructBinayOverlayCountedList(OverlayStream stream, BinaryOverlayFactoryPackage package)
             {
-                var counterMeta = package.MetaData.Constants.ReadSubrecordFrame(stream);
+                var counterMeta = stream.ReadSubrecordFrame();
                 if (counterMeta.RecordType != RecordTypes.CITC
                     || counterMeta.Content.Length != 4)
                 {

@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region RunOnTabIndex
         private int? _RunOnTabIndexLocation;
-        public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordSpan(_data, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
+        public Byte RunOnTabIndex => _RunOnTabIndexLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _RunOnTabIndexLocation.Value, _package.MetaData.Constants)[0] : default(Byte);
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(

@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region DialogType
         private int? _DialogTypeLocation;
-        public DialogType? DialogType => _DialogTypeLocation.HasValue ? (DialogType)HeaderTranslation.ExtractSubrecordSpan(_data, _DialogTypeLocation!.Value, _package.MetaData.Constants)[0] : default(DialogType?);
+        public DialogType? DialogType => _DialogTypeLocation.HasValue ? (DialogType)HeaderTranslation.ExtractSubrecordMemory(_data, _DialogTypeLocation!.Value, _package.MetaData.Constants)[0] : default(DialogType?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new DialogTopicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
-            var finalPos = checked((int)(stream.Position + package.MetaData.Constants.MajorRecord(stream.RemainingSpan).TotalLength));
+            var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
             int offset = stream.Position + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;
             ret._package.FormVersion = ret;
             stream.Position += 0xC + package.MetaData.Constants.MajorConstants.TypeAndLengthLength;

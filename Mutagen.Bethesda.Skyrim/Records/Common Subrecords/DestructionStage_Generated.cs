@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.DSTF: // End Marker
                 {
-                    _package.MetaData.Constants.ReadSubrecordFrame(stream);
+                    stream.ReadSubrecordFrame();
                     return ParseResult.Stop;
                 }
                 default:
