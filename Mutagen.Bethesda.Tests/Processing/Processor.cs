@@ -112,31 +112,28 @@ namespace Mutagen.Bethesda.Tests
             RecordType recType)
         {
             var loc = this._AlignedFileLocs[formID];
-            ProcessEDID(stream, loc);
-            ProcessMajorRecordFormIDOverflow(stream, loc);
+            stream.Position = loc.Min;
+            var majorFrame = stream.ReadMajorRecordFrame();
+            ProcessEDID(majorFrame, loc);
+            ProcessMajorRecordFormIDOverflow(majorFrame, loc);
         }
 
         public void ProcessEDID(
-            IMutagenReadStream stream,
+            MajorRecordFrame majorFrame,
             RangeInt64 loc)
         {
-            stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordFrame();
-            var edidLoc = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, this.Meta, Mutagen.Bethesda.Internals.Constants.EditorID);
-            if (edidLoc == null) return;
+            if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc)) return;
             ProcessStringTermination(
-                stream,
-                loc.Min + majorFrame.HeaderLength + edidLoc.Value,
+                edidFrame,
+                loc.Min + majorFrame.HeaderLength + edidLoc,
                 majorFrame.FormID);
         }
 
         public void ProcessMajorRecordFormIDOverflow(
-            IMutagenReadStream stream,
+            MajorRecordFrame majorFrame,
             RangeInt64 loc)
         {
-            stream.Position = loc.Min;
-            var majorMeta = stream.GetMajorRecord();
-            var formID = majorMeta.FormID;
+            var formID = majorFrame.FormID;
             if (formID.ModIndex.ID <= this._NumMasters) return;
             // Need to zero out master
             this._Instructions.SetSubstitution(
@@ -157,24 +154,22 @@ namespace Mutagen.Bethesda.Tests
         }
 
         public void ProcessStringTermination(
-            IMutagenReadStream stream,
-            long subrecordLoc,
+            SubrecordFrame subFrame,
+            long refLoc,
             FormID formID)
         {
-            stream.Position = subrecordLoc;
-            var subFrame = stream.ReadSubrecordFrame();
             var nullIndex = MemoryExtensions.IndexOf<byte>(subFrame.Content, default(byte));
             if (nullIndex == -1) throw new ArgumentException();
             if (nullIndex == subFrame.Content.Length - 1) return;
-            // Extra content pass null terminator.  Trim
+            // Extra content pass null terminator.  Trim 
             this._Instructions.SetRemove(
                 section: RangeInt64.FactoryFromLength(
-                    subrecordLoc + subFrame.HeaderLength + nullIndex + 1,
+                    refLoc + subFrame.HeaderLength + nullIndex + 1,
                     subFrame.Content.Length - nullIndex));
-            ProcessSubrecordLengths(
-                stream: stream,
+            ProcessLengths(
+                frame: subFrame,
                 amount: nullIndex + 1,
-                loc: subrecordLoc,
+                refLoc: refLoc,
                 formID: formID);
         }
 
@@ -199,6 +194,49 @@ namespace Mutagen.Bethesda.Tests
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
                 loc: loc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                sub: lenData);
+        }
+
+        public void ProcessLengths(
+            SubrecordFrame frame,
+            int amount,
+            long refLoc,
+            FormID formID,
+            bool doRecordLen = true)
+        {
+            if (amount == 0) return;
+            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+            {
+                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
+            }
+
+            if (!doRecordLen) return;
+            // Modify Length 
+            byte[] lenData = new byte[2];
+            BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
+            this._Instructions.SetSubstitution(
+                loc: refLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                sub: lenData);
+        }
+
+        public void ProcessLengths(
+            MajorRecordFrame frame,
+            int amount,
+            long refLoc,
+            bool doRecordLen = true)
+        {
+            if (amount == 0) return;
+            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(frame.FormID))
+            {
+                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
+            }
+
+            if (!doRecordLen) return;
+            // Modify Length 
+            byte[] lenData = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
+            this._Instructions.SetSubstitution(
+                loc: refLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
                 sub: lenData);
         }
 
