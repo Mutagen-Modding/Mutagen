@@ -291,7 +291,7 @@ namespace Mutagen.Bethesda.Binary
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
     /// </summary>
-    public struct MajorRecordFrame : IEnumerable<SubrecordFrame>
+    public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     {
         private readonly MajorRecordHeader _header;
         
@@ -308,7 +308,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Total length of the Major Record, including the header and its content.
         /// </summary>
-        public long TotalLength => this._header.HeaderLength + Content.Length;
+        public long TotalLength => HeaderAndContentData.Length;
 
         /// <summary>
         /// Constructor
@@ -346,14 +346,6 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public IEnumerable<(int Location, SubrecordFrame Subrecord)> EnumerateSubrecordFrames()
-        {
-            foreach (var loc in EnumerateSubrecordLocations())
-            {
-                yield return (loc, new SubrecordFrame(Meta, HeaderAndContentData.Slice(loc)));
-            }
-        }
-
         public IEnumerable<(int Location, SubrecordHeader Subrecord)> EnumerateSubrecords()
         {
             foreach (var loc in EnumerateSubrecordLocations())
@@ -362,11 +354,11 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public IEnumerator<SubrecordFrame> GetEnumerator()
+        public IEnumerator<SubrecordPinFrame> GetEnumerator()
         {
             foreach (var loc in EnumerateSubrecordLocations())
             {
-                yield return new SubrecordFrame(Meta, HeaderAndContentData.Slice(loc));
+                yield return new SubrecordPinFrame(Meta, HeaderAndContentData.Slice(loc), loc);
             }
         }
 

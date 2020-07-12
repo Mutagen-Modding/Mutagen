@@ -119,7 +119,14 @@ namespace Mutagen.Bethesda.Binary
 
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame)
         {
-            return majorFrame.TryLocateSubrecordFrame(type, frame: out frame, loc: out var _);
+            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            if (find == null)
+            {
+                frame = default;
+                return false;
+            }
+            frame = new SubrecordFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value));
+            return true;
         }
 
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame, out int loc)
@@ -150,6 +157,30 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+        public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
+        {
+            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            if (find == null)
+            {
+                pin = default;
+                return false;
+            }
+            pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value), find.Value + majorFrame.HeaderLength);
+            return true;
+        }
+
+        public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
+        {
+            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+            if (find == null)
+            {
+                pin = default;
+                return false;
+            }
+            pin = new SubrecordPinFrame(majorFrame.Meta, majorFrame.Content.Slice(find.Value + offset - majorFrame.HeaderLength), find.Value + offset);
+            return true;
+        }
+
         public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type)
         {
             return majorFrame.LocateSubrecord(type, loc: out var _);
@@ -175,7 +206,11 @@ namespace Mutagen.Bethesda.Binary
 
         public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type)
         {
-            return majorFrame.LocateSubrecordFrame(type, loc: out var _);
+            if (!TryLocateSubrecordFrame(majorFrame, type, out var frame))
+            {
+                throw new ArgumentException($"Could not locate subrecord of type: {type}");
+            }
+            return frame;
         }
 
         public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out int loc)
@@ -195,18 +230,36 @@ namespace Mutagen.Bethesda.Binary
             }
             return frame;
         }
+
+        public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type)
+        {
+            if (!TryLocateSubrecordPinFrame(majorFrame, type, out var pin))
+            {
+                throw new ArgumentException($"Could not locate subrecord of type: {type}");
+            }
+            return pin;
+        }
+
+        public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset)
+        {
+            if (!TryLocateSubrecordPinFrame(majorFrame, type, offset, out var pin))
+            {
+                throw new ArgumentException($"Could not locate subrecord of type: {type}");
+            }
+            return pin;
+        }
         #endregion
 
         #region Iterate
-        public static IEnumerable<(int Location, SubrecordFrame Subrecord)> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, RecordType type, bool onlyFirstSet = false)
+        public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, RecordType type, bool onlyFirstSet = false)
         {
             bool encountered = false;
-            foreach (var (Location, Subrecord) in majorFrame.EnumerateSubrecordFrames())
+            foreach (var subrecord in majorFrame)
             {
-                if (Subrecord.RecordType == type)
+                if (subrecord.RecordType == type)
                 {
                     encountered = true;
-                    yield return (Location, Subrecord);
+                    yield return subrecord;
                 }
                 else if (onlyFirstSet && encountered)
                 {

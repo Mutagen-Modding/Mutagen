@@ -153,6 +153,16 @@ namespace Mutagen.Bethesda.Tests
                 _NumMasters);
         }
 
+        public void ProcessFormIDOverflow(ReadOnlySpan<byte> span, ref long offsetLoc)
+        {
+            var formID = new FormID(span.UInt32());
+            if (formID.ModIndex.ID <= this._NumMasters) return;
+            // Need to zero out master
+            this._Instructions.SetSubstitution(
+                offsetLoc - 1,
+                _NumMasters);
+        }
+
         public void ProcessStringTermination(
             SubrecordFrame subFrame,
             long refLoc,
@@ -246,40 +256,93 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public void ProcessZeroFloat(IMutagenReadStream stream)
+        public void ProcessZeroFloat(ReadOnlySpan<byte> span, ref long offsetLoc)
         {
-            var f = stream.ReadFloat();
+            offsetLoc += 4;
+            var f = span.Float();
             if (f == float.Epsilon)
             {
                 this._Instructions.SetSubstitution(
-                    stream.Position - 4,
+                    offsetLoc - 4,
                     new byte[4]);
                 return;
             }
-            stream.Position -= 4;
-            uint floatInt = stream.ReadUInt32();
+            uint floatInt = span.UInt32();
             if (floatInt == 0x80000000)
             {
                 this._Instructions.SetSubstitution(
-                    stream.Position - 4,
+                    offsetLoc - 4,
                     new byte[4]);
-                return;
             }
         }
 
-        public void ProcessColorFloat(IMutagenReadStream stream)
+        public void ProcessZeroFloat(MajorRecordFrame frame, long offsetLoc, ref int loc)
         {
-            var inBytes = stream.ReadSpan(12);
-            var color = IBinaryStreamExt.ReadColor(inBytes, ColorBinaryType.NoAlphaFloat);
+            long longLoc = offsetLoc + loc;
+            ProcessZeroFloat(frame.HeaderAndContentData.Slice(loc), ref longLoc);
+            loc += 4;
+        }
+
+        public void ProcessZeroFloats(MajorRecordFrame frame, long offsetLoc, ref int loc, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                ProcessZeroFloat(frame, offsetLoc, ref loc);
+            }
+        }
+
+        public bool ProcessZeroFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+        {
+            if (loc >= pin.ContentLength) return false;
+            long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+            ProcessZeroFloat(pin.Content.Slice(loc), ref longLoc);
+            loc += 4;
+            return true;
+        }
+
+        public bool ProcessZeroFloat(SubrecordPinFrame pin, long offsetLoc)
+        {
+            int loc = 0;
+            return ProcessZeroFloat(pin, offsetLoc, ref loc);
+        }
+
+        public bool ProcessZeroFloats(SubrecordPinFrame pin, long offsetLoc, int amount)
+        {
+            int loc = 0;
+            return ProcessZeroFloats(pin, offsetLoc, ref loc, amount);
+        }
+
+        public bool ProcessZeroFloats(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                if (!ProcessZeroFloat(pin, offsetLoc, ref loc)) return false;
+            }
+            return true;
+        }
+
+        public void ProcessColorFloat(ReadOnlySpan<byte> span, ref long offsetLoc)
+        {
+            span = span.Slice(0, 12);
+            var color = IBinaryStreamExt.ReadColor(span, ColorBinaryType.NoAlphaFloat);
             var outBytes = new byte[12];
             using (var writer = new MutagenWriter(new BinaryWriter(new MemoryStream(outBytes)), null!))
             {
                 writer.Write(color, ColorBinaryType.NoAlphaFloat);
             }
-            if (inBytes.SequenceEqual(outBytes)) return;
+            if (span.SequenceEqual(outBytes)) return;
             this._Instructions.SetSubstitution(
-                stream.Position - 12,
+                offsetLoc,
                 outBytes);
+        }
+
+        public bool ProcessColorFloat(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+        {
+            if (loc >= pin.ContentLength) return false;
+            long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+            ProcessColorFloat(pin.Content.Slice(loc), ref longLoc);
+            loc += 12;
+            return true;
         }
 
         public void RemoveEmptyGroups(Func<IMutagenReadStream> streamGetter)
