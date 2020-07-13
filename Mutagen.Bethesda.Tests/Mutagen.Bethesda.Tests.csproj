@@ -77,6 +77,9 @@
     <Compile Include="Settings\RecordInterest_Generated.cs">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\CacheReuse_Generated.cs">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Settings\TestingSettings.xsd">
@@ -96,6 +99,9 @@
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
     <None Include="Settings\RecordInterest.xsd">
+      <DependentUpon>TestingSettings.xml</DependentUpon>
+    </None>
+    <None Include="Settings\CacheReuse.xsd">
       <DependentUpon>TestingSettings.xml</DependentUpon>
     </None>
   </ItemGroup>

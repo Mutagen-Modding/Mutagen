@@ -14,7 +14,7 @@
   </Object>
   <Object name="PassthroughSettings" GUID="b6e04291-8a1a-4f43-baa4-0f5fc5074d8b" ID="3">
     <Fields>
-      <Bool name="ReuseCaches" />
+      <RefDirect name="CacheReuse" refName="CacheReuse" />
       <Bool name="ReorderRecords" />
       <Bool name="DeleteCachesAfter" default="true" />
       <Bool name="TestNormal" />
@@ -58,6 +58,14 @@
       <List name="UninterestingTypes">
         <String />
       </List>
+    </Fields>
+  </Object>
+  <Object name="CacheReuse" GUID="37625ad0-31c3-4779-b431-abbc89d3c2f8" ID="7">
+    <Fields>
+      <Bool name="ReuseAny" />
+      <Bool name="ReuseDecompression" />
+      <Bool name="ReuseAlignment" />
+      <Bool name="ReuseProcessing" />
     </Fields>
   </Object>
 </Loqui>

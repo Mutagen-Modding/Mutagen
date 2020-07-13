@@ -13,6 +13,7 @@ using Loqui;
 using Loqui.Internal;
 using Noggog;
 using Mutagen.Bethesda.Tests.Internals;
+using Mutagen.Bethesda.Tests;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -40,8 +41,10 @@ namespace Mutagen.Bethesda.Tests
         partial void CustomCtor();
         #endregion
 
-        #region ReuseCaches
-        public Boolean ReuseCaches { get; set; } = default;
+        #region CacheReuse
+        public CacheReuse CacheReuse { get; set; } = new CacheReuse();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        ICacheReuseGetter IPassthroughSettingsGetter.CacheReuse => CacheReuse;
         #endregion
         #region ReorderRecords
         public Boolean ReorderRecords { get; set; } = default;
@@ -111,7 +114,7 @@ namespace Mutagen.Bethesda.Tests
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ReuseCaches = initialValue;
+                this.CacheReuse = new MaskItem<TItem, CacheReuse.Mask<TItem>?>(initialValue, new CacheReuse.Mask<TItem>(initialValue));
                 this.ReorderRecords = initialValue;
                 this.DeleteCachesAfter = initialValue;
                 this.TestNormal = initialValue;
@@ -123,7 +126,7 @@ namespace Mutagen.Bethesda.Tests
             }
 
             public Mask(
-                TItem ReuseCaches,
+                TItem CacheReuse,
                 TItem ReorderRecords,
                 TItem DeleteCachesAfter,
                 TItem TestNormal,
@@ -133,7 +136,7 @@ namespace Mutagen.Bethesda.Tests
                 TItem TestCopyIn,
                 TItem Parallel)
             {
-                this.ReuseCaches = ReuseCaches;
+                this.CacheReuse = new MaskItem<TItem, CacheReuse.Mask<TItem>?>(CacheReuse, new CacheReuse.Mask<TItem>(CacheReuse));
                 this.ReorderRecords = ReorderRecords;
                 this.DeleteCachesAfter = DeleteCachesAfter;
                 this.TestNormal = TestNormal;
@@ -153,7 +156,7 @@ namespace Mutagen.Bethesda.Tests
             #endregion
 
             #region Members
-            public TItem ReuseCaches;
+            public MaskItem<TItem, CacheReuse.Mask<TItem>?>? CacheReuse { get; set; }
             public TItem ReorderRecords;
             public TItem DeleteCachesAfter;
             public TItem TestNormal;
@@ -174,7 +177,7 @@ namespace Mutagen.Bethesda.Tests
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.ReuseCaches, rhs.ReuseCaches)) return false;
+                if (!object.Equals(this.CacheReuse, rhs.CacheReuse)) return false;
                 if (!object.Equals(this.ReorderRecords, rhs.ReorderRecords)) return false;
                 if (!object.Equals(this.DeleteCachesAfter, rhs.DeleteCachesAfter)) return false;
                 if (!object.Equals(this.TestNormal, rhs.TestNormal)) return false;
@@ -188,7 +191,7 @@ namespace Mutagen.Bethesda.Tests
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.ReuseCaches);
+                hash.Add(this.CacheReuse);
                 hash.Add(this.ReorderRecords);
                 hash.Add(this.DeleteCachesAfter);
                 hash.Add(this.TestNormal);
@@ -205,7 +208,11 @@ namespace Mutagen.Bethesda.Tests
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.ReuseCaches)) return false;
+                if (CacheReuse != null)
+                {
+                    if (!eval(this.CacheReuse.Overall)) return false;
+                    if (this.CacheReuse.Specific != null && !this.CacheReuse.Specific.All(eval)) return false;
+                }
                 if (!eval(this.ReorderRecords)) return false;
                 if (!eval(this.DeleteCachesAfter)) return false;
                 if (!eval(this.TestNormal)) return false;
@@ -221,7 +228,11 @@ namespace Mutagen.Bethesda.Tests
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.ReuseCaches)) return true;
+                if (CacheReuse != null)
+                {
+                    if (eval(this.CacheReuse.Overall)) return true;
+                    if (this.CacheReuse.Specific != null && this.CacheReuse.Specific.Any(eval)) return true;
+                }
                 if (eval(this.ReorderRecords)) return true;
                 if (eval(this.DeleteCachesAfter)) return true;
                 if (eval(this.TestNormal)) return true;
@@ -244,7 +255,7 @@ namespace Mutagen.Bethesda.Tests
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ReuseCaches = eval(this.ReuseCaches);
+                obj.CacheReuse = this.CacheReuse == null ? null : new MaskItem<R, CacheReuse.Mask<R>?>(eval(this.CacheReuse.Overall), this.CacheReuse.Specific?.Translate(eval));
                 obj.ReorderRecords = eval(this.ReorderRecords);
                 obj.DeleteCachesAfter = eval(this.DeleteCachesAfter);
                 obj.TestNormal = eval(this.TestNormal);
@@ -275,9 +286,9 @@ namespace Mutagen.Bethesda.Tests
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.ReuseCaches ?? true)
+                    if (printMask?.CacheReuse?.Overall ?? true)
                     {
-                        fg.AppendItem(ReuseCaches, "ReuseCaches");
+                        CacheReuse?.ToString(fg);
                     }
                     if (printMask?.ReorderRecords ?? true)
                     {
@@ -336,7 +347,7 @@ namespace Mutagen.Bethesda.Tests
                     return _warnings;
                 }
             }
-            public Exception? ReuseCaches;
+            public MaskItem<Exception?, CacheReuse.ErrorMask?>? CacheReuse;
             public Exception? ReorderRecords;
             public Exception? DeleteCachesAfter;
             public Exception? TestNormal;
@@ -353,8 +364,8 @@ namespace Mutagen.Bethesda.Tests
                 PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
                 switch (enu)
                 {
-                    case PassthroughSettings_FieldIndex.ReuseCaches:
-                        return ReuseCaches;
+                    case PassthroughSettings_FieldIndex.CacheReuse:
+                        return CacheReuse;
                     case PassthroughSettings_FieldIndex.ReorderRecords:
                         return ReorderRecords;
                     case PassthroughSettings_FieldIndex.DeleteCachesAfter:
@@ -381,8 +392,8 @@ namespace Mutagen.Bethesda.Tests
                 PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
                 switch (enu)
                 {
-                    case PassthroughSettings_FieldIndex.ReuseCaches:
-                        this.ReuseCaches = ex;
+                    case PassthroughSettings_FieldIndex.CacheReuse:
+                        this.CacheReuse = new MaskItem<Exception?, CacheReuse.ErrorMask?>(ex, null);
                         break;
                     case PassthroughSettings_FieldIndex.ReorderRecords:
                         this.ReorderRecords = ex;
@@ -418,8 +429,8 @@ namespace Mutagen.Bethesda.Tests
                 PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
                 switch (enu)
                 {
-                    case PassthroughSettings_FieldIndex.ReuseCaches:
-                        this.ReuseCaches = (Exception?)obj;
+                    case PassthroughSettings_FieldIndex.CacheReuse:
+                        this.CacheReuse = (MaskItem<Exception?, CacheReuse.ErrorMask?>?)obj;
                         break;
                     case PassthroughSettings_FieldIndex.ReorderRecords:
                         this.ReorderRecords = (Exception?)obj;
@@ -453,7 +464,7 @@ namespace Mutagen.Bethesda.Tests
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (ReuseCaches != null) return true;
+                if (CacheReuse != null) return true;
                 if (ReorderRecords != null) return true;
                 if (DeleteCachesAfter != null) return true;
                 if (TestNormal != null) return true;
@@ -496,7 +507,7 @@ namespace Mutagen.Bethesda.Tests
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(ReuseCaches, "ReuseCaches");
+                CacheReuse?.ToString(fg);
                 fg.AppendItem(ReorderRecords, "ReorderRecords");
                 fg.AppendItem(DeleteCachesAfter, "DeleteCachesAfter");
                 fg.AppendItem(TestNormal, "TestNormal");
@@ -513,7 +524,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.ReuseCaches = this.ReuseCaches.Combine(rhs.ReuseCaches);
+                ret.CacheReuse = this.CacheReuse.Combine(rhs.CacheReuse, (l, r) => l.Combine(r));
                 ret.ReorderRecords = this.ReorderRecords.Combine(rhs.ReorderRecords);
                 ret.DeleteCachesAfter = this.DeleteCachesAfter.Combine(rhs.DeleteCachesAfter);
                 ret.TestNormal = this.TestNormal.Combine(rhs.TestNormal);
@@ -543,7 +554,7 @@ namespace Mutagen.Bethesda.Tests
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public bool ReuseCaches;
+            public MaskItem<bool, CacheReuse.TranslationMask?> CacheReuse;
             public bool ReorderRecords;
             public bool DeleteCachesAfter;
             public bool TestNormal;
@@ -557,7 +568,7 @@ namespace Mutagen.Bethesda.Tests
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.ReuseCaches = defaultOn;
+                this.CacheReuse = new MaskItem<bool, CacheReuse.TranslationMask?>(defaultOn, null);
                 this.ReorderRecords = defaultOn;
                 this.DeleteCachesAfter = defaultOn;
                 this.TestNormal = defaultOn;
@@ -581,7 +592,7 @@ namespace Mutagen.Bethesda.Tests
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((ReuseCaches, null));
+                ret.Add((CacheReuse?.Overall ?? true, CacheReuse?.Specific?.GetCrystal()));
                 ret.Add((ReorderRecords, null));
                 ret.Add((DeleteCachesAfter, null));
                 ret.Add((TestNormal, null));
@@ -747,7 +758,7 @@ namespace Mutagen.Bethesda.Tests
         IPassthroughSettingsGetter,
         ILoquiObjectSetter<IPassthroughSettings>
     {
-        new Boolean ReuseCaches { get; set; }
+        new CacheReuse CacheReuse { get; set; }
         new Boolean ReorderRecords { get; set; }
         new Boolean DeleteCachesAfter { get; set; }
         new Boolean TestNormal { get; set; }
@@ -770,7 +781,7 @@ namespace Mutagen.Bethesda.Tests
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PassthroughSettings_Registration.Instance;
-        Boolean ReuseCaches { get; }
+        ICacheReuseGetter CacheReuse { get; }
         Boolean ReorderRecords { get; }
         Boolean DeleteCachesAfter { get; }
         Boolean TestNormal { get; }
@@ -1071,7 +1082,7 @@ namespace Mutagen.Bethesda.Tests.Internals
     #region Field Index
     public enum PassthroughSettings_FieldIndex
     {
-        ReuseCaches = 0,
+        CacheReuse = 0,
         ReorderRecords = 1,
         DeleteCachesAfter = 2,
         TestNormal = 3,
@@ -1129,8 +1140,8 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (str.Upper)
             {
-                case "REUSECACHES":
-                    return (ushort)PassthroughSettings_FieldIndex.ReuseCaches;
+                case "CACHEREUSE":
+                    return (ushort)PassthroughSettings_FieldIndex.CacheReuse;
                 case "REORDERRECORDS":
                     return (ushort)PassthroughSettings_FieldIndex.ReorderRecords;
                 case "DELETECACHESAFTER":
@@ -1157,7 +1168,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.CacheReuse:
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1177,7 +1188,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.CacheReuse:
+                    return true;
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1197,7 +1209,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.CacheReuse:
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1217,8 +1229,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    return "ReuseCaches";
+                case PassthroughSettings_FieldIndex.CacheReuse:
+                    return "CacheReuse";
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                     return "ReorderRecords";
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
@@ -1245,7 +1257,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.CacheReuse:
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1265,7 +1277,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
+                case PassthroughSettings_FieldIndex.CacheReuse:
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
                 case PassthroughSettings_FieldIndex.TestNormal:
@@ -1285,8 +1297,8 @@ namespace Mutagen.Bethesda.Tests.Internals
             PassthroughSettings_FieldIndex enu = (PassthroughSettings_FieldIndex)index;
             switch (enu)
             {
-                case PassthroughSettings_FieldIndex.ReuseCaches:
-                    return typeof(Boolean);
+                case PassthroughSettings_FieldIndex.CacheReuse:
+                    return typeof(CacheReuse);
                 case PassthroughSettings_FieldIndex.ReorderRecords:
                     return typeof(Boolean);
                 case PassthroughSettings_FieldIndex.DeleteCachesAfter:
@@ -1350,7 +1362,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public void Clear(IPassthroughSettings item)
         {
             ClearPartial();
-            item.ReuseCaches = default;
+            item.CacheReuse.Clear();
             item.ReorderRecords = default;
             item.DeleteCachesAfter = PassthroughSettings._DeleteCachesAfter_Default;
             item.TestNormal = default;
@@ -1415,7 +1427,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.ReuseCaches = item.ReuseCaches == rhs.ReuseCaches;
+            ret.CacheReuse = MaskItemExt.Factory(item.CacheReuse.GetEqualsMask(rhs.CacheReuse, include), include);
             ret.ReorderRecords = item.ReorderRecords == rhs.ReorderRecords;
             ret.DeleteCachesAfter = item.DeleteCachesAfter == rhs.DeleteCachesAfter;
             ret.TestNormal = item.TestNormal == rhs.TestNormal;
@@ -1470,9 +1482,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             FileGeneration fg,
             PassthroughSettings.Mask<bool>? printMask = null)
         {
-            if (printMask?.ReuseCaches ?? true)
+            if (printMask?.CacheReuse?.Overall ?? true)
             {
-                fg.AppendItem(item.ReuseCaches, "ReuseCaches");
+                item.CacheReuse?.ToString(fg, "CacheReuse");
             }
             if (printMask?.ReorderRecords ?? true)
             {
@@ -1519,7 +1531,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IPassthroughSettingsGetter item,
             PassthroughSettings.Mask<bool> mask)
         {
-            mask.ReuseCaches = true;
+            mask.CacheReuse = new MaskItem<bool, CacheReuse.Mask<bool>?>(true, item.CacheReuse?.GetHasBeenSetMask());
             mask.ReorderRecords = true;
             mask.DeleteCachesAfter = true;
             mask.TestNormal = true;
@@ -1537,7 +1549,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.ReuseCaches != rhs.ReuseCaches) return false;
+            if (!object.Equals(lhs.CacheReuse, rhs.CacheReuse)) return false;
             if (lhs.ReorderRecords != rhs.ReorderRecords) return false;
             if (lhs.DeleteCachesAfter != rhs.DeleteCachesAfter) return false;
             if (lhs.TestNormal != rhs.TestNormal) return false;
@@ -1552,7 +1564,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public virtual int GetHashCode(IPassthroughSettingsGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.ReuseCaches);
+            hash.Add(item.CacheReuse);
             hash.Add(item.ReorderRecords);
             hash.Add(item.DeleteCachesAfter);
             hash.Add(item.TestNormal);
@@ -1584,9 +1596,27 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.CacheReuse) ?? true))
             {
-                item.ReuseCaches = rhs.ReuseCaches;
+                errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.CacheReuse);
+                try
+                {
+                    if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.CacheReuse) ?? true))
+                    {
+                        item.CacheReuse = rhs.CacheReuse.DeepCopy(
+                            copyMask: copyMask?.GetSubCrystal((int)PassthroughSettings_FieldIndex.CacheReuse),
+                            errorMask: errorMask);
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
             }
             if ((copyMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
             {
@@ -1709,14 +1739,16 @@ namespace Mutagen.Bethesda.Tests.Internals
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? translationMask)
         {
-            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
+            if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.CacheReuse) ?? true))
             {
-                BooleanXmlTranslation.Instance.Write(
+                var CacheReuseItem = item.CacheReuse;
+                ((CacheReuseXmlWriteTranslation)((IXmlItem)CacheReuseItem).XmlWriteTranslator).Write(
+                    item: CacheReuseItem,
                     node: node,
-                    name: nameof(item.ReuseCaches),
-                    item: item.ReuseCaches,
-                    fieldIndex: (int)PassthroughSettings_FieldIndex.ReuseCaches,
-                    errorMask: errorMask);
+                    name: nameof(item.CacheReuse),
+                    fieldIndex: (int)PassthroughSettings_FieldIndex.CacheReuse,
+                    errorMask: errorMask,
+                    translationMask: translationMask?.GetSubCrystal((int)PassthroughSettings_FieldIndex.CacheReuse));
             }
             if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReorderRecords) ?? true))
             {
@@ -1896,15 +1928,16 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             switch (name)
             {
-                case "ReuseCaches":
-                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.ReuseCaches) ?? true))
+                case "CacheReuse":
+                    if ((translationMask?.GetShouldTranslate((int)PassthroughSettings_FieldIndex.CacheReuse) ?? true))
                     {
-                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.ReuseCaches);
+                        errorMask?.PushIndex((int)PassthroughSettings_FieldIndex.CacheReuse);
                         try
                         {
-                            item.ReuseCaches = BooleanXmlTranslation.Instance.Parse(
+                            item.CacheReuse = LoquiXmlTranslation<CacheReuse>.Instance.Parse(
                                 node: node,
-                                errorMask: errorMask);
+                                errorMask: errorMask,
+                                translationMask: translationMask?.GetSubCrystal((int)PassthroughSettings_FieldIndex.CacheReuse));
                         }
                         catch (Exception ex)
                         when (errorMask != null)

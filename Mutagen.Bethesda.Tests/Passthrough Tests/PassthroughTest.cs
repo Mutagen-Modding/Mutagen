@@ -65,7 +65,9 @@ namespace Mutagen.Bethesda.Tests
                         .Select(i => new RecordType(i)));
             }
 
-            if (!Settings.ReuseCaches || !File.Exists(uncompressedPath))
+            if (!Settings.CacheReuse.ReuseAny
+                || !Settings.CacheReuse.ReuseDecompression 
+                || !File.Exists(uncompressedPath))
             {
                 try
                 {
@@ -86,7 +88,7 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            if (Settings.ReorderRecords && (!Settings.ReuseCaches || !File.Exists(orderedPath)))
+            if (Settings.ReorderRecords && (!Settings.CacheReuse.ReuseAny || !File.Exists(orderedPath)))
             {
                 try
                 {
@@ -106,7 +108,9 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            if (!Settings.ReuseCaches || !File.Exists(alignedPath))
+            if (!Settings.CacheReuse.ReuseAny 
+                || !Settings.CacheReuse.ReuseAlignment
+                || !File.Exists(alignedPath))
             {
                 ModRecordAligner.Align(
                     inputPath: Settings.ReorderRecords ? orderedPath : uncompressedPath,
@@ -117,7 +121,9 @@ namespace Mutagen.Bethesda.Tests
             }
 
             BinaryFileProcessor.Config instructions;
-            if (!Settings.ReuseCaches || !File.Exists(processedPath))
+            if (!Settings.CacheReuse.ReuseAny
+                || !Settings.CacheReuse.ReuseProcessing
+                || !File.Exists(processedPath))
             {
                 instructions = new BinaryFileProcessor.Config();
 

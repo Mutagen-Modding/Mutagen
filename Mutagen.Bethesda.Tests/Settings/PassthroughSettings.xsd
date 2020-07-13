@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="PassthroughSettings" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <xs:include schemaLocation="Common.xsd" />
+   <xs:include schemaLocation="CacheReuse.xsd" />
    <xs:element name="PassthroughSettings" type="PassthroughSettingsType" />
    <xs:complexType name="PassthroughSettingsType">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element name="ReuseCaches" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="CacheReuse" type="CacheReuseType" minOccurs="0" maxOccurs="1" />
          <xs:element name="ReorderRecords" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="DeleteCachesAfter" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="TestNormal" type="ValueType" minOccurs="0" maxOccurs="1" />
