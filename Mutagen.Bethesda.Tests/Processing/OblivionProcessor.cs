@@ -19,40 +19,32 @@ namespace Mutagen.Bethesda.Tests
         /*
          * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
          */
-        protected override void AddDynamicProcessorInstructions(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType)
+        protected override void AddDynamicProcessorInstructions()
         {
-            base.AddDynamicProcessorInstructions(stream, formID, recType);
-            var loc = this._AlignedFileLocs[formID];
-            ProcessNPC(stream, recType, loc.Min);
-            ProcessLeveledItemDataFields(stream, formID, recType, loc.Min);
-            ProcessRegions(stream, formID, recType, loc.Min);
-            ProcessPlacedObject(stream, formID, recType, loc.Min);
-            ProcessPlacedCreature(stream, formID, recType, loc.Min);
-            ProcessPlacedNPC(stream, formID, recType, loc.Min);
-            ProcessCells(stream, formID, recType, loc.Min);
-            ProcessDialogTopics(stream, formID, recType, loc.Min);
-            ProcessDialogItems(stream, formID, recType, loc.Min);
-            ProcessIdleAnimations(stream, formID, recType, loc.Min);
-            ProcessAIPackages(stream, formID, recType, loc.Min);
-            ProcessCombatStyle(stream, formID, recType, loc.Min);
-            ProcessWater(stream, formID, recType, loc.Min);
-            ProcessGameSettings(stream, formID, recType, loc.Min);
-            ProcessBooks(stream, formID, recType, loc.Min);
-            ProcessLights(stream, formID, recType, loc.Min);
-            ProcessSpell(stream, formID, recType, loc.Min);
+            base.AddDynamicProcessorInstructions();
+            AddDynamicProcessing(RecordTypes.NPC_, ProcessNPC);
+            AddDynamicProcessing(RecordTypes.LVLI, ProcessLeveledItemDataFields);
+            AddDynamicProcessing(RecordTypes.REGN, ProcessRegions);
+            AddDynamicProcessing(RecordTypes.REFR, ProcessPlacedObject);
+            AddDynamicProcessing(RecordTypes.ACRE, ProcessPlacedCreature);
+            AddDynamicProcessing(RecordTypes.ACHR, ProcessPlacedNPC);
+            AddDynamicProcessing(RecordTypes.CELL, ProcessCells);
+            AddDynamicProcessing(RecordTypes.DIAL, ProcessDialogTopics);
+            AddDynamicProcessing(RecordTypes.INFO, ProcessDialogItems);
+            AddDynamicProcessing(RecordTypes.IDLE, ProcessIdleAnimations);
+            AddDynamicProcessing(RecordTypes.PACK, ProcessAIPackages);
+            AddDynamicProcessing(RecordTypes.CSTY, ProcessCombatStyle);
+            AddDynamicProcessing(RecordTypes.WATR, ProcessWater);
+            AddDynamicProcessing(RecordTypes.GMST, ProcessGameSettings);
+            AddDynamicProcessing(RecordTypes.BOOK, ProcessBooks);
+            AddDynamicProcessing(RecordTypes.LIGH, ProcessLights);
+            AddDynamicProcessing(RecordTypes.SPEL, ProcessSpell);
         }
 
         private void ProcessNPC(
-            IMutagenReadStream stream,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.NPC_.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             this.DynamicMove(
                 majorFrame,
                 fileOffset,
@@ -73,14 +65,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLeveledItemDataFields(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.LVLI.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataFrame, out var dataIndex)) return;
 
             int amount = 0;
@@ -129,13 +116,9 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessRegions(
             IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.REGN.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             if (!majorFrame.TryLocateSubrecordFrame(RecordTypes.RDAT, out var rdatFrame, out var rdatIndex)) return;
             int amount = 0;
             SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
@@ -204,16 +187,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPlacedObject(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.REFR.Equals(recType)) return;
-
             int amount = 0;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
                 && xlocFrame.ContentLength == 16)
             {
@@ -263,17 +240,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPlacedCreature(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!PlacedCreature_Registration.TriggeringRecordType.Equals(recType)) return;
-
             int amount = 0;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 ProcessZeroFloats(dataRec, fileOffset, 6);
@@ -286,17 +256,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessPlacedNPC(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!PlacedNpc_Registration.TriggeringRecordType.Equals(recType)) return;
-
             int amount = 0;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 ProcessZeroFloats(dataRec, fileOffset, 6);
@@ -310,41 +273,31 @@ namespace Mutagen.Bethesda.Tests
 
         private void ProcessCells(
             IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.CELL.Equals(recType)) return;
             CleanEmptyCellGroups(
                 stream,
-                formID,
+                majorFrame.FormID,
                 fileOffset,
                 numSubGroups: 3);
         }
 
         private void ProcessDialogTopics(
             IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.DIAL.Equals(recType)) return;
             CleanEmptyDialogGroups(
                 stream,
-                formID,
+                majorFrame.FormID,
                 fileOffset);
         }
 
         private void ProcessDialogItems(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.INFO.Equals(recType)) return;
-
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
             foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
@@ -380,15 +333,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessIdleAnimations(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.IDLE.Equals(recType)) return;
-
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
             foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
@@ -408,15 +355,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessAIPackages(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!RecordTypes.PACK.Equals(recType)) return;
-
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             int amount = 0;
             foreach (var ctdt in majorFrame.FindEnumerateSubrecords(RecordTypes.CTDT))
             {
@@ -455,14 +396,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessCombatStyle(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!CombatStyle_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             if (majorFrame.TryLocateSubrecord(RecordTypes.CSTD, out var ctsd, out var ctsdLoc))
             {
                 var len = ctsd.ContentLength;
@@ -499,14 +435,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessWater(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!Water_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
             var amount = 0;
             if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec, out var dataLoc))
             {
@@ -575,15 +506,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessGameSettings(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!GameSetting_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-
             var edidRec = majorFrame.LocateSubrecordFrame("EDID");
             if ((char)edidRec.Content[0] != 'f') return;
 
@@ -595,15 +520,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessBooks(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!Book_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 var offset = 2;
@@ -612,15 +531,9 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessLights(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!Light_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 var offset = 16;
@@ -631,15 +544,10 @@ namespace Mutagen.Bethesda.Tests
         }
 
         private void ProcessSpell(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType,
+            MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            if (!SpellUnleveled_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = fileOffset;
-            var majorRecordFrame = stream.ReadMajorRecordFrame();
-            foreach (var scit in majorRecordFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
+            foreach (var scit in majorFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
             {
                 ProcessFormIDOverflow(scit, fileOffset);
             }

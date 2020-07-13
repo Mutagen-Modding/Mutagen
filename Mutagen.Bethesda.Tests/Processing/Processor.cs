@@ -17,15 +17,18 @@ namespace Mutagen.Bethesda.Tests
     {
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
-        protected RecordLocator.FileLocations _SourceFileLocs;
         protected RecordLocator.FileLocations _AlignedFileLocs;
         protected BinaryFileProcessor.Config _Instructions = new BinaryFileProcessor.Config();
         protected Dictionary<long, uint> _LengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
         protected string SourcePath;
         protected TempFolder TempFolder;
-        public bool DoMultithreading = true;
+        public bool DoMultithreading = false;
         public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
+        public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
+        public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
+        protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
+        protected Dictionary<RecordType, List<DynamicStreamProcessor>> DynamicStreamProcessors = new Dictionary<RecordType, List<DynamicStreamProcessor>>();
 
         public Processor()
         {
@@ -42,7 +45,6 @@ namespace Mutagen.Bethesda.Tests
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
             this._NumMasters = numMasters;
-            this._SourceFileLocs = RecordLocator.GetFileLocations(sourcePath, this.GameRelease);
             this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);
@@ -59,13 +61,12 @@ namespace Mutagen.Bethesda.Tests
 
                 await Task.WhenAll(ExtraJobs(streamGetter));
 
-                foreach (var rec in this._SourceFileLocs.ListedRecords)
-                {
-                    this.AddDynamicProcessorInstructions(
-                        stream: stream,
-                        formID: rec.Value.FormID,
-                        recType: rec.Value.Record);
-                }
+                this.AddDynamicProcessorInstructions();
+                await Task.WhenAll(this.DynamicProcessors.Keys
+                    .And(this.DynamicStreamProcessors.Keys)
+                    .And(RecordType.Null)
+                    .Distinct()
+                    .Select(type => TaskExt.Run(DoMultithreading, () => ProcessDynamicType(type, streamGetter))));
 
                 foreach (var grup in this._LengthTracker)
                 {
@@ -106,16 +107,53 @@ namespace Mutagen.Bethesda.Tests
             yield return TaskExt.Run(DoMultithreading, () => RemoveEmptyGroups(streamGetter));
         }
 
-        protected virtual void AddDynamicProcessorInstructions(
-            IMutagenReadStream stream,
-            FormID formID,
-            RecordType recType)
+        protected virtual void AddDynamicProcessorInstructions()
         {
-            var loc = this._AlignedFileLocs[formID];
-            stream.Position = loc.Min;
-            var majorFrame = stream.ReadMajorRecordFrame();
-            ProcessEDID(majorFrame, loc.Min);
-            ProcessMajorRecordFormIDOverflow(majorFrame, loc.Min);
+            AddDynamicProcessing(RecordType.Null, ProcessEDID);
+            AddDynamicProcessing(RecordType.Null, ProcessMajorRecordFormIDOverflow);
+        }
+
+        protected void AddDynamicProcessing(RecordType type, DynamicProcessor processor)
+        {
+            DynamicProcessors.TryCreateValue(type).Add(processor);
+        }
+
+        protected void AddDynamicProcessing(DynamicProcessor processor, params RecordType[] types)
+        {
+            foreach (var type in types)
+            {
+                DynamicProcessors.TryCreateValue(type).Add(processor);
+            }
+        }
+
+        protected void AddDynamicProcessing(RecordType type, DynamicStreamProcessor processor)
+        {
+            DynamicStreamProcessors.TryCreateValue(type).Add(processor);
+        }
+
+        protected async Task ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
+        {
+            foreach (var loc in _AlignedFileLocs.ListedRecords)
+            {
+                if (loc.Value.Record != type && type != RecordType.Null) continue;
+                using var stream = streamGetter();
+                stream.Position = loc.Key;
+                var frame = stream.ReadMajorRecordFrame();
+                if (DynamicProcessors.TryGetValue(type, out var procs))
+                {
+                    foreach (var proc in procs)
+                    {
+                        proc(frame, loc.Key);
+                    }
+                }
+                if (DynamicStreamProcessors.TryGetValue(type, out var streamProcs))
+                {
+                    foreach (var proc in streamProcs)
+                    {
+                        proc(stream, frame, loc.Key);
+                    }
+                }
+            }
         }
 
         public void ProcessEDID(
