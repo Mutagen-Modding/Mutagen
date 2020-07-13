@@ -210,6 +210,7 @@ namespace Mutagen.Bethesda.Tests
             long refLoc,
             FormID formID)
         {
+            if (amount == 0) return;
             ModifyParentGroupLengths(amount, formID);
 
             // Modify Length 
@@ -225,6 +226,7 @@ namespace Mutagen.Bethesda.Tests
             int amount,
             long refLoc)
         {
+            if (amount == 0) return;
             ModifyParentGroupLengths(amount, frame.FormID);
 
             // Modify Length 
