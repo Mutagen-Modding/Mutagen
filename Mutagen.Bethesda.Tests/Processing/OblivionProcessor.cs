@@ -44,7 +44,6 @@ namespace Mutagen.Bethesda.Tests
             ProcessBooks(stream, formID, recType, loc);
             ProcessLights(stream, formID, recType, loc);
             ProcessSpell(stream, formID, recType, loc);
-            ProcessMisindexedRecords(stream, formID, loc);
         }
 
         private void ProcessNPC(
@@ -144,9 +143,7 @@ namespace Mutagen.Bethesda.Tests
             }
             else
             {
-                // Modify Length
-                stream.Position = loc.Min + Mutagen.Bethesda.Internals.Constants.HeaderLength;
-                var existingLen = stream.ReadUInt16();
+                var existingLen = dataFrame.ContentLength;
                 byte[] lenData = new byte[2];
                 using (var writer = new MutagenWriter(new MemoryStream(lenData), this.GameRelease))
                 {
@@ -271,9 +268,7 @@ namespace Mutagen.Bethesda.Tests
             }
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XSED, out var xsedFrame, out var xsedLoc))
             {
-                stream.Position = loc.Min + xsedLoc;
-                stream.Position += 4;
-                var len = stream.ReadUInt16();
+                var len = xsedFrame.ContentLength;
                 if (len == 4)
                 {
                     this._LengthTracker[loc.Min] = this._LengthTracker[loc.Min] - 3;
@@ -402,8 +397,7 @@ namespace Mutagen.Bethesda.Tests
 
             foreach (var schd in majorFrame.FindEnumerateSubrecords(RecordTypes.SCHD))
             {
-                stream.Position = loc.Min + schd.Location + 4;
-                var existingLen = stream.ReadUInt16();
+                var existingLen = schd.ContentLength;
                 var diff = existingLen - 0x14;
                 this._Instructions.SetSubstitution(
                     loc: schd.Location + loc.Min + 3,
@@ -479,11 +473,10 @@ namespace Mutagen.Bethesda.Tests
                 this._Instructions.SetSubstitution(
                     loc: loc.Min + ctdt.Location + 4,
                     sub: new byte[] { 0x8 });
-                stream.Position = loc.Min + ctdt.Location + ctdt.HeaderLength;
-                var first1 = stream.ReadUInt8();
-                var first2 = stream.ReadUInt8();
-                var second1 = stream.ReadUInt8();
-                var second2 = stream.ReadUInt8();
+                var first1 = ctdt.Content[0];
+                var first2 = ctdt.Content[1];
+                var second1 = ctdt.Content[2];
+                var second2 = ctdt.Content[3];
                 this._Instructions.SetSubstitution(
                     loc: loc.Min + ctdt.Location + 6,
                     sub: new byte[] { first1, first2, 0, 0 });
@@ -629,9 +622,8 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
 
-            var edidRec = majorFrame.LocateSubrecord("EDID", out var edidIndex);
-            stream.Position = loc.Min + edidIndex + edidRec.HeaderLength;
-            if ((char)stream.ReadUInt8() != 'f') return;
+            var edidRec = majorFrame.LocateSubrecordFrame("EDID");
+            if ((char)edidRec.Content[0] != 'f') return;
 
             if (majorFrame.TryLocateSubrecord(RecordTypes.DATA, out var dataRec, out var dataIndex))
             {
@@ -687,10 +679,7 @@ namespace Mutagen.Bethesda.Tests
             var majorRecordFrame = stream.ReadMajorRecordFrame();
             foreach (var scit in majorRecordFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
             {
-                stream.Position = loc.Min + scit.Location + scit.HeaderLength;
-                ProcessFormID(
-                    stream,
-                    pos: stream.Position);
+                ProcessFormIDOverflow(scit, loc.Min);
             }
         }
 
@@ -740,39 +729,6 @@ namespace Mutagen.Bethesda.Tests
                     loc: start + loc.Min,
                     sub: data);
                 start += len;
-            }
-        }
-
-        private void ProcessMisindexedRecords(
-            IMutagenReadStream stream,
-            FormID formID,
-            RangeInt64 loc)
-        {
-            ProcessFormID(
-                stream,
-                loc.Min + 12);
-        }
-
-        private void ProcessFormID(
-            IMutagenReadStream stream,
-            long pos)
-        {
-            stream.Position = pos;
-            FormID formID = new FormID(stream.ReadUInt32());
-            if (formID.ModIndex.ID <= this._NumMasters) return;
-            this._Instructions.SetSubstitution(
-                pos + 3,
-                this._NumMasters);
-        }
-
-        private IEnumerable<int> IterateTypes(string str, RecordType type)
-        {
-            int index = 0;
-            int dataIndex;
-            while ((dataIndex = str.IndexOf(type.Type, index)) != -1)
-            {
-                yield return dataIndex;
-                index = dataIndex + 4;
             }
         }
         #endregion
