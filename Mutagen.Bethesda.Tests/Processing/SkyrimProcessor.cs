@@ -22,48 +22,48 @@ namespace Mutagen.Bethesda.Tests
         {
             base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
-            ProcessGameSettings(stream, formID, recType, loc);
-            ProcessFurniture(stream, formID, recType, loc);
-            ProcessNpcs(stream, formID, recType, loc);
-            ProcessRegions(stream, formID, recType, loc);
-            ProcessCells(stream, formID, recType, loc);
-            ProcessPlaced(stream, formID, recType, loc);
-            ProcessNavmeshes(stream, formID, recType, loc);
-            ProcessDialogs(stream, formID, recType, loc);
-            ProcessQuests(stream, formID, recType, loc);
-            ProcessPackages(stream, formID, recType, loc);
-            ProcessShaders(stream, formID, recType, loc);
-            ProcessExplosions(stream, formID, recType, loc);
-            ProcessImageSpaceAdapters(stream, formID, recType, loc);
-            ProcessLoadScreens(stream, formID, recType, loc);
-            ProcessActivators(stream, formID, recType, loc);
-            ProcessWeathers(stream, formID, recType, loc);
+            ProcessGameSettings(stream, formID, recType, loc.Min);
+            ProcessFurniture(stream, formID, recType, loc.Min);
+            ProcessNpcs(stream, formID, recType, loc.Min);
+            ProcessRegions(stream, formID, recType, loc.Min);
+            ProcessCells(stream, formID, recType, loc.Min);
+            ProcessPlaced(stream, formID, recType, loc.Min);
+            ProcessNavmeshes(stream, formID, recType, loc.Min);
+            ProcessDialogs(stream, formID, recType, loc.Min);
+            ProcessQuests(stream, formID, recType, loc.Min);
+            ProcessPackages(stream, formID, recType, loc.Min);
+            ProcessShaders(stream, formID, recType, loc.Min);
+            ProcessExplosions(stream, formID, recType, loc.Min);
+            ProcessImageSpaceAdapters(stream, formID, recType, loc.Min);
+            ProcessLoadScreens(stream, formID, recType, loc.Min);
+            ProcessActivators(stream, formID, recType, loc.Min);
+            ProcessWeathers(stream, formID, recType, loc.Min);
         }
 
         private void ProcessGameSettings(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!GameSetting_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
             if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame)) return;
             if ((char)edidFrame.Content[0] != 'f') return;
 
             if (!majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec)) return;
-            ProcessZeroFloat(dataRec, loc.Min);
+            ProcessZeroFloat(dataRec, fileOffset);
         }
 
         private void ProcessFurniture(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Furniture_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             // Find and store marker data
@@ -102,17 +102,17 @@ namespace Mutagen.Bethesda.Tests
                 bytes.Span.CopyTo(reordered.AsSpan().Slice(transferPos));
                 transferPos += bytes.Length;
             }
-            this._Instructions.SetSubstitution(loc.Min + initialPos, reordered);
+            this._Instructions.SetSubstitution(fileOffset + initialPos, reordered);
         }
 
         private void ProcessNpcs(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Npc_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.QNAM, out var qnamFrame, out var qnamLoc))
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.Tests
                 writer.Write(r / 255f);
                 writer.Write(g / 255f);
                 writer.Write(b / 255f);
-                this._Instructions.SetSubstitution(loc.Min + qnamLoc + qnamFrame.HeaderLength, bytes);
+                this._Instructions.SetSubstitution(fileOffset + qnamLoc + qnamFrame.HeaderLength, bytes);
             }
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NAM9, out var nam9Frame, out var nam9Loc))
             {
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Tests
                 var endPos = nam9Loc + nam9Frame.ContentLength;
                 while (nam9Loc < endPos)
                 {
-                    ProcessZeroFloat(majorFrame, loc.Min, ref nam9Loc);
+                    ProcessZeroFloat(majorFrame, fileOffset, ref nam9Loc);
                 }
             }
         }
@@ -143,10 +143,10 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Region_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, stream.MetaData.Constants, RecordTypes.RDAT, navigateToContent: false);
@@ -167,8 +167,8 @@ namespace Mutagen.Bethesda.Tests
                     offset: rdat.Value + rdatHeader.TotalLength);
                 rdats[index] =
                     new RangeInt64(
-                        loc.Min + majorFrame.HeaderLength + rdat.Value,
-                        nextRdat == null ? loc.Max : nextRdat.Value - 1 + loc.Min + majorFrame.HeaderLength);
+                        fileOffset + majorFrame.HeaderLength + rdat.Value,
+                        nextRdat == null ? fileOffset + majorFrame.TotalLength - 1 : nextRdat.Value - 1 + fileOffset + majorFrame.HeaderLength);
                 raw.Add(index);
                 rdat = nextRdat;
             }
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Tests
             foreach (var item in rdats.Reverse())
             {
                 this._Instructions.SetMove(
-                    loc: loc.Max + 1,
+                    loc: fileOffset + majorFrame.TotalLength,
                     section: item.Value);
             }
         }
@@ -185,17 +185,17 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!RecordTypes.CELL.Equals(recType)) return;
             CleanEmptyCellGroups(
                 stream,
                 formID,
-                loc,
+                fileOffset,
                 numSubGroups: 2);
 
             // Process odd length changing flags
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
             var sizeChange = 0;
 
@@ -204,10 +204,10 @@ namespace Mutagen.Bethesda.Tests
                 if (dataRec.ContentLength == 1)
                 {
                     _Instructions.SetSubstitution(
-                        loc.Min + dataIndex + 4,
+                        fileOffset + dataIndex + 4,
                         2);
                     _Instructions.SetAddition(
-                        loc.Min + dataIndex + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
+                        fileOffset + dataIndex + stream.MetaData.Constants.SubConstants.HeaderLength + 1,
                         new byte[] { 0 });
                     sizeChange++;
                 }
@@ -216,23 +216,23 @@ namespace Mutagen.Bethesda.Tests
             ProcessLengths(
                 majorFrame,
                 sizeChange,
-                loc.Min);
+                fileOffset);
         }
 
         private void ProcessDialogs(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!DialogTopic_Registration.TriggeringRecordType.Equals(recType)) return;
             CleanEmptyDialogGroups(
                 stream,
                 formID,
-                loc);
+                fileOffset);
 
             // Reset misnumbered counter
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.TIFC, out var tifcRec, out var tifcIndex))
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Tests
                     byte[] b = new byte[4];
                     BinaryPrimitives.WriteUInt32LittleEndian(b, actualCount);
                     _Instructions.SetSubstitution(
-                        loc.Min + tifcIndex + stream.MetaData.Constants.SubConstants.HeaderLength,
+                        fileOffset + tifcIndex + stream.MetaData.Constants.SubConstants.HeaderLength,
                         b);
                 }
             }
@@ -266,12 +266,12 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Quest_Registration.TriggeringRecordType.Equals(recType)) return;
 
             // Process next alias ID subrecords to align to their current contents
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
             var content = majorFrame.Content;
 
@@ -304,25 +304,25 @@ namespace Mutagen.Bethesda.Tests
                     byte[] sub = new byte[4];
                     BinaryPrimitives.WriteUInt32LittleEndian(sub, actualNext);
                     _Instructions.SetSubstitution(
-                        loc.Min + anamIndex + anamRec.HeaderLength,
+                        fileOffset + anamIndex + anamRec.HeaderLength,
                         sub);
                 }
             }
 
             var sizeChange = FixMissingCounters(
                 majorFrame,
-                loc,
+                fileOffset,
                 new RecordType("COCT"),
                 new RecordType("CNTO"));
 
             ProcessLengths(
                 majorFrame,
                 sizeChange,
-                loc.Min);
+                fileOffset);
 
             FixVMADFormIDs(
                 majorFrame,
-                loc,
+                fileOffset,
                 out var vmadPos,
                 out var objectFormat,
                 out var processedLen);
@@ -355,14 +355,14 @@ namespace Mutagen.Bethesda.Tests
                 var aliasCount = stream.ReadUInt16();
                 for (int i = 0; i < aliasCount; i++)
                 {
-                    FixObjectPropertyIDs(stream, loc, objectFormat);
+                    FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                     // skip version
                     stream.Position += 2;
                     objectFormat = stream.ReadUInt16();
                     var numScripts = stream.ReadUInt16();
                     for (int j = 0; j < numScripts; j++)
                     {
-                        FixVMADScriptIDs(stream, loc, objectFormat);
+                        FixVMADScriptIDs(stream, fileOffset, objectFormat);
                     }
                 }
             }
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void FixVMADFormIDs(
             MajorRecordFrame frame,
-            RangeInt64 loc,
+            long fileOffset,
             out int? vmadPos,
             out ushort objectFormat,
             out int processed)
@@ -395,12 +395,12 @@ namespace Mutagen.Bethesda.Tests
             var scriptCt = stream.ReadUInt16();
             for (int i = 0; i < scriptCt; i++)
             {
-                FixVMADScriptIDs(stream, loc, objectFormat);
+                FixVMADScriptIDs(stream, fileOffset, objectFormat);
             }
             processed = (int)(stream.Position - vmadPos.Value - frame.HeaderLength);
         }
 
-        private void FixVMADScriptIDs(IMutagenReadStream stream, RangeInt64 loc, ushort objectFormat)
+        private void FixVMADScriptIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
         {
             // skip name
             var len = stream.ReadUInt16();
@@ -435,13 +435,13 @@ namespace Mutagen.Bethesda.Tests
                 switch (prop)
                 {
                     case ScriptObjectProperty obj:
-                        FixObjectPropertyIDs(stream, loc, objectFormat);
+                        FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                         break;
                     case ScriptObjectListProperty objList:
                         var count = stream.ReadUInt32();
                         for (int i = 0; i < count; i++)
                         {
-                            FixObjectPropertyIDs(stream, loc, objectFormat);
+                            FixObjectPropertyIDs(stream, fileOffset, objectFormat);
                         }
                         break;
                     default:
@@ -451,20 +451,20 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private void FixObjectPropertyIDs(IMutagenReadStream stream, RangeInt64 loc, ushort objectFormat)
+        private void FixObjectPropertyIDs(IMutagenReadStream stream, long fileOffset, ushort objectFormat)
         {
             switch (objectFormat)
             {
                 case 2:
                     {
                         stream.Position += 4;
-                        long offset = loc.Min + stream.Position - 4;
+                        long offset = fileOffset + stream.Position - 4;
                         ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
                     }
                     break;
                 case 1:
                     {
-                        long offset = loc.Min + stream.Position - 4;
+                        long offset = fileOffset + stream.Position - 4;
                         ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
                         stream.Position += 4;
                     }
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!PlacedObject_Registration.TriggeringRecordType.Equals(recType)
                 && !PlacedNpc_Registration.TriggeringRecordType.Equals(recType)
@@ -490,27 +490,27 @@ namespace Mutagen.Bethesda.Tests
                 && !PlacedHazard_Registration.TriggeringRecordType.Equals(recType)
                 && !PlacedMissile_Registration.TriggeringRecordType.Equals(recType)
                 && !PlacedTrap_Registration.TriggeringRecordType.Equals(recType)) return;
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
             var sizeChange = 0;
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
-                ProcessZeroFloats(dataRec, loc.Min, 6);
+                ProcessZeroFloats(dataRec, fileOffset, 6);
             }
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XTEL, out var xtelRec))
             {
                 var offset = 4;
-                ProcessZeroFloats(xtelRec, loc.Min, ref offset, 6);
+                ProcessZeroFloats(xtelRec, fileOffset, ref offset, 6);
             }
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XPRM, out var xprmRec))
             {
                 int offset = 0;
-                ProcessZeroFloats(xprmRec, loc.Min, ref offset, 3);
-                ProcessColorFloat(xprmRec, loc.Min, ref offset);
-                ProcessZeroFloat(xprmRec, loc.Min, ref offset);
+                ProcessZeroFloats(xprmRec, fileOffset, ref offset, 3);
+                ProcessColorFloat(xprmRec, fileOffset, ref offset);
+                ProcessZeroFloat(xprmRec, fileOffset, ref offset);
             }
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XRMR, out var xrmrRec, out var xrmrIndex))
@@ -519,7 +519,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     _Instructions.SetRemove(
                         RangeInt64.FactoryFromLength(
-                            loc.Min + xrmrIndex,
+                            fileOffset + xrmrIndex,
                             10));
                     sizeChange -= 10;
                 }
@@ -528,18 +528,18 @@ namespace Mutagen.Bethesda.Tests
             ProcessLengths(
                 majorFrame,
                 sizeChange,
-                loc.Min);
+                fileOffset);
         }
 
         private void ProcessNavmeshes(
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!RecordTypes.NAVM.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.NVNM, out var nvnmRec, out var nvnmIndex))
@@ -549,7 +549,7 @@ namespace Mutagen.Bethesda.Tests
                 nvnmIndex += 4;
                 for (int i = 0; i < count; i++)
                 {
-                    ProcessZeroFloat(majorFrame, loc.Min, ref nvnmIndex);
+                    ProcessZeroFloat(majorFrame, fileOffset, ref nvnmIndex);
                 }
             }
         }
@@ -558,11 +558,11 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Package_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             // Reorder Idle subrecords
@@ -678,7 +678,7 @@ namespace Mutagen.Bethesda.Tests
                 foreach (var item in dataValues.OrderBy(i => i.Index))
                 {
                     _Instructions.SetSubstitution(
-                        loc.Min + majorFrame.HeaderLength + subLoc,
+                        fileOffset + majorFrame.HeaderLength + subLoc,
                         item.Data.ToArray());
                     subLoc += item.Data.Length;
                 }
@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Tests
                     byte[] bytes = new byte[] { 0x55, 0x4E, 0x41, 0x4D, 0x01, 0x00, 0x00 };
                     bytes[6] = (byte)item.Index;
                     _Instructions.SetSubstitution(
-                        loc.Min + majorFrame.HeaderLength + subLoc,
+                        fileOffset + majorFrame.HeaderLength + subLoc,
                         bytes.ToArray());
                     subLoc += bytes.Length;
                 }
@@ -697,7 +697,7 @@ namespace Mutagen.Bethesda.Tests
             var unamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), stream.MetaData.Constants, unam);
             if (!unamPos.HasValue) return;
             unamPos += xnamPos.Value;
-            var writeLoc = loc.Min + majorFrame.HeaderLength + unamPos.Value;
+            var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
             var inputValues = new List<(sbyte Index, ReadOnlyMemorySlice<byte> Data)>();
             while (unamPos.HasValue)
             {
@@ -747,33 +747,33 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!EffectShader_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 var index = 20;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 9);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
                 index += 4;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 8);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 8);
                 index += 20;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 19);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 19);
                 index += 12;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 11);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 11);
                 index += 4;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 5);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 5);
                 index += 4;
-                ProcessZeroFloat(dataRec, loc.Min, ref index);
+                ProcessZeroFloat(dataRec, fileOffset, ref index);
                 index += 8;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 6);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 6);
                 index += 12;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 9);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 9);
                 index += 32;
-                ProcessZeroFloats(dataRec, loc.Min, ref index, 2);
+                ProcessZeroFloats(dataRec, fileOffset, ref index, 2);
             }
         }
 
@@ -781,18 +781,18 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Explosion_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 int offset = 0;
-                ProcessFormIDOverflows(dataRec, loc.Min, ref offset, 6);
-                ProcessZeroFloats(dataRec, loc.Min, ref offset, 5);
+                ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
+                ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
             }
         }
 
@@ -800,16 +800,16 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 range)
+            long fileOffset)
         {
             if (!ImageSpaceAdapter_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = range.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             void ProcessKeyframe(SubrecordPinFrame subrecord)
             {
-                ProcessZeroFloats(subrecord, range.Min, subrecord.ContentLength / 4);
+                ProcessZeroFloats(subrecord, fileOffset, subrecord.ContentLength / 4);
             }
 
             foreach (var subrecord in majorFrame)
@@ -828,8 +828,8 @@ namespace Mutagen.Bethesda.Tests
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
                 int offset = 0;
-                ProcessFormIDOverflows(dataRec, range.Min, ref offset, 6);
-                ProcessZeroFloats(dataRec, range.Min, ref offset, 5);
+                ProcessFormIDOverflows(dataRec, fileOffset, ref offset, 6);
+                ProcessZeroFloats(dataRec, fileOffset, ref offset, 5);
             }
         }
 
@@ -837,16 +837,16 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!LoadScreen_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.XNAM, out var xnamRec))
             {
-                ProcessZeroFloats(xnamRec, loc.Min, 3);
+                ProcessZeroFloats(xnamRec, fileOffset, 3);
             }
         }
 
@@ -854,16 +854,16 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Activator_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             FixVMADFormIDs(
                 majorFrame,
-                loc,
+                fileOffset,
                 out var vmadPos,
                 out var objectFormat,
                 out var processedLen);
@@ -873,18 +873,18 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream stream,
             FormID formID,
             RecordType recType,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!Weather_Registration.TriggeringRecordType.Equals(recType)) return;
 
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             var majorFrame = stream.ReadMajorRecordFrame();
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var _, out var initialIndex))
             {
                 foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
                 {
-                    ProcessFormIDOverflow(snam, loc.Min);
+                    ProcessFormIDOverflow(snam, fileOffset);
                 }
             }
         }

@@ -114,43 +114,31 @@ namespace Mutagen.Bethesda.Tests
             var loc = this._AlignedFileLocs[formID];
             stream.Position = loc.Min;
             var majorFrame = stream.ReadMajorRecordFrame();
-            ProcessEDID(majorFrame, loc);
-            ProcessMajorRecordFormIDOverflow(majorFrame, loc);
+            ProcessEDID(majorFrame, loc.Min);
+            ProcessMajorRecordFormIDOverflow(majorFrame, loc.Min);
         }
 
         public void ProcessEDID(
             MajorRecordFrame majorFrame,
-            RangeInt64 loc)
+            long fileOffset)
         {
             if (!majorFrame.TryLocateSubrecordFrame("EDID", out var edidFrame, out var edidLoc)) return;
             ProcessStringTermination(
                 edidFrame,
-                loc.Min + majorFrame.HeaderLength + edidLoc,
+                fileOffset + majorFrame.HeaderLength + edidLoc,
                 majorFrame.FormID);
         }
 
         public void ProcessMajorRecordFormIDOverflow(
             MajorRecordFrame majorFrame,
-            RangeInt64 loc)
+            long fileOffset)
         {
             var formID = majorFrame.FormID;
             if (formID.ModIndex.ID <= this._NumMasters) return;
             // Need to zero out master
             this._Instructions.SetSubstitution(
-                loc.Min + this.Meta.MajorConstants.FormIDLocationOffset + 3,
+                fileOffset + this.Meta.MajorConstants.FormIDLocationOffset + 3,
                 0);
-        }
-
-        public void ProcessFormIDOverflow(
-            IMutagenReadStream stream,
-            RangeInt64? loc)
-        {
-            var formID = new FormID(stream.ReadUInt32());
-            if (formID.ModIndex.ID <= this._NumMasters) return;
-            // Need to zero out master
-            this._Instructions.SetSubstitution(
-                (loc?.Min ?? 0) + stream.Position - 1,
-                _NumMasters);
         }
 
         public void ProcessFormIDOverflow(ReadOnlySpan<byte> span, ref long offsetLoc)
@@ -383,7 +371,7 @@ namespace Mutagen.Bethesda.Tests
 
         public int FixMissingCounters(
             MajorRecordFrame frame,
-            RangeInt64 loc,
+            long fileOffset,
             RecordType counterType,
             RecordType containedType)
         {
@@ -415,7 +403,7 @@ namespace Mutagen.Bethesda.Tests
                     BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan().Slice(6), numPassed);
                     // Add counter
                     _Instructions.SetAddition(
-                        loc.Min + frame.HeaderLength + pos,
+                        fileOffset + frame.HeaderLength + pos,
                         bytes);
                     sizeChange += 10;
 
@@ -591,11 +579,11 @@ namespace Mutagen.Bethesda.Tests
         public void CleanEmptyCellGroups(
             IMutagenReadStream stream,
             FormID formID,
-            RangeInt64 loc,
+            long fileOffset,
             int numSubGroups)
         {
             List<RangeInt64> removes = new List<RangeInt64>();
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             // Skip Major Record
             var majorHeader = stream.ReadMajorRecord();
             stream.Position += majorHeader.ContentLength;
@@ -656,10 +644,10 @@ namespace Mutagen.Bethesda.Tests
         public void CleanEmptyDialogGroups(
             IMutagenReadStream stream,
             FormID formID,
-            RangeInt64 loc)
+            long fileOffset)
         {
             List<RangeInt64> removes = new List<RangeInt64>();
-            stream.Position = loc.Min;
+            stream.Position = fileOffset;
             // Skip Major Record
             var majorHeader = stream.ReadMajorRecord();
             stream.Position += majorHeader.ContentLength;
@@ -686,7 +674,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected bool DynamicMove(
             MajorRecordFrame majorFrame,
-            RangeInt64 loc,
+            long fileOffset,
             ICollection<RecordType> offendingIndices,
             ICollection<RecordType> offendingLimits,
             ICollection<RecordType> locationsToMove,
@@ -719,9 +707,9 @@ namespace Mutagen.Bethesda.Tests
                 }
                 this._Instructions.SetMove(
                     section: new RangeInt64(
-                        loc.Min + majorFrame.HeaderLength + offender,
-                        loc.Min + majorFrame.HeaderLength + limit - 1),
-                    loc: loc.Min + majorFrame.HeaderLength + locToMove.Value);
+                        fileOffset + majorFrame.HeaderLength + offender,
+                        fileOffset + majorFrame.HeaderLength + limit - 1),
+                    loc: fileOffset + majorFrame.HeaderLength + locToMove.Value);
                 return true;
             }
             return false;
