@@ -159,8 +159,32 @@ namespace Mutagen.Bethesda.Tests
             if (formID.ModIndex.ID <= this._NumMasters) return;
             // Need to zero out master
             this._Instructions.SetSubstitution(
-                offsetLoc - 1,
+                offsetLoc + 3,
                 _NumMasters);
+        }
+
+        public bool ProcessFormIDOverflow(SubrecordPinFrame pin, long offsetLoc, ref int loc)
+        {
+            if (loc >= pin.ContentLength) return false;
+            long longLoc = offsetLoc + pin.Location + pin.HeaderLength + loc;
+            ProcessFormIDOverflow(pin.Content.Slice(loc), ref longLoc);
+            loc += 4;
+            return true;
+        }
+
+        public bool ProcessFormIDOverflow(SubrecordPinFrame pin, long offsetLoc)
+        {
+            int loc = 0;
+            return ProcessFormIDOverflow(pin, offsetLoc, ref loc);
+        }
+
+        public bool ProcessFormIDOverflows(SubrecordPinFrame pin, long offsetLoc, ref int loc, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                if (!ProcessFormIDOverflow(pin, offsetLoc, ref loc)) return false;
+            }
+            return true;
         }
 
         public void ProcessStringTermination(

@@ -456,12 +456,18 @@ namespace Mutagen.Bethesda.Tests
             switch (objectFormat)
             {
                 case 2:
-                    stream.Position += 4;
-                    ProcessFormIDOverflow(stream, loc);
+                    {
+                        stream.Position += 4;
+                        long offset = loc.Min + stream.Position - 4;
+                        ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+                    }
                     break;
                 case 1:
-                    ProcessFormIDOverflow(stream, loc);
-                    stream.Position += 4;
+                    {
+                        long offset = loc.Min + stream.Position - 4;
+                        ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
+                        stream.Position += 4;
+                    }
                     break;
                 default:
                     throw new NotImplementedException();
@@ -784,13 +790,9 @@ namespace Mutagen.Bethesda.Tests
 
             if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
-                stream.Position = loc.Min + dataRec.Location + stream.MetaData.Constants.SubConstants.HeaderLength;
-                for (int i = 0; i < 6; i++)
-                {
-                    ProcessFormIDOverflow(stream, loc: null);
-                }
-                var dataIndex = 6 * 4;
-                ProcessZeroFloats(dataRec, loc.Min, ref dataIndex, 5);
+                int offset = 0;
+                ProcessFormIDOverflows(dataRec, loc.Min, ref offset, 6);
+                ProcessZeroFloats(dataRec, loc.Min, ref offset, 5);
             }
         }
 
@@ -823,15 +825,11 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
-            if (majorFrame.TryLocateSubrecordFrame(RecordTypes.DATA, out var dataRec, out var dataIndex))
+            if (majorFrame.TryLocateSubrecordPinFrame(RecordTypes.DATA, out var dataRec))
             {
-                stream.Position = range.Min + dataIndex + dataRec.HeaderLength;
-                for (int i = 0; i < 6; i++)
-                {
-                    ProcessFormIDOverflow(stream, loc: null);
-                }
-                dataIndex = checked((int)(stream.Position - range.Min));
-                ProcessZeroFloats(majorFrame, range.Min, ref dataIndex, 5);
+                int offset = 0;
+                ProcessFormIDOverflows(dataRec, range.Min, ref offset, 6);
+                ProcessZeroFloats(dataRec, range.Min, ref offset, 5);
             }
         }
 
@@ -884,11 +882,9 @@ namespace Mutagen.Bethesda.Tests
 
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.SNAM, out var _, out var initialIndex))
             {
-                var locs = UtilityTranslation.ParseRepeatingSubrecord(majorFrame.HeaderAndContentData.Slice(initialIndex), stream.MetaData.Constants, RecordTypes.SNAM, out var _);
-                foreach (var snam in locs)
+                foreach (var snam in majorFrame.FindEnumerateSubrecords(RecordTypes.SNAM))
                 {
-                    stream.Position = loc.Min + stream.MetaData.Constants.SubConstants.HeaderLength + snam + initialIndex;
-                    ProcessFormIDOverflow(stream, loc: null);
+                    ProcessFormIDOverflow(snam, loc.Min);
                 }
             }
         }
