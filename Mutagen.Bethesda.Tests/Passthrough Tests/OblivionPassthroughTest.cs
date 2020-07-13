@@ -11,6 +11,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using static Mutagen.Bethesda.Tests.ModRecordAligner;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -47,16 +48,6 @@ namespace Mutagen.Bethesda.Tests
             ret.DeepCopyIn(wrapper);
             return ret;
         }
-
-        //protected override async Task<IMod> ImportXmlFolder(DirectoryPath dir)
-        //{
-        //    return await OblivionMod.CreateFromXmlFolder(dir, this.ModKey);
-        //}
-
-        //protected override Task WriteXmlFolder(IModGetter mod, DirectoryPath dir)
-        //{
-        //    return ((OblivionMod)mod).WriteToXmlFolder(dir);
-        //}
 
         public override ModRecordAligner.AlignmentRules GetAlignmentRules()
         {
@@ -149,6 +140,36 @@ namespace Mutagen.Bethesda.Tests
                 new RecordType("XRGD"),
                 new RecordType("XSCL"),
                 new RecordType("DATA"));
+            ret.AddAlignments(
+                RecordTypes.CREA,
+                new RecordType("EDID"),
+                new RecordType("FULL"),
+                new RecordType("MODL"),
+                new RecordType("MODB"),
+                new RecordType("MODT"),
+                new AlignmentRepeatedRule(new RecordType("CNTO")),
+                new AlignmentRepeatedRule(new RecordType("SPLO")),
+                new AlignmentRepeatedRule(new RecordType("NIFZ")),
+                new RecordType("NIFT"),
+                new RecordType("ACBS"),
+                new AlignmentRepeatedRule(new RecordType("SNAM")),
+                new RecordType("INAM"),
+                new RecordType("SCRI"),
+                new RecordType("AIDT"),
+                new AlignmentRepeatedRule(new RecordType("PKID")),
+                new AlignmentRepeatedRule(new RecordType("KFFZ")),
+                new RecordType("DATA"),
+                new RecordType("RNAM"),
+                new RecordType("ZNAM"),
+                new RecordType("TNAM"),
+                new RecordType("BNAM"),
+                new RecordType("WNAM"),
+                new RecordType("NAM0"),
+                new RecordType("NAM1"));
+            ret.StopMarkers[RecordTypes.CREA] = new List<RecordType>()
+            {
+                new RecordType("DATA"),
+            };
             ret.SetGroupAlignment(
                 GroupTypeEnum.CellTemporaryChildren,
                 new RecordType("LAND"),

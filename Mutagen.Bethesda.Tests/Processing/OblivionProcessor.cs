@@ -27,7 +27,6 @@ namespace Mutagen.Bethesda.Tests
             base.AddDynamicProcessorInstructions(stream, formID, recType);
             var loc = this._AlignedFileLocs[formID];
             ProcessNPC(stream, recType, loc.Min);
-            ProcessCreature(stream, recType, loc.Min);
             ProcessLeveledItemDataFields(stream, formID, recType, loc.Min);
             ProcessRegions(stream, formID, recType, loc.Min);
             ProcessPlacedObject(stream, formID, recType, loc.Min);
@@ -70,43 +69,6 @@ namespace Mutagen.Bethesda.Tests
                 locationsToMove: new RecordType[]
                 {
                     new RecordType("CNAM")
-                });
-        }
-
-        private void ProcessCreature(
-            IMutagenReadStream stream,
-            RecordType recType,
-            long fileOffset)
-        {
-            if (!RecordTypes.CREA.Equals(recType)) return;
-            this.AlignRecords(
-                stream,
-                fileOffset,
-                new RecordType[]
-                {
-                    new RecordType("EDID"),
-                    new RecordType("FULL"),
-                    new RecordType("MODL"),
-                    new RecordType("CNTO"),
-                    new RecordType("SPLO"),
-                    new RecordType("NIFZ"),
-                    new RecordType("ACBS"),
-                    new RecordType("SNAM"),
-                    new RecordType("INAM"),
-                    new RecordType("SCRI"),
-                    new RecordType("AIDT"),
-                    new RecordType("PKID"),
-                    new RecordType("KFFZ"),
-                    new RecordType("DATA"),
-                    new RecordType("RNAM"),
-                    new RecordType("ZNAM"),
-                    new RecordType("TNAM"),
-                    new RecordType("BNAM"),
-                    new RecordType("WNAM"),
-                    new RecordType("NAM0"),
-                    new RecordType("NAM1"),
-                    new RecordType("CSCR"),
-                    new RecordType("CSDT"),
                 });
         }
 
@@ -680,55 +642,6 @@ namespace Mutagen.Bethesda.Tests
             foreach (var scit in majorRecordFrame.FindEnumerateSubrecords(RecordTypes.SCIT))
             {
                 ProcessFormIDOverflow(scit, fileOffset);
-            }
-        }
-
-        private void AlignRecords(
-            IMutagenReadStream stream,
-            long fileOffset,
-            IEnumerable<RecordType> rectypes)
-        {
-            stream.Position = fileOffset;
-            var majorFrame = stream.ReadMajorRecordFrame();
-            List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
-            int recTypeIndex = -1;
-            foreach (var rec in rectypes)
-            {
-                recTypeIndex++;
-                if (!majorFrame.TryLocateSubrecord(rec, out var subRec, out var subLoc)) continue;
-                list.Add((rec, recTypeIndex, subLoc));
-            }
-            if (list.Count == 0) return;
-            List<int> locs = new List<int>(list.OrderBy((l) => l.loc).Select((l) => l.loc));
-            var orderedList = list.OrderBy((l) => l.loc).ToList();
-            if (list.Select(i => i.rec).SequenceEqual(orderedList.Select(i => i.rec))) return;
-            int start = orderedList[0].loc;
-            foreach (var item in list)
-            {
-                var locIndex = locs.IndexOf(item.loc);
-                int len;
-                if (locIndex == locs.Count - 1)
-                {
-                    len = checked((int)(majorFrame.TotalLength - item.loc));
-                }
-                else
-                {
-                    len = locs[locIndex + 1] - item.loc;
-                }
-                if (item.loc == start)
-                {
-                    start += len;
-                    continue;
-                }
-                var data = new byte[len];
-                for (int index = 0; index < len; index++)
-                {
-                    data[index] = majorFrame.HeaderAndContentData[item.loc + index];
-                }
-                this._Instructions.SetSubstitution(
-                    loc: start + fileOffset,
-                    sub: data);
-                start += len;
             }
         }
         #endregion
