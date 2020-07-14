@@ -18,11 +18,32 @@ namespace Mutagen.Bethesda.Tests
         {
             internal SortedList<long, byte[]> _additions = new SortedList<long, byte[]>();
             internal SortedList<long, byte> _substitutions = new SortedList<long, byte>();
+            internal Dictionary<RangeInt64, long> _moves = new Dictionary<RangeInt64, long>();
+            internal Dictionary<long, List<RangeInt64>> _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
+            public bool HasProcessing => this._moves?.Count > 0
+                || this._substitutions?.Count > 0;
+        }
+
+        public class ConfigConstructor
+        {
+            internal Dictionary<long, byte[]> _additions = new Dictionary<long, byte[]>();
+            internal Dictionary<long, byte> _substitutions = new Dictionary<long, byte>();
             internal RangeCollection _moveRanges = new RangeCollection();
             internal Dictionary<RangeInt64, long> _moves = new Dictionary<RangeInt64, long>();
             internal Dictionary<long, List<RangeInt64>> _sameLocMoves = new Dictionary<long, List<RangeInt64>>();
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
+
+            public Config GetConfig()
+            {
+                return new Config()
+                {
+                    _substitutions = new SortedList<long, byte>(_substitutions),
+                    _additions = new SortedList<long, byte[]>(_additions),
+                    _moves = _moves,
+                    _sameLocMoves = _sameLocMoves,
+                };
+            }
 
             public void SetSubstitution(long loc, byte sub)
             {

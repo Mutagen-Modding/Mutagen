@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Tests
         public void PerkStringHandler(
             IMutagenReadStream stream,
             MajorRecordHeader major,
-            BinaryFileProcessor.Config instr,
+            BinaryFileProcessor.ConfigConstructor instr,
             List<KeyValuePair<uint, uint>> processedStrings,
             IStringsLookup overlay,
             ref uint newIndex)

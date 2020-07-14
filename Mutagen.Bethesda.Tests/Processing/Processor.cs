@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Tests
         public abstract GameRelease GameRelease { get; }
         public readonly GameConstants Meta;
         protected RecordLocator.FileLocations _AlignedFileLocs;
-        protected BinaryFileProcessor.Config _Instructions = new BinaryFileProcessor.Config();
+        protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         protected Dictionary<long, uint> _LengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
         protected string SourcePath;
@@ -78,9 +78,11 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
 
+            var config = this._Instructions.GetConfig();
+
             using (var processor = new BinaryFileProcessor(
                 new FileStream(preprocessedPath, FileMode.Open, FileAccess.Read),
-                this._Instructions))
+                config))
             {
                 try
                 {
@@ -456,7 +458,7 @@ namespace Mutagen.Bethesda.Tests
 
         public abstract class AStringsAlignment
         {
-            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.Config instr, List<KeyValuePair<uint, uint>> processedStrings, IStringsLookup overlay, ref uint newIndex);
+            public delegate void Handle(IMutagenReadStream stream, MajorRecordHeader major, BinaryFileProcessor.ConfigConstructor instr, List<KeyValuePair<uint, uint>> processedStrings, IStringsLookup overlay, ref uint newIndex);
 
             public RecordType MajorType;
 
@@ -472,7 +474,7 @@ namespace Mutagen.Bethesda.Tests
 
             public static void ProcessStringLink(
                 IMutagenReadStream stream,
-                BinaryFileProcessor.Config instr,
+                BinaryFileProcessor.ConfigConstructor instr,
                 List<KeyValuePair<uint, uint>> processedStrings,
                 IStringsLookup overlay,
                 ref uint newIndex)
@@ -525,7 +527,7 @@ namespace Mutagen.Bethesda.Tests
             private void Align(
                 IMutagenReadStream stream,
                 MajorRecordHeader major,
-                BinaryFileProcessor.Config instr,
+                BinaryFileProcessor.ConfigConstructor instr,
                 List<KeyValuePair<uint, uint>> processedStrings,
                 IStringsLookup overlay,
                 ref uint newIndex)
