@@ -221,6 +221,7 @@ namespace Mutagen.Bethesda.Tests
                 var count = tifcRec.AsUInt32();
 
                 uint actualCount = 0;
+                stream.Position = fileOffset + majorFrame.TotalLength;
                 if (stream.TryReadGroupFrame(out var groupFrame))
                 {
                     int groupPos = 0;
