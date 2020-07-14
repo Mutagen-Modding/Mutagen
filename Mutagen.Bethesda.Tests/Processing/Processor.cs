@@ -23,16 +23,22 @@ namespace Mutagen.Bethesda.Tests
         protected byte _NumMasters;
         protected string SourcePath;
         protected TempFolder TempFolder;
-        public bool DoMultithreading = false;
+        public bool DoMultithreading = true;
         public ModKey ModKey => ModKey.Factory(Path.GetFileName(SourcePath));
         public delegate void DynamicProcessor(MajorRecordFrame majorFrame, long fileOffset);
         public delegate void DynamicStreamProcessor(IMutagenReadStream stream, MajorRecordFrame majorFrame, long fileOffset);
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
         protected Dictionary<RecordType, List<DynamicStreamProcessor>> DynamicStreamProcessors = new Dictionary<RecordType, List<DynamicStreamProcessor>>();
+        public readonly ParallelOptions ParallelOptions;
 
-        public Processor()
+        public Processor(bool multithread)
         {
             this.Meta = GameConstants.Get(this.GameRelease);
+            this.DoMultithreading = multithread;
+            this.ParallelOptions = new ParallelOptions()
+            {
+                MaxDegreeOfParallelism = multithread ? -1 : 1
+            };
         }
 
         public async Task Process(
@@ -62,11 +68,12 @@ namespace Mutagen.Bethesda.Tests
                 await Task.WhenAll(ExtraJobs(streamGetter));
 
                 this.AddDynamicProcessorInstructions();
-                await Task.WhenAll(this.DynamicProcessors.Keys
+                Parallel.ForEach(this.DynamicProcessors.Keys
                     .And(this.DynamicStreamProcessors.Keys)
                     .And(RecordType.Null)
-                    .Distinct()
-                    .Select(type => TaskExt.Run(DoMultithreading, () => ProcessDynamicType(type, streamGetter))));
+                    .Distinct(),
+                    ParallelOptions,
+                    type => ProcessDynamicType(type, streamGetter));
 
                 foreach (var grup in this._LengthTracker)
                 {
@@ -133,29 +140,45 @@ namespace Mutagen.Bethesda.Tests
             DynamicStreamProcessors.TryCreateValue(type).Add(processor);
         }
 
-        protected async Task ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
+        protected void ProcessDynamicType(RecordType type, Func<IMutagenReadStream> streamGetter)
         {
-            foreach (var loc in _AlignedFileLocs.ListedRecords)
+            IEnumerable<KeyValuePair<long, (FormID FormID, RecordType Record)>> locs = _AlignedFileLocs.ListedRecords;
+            if (type != RecordType.Null)
             {
-                if (loc.Value.Record != type && type != RecordType.Null) continue;
-                using var stream = streamGetter();
-                stream.Position = loc.Key;
-                var frame = stream.ReadMajorRecordFrame();
-                if (DynamicProcessors.TryGetValue(type, out var procs))
+                locs = locs.Where(loc => loc.Value.Record == type);
+            }
+            if (!DynamicProcessors.TryGetValue(type, out var procs))
+            {
+                procs = null;
+            }
+            if (!DynamicStreamProcessors.TryGetValue(type, out var streamProcs))
+            {
+                streamProcs = null;
+            }
+            Parallel.ForEach(locs, ParallelOptions, (loc) =>
+            {
+                MajorRecordFrame frame;
+                using (var stream = streamGetter())
+                {
+                    stream.Position = loc.Key;
+                    frame = stream.ReadMajorRecordFrame(readSafe: true);
+                }
+                if (procs != null)
                 {
                     foreach (var proc in procs)
                     {
                         proc(frame, loc.Key);
                     }
                 }
-                if (DynamicStreamProcessors.TryGetValue(type, out var streamProcs))
+                if (streamProcs != null)
                 {
+                    using var stream = streamGetter();
                     foreach (var proc in streamProcs)
                     {
                         proc(stream, frame, loc.Key);
                     }
                 }
-            }
+            });
         }
 
         public void ProcessEDID(

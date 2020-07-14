@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public override GameRelease GameRelease => GameRelease.Oblivion;
 
-        protected override Processor ProcessorFactory() => new OblivionProcessor();
+        protected override Processor ProcessorFactory() => new OblivionProcessor(Settings.Parallel);
 
         public OblivionPassthroughTest(TestingSettings settings, TargetGroup group, Target target)
             : base(settings, group, target)

@@ -240,6 +240,6 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected override Processor ProcessorFactory() => new SkyrimProcessor();
+        protected override Processor ProcessorFactory() => new SkyrimProcessor(Settings.Parallel);
     }
 }

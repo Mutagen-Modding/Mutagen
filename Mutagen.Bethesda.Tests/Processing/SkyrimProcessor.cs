@@ -16,6 +16,10 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimProcessor : Processor
     {
+        public SkyrimProcessor(bool multithread) : base(multithread)
+        {
+        }
+
         public override GameRelease GameRelease => GameRelease.SkyrimLE;
 
         protected override void AddDynamicProcessorInstructions()

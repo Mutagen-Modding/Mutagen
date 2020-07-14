@@ -13,6 +13,10 @@ namespace Mutagen.Bethesda.Tests
 {
     public class OblivionProcessor : Processor
     {
+        public OblivionProcessor(bool multithread) : base(multithread)
+        {
+        }
+
         public override GameRelease GameRelease => GameRelease.Oblivion;
 
         #region Dynamic Processing
