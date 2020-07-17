@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                 for (int i = 0; i < 2; i++)
                 {
                     if (stream.Complete) return;
-                    var varMeta = stream.GetNextRecordVariableMeta();
+                    var varMeta = stream.GetVariableHeader();
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x4C4C4543: // "CELL":

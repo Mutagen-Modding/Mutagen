@@ -335,6 +335,10 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public override string ToString() => this._header.ToString();
 
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the MajorRecord.
+        /// </summary>
         public IEnumerable<int> EnumerateSubrecordLocations()
         {
             int loc = Meta.MajorConstants.HeaderLength;
@@ -346,14 +350,9 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
-        public IEnumerable<(int Location, SubrecordHeader Subrecord)> EnumerateSubrecords()
-        {
-            foreach (var loc in EnumerateSubrecordLocations())
-            {
-                yield return (loc, new SubrecordHeader(Meta, HeaderAndContentData.Slice(loc)));
-            }
-        }
-
+        /// <summary>
+        /// Enumerates contained subrecords
+        /// </summary>
         public IEnumerator<SubrecordPinFrame> GetEnumerator()
         {
             foreach (var loc in EnumerateSubrecordLocations())

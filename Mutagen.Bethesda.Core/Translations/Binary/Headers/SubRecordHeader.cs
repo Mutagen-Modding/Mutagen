@@ -47,6 +47,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => new RecordType(this.RecordTypeInt);
         
+        /// <summary>
+        /// RecordType of the header, represented as an int
+        /// </summary>
         public int RecordTypeInt => BinaryPrimitives.ReadInt32LittleEndian(this.HeaderData.Slice(0, 4));
         
         /// <summary>
@@ -74,6 +77,9 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public struct SubrecordFrame
     {
+        /// <summary>
+        /// Header struct contained in the frame
+        /// </summary>
         public SubrecordHeader Header { get; }
 
         /// <summary>
@@ -142,6 +148,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => Header.RecordType;
 
+        /// <summary>
+        /// RecordType of the header, represented as an int
+        /// </summary>
         public int RecordTypeInt => Header.RecordTypeInt;
 
         /// <summary>
@@ -168,8 +177,15 @@ namespace Mutagen.Bethesda.Binary
     /// </summary>
     public struct SubrecordPinFrame
     {
+        /// <summary>
+        /// Frame struct contained in the pin
+        /// </summary>
         public SubrecordFrame Frame { get; }
 
+        /// <summary>
+        /// Location of the subrecord relative to the parent MajorRecordFrame's data.<br/>
+        /// E.g., relative to the position of the RecordType of the parent MajorRecord.
+        /// </summary>
         public int Location { get; }
 
         /// <summary>
@@ -200,6 +216,9 @@ namespace Mutagen.Bethesda.Binary
         public override string ToString() => $"{this.Frame.ToString()} @ {Location}";
 
         #region Forwarding
+        /// <summary>
+        /// Header struct contained in the pin
+        /// </summary>
         public SubrecordHeader Header => Frame.Header;
 
         /// <summary>
@@ -242,6 +261,9 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public RecordType RecordType => Frame.RecordType;
 
+        /// <summary>
+        /// RecordType of the header, represented as an int
+        /// </summary>
         public int RecordTypeInt => Frame.RecordTypeInt;
 
         /// <summary>

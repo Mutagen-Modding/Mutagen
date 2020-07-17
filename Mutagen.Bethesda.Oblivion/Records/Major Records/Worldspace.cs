@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
                 for (int i = 0; i < 3; i++)
                 {
                     if (stream.Complete) return;
-                    var varMeta = stream.GetNextRecordVariableMeta();
+                    var varMeta = stream.GetVariableHeader();
                     switch (varMeta.RecordTypeInt)
                     {
                         case 0x44414F52: // "ROAD":

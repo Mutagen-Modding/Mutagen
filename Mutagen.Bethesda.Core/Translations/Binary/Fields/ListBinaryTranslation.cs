@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Binary
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
             while (!frame.Complete && !frame.Reader.Complete)
             {
-                var header = frame.Reader.GetNextRecordVariableMeta();
+                var header = frame.Reader.GetVariableHeader();
                 if (header.RecordType != triggeringRecord) break;
                 if (!IsLoqui)
                 {
