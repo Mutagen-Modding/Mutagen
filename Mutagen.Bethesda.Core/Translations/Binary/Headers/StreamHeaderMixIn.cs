@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader GetModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeader GetModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             return new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader ReadModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeader ReadModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             return new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryGetModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
+        public static bool TryGetModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = true)
         {
             if (stream.Remaining < constants.ModHeaderLength)
             {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryReadModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
+        public static bool TryReadModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = true)
         {
             if (stream.Remaining < constants.ModHeaderLength)
             {
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeaderFrame struct</returns>
-        public static ModHeaderFrame GetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeaderFrame GetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             var meta = GetModHeader(stream, constants, readSafe: readSafe);
             return new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeaderFrame struct</returns>
-        public static ModHeaderFrame ReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeaderFrame ReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             var meta = GetModHeader(stream, constants, readSafe: readSafe);
             return new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeaderFrame struct was read in</returns>
-        public static bool TryGetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = false)
+        public static bool TryGetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = true)
         {
             if (!TryGetModHeader(stream, constants, out var meta, readSafe: false))
             {
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeaderFrame struct was read in</returns>
-        public static bool TryReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = false)
+        public static bool TryReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = true)
         {
             if (!TryGetModHeader(stream, constants, out var meta, readSafe: false))
             {
@@ -182,7 +182,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupHeader struct</returns>
-        public static GroupHeader GetGroup(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupHeader GetGroup(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             var ret = new GroupHeader(constants, stream.GetMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe));
             if (checkIsGroup && !ret.IsGroup)
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupHeader struct</returns>
-        public static GroupHeader ReadGroup(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupHeader ReadGroup(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             var ret = new GroupHeader(constants, stream.ReadMemory(constants.GroupConstants.HeaderLength, offset, readSafe: readSafe));
             if (checkIsGroup && !ret.IsGroup)
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryGetGroup(this IBinaryReadStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryGetGroup(this IBinaryReadStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             if (stream.Remaining < constants.GroupConstants.HeaderLength + offset)
             {
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupFrame struct</returns>
-        public static GroupFrame GetGroupFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupFrame GetGroupFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             var meta = GetGroup(stream, constants, offset: offset, readSafe: readSafe, checkIsGroup: checkIsGroup);
             return new GroupFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupFrame was retrieved</returns>
-        public static bool TryGetGroupFrame(this IBinaryReadStream stream, GameConstants constants, out GroupFrame frame, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryGetGroupFrame(this IBinaryReadStream stream, GameConstants constants, out GroupFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             if (!TryGetGroup(stream, constants, out var meta, offset: offset, checkIsGroup: checkIsGroup, readSafe: false))
             {
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryReadGroup(this IBinaryReadStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryReadGroup(this IBinaryReadStream stream, GameConstants constants, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             if (stream.Remaining < constants.GroupConstants.HeaderLength)
             {
@@ -329,7 +329,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupFrame struct</returns>
-        public static GroupFrame ReadGroupFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupFrame ReadGroupFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true, bool checkIsGroup = true)
         {
             var meta = GetGroup(stream, constants, offset: 0, readSafe: readSafe, checkIsGroup: checkIsGroup);
             return new GroupFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryReadGroupFrame(this IBinaryReadStream stream, GameConstants constants, out GroupFrame frame, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryReadGroupFrame(this IBinaryReadStream stream, GameConstants constants, out GroupFrame frame, bool readSafe = true, bool checkIsGroup = true)
         {
             if (!TryGetGroup(stream, constants, out var meta, offset: 0, checkIsGroup: checkIsGroup, readSafe: false))
             {
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordHeader struct</returns>
-        public static MajorRecordHeader GetMajorRecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static MajorRecordHeader GetMajorRecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             return new MajorRecordHeader(constants, stream.GetMemory(constants.MajorConstants.HeaderLength, offset, readSafe: readSafe)); ;
         }
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame GetMajorRecordFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static MajorRecordFrame GetMajorRecordFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             var meta = GetMajorRecord(stream, constants, offset, readSafe: readSafe);
             return new MajorRecordFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), offset: offset, readSafe: readSafe));
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordHeader struct</returns>
-        public static MajorRecordHeader ReadMajorRecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static MajorRecordHeader ReadMajorRecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             return new MajorRecordHeader(constants, stream.ReadMemory(constants.MajorConstants.HeaderLength, offset: offset, readSafe: readSafe));
         }
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame ReadMajorRecordFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static MajorRecordFrame ReadMajorRecordFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             var meta = GetMajorRecord(stream, constants, offset: 0, readSafe: readSafe);
             return new MajorRecordFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
@@ -440,7 +440,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader GetSubrecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader GetSubrecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             return new SubrecordHeader(constants, stream.GetMemory(constants.SubConstants.HeaderLength, offset, readSafe: readSafe));
         }
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved</returns>
-        public static bool TryGetSubrecord(this IBinaryReadStream stream, GameConstants constants, out SubrecordHeader header, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecord(this IBinaryReadStream stream, GameConstants constants, out SubrecordHeader header, int offset = 0, bool readSafe = true)
         {
             if (stream.Remaining < constants.SubConstants.HeaderLength + offset)
             {
@@ -483,7 +483,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
-        public static bool TryGetSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordHeader header, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordHeader header, int offset = 0, bool readSafe = true)
         {
             if (stream.Remaining < constants.SubConstants.HeaderLength)
             {
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame GetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static SubrecordFrame GetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, constants, offset, readSafe: readSafe);
             return new SubrecordFrame(meta, stream.GetMemory(meta.TotalLength, offset: offset, readSafe: readSafe));
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved</returns>
-        public static bool TryGetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, out SubrecordFrame frame, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, out SubrecordFrame frame, int offset = 0, bool readSafe = true)
         {
             if (!TryGetSubrecord(stream, constants, out var meta, readSafe: readSafe, offset: offset))
             {
@@ -550,7 +550,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
-        public static bool TryGetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordFrame frame, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordFrame frame, int offset = 0, bool readSafe = true)
         {
             if (!TryGetSubrecord(stream, constants, targetType, out var meta, readSafe: readSafe, offset: offset))
             {
@@ -573,7 +573,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader ReadSubrecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader ReadSubrecord(this IBinaryReadStream stream, GameConstants constants, int offset = 0, bool readSafe = true)
         {
             return new SubrecordHeader(constants, stream.ReadMemory(constants.SubConstants.HeaderLength, offset: offset, readSafe: readSafe));
         }
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader ReadSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader ReadSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, int offset = 0, bool readSafe = true)
         {
             var meta = ReadSubrecord(stream, constants, offset: offset, readSafe: readSafe);
             if (meta.RecordType != targetType)
@@ -614,7 +614,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved</returns>
-        public static bool TryReadSubrecord(this IBinaryReadStream stream, GameConstants constants, out SubrecordHeader header, bool readSafe = false)
+        public static bool TryReadSubrecord(this IBinaryReadStream stream, GameConstants constants, out SubrecordHeader header, bool readSafe = true)
         {
             if (stream.Remaining < constants.SubConstants.HeaderLength)
             {
@@ -638,7 +638,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
-        public static bool TryReadSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordHeader header, bool readSafe = false)
+        public static bool TryReadSubrecord(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordHeader header, bool readSafe = true)
         {
             if (stream.Remaining < constants.SubConstants.HeaderLength)
             {
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame ReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static SubrecordFrame ReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, constants, readSafe: readSafe, offset: 0);
             return new SubrecordFrame(meta, stream.ReadMemory(meta.TotalLength, readSafe: readSafe));
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame ReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, bool readSafe = false)
+        public static SubrecordFrame ReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, bool readSafe = true)
         {
             var meta = GetSubrecord(stream, constants, readSafe: readSafe, offset: 0);
             if (meta.RecordType != targetType)
@@ -707,7 +707,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved</returns>
-        public static bool TryReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, out SubrecordFrame frame, bool readSafe = false)
+        public static bool TryReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, out SubrecordFrame frame, bool readSafe = true)
         {
             if (!TryGetSubrecord(stream, constants, out var meta, readSafe: readSafe, offset: 0))
             {
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
-        public static bool TryReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordFrame frame, bool readSafe = false)
+        public static bool TryReadSubrecordFrame(this IBinaryReadStream stream, GameConstants constants, RecordType targetType, out SubrecordFrame frame, bool readSafe = true)
         {
             if (!TryGetSubrecord(stream, constants, targetType, out var meta, readSafe: readSafe, offset: 0))
             {
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A VariableHeader struct</returns>
-        public static VariableHeader GetVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static VariableHeader GetVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             RecordType rec = new RecordType(stream.GetInt32());
             if (rec == Mutagen.Bethesda.Internals.Constants.Group)
@@ -777,7 +777,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A VariableHeader struct</returns>
-        public static VariableHeader ReadVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static VariableHeader ReadVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             RecordType rec = new RecordType(stream.GetInt32());
             if (rec == Mutagen.Bethesda.Internals.Constants.Group)
@@ -802,7 +802,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader GetModHeader(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeader GetModHeader(this IMutagenReadStream stream, bool readSafe = true)
         {
             return GetModHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -817,7 +817,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader ReadModHeader(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeader ReadModHeader(this IMutagenReadStream stream, bool readSafe = true)
         {
             return ReadModHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -833,7 +833,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryGetModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
+        public static bool TryGetModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = true)
         {
             return TryGetModHeader(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryReadModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
+        public static bool TryReadModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = true)
         {
             return TryReadModHeader(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
@@ -864,7 +864,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeaderFrame GetModHeaderFrame(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeaderFrame GetModHeaderFrame(this IMutagenReadStream stream, bool readSafe = true)
         {
             return GetModHeaderFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeaderFrame ReadModHeaderFrame(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeaderFrame ReadModHeaderFrame(this IMutagenReadStream stream, bool readSafe = true)
         {
             return ReadModHeaderFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryGetModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame frame, bool readSafe = false)
+        public static bool TryGetModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame frame, bool readSafe = true)
         {
             return TryGetModHeaderFrame(stream, stream.MetaData.Constants, out frame, readSafe: readSafe);
         }
@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryReadModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame header, bool readSafe = false)
+        public static bool TryReadModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame header, bool readSafe = true)
         {
             return TryReadModHeaderFrame(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupHeader struct</returns>
-        public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupHeader GetGroup(this IMutagenReadStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return GetGroup(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe, checkIsGroup: checkIsGroup);
         }
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryGetGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryGetGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return TryGetGroup(stream, stream.MetaData.Constants, out header, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -965,7 +965,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupFrame struct</returns>
-        public static GroupFrame GetGroupFrame(IMutagenReadStream stream, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupFrame GetGroupFrame(IMutagenReadStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return GetGroupFrame(stream, stream.MetaData.Constants, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupFrame was retrieved</returns>
-        public static bool TryGetGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryGetGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return TryGetGroupFrame(stream, stream.MetaData.Constants, out frame, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -1001,7 +1001,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupHeader struct</returns>
-        public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupHeader ReadGroup(this IMutagenReadStream stream, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return ReadGroup(stream, stream.MetaData.Constants, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryReadGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryReadGroup(this IMutagenReadStream stream, out GroupHeader header, int offset = 0, bool readSafe = true, bool checkIsGroup = true)
         {
             return TryReadGroup(stream, stream.MetaData.Constants, out header, offset: offset, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="checkIsGroup">Whether to throw exception if header is aligned on top of bytes that are not a GRUP</param>
         /// <exception cref="System.ArgumentException">Thrown if checkIsGroup is on, and bytes not aligned on a GRUP.</exception>
         /// <returns>A GroupFrame struct</returns>
-        public static GroupFrame ReadGroupFrame(this IMutagenReadStream stream, bool readSafe = false, bool checkIsGroup = true)
+        public static GroupFrame ReadGroupFrame(this IMutagenReadStream stream, bool readSafe = true, bool checkIsGroup = true)
         {
             return ReadGroupFrame(stream, stream.MetaData.Constants, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <param name="checkIsGroup">Whether to return false if header is aligned on top of bytes that are not a GRUP</param>
         /// <returns>True if GroupHeader was retrieved</returns>
-        public static bool TryReadGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, bool readSafe = false, bool checkIsGroup = true)
+        public static bool TryReadGroupFrame(this IMutagenReadStream stream, out GroupFrame frame, bool readSafe = true, bool checkIsGroup = true)
         {
             return TryReadGroupFrame(stream, stream.MetaData.Constants, out frame, checkIsGroup: checkIsGroup, readSafe: readSafe);
         }
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordHeader struct</returns>
-        public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static MajorRecordHeader GetMajorRecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return GetMajorRecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1085,7 +1085,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordHeader struct</returns>
-        public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static MajorRecordHeader ReadMajorRecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return ReadMajorRecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static MajorRecordFrame GetMajorRecordFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return GetMajorRecordFrame(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A MajorRecordFrame struct</returns>
-        public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream, bool readSafe = false)
+        public static MajorRecordFrame ReadMajorRecordFrame(this IMutagenReadStream stream, bool readSafe = true)
         {
             return ReadMajorRecordFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader GetSubrecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return GetSubrecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved</returns>
-        public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader header, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, out SubrecordHeader header, int offset = 0, bool readSafe = true)
         {
             return TryGetSubrecord(stream, stream.MetaData.Constants, out header, offset: offset, readSafe: readSafe);
         }
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
-        public static bool TryGetSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader header, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader header, int offset = 0, bool readSafe = true)
         {
             return TryGetSubrecord(stream, stream.MetaData.Constants, targetType, out header, offset: offset, readSafe: readSafe);
         }
@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame GetSubrecordFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static SubrecordFrame GetSubrecordFrame(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return GetSubrecordFrame(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1200,7 +1200,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved</returns>
-        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame, int offset = 0, bool readSafe = true)
         {
             return TryGetSubrecordFrame(stream, stream.MetaData.Constants, out frame, offset: offset, readSafe: readSafe);
         }
@@ -1218,7 +1218,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
-        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame, int offset = 0, bool readSafe = false)
+        public static bool TryGetSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame, int offset = 0, bool readSafe = true)
         {
             return TryGetSubrecordFrame(stream, stream.MetaData.Constants, targetType, out frame, offset: offset, readSafe: readSafe);
         }
@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, int offset = 0, bool readSafe = true)
         {
             return ReadSubrecord(stream, stream.MetaData.Constants, offset: offset, readSafe: readSafe);
         }
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordHeader struct</returns>
-        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, RecordType targetType, int offset = 0, bool readSafe = false)
+        public static SubrecordHeader ReadSubrecord(this IMutagenReadStream stream, RecordType targetType, int offset = 0, bool readSafe = true)
         {
             return ReadSubrecord(stream, stream.MetaData.Constants, targetType, offset: offset, readSafe: readSafe);
         }
@@ -1268,7 +1268,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved</returns>
-        public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubrecordHeader header, bool readSafe = false)
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, out SubrecordHeader header, bool readSafe = true)
         {
             return TryReadSubrecord(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordHeader was retrieved, and is of target type</returns>
-        public static bool TryReadSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader header, bool readSafe = false)
+        public static bool TryReadSubrecord(this IMutagenReadStream stream, RecordType targetType, out SubrecordHeader header, bool readSafe = true)
         {
             return TryReadSubrecord(stream, stream.MetaData.Constants, targetType, out header, readSafe: readSafe);
         }
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, bool readSafe = false)
+        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, bool readSafe = true)
         {
             return ReadSubrecordFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -1318,7 +1318,7 @@ namespace Mutagen.Bethesda.Binary
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown when subrecord is not of target type</exception>
         /// <returns>A SubrecordFrame struct</returns>
-        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, bool readSafe = false)
+        public static SubrecordFrame ReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, bool readSafe = true)
         {
             return ReadSubrecordFrame(stream, stream.MetaData.Constants, targetType, readSafe: readSafe);
         }
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved</returns>
-        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame, bool readSafe = false)
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, out SubrecordFrame frame, bool readSafe = true)
         {
             return TryReadSubrecordFrame(stream, stream.MetaData.Constants, out frame, readSafe: readSafe);
         }
@@ -1351,7 +1351,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if SubrecordFrame was retrieved, and is of target type</returns>
-        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame, bool readSafe = false)
+        public static bool TryReadSubrecordFrame(this IMutagenReadStream stream, RecordType targetType, out SubrecordFrame frame, bool readSafe = true)
         {
             return TryReadSubrecordFrame(stream, stream.MetaData.Constants, targetType, out frame, readSafe: readSafe);
         }
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A VariableHeader struct</returns>
-        public static VariableHeader GetVariableHeader(this IMutagenReadStream stream, bool readSafe = false)
+        public static VariableHeader GetVariableHeader(this IMutagenReadStream stream, bool readSafe = true)
         {
             return GetVariableHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A VariableHeader struct</returns>
-        public static VariableHeader ReadVariableHeader(this IMutagenReadStream stream, bool readSafe = false)
+        public static VariableHeader ReadVariableHeader(this IMutagenReadStream stream, bool readSafe = true)
         {
             return ReadVariableHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
