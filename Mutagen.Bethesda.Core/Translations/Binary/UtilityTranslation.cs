@@ -276,7 +276,7 @@ namespace Mutagen.Bethesda
             ModRecordTypeFill<TMod, TImportMask> fillTyped)
             where TMod : IMod
         {
-            var modHeader = frame.Reader.GetMod();
+            var modHeader = frame.Reader.GetModHeader();
             fillTyped(
                 record: record,
                 frame: frame,

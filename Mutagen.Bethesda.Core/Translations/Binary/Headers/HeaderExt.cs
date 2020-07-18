@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -473,6 +474,64 @@ namespace Mutagen.Bethesda.Binary
                 else if (onlyFirstSet && encountered)
                 {
                     yield break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the MajorRecord.
+        /// </summary>
+        public static IEnumerable<int> SubrecordLocations(this MajorRecordFrame majorFrame)
+        {
+            int loc = majorFrame.HeaderLength;
+            while (loc < majorFrame.HeaderAndContentData.Length)
+            {
+                yield return loc;
+                var subHeader = new SubrecordHeader(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc));
+                loc += subHeader.TotalLength;
+            }
+        }
+
+        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the MajorRecordFrame.
+        /// </summary>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(MajorRecordFrame majorFrame)
+        {
+            int loc = majorFrame.HeaderLength;
+            while (loc < majorFrame.HeaderAndContentData.Length)
+            {
+                var subHeader = new SubrecordPinFrame(majorFrame.Meta, majorFrame.HeaderAndContentData.Slice(loc), loc);
+                yield return subHeader;
+                loc += subHeader.TotalLength;
+            }
+        }
+
+        // Not an extension method, as we don't want it to show up as intellisense, as it's already part of a MajorRecordFrame's enumerator.
+        /// <summary>
+        /// Enumerates locations of the contained subrecords.<br/>
+        /// Locations are relative to the RecordType of the ModHeaderFrame.
+        /// </summary>
+        public static IEnumerable<SubrecordPinFrame> EnumerateSubrecords(ModHeaderFrame modHeader)
+        {
+            int loc = modHeader.HeaderLength;
+            while (loc < modHeader.HeaderAndContentData.Length)
+            {
+                var subHeader = new SubrecordPinFrame(modHeader.Meta, modHeader.HeaderAndContentData.Slice(loc), loc);
+                yield return subHeader;
+                loc += subHeader.TotalLength;
+            }
+        }
+
+        public static IEnumerable<SubrecordPinFrame> Masters(this ModHeaderFrame modHeader)
+        {
+            foreach (var pin in EnumerateSubrecords(modHeader))
+            {
+                if (pin.RecordType == RecordTypes.MAST)
+                {
+                    yield return pin;
                 }
             }
         }

@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Binary
         public uint RecordLength => BinaryPrimitives.ReadUInt32LittleEndian(this.HeaderData.Slice(4, this.Meta.MajorConstants.LengthLength));
         
         /// <summary>
-        /// The length of the content of the Group, excluding the header bytes.
+        /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
         public uint ContentLength => RecordLength;
         
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Binary
         }
         
         /// <summary>
-        /// The length of the content of the Group, excluding the header bytes.
+        /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
         public uint ContentLength
         {
@@ -287,9 +287,9 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public override string ToString() => $"{RecordType} => 0x{ContentLength:X}";
     }
-    
+
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Major Record data on demand.
+    /// A struct that overlays on top of bytes that is able to retrive Major Record header and content data on demand.
     /// </summary>
     public struct MajorRecordFrame : IEnumerable<SubrecordPinFrame>
     {
@@ -335,31 +335,8 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public override string ToString() => this._header.ToString();
 
-        /// <summary>
-        /// Enumerates locations of the contained subrecords.<br/>
-        /// Locations are relative to the RecordType of the MajorRecord.
-        /// </summary>
-        public IEnumerable<int> EnumerateSubrecordLocations()
-        {
-            int loc = Meta.MajorConstants.HeaderLength;
-            while (loc < HeaderAndContentData.Length)
-            {
-                yield return loc;
-                var subHeader = new SubrecordHeader(Meta, HeaderAndContentData.Slice(loc));
-                loc += subHeader.TotalLength;
-            }
-        }
-
-        /// <summary>
-        /// Enumerates contained subrecords
-        /// </summary>
-        public IEnumerator<SubrecordPinFrame> GetEnumerator()
-        {
-            foreach (var loc in EnumerateSubrecordLocations())
-            {
-                yield return new SubrecordPinFrame(Meta, HeaderAndContentData.Slice(loc), loc);
-            }
-        }
+        /// <inheritdoc/>
+        public IEnumerator<SubrecordPinFrame> GetEnumerator() => HeaderExt.EnumerateSubrecords(this).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
@@ -396,7 +373,7 @@ namespace Mutagen.Bethesda.Binary
         public uint RecordLength => _header.RecordLength;
 
         /// <summary>
-        /// The length of the content of the Group, excluding the header bytes.
+        /// The length of the content of the MajorRecord, excluding the header bytes.
         /// </summary>
         public uint ContentLength => (uint)Content.Length;
 

@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Binary
             BinaryOverlayFactoryPackage package)
         {
             int? lastParsed = null;
-            ModHeader headerMeta = stream.GetMod(package);
+            ModHeader headerMeta = stream.GetModHeader(package);
             var minimumFinalPos = checked((int)(stream.Position + headerMeta.TotalLength));
             fill(
                 stream: stream,

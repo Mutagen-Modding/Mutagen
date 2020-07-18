@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Binary
         public static readonly GameConstants SkyrimSE = new GameConstants(SkyrimLE, GameRelease.SkyrimSE);
 
         #region Header Factories
-        public ModHeader Mod(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);
+        public ModHeader ModHeader(ReadOnlyMemorySlice<byte> span) => new ModHeader(this, span);
 
         public GroupHeader Group(ReadOnlyMemorySlice<byte> span) => new GroupHeader(this, span);
 

@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader GetMod(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeader GetModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
         {
             return new ModHeader(constants, stream.GetMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader ReadMod(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        public static ModHeader ReadModHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
         {
             return new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
         }
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryGetMod(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
+        public static bool TryGetModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
         {
             if (stream.Remaining < constants.ModHeaderLength)
             {
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryReadMod(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
+        public static bool TryReadModHeader(this IBinaryReadStream stream, GameConstants constants, out ModHeader header, bool readSafe = false)
         {
             if (stream.Remaining < constants.ModHeaderLength)
             {
@@ -86,6 +86,85 @@ namespace Mutagen.Bethesda.Binary
                 return false;
             }
             header = new ModHeader(constants, stream.ReadMemory(constants.ModHeaderLength, readSafe: readSafe));
+            return true;
+        }
+        /// <summary>
+        /// Retrieves a ModHeaderFrame struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>A ModHeaderFrame struct</returns>
+        public static ModHeaderFrame GetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        {
+            var meta = GetModHeader(stream, constants, readSafe: readSafe);
+            return new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        }
+
+        /// <summary>
+        /// Reads a ModHeaderFrame struct from the stream, progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>A ModHeaderFrame struct</returns>
+        public static ModHeaderFrame ReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, bool readSafe = false)
+        {
+            var meta = GetModHeader(stream, constants, readSafe: readSafe);
+            return new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a ModHeaderFrame struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="frame">ModHeaderFrame struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if a ModHeaderFrame struct was read in</returns>
+        public static bool TryGetModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = false)
+        {
+            if (!TryGetModHeader(stream, constants, out var meta, readSafe: false))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new ModHeaderFrame(meta, stream.GetMemory(checked((int)meta.TotalLength), readSafe: readSafe));
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a ModHeaderFrame struct from the stream, progressing its position if successful.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="constants">Constants to use for alignment and measurements</param>
+        /// <param name="frame">ModHeaderFrame struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if a ModHeaderFrame struct was read in</returns>
+        public static bool TryReadModHeaderFrame(this IBinaryReadStream stream, GameConstants constants, out ModHeaderFrame frame, bool readSafe = false)
+        {
+            if (!TryGetModHeader(stream, constants, out var meta, readSafe: false))
+            {
+                frame = default;
+                return false;
+            }
+            frame = new ModHeaderFrame(meta, stream.ReadMemory(checked((int)meta.TotalLength), readSafe: readSafe));
             return true;
         }
 
@@ -711,7 +790,7 @@ namespace Mutagen.Bethesda.Binary
             }
         }
         #endregion
-        
+
         #region Mutagen Stream
         /// <summary>
         /// Retrieves a ModHeader struct from the stream, without progressing its position.
@@ -723,9 +802,9 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader GetMod(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeader GetModHeader(this IMutagenReadStream stream, bool readSafe = false)
         {
-            return GetMod(stream, stream.MetaData.Constants, readSafe: readSafe);
+            return GetModHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
 
         /// <summary>
@@ -738,9 +817,9 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>A ModHeader struct</returns>
-        public static ModHeader ReadMod(this IMutagenReadStream stream, bool readSafe = false)
+        public static ModHeader ReadModHeader(this IMutagenReadStream stream, bool readSafe = false)
         {
-            return ReadMod(stream, stream.MetaData.Constants, readSafe: readSafe);
+            return ReadModHeader(stream, stream.MetaData.Constants, readSafe: readSafe);
         }
 
         /// <summary>
@@ -754,9 +833,9 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryGetMod(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
+        public static bool TryGetModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
         {
-            return TryGetMod(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
+            return TryGetModHeader(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
 
         /// <summary>
@@ -770,9 +849,71 @@ namespace Mutagen.Bethesda.Binary
         /// If true, extra data copies may occur depending on the underling stream type.
         /// </param>
         /// <returns>True if a ModHeader struct was read in</returns>
-        public static bool TryReadMod(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
+        public static bool TryReadModHeader(this IMutagenReadStream stream, out ModHeader header, bool readSafe = false)
         {
-            return TryReadMod(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
+            return TryReadModHeader(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Retrieves a ModHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>A ModHeader struct</returns>
+        public static ModHeaderFrame GetModHeaderFrame(this IMutagenReadStream stream, bool readSafe = false)
+        {
+            return GetModHeaderFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Reads a ModHeader struct from the stream, progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>A ModHeader struct</returns>
+        public static ModHeaderFrame ReadModHeaderFrame(this IMutagenReadStream stream, bool readSafe = false)
+        {
+            return ReadModHeaderFrame(stream, stream.MetaData.Constants, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a ModHeader struct from the stream, without progressing its position.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="frame">ModHeader struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if a ModHeader struct was read in</returns>
+        public static bool TryGetModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame frame, bool readSafe = false)
+        {
+            return TryGetModHeaderFrame(stream, stream.MetaData.Constants, out frame, readSafe: readSafe);
+        }
+
+        /// <summary>
+        /// Attempts to retrieve a ModHeader struct from the stream, progressing its position if successful.
+        /// </summary>
+        /// <param name="stream">Source stream</param>
+        /// <param name="header">ModHeader struct if successfully retrieved</param>
+        /// <param name="readSafe">
+        /// Whether to prepare the underlying bytes to be safe in the case of future reads from the same stream.<br/>
+        /// If false, future stream movement may corrupt and misalign underlying data the header references.<br/>
+        /// If true, extra data copies may occur depending on the underling stream type.
+        /// </param>
+        /// <returns>True if a ModHeader struct was read in</returns>
+        public static bool TryReadModHeaderFrame(this IMutagenReadStream stream, out ModHeaderFrame header, bool readSafe = false)
+        {
+            return TryReadModHeaderFrame(stream, stream.MetaData.Constants, out header, readSafe: readSafe);
         }
 
         /// <summary>

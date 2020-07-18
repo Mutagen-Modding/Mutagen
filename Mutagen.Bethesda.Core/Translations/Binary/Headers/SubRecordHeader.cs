@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Binary
     }
 
     /// <summary>
-    /// A struct that overlays on top of bytes that is able to retrive Sub Record data on demand.
+    /// A struct that overlays on top of bytes that is able to retrive Sub Record header and content data on demand.
     /// </summary>
     public struct SubrecordFrame
     {
