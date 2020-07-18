@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
-        /// <returns>Subrecord's content as a byte</return>
+        /// <returns>Subrecord's content as a byte</returns>
         public static byte AsUInt8(this SubrecordFrame frame)
         {
             frame.AssertLength(1);
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 1</exception>
-        /// <returns>Subrecord's content as a sbyte</return>
+        /// <returns>Subrecord's content as a sbyte</returns>
         public static sbyte AsInt8(this SubrecordFrame frame)
         {
             frame.AssertLength(1);
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
-        /// <returns>Subrecord's content as a ushort</return>
+        /// <returns>Subrecord's content as a ushort</returns>
         public static ushort AsUInt16(this SubrecordFrame frame)
         {
             frame.AssertLength(2);
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 2</exception>
-        /// <returns>Subrecord's content as a short</return>
+        /// <returns>Subrecord's content as a short</returns>
         public static short AsInt16(this SubrecordFrame frame)
         {
             frame.AssertLength(2);
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
-        /// <returns>Subrecord's content as a uint</return>
+        /// <returns>Subrecord's content as a uint</returns>
         public static uint AsUInt32(this SubrecordFrame frame)
         {
             frame.AssertLength(4);
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
-        /// <returns>Subrecord's content as a int</return>
+        /// <returns>Subrecord's content as a int</returns>
         public static int AsInt32(this SubrecordFrame frame)
         {
             frame.AssertLength(4);
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
-        /// <returns>Subrecord's content as a ulong</return>
+        /// <returns>Subrecord's content as a ulong</returns>
         public static ulong AsUInt64(this SubrecordFrame frame)
         {
             frame.AssertLength(8);
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
-        /// <returns>Subrecord's content as a long</return>
+        /// <returns>Subrecord's content as a long</returns>
         public static long AsInt64(this SubrecordFrame frame)
         {
             frame.AssertLength(8);
@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 4</exception>
-        /// <returns>Subrecord's content as a float</return>
+        /// <returns>Subrecord's content as a float</returns>
         public static float AsFloat(this SubrecordFrame frame)
         {
             frame.AssertLength(4);
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         /// <param name="frame">Frame to read from</param>
         /// <exception cref="System.ArgumentException">Thrown if frame's content is not exactly 8</exception>
-        /// <returns>Subrecord's content as a double</return>
+        /// <returns>Subrecord's content as a double</returns>
         public static double AsDouble(this SubrecordFrame frame)
         {
             frame.AssertLength(8);
@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Binary
         /// Interprets a subrecord's content as a string.
         /// </summary>
         /// <param name="frame">Frame to read from</param>
-        /// <returns>Subrecord's content as a string, null trimmed if applicable</return>
+        /// <returns>Subrecord's content as a string, null trimmed if applicable</returns>
         public static string AsString(this SubrecordFrame frame)
         {
             return BinaryStringUtility.ProcessWholeToZString(frame.Content);
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <param name="header">SubrecordHeader if found</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header)
         {
             return majorFrame.TryLocateSubrecord(type, header: out header, loc: out var _);
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="header">SubrecordHeader if found</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header, out int loc)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="header">SubrecordHeader if found</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordHeader header, out int loc)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <param name="frame">SubrecordFrame if found</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="frame">SubrecordFrame if found</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame, out int loc)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="offset">Offset within the Major Record's contents to start searching</param>
         /// <param name="frame">SubrecordFrame if found</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordFrame frame, out int loc)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <param name="pin">SubrecordPinFrame if found</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="offset">Offset within the Major Record's contents to start searching</param>
         /// <param name="pin">SubrecordPinFrame if found</param>
-        /// <returns>True if matching subrecord is found</return>
+        /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
         {
             var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
@@ -324,7 +324,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordHeader with the given type</return>
+        /// <returns>First encountered SubrecordHeader with the given type</returns>
         public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type)
         {
             return majorFrame.LocateSubrecord(type, loc: out var _);
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordHeader with the given type</return>
+        /// <returns>First encountered SubrecordHeader with the given type</returns>
         public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out int loc)
         {
             if (!TryLocateSubrecord(majorFrame, type, out var header, out loc))
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="offset">Offset within the Major Record's contents to start searching</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordHeader with the given type</return>
+        /// <returns>First encountered SubrecordHeader with the given type</returns>
         public static SubrecordHeader LocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out int loc)
         {
             if (!TryLocateSubrecord(majorFrame, type, offset, out var header, out loc))
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordFrame with the given type</return>
+        /// <returns>First encountered SubrecordFrame with the given type</returns>
         public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type)
         {
             if (!TryLocateSubrecordFrame(majorFrame, type, out var frame))
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordFrame with the given type</return>
+        /// <returns>First encountered SubrecordFrame with the given type</returns>
         public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out int loc)
         {
             if (!TryLocateSubrecordFrame(majorFrame, type, out var frame, out loc))
@@ -406,7 +406,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="offset">Offset within the Major Record's contents to start searching</param>
         /// <param name="loc">Location of the subrecord, relative to the parent record's RecordType data</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordFrame with the given type</return>
+        /// <returns>First encountered SubrecordFrame with the given type</returns>
         public static SubrecordFrame LocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out int loc)
         {
             if (!TryLocateSubrecordFrame(majorFrame, type, offset, out var frame, out loc))
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="majorFrame">Frame to read from</param>
         /// <param name="type">Type to search for</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordPin with the given type</return>
+        /// <returns>First encountered SubrecordPin with the given type</returns>
         public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type)
         {
             if (!TryLocateSubrecordPinFrame(majorFrame, type, out var pin))
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Binary
         /// <param name="type">Type to search for</param>
         /// <param name="offset">Offset within the Major Record's contents to start searching</param>
         /// <exception cref="System.ArgumentException">Thrown if target type cannot be found.</exception>
-        /// <returns>First encountered SubrecordPin with the given type</return>
+        /// <returns>First encountered SubrecordPin with the given type</returns>
         public static SubrecordPinFrame LocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset)
         {
             if (!TryLocateSubrecordPinFrame(majorFrame, type, offset, out var pin))
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Binary
         /// If true, iteration will stop after finding the first non-applicable record after some applicable ones.<br/>
         /// If false, records will continue to be searched in their entirety for all matching subrecords.
         /// </param>
-        /// <returns>First encountered SubrecordFrame with the given type</return>
+        /// <returns>First encountered SubrecordFrame with the given type</returns>
         public static IEnumerable<SubrecordPinFrame> FindEnumerateSubrecords(this MajorRecordFrame majorFrame, RecordType type, bool onlyFirstSet = false)
         {
             bool encountered = false;
