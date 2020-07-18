@@ -66,9 +66,9 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task<(string TestName, Exception ex)> RunTest(string name, Target target, Func<Task> toDo)
+        public static async Task<(string TestName, Exception ex)> RunTest(string name, GameRelease release, Target target, Func<Task> toDo)
         {
-            return await RunTest($"{target.GameRelease} => {target.Path}\n" +
+            return await RunTest($"{release} => {target.Path}\n" +
                 $"{name}",
                 toDo);
         }
@@ -78,7 +78,6 @@ namespace Mutagen.Bethesda.Tests
             var oblivPassthrough = new Target()
             {
                 Do = true,
-                GameRelease = GameRelease.Oblivion,
                 Path = "Oblivion.esm"
             };
             var passthroughTests = (settings.PassthroughSettings?.TestNormal ?? false)
@@ -101,7 +100,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     if (settings.PassthroughSettings?.TestImport ?? false)
                     {
-                        yield return await RunTest("Test Import", target, passthroughTest.TestImport);
+                        yield return await RunTest("Test Import", targetGroup.GameRelease, target, passthroughTest.TestImport);
                     }
                 }
             }

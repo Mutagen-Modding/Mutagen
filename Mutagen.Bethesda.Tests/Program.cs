@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Tests;
+using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -30,15 +31,15 @@ namespace Mutagen.Bethesda.Tests
                 }
                 else
                 {
-                    settingsFile = new FilePath("../../../TestingSettings.xml");
+                    settingsFile = new FilePath("../../../TestingSettings.json");
                 }
                 if (!settingsFile.Exists)
                 {
-                    throw new ArgumentException($"Coult not find settings file at: {settingsFile}");
+                    throw new ArgumentException($"Could not find settings file at: {settingsFile}");
                 }
 
                 System.Console.WriteLine($"Using settings: {settingsFile.Path}");
-                var settings = TestingSettings.CreateFromXml(settingsFile.Path);
+                var settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsFile.Path));
 
                 Stopwatch sw = new Stopwatch();
                 sw.Start();

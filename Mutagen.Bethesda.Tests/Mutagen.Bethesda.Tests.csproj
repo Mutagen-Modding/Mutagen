@@ -17,6 +17,7 @@
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="Loqui" Version="1.1.18" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Noggog.CSharpExt" Version="1.0.31" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
@@ -46,63 +47,12 @@
     <Compile Include="Processing\Processor.cs" />
     <Compile Include="Processing\SkyrimProcessor.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Settings\DataFolderLocations.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Target.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\ProtocolDefinition_Tests.cs" />
     <Compile Include="Passthrough Tests\OtherTests.cs" />
     <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
     <Compile Include="Passthrough Tests\PassthroughTest.cs" />
     <Compile Include="Passthrough Tests\SkyrimPassthroughTest.cs" />
+    <Compile Include="TestingSettings.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />
-    <Compile Include="Settings\TestingSettings_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\PassthroughSettings_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\DataFolderLocations_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\TargetGroup_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Target_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\RecordInterest_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\CacheReuse_Generated.cs">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Settings\TestingSettings.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\PassthroughSettings.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\Common.xsd" />
-    <None Include="Settings\DataFolderLocations.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\TargetGroup.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\Target.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\RecordInterest.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
-    <None Include="Settings\CacheReuse.xsd">
-      <DependentUpon>TestingSettings.xml</DependentUpon>
-    </None>
   </ItemGroup>
 </Project>

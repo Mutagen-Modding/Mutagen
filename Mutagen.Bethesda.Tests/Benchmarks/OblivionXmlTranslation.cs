@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Oblivion;
+using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -29,7 +30,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            Settings = TestingSettings.CreateFromXml(settingsPath.Path);
+            Settings = JsonConvert.DeserializeObject<TestingSettings>(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths
@@ -87,7 +88,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            Settings = TestingSettings.CreateFromXml(settingsPath.Path);
+            Settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsPath.Path));
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
             // Setup folders and paths

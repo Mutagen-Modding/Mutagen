@@ -1,6 +1,7 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Newtonsoft.Json;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             System.Console.WriteLine("Running in directory: " + Directory.GetCurrentDirectory());
             FilePath settingsPath = "../../../../TestingSettings.xml";
             System.Console.WriteLine("Settings path: " + settingsPath);
-            var settings = TestingSettings.CreateFromXml(settingsPath.Path);
+            var settings = JsonConvert.DeserializeObject<TestingSettings>(File.ReadAllText(settingsPath.Path));
             System.Console.WriteLine("Target settings: " + settings.ToString());
             var dataPath = Path.Combine(settings.DataFolderLocations.Oblivion, "Oblivion.esm");
             data = File.ReadAllBytes(dataPath);

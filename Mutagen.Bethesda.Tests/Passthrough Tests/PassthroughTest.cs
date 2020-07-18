@@ -19,7 +19,6 @@ namespace Mutagen.Bethesda.Tests
         public PassthroughSettings PassthroughSettings { get; set; } = new PassthroughSettings();
         public GameRelease GameRelease { get; set; }
         public Target Target { get; set; } = new Target();
-        public DataFolderLocations DataFolderLocations { get; set; }
     }
 
     public abstract class PassthroughTest
@@ -41,7 +40,7 @@ namespace Mutagen.Bethesda.Tests
 
         public PassthroughTest(PassthroughTestParams param)
         {
-            var path = Path.Combine(param.DataFolderLocations.Get(param.Target.GameRelease), param.Target.Path);
+            var path = param.Target.Path;
             this.FilePath = path;
             this.Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
             this.Settings = param.PassthroughSettings;
@@ -57,71 +56,38 @@ namespace Mutagen.Bethesda.Tests
 
             var outputPath = ExportFileName(tmp);
             var observableOutputPath = ObservableExportFileName(tmp);
-            var uncompressedPath = UncompressedFileName(tmp);
+            var decompressedPath = UncompressedFileName(tmp);
             var alignedPath = AlignedFileName(tmp);
-            var orderedPath = OrderedFileName(tmp);
             var preprocessedPath = alignedPath;
             var processedPath = ProcessedPath(tmp);
 
-            Mutagen.Bethesda.RecordInterest interest = null;
-            if (this.Target.Interest != null)
-            {
-                interest = new Mutagen.Bethesda.RecordInterest(
-                    this.Target.Interest.InterestingTypes
-                        .Select(i => new RecordType(i)),
-                    this.Target.Interest.UninterestingTypes
-                        .Select(i => new RecordType(i)));
-            }
-
-            if (!Settings.CacheReuse.ReuseAny
-                || !Settings.CacheReuse.ReuseDecompression 
-                || !File.Exists(uncompressedPath))
+            if (!Settings.CacheReuse.ReuseDecompression 
+                || !File.Exists(decompressedPath))
             {
                 try
                 {
-                    using var outStream = new FileStream(uncompressedPath, FileMode.Create, FileAccess.Write);
+                    using var outStream = new FileStream(decompressedPath, FileMode.Create, FileAccess.Write);
                     ModDecompressor.Decompress(
                         streamCreator: () => File.OpenRead(this.FilePath.Path),
                         release: this.GameRelease,
                         outputStream: outStream,
-                        interest: interest);
+                        interest: new RecordInterest());
                 }
                 catch (Exception)
                 {
-                    if (File.Exists(uncompressedPath))
+                    if (File.Exists(decompressedPath))
                     {
-                        File.Delete(uncompressedPath);
+                        File.Delete(decompressedPath);
                     }
                     throw;
                 }
             }
 
-            if (Settings.ReorderRecords && (!Settings.CacheReuse.ReuseAny || !File.Exists(orderedPath)))
-            {
-                try
-                {
-                    using var outStream = new FileStream(orderedPath, FileMode.Create);
-                    ModRecordSorter.Sort(
-                        streamCreator: () => File.OpenRead(uncompressedPath),
-                        outputStream: outStream,
-                        release: this.Target.GameRelease);
-                }
-                catch (Exception)
-                {
-                    if (File.Exists(orderedPath))
-                    {
-                        File.Delete(orderedPath);
-                    }
-                    throw;
-                }
-            }
-
-            if (!Settings.CacheReuse.ReuseAny 
-                || !Settings.CacheReuse.ReuseAlignment
+            if (!Settings.CacheReuse.ReuseAlignment
                 || !File.Exists(alignedPath))
             {
                 ModRecordAligner.Align(
-                    inputPath: Settings.ReorderRecords ? orderedPath : uncompressedPath,
+                    inputPath: decompressedPath,
                     outputPath: alignedPath,
                     gameMode: this.GameRelease,
                     alignmentRules: GetAlignmentRules(),
@@ -129,8 +95,7 @@ namespace Mutagen.Bethesda.Tests
             }
 
             BinaryFileProcessor.Config instructions;
-            if (!Settings.CacheReuse.ReuseAny
-                || !Settings.CacheReuse.ReuseProcessing
+            if (!Settings.CacheReuse.ReuseProcessing
                 || !File.Exists(processedPath))
             {
                 instructions = new BinaryFileProcessor.Config();
@@ -179,6 +144,7 @@ namespace Mutagen.Bethesda.Tests
                 bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Binary Normal Passthrough",
+                    this.GameRelease,
                     this.Target,
                     async () =>
                     {
@@ -220,6 +186,7 @@ namespace Mutagen.Bethesda.Tests
                 bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Binary Overlay Passthrough",
+                    this.GameRelease,
                     this.Target,
                     async () =>
                     {
@@ -256,6 +223,7 @@ namespace Mutagen.Bethesda.Tests
                 bool doStrings = false;
                 yield return await TestBattery.RunTest(
                     "Copy In Passthrough",
+                    this.GameRelease,
                     this.Target,
                     async () =>
                     {
@@ -335,8 +303,7 @@ namespace Mutagen.Bethesda.Tests
                 NicknameSuffix = group.NicknameSuffix,
                 PassthroughSettings = settings.PassthroughSettings,
                 Target = target,
-                DataFolderLocations = settings.DataFolderLocations,
-                GameRelease = target.GameRelease,
+                GameRelease = group.GameRelease,
             });
         }
 
