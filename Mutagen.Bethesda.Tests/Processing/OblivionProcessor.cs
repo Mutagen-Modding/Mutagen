@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Tests
             if (majorFrame.TryLocateSubrecordFrame(RecordTypes.XLOC, out var xlocFrame, out var xlocLoc)
                 && xlocFrame.ContentLength == 16)
             {
-                this._LengthTracker[fileOffset] = this._LengthTracker[fileOffset] - 4;
+                ModifyLengthTracking(fileOffset, -4);
                 var removeStart = fileOffset + xlocLoc + xlocFrame.HeaderLength + 12;
                 this._Instructions.SetSubstitution(
                     loc: fileOffset + xlocLoc + 4,
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Tests
                 var len = xsedFrame.ContentLength;
                 if (len == 4)
                 {
-                    this._LengthTracker[fileOffset] = this._LengthTracker[fileOffset] - 3;
+                    ModifyLengthTracking(fileOffset, -3);
                     var removeStart = fileOffset + xsedLoc + xsedFrame.HeaderLength + 1;
                     this._Instructions.SetSubstitution(
                         loc: fileOffset + xsedLoc + 4,

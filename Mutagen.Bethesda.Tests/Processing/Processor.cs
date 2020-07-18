@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Tests
         public readonly GameConstants Meta;
         protected RecordLocator.FileLocations _AlignedFileLocs;
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
-        protected Dictionary<long, uint> _LengthTracker = new Dictionary<long, uint>();
+        private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
         protected string SourcePath;
         protected TempFolder TempFolder;
@@ -63,10 +63,13 @@ namespace Mutagen.Bethesda.Tests
             IMutagenReadStream streamGetter() => new MutagenMemoryReadStream(preprocessedBytes, this.GameRelease);
             using (var stream = streamGetter())
             {
-                foreach (var grup in this._AlignedFileLocs.GrupLocations.And(this._AlignedFileLocs.ListedRecords.Keys))
+                lock (_lengthTracker)
                 {
-                    stream.Position = grup + 4;
-                    this._LengthTracker[grup] = stream.ReadUInt32();
+                    foreach (var grup in this._AlignedFileLocs.GrupLocations.And(this._AlignedFileLocs.ListedRecords.Keys))
+                    {
+                        stream.Position = grup + 4;
+                        this._lengthTracker[grup] = stream.ReadUInt32();
+                    }
                 }
 
                 await this.PreProcessorJobs(streamGetter);
@@ -81,13 +84,16 @@ namespace Mutagen.Bethesda.Tests
                     ParallelOptions,
                     type => ProcessDynamicType(type, streamGetter));
 
-                foreach (var grup in this._LengthTracker)
+                lock (_lengthTracker)
                 {
-                    stream.Position = grup.Key + 4;
-                    if (grup.Value == stream.ReadUInt32()) continue;
-                    this._Instructions.SetSubstitution(
-                        loc: grup.Key + 4,
-                        sub: BitConverter.GetBytes(grup.Value));
+                    foreach (var grup in this._lengthTracker)
+                    {
+                        stream.Position = grup.Key + 4;
+                        if (grup.Value == stream.ReadUInt32()) continue;
+                        this._Instructions.SetSubstitution(
+                            loc: grup.Key + 4,
+                            sub: BitConverter.GetBytes(grup.Value));
+                    }
                 }
             }
 
@@ -267,9 +273,12 @@ namespace Mutagen.Bethesda.Tests
         public void ModifyParentGroupLengths(int amount, FormID formID)
         {
             if (amount == 0) return;
-            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+            lock (_lengthTracker)
             {
-                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
+                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+                {
+                    this._lengthTracker[k] = (uint)(this._lengthTracker[k] + amount);
+                }
             }
         }
 
@@ -314,9 +323,12 @@ namespace Mutagen.Bethesda.Tests
             long? subRecordLoc)
         {
             if (amount == 0) return;
-            foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+            lock (_lengthTracker)
             {
-                this._LengthTracker[k] = (uint)(this._LengthTracker[k] + amount);
+                foreach (var k in this._AlignedFileLocs.GetContainingGroupLocations(formID))
+                {
+                    this._lengthTracker[k] = (uint)(this._lengthTracker[k] + amount);
+                }
             }
 
             stream.Position = recordLoc;
@@ -684,7 +696,7 @@ namespace Mutagen.Bethesda.Tests
                     }
                     if (subBlockGroup.ContentLength == 0)
                     { // Empty group
-                        this._LengthTracker[blockGroupPos] = checked((uint)(this._LengthTracker[blockGroupPos] - subBlockGroup.HeaderLength));
+                        ModifyLengthTracking(blockGroupPos, -subBlockGroup.HeaderLength);
                         removes.Add(RangeInt64.FactoryFromLength(subBlockGroupPos, subBlockGroup.HeaderLength));
                         amountRemoved++;
                     }
@@ -784,6 +796,14 @@ namespace Mutagen.Bethesda.Tests
                 return true;
             }
             return false;
+        }
+
+        protected void ModifyLengthTracking(long pos, int amount)
+        {
+            lock (_lengthTracker)
+            {
+                this._lengthTracker[pos] = checked((uint)(this._lengthTracker[pos] + amount));
+            }
         }
     }
 }
