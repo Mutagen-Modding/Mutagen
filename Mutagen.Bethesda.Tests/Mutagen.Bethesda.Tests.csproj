@@ -51,6 +51,7 @@
     <Compile Include="Passthrough Tests\OblivionPassthroughTest.cs" />
     <Compile Include="Passthrough Tests\PassthroughTest.cs" />
     <Compile Include="Passthrough Tests\SkyrimPassthroughTest.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="TestingSettings.cs" />
     <Compile Include="TestBattery.cs" />
     <Compile Include="TestingConstants.cs" />

@@ -44,7 +44,9 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
 
             var passthrough = new OblivionPassthroughTest(passthroughSettings);
 
-            ProcessedFilesFolder = await passthrough.SetupProcessedFiles();
+            (TempFolder TempFolder, Test Test) = passthrough.SetupProcessedFiles();
+            using var tmp = TempFolder;
+            await Test.Start();
             using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder)))
             {
                 stream.Position = 0xCF614B;

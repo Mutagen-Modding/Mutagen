@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,13 +16,20 @@ namespace Mutagen.Bethesda.Tests
         {
             int passed = 0;
             int failed = 0;
-            await foreach (var (TestName, ex) in GetTests(settings: settings))
+            await foreach (var test in GetTests(settings: settings))
             {
-                System.Console.WriteLine("========================================\\");
-                System.Console.WriteLine(TestName);
-                if (ex != null)
+                using var sub = test.AllOutput.Subscribe(msg =>
                 {
-                    failed++;
+                    System.Console.WriteLine(msg);
+                });
+                try
+                {
+                    await test.Start();
+                    passed += 1 + test.ChildCount;
+                }
+                catch (Exception ex)
+                {
+                    failed += 1 + test.ChildCount;
                     if (ex is IPrintable printable)
                     {
                         FileGeneration fg = new FileGeneration();
@@ -34,13 +43,7 @@ namespace Mutagen.Bethesda.Tests
                         System.Console.WriteLine(ex);
                     }
                 }
-                else
-                {
-                    passed++;
-                    System.Console.WriteLine("Passed");
-                }
-                System.Console.WriteLine("========================================/");
-                System.Console.WriteLine();
+                await test.Output.LastOrDefaultAsync();
                 GC.Collect();
             }
             if (failed == 0)
@@ -53,27 +56,23 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static async Task<(string TestName, Exception ex)> RunTest(string name, Func<Task> toDo)
+        public static Test RunTest(string name, Func<Subject<string>, Task> toDo, bool parallel = true)
         {
-            try
-            {
-                await toDo().ConfigureAwait(false);
-                return (name, null);
-            }
-            catch (Exception ex)
-            {
-                return (name, ex);
-            }
+            return new Test(
+                name,
+                parallel: parallel,
+                toDo: toDo);
         }
 
-        public static async Task<(string TestName, Exception ex)> RunTest(string name, GameRelease release, Target target, Func<Task> toDo)
+        public static Test RunTest(string name, GameRelease release, Target target, Func<Subject<string>, Task> toDo, bool parallel = true)
         {
-            return await RunTest($"{release} => {target.Path}\n" +
+            return RunTest($"{release} => {target.Path}\n" +
                 $"{name}",
-                toDo);
+                parallel: parallel,
+                toDo: toDo);
         }
 
-        public static async IAsyncEnumerable<(string TestName, Exception ex)> GetTests(TestingSettings settings)
+        public static async IAsyncEnumerable<Test> GetTests(TestingSettings settings)
         {
             var oblivPassthrough = new Target()
             {
@@ -93,26 +92,23 @@ namespace Mutagen.Bethesda.Tests
                     PassthroughTest passthroughTest = PassthroughTest.Factory(settings, targetGroup, target);
                     if (passthroughTests)
                     {
-                        await foreach (var result in passthroughTest.BinaryPassthroughTest())
-                        {
-                            yield return result;
-                        }
+                        yield return passthroughTest.BinaryPassthroughTest();
                     }
                     if (settings.PassthroughSettings?.TestImport ?? false)
                     {
-                        yield return await RunTest("Test Import", targetGroup.GameRelease, target, passthroughTest.TestImport);
+                        yield return RunTest("Test Import", targetGroup.GameRelease, target, passthroughTest.TestImport);
                     }
                 }
             }
 
             if (settings.TestGroupMasks)
             {
-                yield return await RunTest("GroupMask Import", () => OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough));
-                yield return await RunTest("GroupMask Export", () => OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough));
+                yield return RunTest("GroupMask Import", (o) => OtherTests.OblivionESM_GroupMask_Import(settings, oblivPassthrough));
+                yield return RunTest("GroupMask Export", (o) => OtherTests.OblivionESM_GroupMask_Export(settings, oblivPassthrough));
             }
             if (settings.TestFlattenedMod)
             {
-                yield return await RunTest("Flatten Mod", () => FlattenedMod_Tests.Oblivion_FlattenMod(settings));
+                yield return RunTest("Flatten Mod", (o) => FlattenedMod_Tests.Oblivion_FlattenMod(settings));
             }
             if (settings.TestBenchmarks)
             {
@@ -120,7 +116,7 @@ namespace Mutagen.Bethesda.Tests
             }
             if (settings.TestRecordEnumerables)
             {
-                yield return await RunTest("Record Enumerations", () => OtherTests.RecordEnumerations(settings, oblivPassthrough));
+                yield return RunTest("Record Enumerations", (o) => OtherTests.RecordEnumerations(settings, oblivPassthrough));
             }
             //if (settings.TestLocators)
             //{
