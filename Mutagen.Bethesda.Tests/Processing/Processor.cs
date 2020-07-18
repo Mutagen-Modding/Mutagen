@@ -41,16 +41,22 @@ namespace Mutagen.Bethesda.Tests
             };
         }
 
+        private byte GetNumMasters()
+        {
+            using var stream = new MutagenBinaryReadStream(SourcePath, GameRelease);
+            var modFrame = stream.ReadModHeaderFrame();
+            return checked((byte)modFrame.Masters().Count());
+        }
+
         public async Task Process(
             TempFolder tmpFolder,
             string sourcePath,
             string preprocessedPath,
-            string outputPath,
-            byte numMasters)
+            string outputPath)
         {
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
-            this._NumMasters = numMasters;
+            this._NumMasters = GetNumMasters();
             this._AlignedFileLocs = RecordLocator.GetFileLocations(preprocessedPath, this.GameRelease);
 
             var preprocessedBytes = File.ReadAllBytes(preprocessedPath);

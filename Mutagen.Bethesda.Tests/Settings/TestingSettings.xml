@@ -43,9 +43,7 @@
     <Fields>
       <Bool name="Do" />
       <String name="Path" />
-      <UInt8 name="NumMasters" />
       <Enum name="GameRelease" enumName="Mutagen.Bethesda.GameRelease" />
-      <UInt8 name="ExpectedBaseGroupCount" hasBeenSet="True" />
       <String name="Nickname" />
       <RefDirect name="Interest" refName="RecordInterest" />
     </Fields>

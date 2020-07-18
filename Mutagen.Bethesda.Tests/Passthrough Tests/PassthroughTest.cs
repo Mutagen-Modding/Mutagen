@@ -16,7 +16,6 @@ namespace Mutagen.Bethesda.Tests
     {
         public string Nickname { get; }
         public FilePath FilePath { get; set; }
-        public byte NumMasters { get; }
         public PassthroughSettings Settings { get; }
         public Target Target { get; }
         public string ExportFileName(TempFolder tmp) => Path.Combine(tmp.Dir.Path, $"{this.Nickname}_NormalExport");
@@ -35,7 +34,6 @@ namespace Mutagen.Bethesda.Tests
             var path = Path.Combine(settings.DataFolderLocations.Get(target.GameRelease), target.Path);
             this.FilePath = path;
             this.Nickname = $"{target.Path}{group.NicknameSuffix}";
-            this.NumMasters = target.NumMasters;
             this.Settings = settings.PassthroughSettings;
             this.Target = target;
             this.Meta = GameConstants.Get(this.GameRelease);
@@ -134,8 +132,7 @@ namespace Mutagen.Bethesda.Tests
                         tmpFolder: tmp,
                         sourcePath: this.FilePath.Path,
                         preprocessedPath: alignedPath,
-                        outputPath: processedPath,
-                        numMasters: this.NumMasters);
+                        outputPath: processedPath);
                 }
             }
 

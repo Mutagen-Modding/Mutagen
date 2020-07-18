@@ -7,9 +7,7 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
          <xs:element name="Do" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="Path" type="NullableValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="NumMasters" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="GameRelease" type="ValueType" minOccurs="0" maxOccurs="1" />
-         <xs:element name="ExpectedBaseGroupCount" type="ValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="Nickname" type="NullableValueType" minOccurs="0" maxOccurs="1" />
          <xs:element name="Interest" type="RecordInterestType" minOccurs="0" maxOccurs="1" />
       </xs:choice>

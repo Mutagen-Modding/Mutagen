@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Tests
             }
         }
         
-        public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
-        {
-            if (!settings.ExpectedBaseGroupCount.TryGet(out var expected)) return;
-            var loc = settings.GetFilePath(locs);
-            using var stream = new MutagenBinaryReadStream(loc.Path, settings.GameRelease);
-            var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
-            Assert.Equal(expected, grups.Length);
-        }
+        //public static async Task BaseGroupIterator(Target settings, DataFolderLocations locs)
+        //{
+        //    if (!settings.ExpectedBaseGroupCount.TryGet(out var expected)) return;
+        //    var loc = settings.GetFilePath(locs);
+        //    using var stream = new MutagenBinaryReadStream(loc.Path, settings.GameRelease);
+        //    var grups = RecordLocator.IterateBaseGroupLocations(stream).ToArray();
+        //    Assert.Equal(expected, grups.Length);
+        //}
 
         public static async Task RecordEnumerations(TestingSettings settings, Target target)
         {

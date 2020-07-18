@@ -103,10 +103,6 @@ namespace Mutagen.Bethesda.Tests
                     {
                         yield return await RunTest("Test Import", target, passthroughTest.TestImport);
                     }
-                    if (settings.TestLocators)
-                    {
-                        yield return await RunTest("Data Folder Locator", target, () => OtherTests.BaseGroupIterator(target, settings.DataFolderLocations));
-                    }
                 }
             }
 
@@ -127,6 +123,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return await RunTest("Record Enumerations", () => OtherTests.RecordEnumerations(settings, oblivPassthrough));
             }
+            //if (settings.TestLocators)
+            //{
+            //    yield return await RunTest("Data Folder Locator", target, () => OtherTests.BaseGroupIterator(target, settings.DataFolderLocations));
+            //}
         }
     }
 }

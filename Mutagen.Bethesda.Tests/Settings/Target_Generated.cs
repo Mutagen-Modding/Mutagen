@@ -47,16 +47,8 @@ namespace Mutagen.Bethesda.Tests
         #region Path
         public String Path { get; set; } = string.Empty;
         #endregion
-        #region NumMasters
-        public Byte NumMasters { get; set; } = default;
-        #endregion
         #region GameRelease
         public Mutagen.Bethesda.GameRelease GameRelease { get; set; } = default;
-        #endregion
-        #region ExpectedBaseGroupCount
-        public Byte? ExpectedBaseGroupCount { get; set; }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Byte? ITargetGetter.ExpectedBaseGroupCount => this.ExpectedBaseGroupCount;
         #endregion
         #region Nickname
         public String Nickname { get; set; } = string.Empty;
@@ -111,9 +103,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 this.Do = initialValue;
                 this.Path = initialValue;
-                this.NumMasters = initialValue;
                 this.GameRelease = initialValue;
-                this.ExpectedBaseGroupCount = initialValue;
                 this.Nickname = initialValue;
                 this.Interest = new MaskItem<TItem, RecordInterest.Mask<TItem>?>(initialValue, new RecordInterest.Mask<TItem>(initialValue));
             }
@@ -121,17 +111,13 @@ namespace Mutagen.Bethesda.Tests
             public Mask(
                 TItem Do,
                 TItem Path,
-                TItem NumMasters,
                 TItem GameRelease,
-                TItem ExpectedBaseGroupCount,
                 TItem Nickname,
                 TItem Interest)
             {
                 this.Do = Do;
                 this.Path = Path;
-                this.NumMasters = NumMasters;
                 this.GameRelease = GameRelease;
-                this.ExpectedBaseGroupCount = ExpectedBaseGroupCount;
                 this.Nickname = Nickname;
                 this.Interest = new MaskItem<TItem, RecordInterest.Mask<TItem>?>(Interest, new RecordInterest.Mask<TItem>(Interest));
             }
@@ -147,9 +133,7 @@ namespace Mutagen.Bethesda.Tests
             #region Members
             public TItem Do;
             public TItem Path;
-            public TItem NumMasters;
             public TItem GameRelease;
-            public TItem ExpectedBaseGroupCount;
             public TItem Nickname;
             public MaskItem<TItem, RecordInterest.Mask<TItem>?>? Interest { get; set; }
             #endregion
@@ -166,9 +150,7 @@ namespace Mutagen.Bethesda.Tests
                 if (rhs == null) return false;
                 if (!object.Equals(this.Do, rhs.Do)) return false;
                 if (!object.Equals(this.Path, rhs.Path)) return false;
-                if (!object.Equals(this.NumMasters, rhs.NumMasters)) return false;
                 if (!object.Equals(this.GameRelease, rhs.GameRelease)) return false;
-                if (!object.Equals(this.ExpectedBaseGroupCount, rhs.ExpectedBaseGroupCount)) return false;
                 if (!object.Equals(this.Nickname, rhs.Nickname)) return false;
                 if (!object.Equals(this.Interest, rhs.Interest)) return false;
                 return true;
@@ -178,9 +160,7 @@ namespace Mutagen.Bethesda.Tests
                 var hash = new HashCode();
                 hash.Add(this.Do);
                 hash.Add(this.Path);
-                hash.Add(this.NumMasters);
                 hash.Add(this.GameRelease);
-                hash.Add(this.ExpectedBaseGroupCount);
                 hash.Add(this.Nickname);
                 hash.Add(this.Interest);
                 return hash.ToHashCode();
@@ -193,9 +173,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (!eval(this.Do)) return false;
                 if (!eval(this.Path)) return false;
-                if (!eval(this.NumMasters)) return false;
                 if (!eval(this.GameRelease)) return false;
-                if (!eval(this.ExpectedBaseGroupCount)) return false;
                 if (!eval(this.Nickname)) return false;
                 if (Interest != null)
                 {
@@ -211,9 +189,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (eval(this.Do)) return true;
                 if (eval(this.Path)) return true;
-                if (eval(this.NumMasters)) return true;
                 if (eval(this.GameRelease)) return true;
-                if (eval(this.ExpectedBaseGroupCount)) return true;
                 if (eval(this.Nickname)) return true;
                 if (Interest != null)
                 {
@@ -236,9 +212,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 obj.Do = eval(this.Do);
                 obj.Path = eval(this.Path);
-                obj.NumMasters = eval(this.NumMasters);
                 obj.GameRelease = eval(this.GameRelease);
-                obj.ExpectedBaseGroupCount = eval(this.ExpectedBaseGroupCount);
                 obj.Nickname = eval(this.Nickname);
                 obj.Interest = this.Interest == null ? null : new MaskItem<R, RecordInterest.Mask<R>?>(eval(this.Interest.Overall), this.Interest.Specific?.Translate(eval));
             }
@@ -271,17 +245,9 @@ namespace Mutagen.Bethesda.Tests
                     {
                         fg.AppendItem(Path, "Path");
                     }
-                    if (printMask?.NumMasters ?? true)
-                    {
-                        fg.AppendItem(NumMasters, "NumMasters");
-                    }
                     if (printMask?.GameRelease ?? true)
                     {
                         fg.AppendItem(GameRelease, "GameRelease");
-                    }
-                    if (printMask?.ExpectedBaseGroupCount ?? true)
-                    {
-                        fg.AppendItem(ExpectedBaseGroupCount, "ExpectedBaseGroupCount");
                     }
                     if (printMask?.Nickname ?? true)
                     {
@@ -318,9 +284,7 @@ namespace Mutagen.Bethesda.Tests
             }
             public Exception? Do;
             public Exception? Path;
-            public Exception? NumMasters;
             public Exception? GameRelease;
-            public Exception? ExpectedBaseGroupCount;
             public Exception? Nickname;
             public MaskItem<Exception?, RecordInterest.ErrorMask?>? Interest;
             #endregion
@@ -335,12 +299,8 @@ namespace Mutagen.Bethesda.Tests
                         return Do;
                     case Target_FieldIndex.Path:
                         return Path;
-                    case Target_FieldIndex.NumMasters:
-                        return NumMasters;
                     case Target_FieldIndex.GameRelease:
                         return GameRelease;
-                    case Target_FieldIndex.ExpectedBaseGroupCount:
-                        return ExpectedBaseGroupCount;
                     case Target_FieldIndex.Nickname:
                         return Nickname;
                     case Target_FieldIndex.Interest:
@@ -361,14 +321,8 @@ namespace Mutagen.Bethesda.Tests
                     case Target_FieldIndex.Path:
                         this.Path = ex;
                         break;
-                    case Target_FieldIndex.NumMasters:
-                        this.NumMasters = ex;
-                        break;
                     case Target_FieldIndex.GameRelease:
                         this.GameRelease = ex;
-                        break;
-                    case Target_FieldIndex.ExpectedBaseGroupCount:
-                        this.ExpectedBaseGroupCount = ex;
                         break;
                     case Target_FieldIndex.Nickname:
                         this.Nickname = ex;
@@ -392,14 +346,8 @@ namespace Mutagen.Bethesda.Tests
                     case Target_FieldIndex.Path:
                         this.Path = (Exception?)obj;
                         break;
-                    case Target_FieldIndex.NumMasters:
-                        this.NumMasters = (Exception?)obj;
-                        break;
                     case Target_FieldIndex.GameRelease:
                         this.GameRelease = (Exception?)obj;
-                        break;
-                    case Target_FieldIndex.ExpectedBaseGroupCount:
-                        this.ExpectedBaseGroupCount = (Exception?)obj;
                         break;
                     case Target_FieldIndex.Nickname:
                         this.Nickname = (Exception?)obj;
@@ -417,9 +365,7 @@ namespace Mutagen.Bethesda.Tests
                 if (Overall != null) return true;
                 if (Do != null) return true;
                 if (Path != null) return true;
-                if (NumMasters != null) return true;
                 if (GameRelease != null) return true;
-                if (ExpectedBaseGroupCount != null) return true;
                 if (Nickname != null) return true;
                 if (Interest != null) return true;
                 return false;
@@ -458,9 +404,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 fg.AppendItem(Do, "Do");
                 fg.AppendItem(Path, "Path");
-                fg.AppendItem(NumMasters, "NumMasters");
                 fg.AppendItem(GameRelease, "GameRelease");
-                fg.AppendItem(ExpectedBaseGroupCount, "ExpectedBaseGroupCount");
                 fg.AppendItem(Nickname, "Nickname");
                 Interest?.ToString(fg);
             }
@@ -473,9 +417,7 @@ namespace Mutagen.Bethesda.Tests
                 var ret = new ErrorMask();
                 ret.Do = this.Do.Combine(rhs.Do);
                 ret.Path = this.Path.Combine(rhs.Path);
-                ret.NumMasters = this.NumMasters.Combine(rhs.NumMasters);
                 ret.GameRelease = this.GameRelease.Combine(rhs.GameRelease);
-                ret.ExpectedBaseGroupCount = this.ExpectedBaseGroupCount.Combine(rhs.ExpectedBaseGroupCount);
                 ret.Nickname = this.Nickname.Combine(rhs.Nickname);
                 ret.Interest = this.Interest.Combine(rhs.Interest, (l, r) => l.Combine(r));
                 return ret;
@@ -501,9 +443,7 @@ namespace Mutagen.Bethesda.Tests
             private TranslationCrystal? _crystal;
             public bool Do;
             public bool Path;
-            public bool NumMasters;
             public bool GameRelease;
-            public bool ExpectedBaseGroupCount;
             public bool Nickname;
             public MaskItem<bool, RecordInterest.TranslationMask?> Interest;
             #endregion
@@ -513,9 +453,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 this.Do = defaultOn;
                 this.Path = defaultOn;
-                this.NumMasters = defaultOn;
                 this.GameRelease = defaultOn;
-                this.ExpectedBaseGroupCount = defaultOn;
                 this.Nickname = defaultOn;
                 this.Interest = new MaskItem<bool, RecordInterest.TranslationMask?>(defaultOn, null);
             }
@@ -535,9 +473,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 ret.Add((Do, null));
                 ret.Add((Path, null));
-                ret.Add((NumMasters, null));
                 ret.Add((GameRelease, null));
-                ret.Add((ExpectedBaseGroupCount, null));
                 ret.Add((Nickname, null));
                 ret.Add((Interest?.Overall ?? true, Interest?.Specific?.GetCrystal()));
             }
@@ -699,9 +635,7 @@ namespace Mutagen.Bethesda.Tests
     {
         new Boolean Do { get; set; }
         new String Path { get; set; }
-        new Byte NumMasters { get; set; }
         new Mutagen.Bethesda.GameRelease GameRelease { get; set; }
-        new Byte? ExpectedBaseGroupCount { get; set; }
         new String Nickname { get; set; }
         new RecordInterest Interest { get; set; }
     }
@@ -720,9 +654,7 @@ namespace Mutagen.Bethesda.Tests
         static ILoquiRegistration Registration => Target_Registration.Instance;
         Boolean Do { get; }
         String Path { get; }
-        Byte NumMasters { get; }
         Mutagen.Bethesda.GameRelease GameRelease { get; }
-        Byte? ExpectedBaseGroupCount { get; }
         String Nickname { get; }
         IRecordInterestGetter Interest { get; }
 
@@ -1019,11 +951,9 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         Do = 0,
         Path = 1,
-        NumMasters = 2,
-        GameRelease = 3,
-        ExpectedBaseGroupCount = 4,
-        Nickname = 5,
-        Interest = 6,
+        GameRelease = 2,
+        Nickname = 3,
+        Interest = 4,
     }
     #endregion
 
@@ -1041,9 +971,9 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "4eabe8e5-a068-4934-a847-401d92253ade";
 
-        public const ushort AdditionalFieldCount = 7;
+        public const ushort AdditionalFieldCount = 5;
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(Target.Mask<>);
 
@@ -1077,12 +1007,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)Target_FieldIndex.Do;
                 case "PATH":
                     return (ushort)Target_FieldIndex.Path;
-                case "NUMMASTERS":
-                    return (ushort)Target_FieldIndex.NumMasters;
                 case "GAMERELEASE":
                     return (ushort)Target_FieldIndex.GameRelease;
-                case "EXPECTEDBASEGROUPCOUNT":
-                    return (ushort)Target_FieldIndex.ExpectedBaseGroupCount;
                 case "NICKNAME":
                     return (ushort)Target_FieldIndex.Nickname;
                 case "INTEREST":
@@ -1099,9 +1025,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameRelease:
-                case Target_FieldIndex.ExpectedBaseGroupCount:
                 case Target_FieldIndex.Nickname:
                 case Target_FieldIndex.Interest:
                     return false;
@@ -1119,9 +1043,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return true;
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameRelease:
-                case Target_FieldIndex.ExpectedBaseGroupCount:
                 case Target_FieldIndex.Nickname:
                     return false;
                 default:
@@ -1136,9 +1058,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameRelease:
-                case Target_FieldIndex.ExpectedBaseGroupCount:
                 case Target_FieldIndex.Nickname:
                 case Target_FieldIndex.Interest:
                     return false;
@@ -1156,12 +1076,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "Do";
                 case Target_FieldIndex.Path:
                     return "Path";
-                case Target_FieldIndex.NumMasters:
-                    return "NumMasters";
                 case Target_FieldIndex.GameRelease:
                     return "GameRelease";
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    return "ExpectedBaseGroupCount";
                 case Target_FieldIndex.Nickname:
                     return "Nickname";
                 case Target_FieldIndex.Interest:
@@ -1178,9 +1094,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameRelease:
-                case Target_FieldIndex.ExpectedBaseGroupCount:
                 case Target_FieldIndex.Nickname:
                 case Target_FieldIndex.Interest:
                     return false;
@@ -1196,9 +1110,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Target_FieldIndex.Do:
                 case Target_FieldIndex.Path:
-                case Target_FieldIndex.NumMasters:
                 case Target_FieldIndex.GameRelease:
-                case Target_FieldIndex.ExpectedBaseGroupCount:
                 case Target_FieldIndex.Nickname:
                 case Target_FieldIndex.Interest:
                     return false;
@@ -1216,12 +1128,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return typeof(Boolean);
                 case Target_FieldIndex.Path:
                     return typeof(String);
-                case Target_FieldIndex.NumMasters:
-                    return typeof(Byte);
                 case Target_FieldIndex.GameRelease:
                     return typeof(Mutagen.Bethesda.GameRelease);
-                case Target_FieldIndex.ExpectedBaseGroupCount:
-                    return typeof(Byte);
                 case Target_FieldIndex.Nickname:
                     return typeof(String);
                 case Target_FieldIndex.Interest:
@@ -1275,9 +1183,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ClearPartial();
             item.Do = default;
             item.Path = string.Empty;
-            item.NumMasters = default;
             item.GameRelease = default;
-            item.ExpectedBaseGroupCount = default;
             item.Nickname = string.Empty;
             item.Interest.Clear();
         }
@@ -1338,9 +1244,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return;
             ret.Do = item.Do == rhs.Do;
             ret.Path = string.Equals(item.Path, rhs.Path);
-            ret.NumMasters = item.NumMasters == rhs.NumMasters;
             ret.GameRelease = item.GameRelease == rhs.GameRelease;
-            ret.ExpectedBaseGroupCount = item.ExpectedBaseGroupCount == rhs.ExpectedBaseGroupCount;
             ret.Nickname = string.Equals(item.Nickname, rhs.Nickname);
             ret.Interest = MaskItemExt.Factory(item.Interest.GetEqualsMask(rhs.Interest, include), include);
         }
@@ -1397,18 +1301,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 fg.AppendItem(item.Path, "Path");
             }
-            if (printMask?.NumMasters ?? true)
-            {
-                fg.AppendItem(item.NumMasters, "NumMasters");
-            }
             if (printMask?.GameRelease ?? true)
             {
                 fg.AppendItem(item.GameRelease, "GameRelease");
-            }
-            if ((printMask?.ExpectedBaseGroupCount ?? true)
-                && item.ExpectedBaseGroupCount.TryGet(out var ExpectedBaseGroupCountItem))
-            {
-                fg.AppendItem(ExpectedBaseGroupCountItem, "ExpectedBaseGroupCount");
             }
             if (printMask?.Nickname ?? true)
             {
@@ -1424,7 +1319,6 @@ namespace Mutagen.Bethesda.Tests.Internals
             ITargetGetter item,
             Target.Mask<bool?> checkMask)
         {
-            if (checkMask.ExpectedBaseGroupCount.HasValue && checkMask.ExpectedBaseGroupCount.Value != (item.ExpectedBaseGroupCount != null)) return false;
             return true;
         }
         
@@ -1434,9 +1328,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             mask.Do = true;
             mask.Path = true;
-            mask.NumMasters = true;
             mask.GameRelease = true;
-            mask.ExpectedBaseGroupCount = (item.ExpectedBaseGroupCount != null);
             mask.Nickname = true;
             mask.Interest = new MaskItem<bool, RecordInterest.Mask<bool>?>(true, item.Interest?.GetHasBeenSetMask());
         }
@@ -1450,9 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (lhs == null || rhs == null) return false;
             if (lhs.Do != rhs.Do) return false;
             if (!string.Equals(lhs.Path, rhs.Path)) return false;
-            if (lhs.NumMasters != rhs.NumMasters) return false;
             if (lhs.GameRelease != rhs.GameRelease) return false;
-            if (lhs.ExpectedBaseGroupCount != rhs.ExpectedBaseGroupCount) return false;
             if (!string.Equals(lhs.Nickname, rhs.Nickname)) return false;
             if (!object.Equals(lhs.Interest, rhs.Interest)) return false;
             return true;
@@ -1463,12 +1353,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             var hash = new HashCode();
             hash.Add(item.Do);
             hash.Add(item.Path);
-            hash.Add(item.NumMasters);
             hash.Add(item.GameRelease);
-            if (item.ExpectedBaseGroupCount.TryGet(out var ExpectedBaseGroupCountitem))
-            {
-                hash.Add(ExpectedBaseGroupCountitem);
-            }
             hash.Add(item.Nickname);
             hash.Add(item.Interest);
             return hash.ToHashCode();
@@ -1502,17 +1387,9 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 item.Path = rhs.Path;
             }
-            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
-            {
-                item.NumMasters = rhs.NumMasters;
-            }
             if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.GameRelease) ?? true))
             {
                 item.GameRelease = rhs.GameRelease;
-            }
-            if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
-            {
-                item.ExpectedBaseGroupCount = rhs.ExpectedBaseGroupCount;
             }
             if ((copyMask?.GetShouldTranslate((int)Target_FieldIndex.Nickname) ?? true))
             {
@@ -1647,15 +1524,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fieldIndex: (int)Target_FieldIndex.Path,
                     errorMask: errorMask);
             }
-            if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.NumMasters),
-                    item: item.NumMasters,
-                    fieldIndex: (int)Target_FieldIndex.NumMasters,
-                    errorMask: errorMask);
-            }
             if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.GameRelease) ?? true))
             {
                 EnumXmlTranslation<Mutagen.Bethesda.GameRelease>.Instance.Write(
@@ -1663,16 +1531,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                     name: nameof(item.GameRelease),
                     item: item.GameRelease,
                     fieldIndex: (int)Target_FieldIndex.GameRelease,
-                    errorMask: errorMask);
-            }
-            if ((item.ExpectedBaseGroupCount != null)
-                && (translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
-            {
-                ByteXmlTranslation.Instance.Write(
-                    node: node,
-                    name: nameof(item.ExpectedBaseGroupCount),
-                    item: item.ExpectedBaseGroupCount.Value,
-                    fieldIndex: (int)Target_FieldIndex.ExpectedBaseGroupCount,
                     errorMask: errorMask);
             }
             if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.Nickname) ?? true))
@@ -1843,27 +1701,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                         }
                     }
                     break;
-                case "NumMasters":
-                    if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.NumMasters) ?? true))
-                    {
-                        errorMask?.PushIndex((int)Target_FieldIndex.NumMasters);
-                        try
-                        {
-                            item.NumMasters = ByteXmlTranslation.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
                 case "GameRelease":
                     if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.GameRelease) ?? true))
                     {
@@ -1871,27 +1708,6 @@ namespace Mutagen.Bethesda.Tests.Internals
                         try
                         {
                             item.GameRelease = EnumXmlTranslation<Mutagen.Bethesda.GameRelease>.Instance.Parse(
-                                node: node,
-                                errorMask: errorMask);
-                        }
-                        catch (Exception ex)
-                        when (errorMask != null)
-                        {
-                            errorMask.ReportException(ex);
-                        }
-                        finally
-                        {
-                            errorMask?.PopIndex();
-                        }
-                    }
-                    break;
-                case "ExpectedBaseGroupCount":
-                    if ((translationMask?.GetShouldTranslate((int)Target_FieldIndex.ExpectedBaseGroupCount) ?? true))
-                    {
-                        errorMask?.PushIndex((int)Target_FieldIndex.ExpectedBaseGroupCount);
-                        try
-                        {
-                            item.ExpectedBaseGroupCount = ByteXmlTranslation.Instance.Parse(
                                 node: node,
                                 errorMask: errorMask);
                         }
