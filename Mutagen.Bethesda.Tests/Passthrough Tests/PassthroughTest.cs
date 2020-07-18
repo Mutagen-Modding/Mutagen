@@ -8,10 +8,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
 {
+    public class PassthroughTestParams
+    {
+        public string NicknameSuffix { get; set; } = string.Empty;
+        public PassthroughSettings PassthroughSettings { get; set; } = new PassthroughSettings();
+        public GameRelease GameRelease { get; set; }
+        public Target Target { get; set; } = new Target();
+        public DataFolderLocations DataFolderLocations { get; set; }
+    }
+
     public abstract class PassthroughTest
     {
         public string Nickname { get; }
@@ -29,13 +39,13 @@ namespace Mutagen.Bethesda.Tests
         public readonly GameConstants Meta;
         protected abstract Processor ProcessorFactory();
 
-        public PassthroughTest(TestingSettings settings, TargetGroup group, Target target)
+        public PassthroughTest(PassthroughTestParams param)
         {
-            var path = Path.Combine(settings.DataFolderLocations.Get(target.GameRelease), target.Path);
+            var path = Path.Combine(param.DataFolderLocations.Get(param.Target.GameRelease), param.Target.Path);
             this.FilePath = path;
-            this.Nickname = $"{target.Path}{group.NicknameSuffix}";
-            this.Settings = settings.PassthroughSettings;
-            this.Target = target;
+            this.Nickname = $"{Path.GetFileName(param.Target.Path)}{param.NicknameSuffix}";
+            this.Settings = param.PassthroughSettings;
+            this.Target = param.Target;
             this.Meta = GameConstants.Get(this.GameRelease);
         }
 
@@ -320,11 +330,23 @@ namespace Mutagen.Bethesda.Tests
 
         public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)
         {
-            return target.GameRelease switch
+            return Factory(new PassthroughTestParams()
             {
-                GameRelease.Oblivion => new OblivionPassthroughTest(settings, group, target),
-                GameRelease.SkyrimLE => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimLE),
-                GameRelease.SkyrimSE => new SkyrimPassthroughTest(settings, group, target, GameRelease.SkyrimSE),
+                NicknameSuffix = group.NicknameSuffix,
+                PassthroughSettings = settings.PassthroughSettings,
+                Target = target,
+                DataFolderLocations = settings.DataFolderLocations,
+                GameRelease = target.GameRelease,
+            });
+        }
+
+        public static PassthroughTest Factory(PassthroughTestParams passthroughSettings)
+        {
+            return passthroughSettings.GameRelease switch
+            {
+                GameRelease.Oblivion => new OblivionPassthroughTest(passthroughSettings),
+                GameRelease.SkyrimLE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimLE),
+                GameRelease.SkyrimSE => new SkyrimPassthroughTest(passthroughSettings, GameRelease.SkyrimSE),
                 _ => throw new NotImplementedException(),
             };
         }

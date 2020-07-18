@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda.Tests
     {
         public override GameRelease GameRelease { get; }
 
-        public SkyrimPassthroughTest(TestingSettings settings, TargetGroup group, Target target, GameRelease mode)
-            : base(settings, group, target)
+        public SkyrimPassthroughTest(PassthroughTestParams param, GameRelease mode)
+            : base(param)
         {
             GameRelease = mode;
         }

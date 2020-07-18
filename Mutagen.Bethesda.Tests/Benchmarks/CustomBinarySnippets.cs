@@ -29,15 +29,20 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
             Settings = TestingSettings.CreateFromXml(settingsPath.Path);
             System.Console.WriteLine("Target settings: " + Settings.ToString());
 
-            var passthrough = new OblivionPassthroughTest(
-                Settings,
-                null,
-                new Target()
+            var passthroughSettings = new PassthroughTestParams()
+            {
+                NicknameSuffix = null,
+                PassthroughSettings = Settings.PassthroughSettings,
+                GameRelease = GameRelease.Oblivion,
+                DataFolderLocations = Settings.DataFolderLocations,
+                Target = new Target()
                 {
                     Path = $"Oblivion.esm",
                     Do = true,
-                    GameRelease = GameRelease.Oblivion,
-                });
+                },
+            };
+
+            var passthrough = new OblivionPassthroughTest(passthroughSettings);
 
             ProcessedFilesFolder = await passthrough.SetupProcessedFiles();
             using (var stream = new BinaryReadStream(passthrough.ProcessedPath(ProcessedFilesFolder)))
