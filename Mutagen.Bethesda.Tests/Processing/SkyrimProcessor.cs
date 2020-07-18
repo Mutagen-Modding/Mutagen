@@ -431,13 +431,13 @@ namespace Mutagen.Bethesda.Tests
                 case 2:
                     {
                         stream.Position += 4;
-                        long offset = fileOffset + stream.Position - 4;
+                        long offset = fileOffset + stream.Position;
                         ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
                     }
                     break;
                 case 1:
                     {
-                        long offset = fileOffset + stream.Position - 4;
+                        long offset = fileOffset + stream.Position;
                         ProcessFormIDOverflow(stream.ReadSpan(4), ref offset);
                         stream.Position += 4;
                     }
