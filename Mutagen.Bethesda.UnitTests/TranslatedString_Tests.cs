@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.UnitTests
         public const string FrenchString = "Bonjour";
         public const string SpainishString = "Hola";
         public const uint LookupKey = 1234;
+        public const Language UnusedLanguage = Language.Italian;
 
         public abstract TranslatedString Create(string str);
 
@@ -58,7 +59,7 @@ namespace Mutagen.Bethesda.UnitTests
                 new KeyValuePair<Language, string>(Language.French, FrenchString));
 
             // English string
-            Assert.Equal(string.Empty, str.String);
+            Assert.Null(str.String);
             Assert.False(str.TryLookup(Language.English, out var outStr));
 
             // French string
@@ -255,6 +256,7 @@ namespace Mutagen.Bethesda.UnitTests
                 {
                     _dict.TryCreate(kv.Language, () => new Dictionary<uint, string>())[kv.Key] = kv.Str;
                 }
+                _dict.Add(UnusedLanguage, new Dictionary<uint, string>());
             }
 
             public IEnumerable<Language> AvailableLanguages(StringsSource source)

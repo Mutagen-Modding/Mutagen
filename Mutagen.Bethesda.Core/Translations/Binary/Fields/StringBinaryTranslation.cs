@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"String in Strings File format had unexpected length: {frame.Remaining} != 4");
                 }
                 uint key = frame.ReadUInt32();
-                if (key == 0) return string.Empty;
+                if (key == 0) return new TranslatedString(directString: null);
                 return frame.MetaData.StringsLookup.CreateString(source, key);
             }
             else
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Binary
                     throw new ArgumentException($"String in Strings File format had unexpected length: {data.Length} != 4");
                 }
                 uint key = BinaryPrimitives.ReadUInt32LittleEndian(data);
-                if (key == 0) return string.Empty;
+                if (key == 0) return new TranslatedString(directString: null);
                 return lookup.CreateString(source, key);
             }
             else
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Binary
             if (writer.MetaData.StringsWriter == null)
             {
                 writer.Write(
-                    item.String,
+                    item.String ?? string.Empty,
                     binaryType: binaryType);
             }
             else
@@ -218,7 +218,7 @@ namespace Mutagen.Bethesda.Binary
                 if (writer.MetaData.StringsWriter == null)
                 {
                     writer.Write(
-                        item.String,
+                        item.String ?? string.Empty,
                         binaryType: binaryType);
                 }
                 else
@@ -238,7 +238,7 @@ namespace Mutagen.Bethesda.Binary
             if (writer.MetaData.StringsWriter == null)
             {
                 writer.Write(
-                    item.String,
+                    item.String ?? string.Empty,
                     binaryType: binaryType);
             }
             else

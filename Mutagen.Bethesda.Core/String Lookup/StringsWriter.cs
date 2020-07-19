@@ -36,6 +36,8 @@ namespace Mutagen.Bethesda
             };
             lock (strs)
             {
+                // ToDo
+                // Add Count member to TranslatedString, or something similar to short circuit array creation if unnecessary
                 var arr = str.ToArray();
                 if (!arr.Any(x => x.Value != null))
                 {

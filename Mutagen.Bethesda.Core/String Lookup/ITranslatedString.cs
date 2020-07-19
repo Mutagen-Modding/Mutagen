@@ -16,9 +16,9 @@ namespace Mutagen.Bethesda
         Language TargetLanguage { get; }
 
         /// <summary>
-        /// Retrieves or sets the string for the language stored in TranslatedString.DefaultLanguage
+        /// String for the language stored in TranslatedString.DefaultLanguage
         /// </summary>
-        string String { get; set; }
+        string? String { get; set; }
 
         /// <summary>
         /// Attempts to retrieve a string for a specific language
@@ -58,6 +58,11 @@ namespace Mutagen.Bethesda
         /// Clears all language registrations, and sets the default string to empty.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// String for the language stored in TranslatedString.DefaultLanguage
+        /// </summary>
+        new string? String { get; set; }
     }
 
     public static class TranslatedStringExt

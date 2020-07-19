@@ -33,19 +33,21 @@ namespace Mutagen.Bethesda
         internal IStringsFolderLookup? StringsLookup;
         internal StringsSource StringsSource;
 
+        private bool UsingLocalizationDictionary => _localization != null || StringsLookup != null;
+
         /// <inheritdoc />
-        public string String
+        public string? String
         {
             get
             {
                 lock (_lock)
                 {
-                    if (_directString != null) return _directString;
+                    if (!UsingLocalizationDictionary) return _directString;
                     if (TryLookup(TargetLanguage, out var str))
                     {
                         return str;
                     }
-                    return string.Empty;
+                    return null;
                 }
             }
             set => Set(TargetLanguage, value);
@@ -65,7 +67,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="directString">String to register for the default language</param>
         /// <param name="language">Optional target language override</param>
-        public TranslatedString(string directString, Language? language = null)
+        public TranslatedString(string? directString, Language? language = null)
         {
             _directString = directString;
             TargetLanguage = language ?? DefaultLanguage;
@@ -111,15 +113,15 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public bool TryLookup(Language language, [MaybeNullWhen(false)] out string str)
         {
-            if (TargetLanguage == language
-                && _directString != null)
-            {
-                str = _directString;
-                return true;
-            }
-
             lock (_lock)
             {
+                if (TargetLanguage == language
+                    && !UsingLocalizationDictionary)
+                {
+                    str = _directString;
+                    return str != null;
+                }
+
                 if (_localization != null
                     && _localization.TryGetValue(language, out str))
                 {
@@ -153,13 +155,14 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="language">Language to register the string under</param>
         /// <param name="str">String to register</param>
-        public void Set(Language language, string str)
+        public void Set(Language language, string? str)
         {
             lock (_lock)
             {
                 if (_localization == null)
                 {
-                    if (language == TargetLanguage)
+                    if (language == DefaultLanguage
+                        && !UsingLocalizationDictionary)
                     {
                         _directString = str;
                         return;
@@ -189,7 +192,7 @@ namespace Mutagen.Bethesda
         {
             var ret = new Dictionary<Language, string?>();
 
-            // If we already have a direct string, swap to the internal setup where it's stored in the dictionary
+            // Swap direct string to the internal setup where it's stored in the dictionary
             if (_directString != null)
             {
                 ret[TargetLanguage] = _directString;
@@ -206,7 +209,7 @@ namespace Mutagen.Bethesda
                 if (_localization == null) return;
                 if (!_localization.TryGetValue(TargetLanguage, out _directString))
                 {
-                    _directString = string.Empty;
+                    _directString = null;
                 }
                 _localization = null;
             }
@@ -225,55 +228,48 @@ namespace Mutagen.Bethesda
         {
             lock (_lock)
             {
-                if (StringsLookup == null)
-                {
-                    if (_localization == null)
-                    {
-                        if (_directString != null)
-                        {
-                            yield return new KeyValuePair<Language, string>(TargetLanguage, _directString);
-                        }
-                        yield break;
-                    }
-                    else
-                    {
-                        if (_directString != null && !_localization.ContainsKey(TargetLanguage))
-                        {
-                            yield return new KeyValuePair<Language, string>(TargetLanguage, _directString);
-                        }
-                        foreach (var item in _localization)
-                        {
-                            if (item.Value == null) continue;
-                            yield return new KeyValuePair<Language, string>(item.Key, item.Value);
-                        }
-                    }
-                }
-                else
+                ResolveAllStringSources();
+                if (_localization == null)
                 {
                     if (_directString != null)
                     {
                         yield return new KeyValuePair<Language, string>(TargetLanguage, _directString);
                     }
-
-                    foreach (var lang in StringsLookup.AvailableLanguages(StringsSource))
+                    yield break;
+                }
+                else
+                {
+                    foreach (var item in _localization)
                     {
-                        if (_localization != null
-                            && _localization.TryGetValue(lang, out var langStr))
-                        {
-                            if (langStr != null)
-                            {
-                                yield return new KeyValuePair<Language, string>(lang, langStr);
-                            }
-                        }
-                        else
-                        {
-                            if (StringsLookup.TryLookup(StringsSource, lang, Key, out var str))
-                            {
-                                yield return new KeyValuePair<Language, string>(lang, str);
-                            }
-                        }
+                        if (item.Value == null) continue;
+                        yield return new KeyValuePair<Language, string>(item.Key, item.Value);
                     }
                 }
+            }
+        }
+
+        private void ResolveAllStringSources()
+        {
+            lock (_lock)
+            {
+                if (StringsLookup == null) return;
+                if (_localization == null)
+                {
+                    _localization = new Dictionary<Language, string?>();
+                }
+                foreach (var lang in StringsLookup.AvailableLanguages(StringsSource))
+                {
+                    if (_localization.ContainsKey(lang)) continue;
+                    if (StringsLookup.TryLookup(StringsSource, lang, Key, out var str))
+                    {
+                        _localization[lang] = str;
+                    }
+                    else
+                    {
+                        _localization[lang] = null;
+                    }
+                }
+                StringsLookup = null;
             }
         }
 
@@ -284,7 +280,7 @@ namespace Mutagen.Bethesda
 
         public override string ToString()
         {
-            return this.String;
+            return this.String ?? string.Empty;
         }
     }
 }
