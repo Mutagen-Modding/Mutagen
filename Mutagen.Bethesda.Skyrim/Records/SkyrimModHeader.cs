@@ -1,8 +1,10 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -14,6 +16,17 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Master = 0x01
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        int IModHeaderCommon.RawFlags
+        {
+            get => (int)this.Flags;
+            set => this.Flags = (HeaderFlag)value;
+        }
+    }
+
+    public partial interface ISkyrimModHeader : IModHeaderCommon
+    {
     }
 
     namespace Internals

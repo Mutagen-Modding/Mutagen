@@ -22,20 +22,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class SkyrimModBinaryWriteTranslation
-        {
-            public static void WriteModHeader(
-                ISkyrimModGetter mod,
-                MutagenWriter writer,
-                ModKey modKey)
-            {
-                var modHeader = mod.ModHeader.DeepCopy() as SkyrimModHeader;
-                modHeader.Flags = modHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Master, modKey.Master);
-                modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-                modHeader.WriteToBinary(writer);
-            }
-        }
-
         public partial class SkyrimModCommon
         {
             public static void WriteCellsParallel(

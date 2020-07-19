@@ -39,6 +39,7 @@
     <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\GameCategory.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Enums\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Enums\StringsFileFormat.cs" />
     <Compile Include="Enums\StringsSource.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Interfaces\IMajorRecordCommon.cs" />
     <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
     <Compile Include="Interfaces\IMod.cs" />
+    <Compile Include="Interfaces\IModHeaderCommon.cs" />
     <Compile Include="Interfaces\INamed.cs" />
     <Compile Include="Interfaces\INamedRequired.cs" />
     <Compile Include="Interfaces\ITranslatedNamed.cs" />

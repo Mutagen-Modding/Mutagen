@@ -11027,8 +11027,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
             var bundle = new WritingBundle(gameConstants);
             bundle.MasterReferences = masterRefs;
-            SkyrimModBinaryWriteTranslation.WriteModHeader(
-                item,
+            UtilityTranslation.WriteModHeader(
+                item.ModHeader.DeepCopy(),
                 new MutagenWriter(stream, bundle),
                 modKey);
             Stream[] outputStreams = new Stream[113];
@@ -16618,8 +16618,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters param,
             RecordTypeConverter? recordTypeConverter)
         {
-            WriteModHeader(
-                mod: item,
+            UtilityTranslation.WriteModHeader(
+                modHeader: item.ModHeader.DeepCopy(),
                 writer: writer,
                 modKey: modKey);
             if (importMask?.GameSettings ?? true)

@@ -1984,9 +1984,9 @@ namespace Mutagen.Bethesda.Generation
                                     && loqui.Name == "ModHeader")
                                 {
                                     using (var args = new ArgsWrapper(fg,
-                                        $"WriteModHeader"))
+                                        $"{nameof(UtilityTranslation)}.WriteModHeader"))
                                     {
-                                        args.Add("mod: item");
+                                        args.Add("modHeader: item.ModHeader.DeepCopy()");
                                         args.AddPassArg("writer");
                                         args.AddPassArg("modKey");
                                     }

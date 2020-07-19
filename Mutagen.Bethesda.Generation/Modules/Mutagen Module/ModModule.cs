@@ -538,9 +538,9 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr});");
                 fg.AppendLine($"bundle.{nameof(WritingBundle.MasterReferences)} = masterRefs;");
                 using (var args = new ArgsWrapper(fg,
-                    $"{obj.ObjectName}BinaryWriteTranslation.WriteModHeader"))
+                    $"{nameof(UtilityTranslation)}.WriteModHeader"))
                 {
-                    args.Add("item");
+                    args.Add("item.ModHeader.DeepCopy()");
                     args.Add($"new MutagenWriter(stream, bundle)");
                     args.Add("modKey");
                 }

@@ -6101,8 +6101,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
             var bundle = new WritingBundle(GameConstants.Oblivion);
             bundle.MasterReferences = masterRefs;
-            OblivionModBinaryWriteTranslation.WriteModHeader(
-                item,
+            UtilityTranslation.WriteModHeader(
+                item.ModHeader.DeepCopy(),
                 new MutagenWriter(stream, bundle),
                 modKey);
             Stream[] outputStreams = new Stream[56];
@@ -8851,8 +8851,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryWriteParameters param,
             RecordTypeConverter? recordTypeConverter)
         {
-            WriteModHeader(
-                mod: item,
+            UtilityTranslation.WriteModHeader(
+                modHeader: item.ModHeader.DeepCopy(),
                 writer: writer,
                 modKey: modKey);
             if (importMask?.GameSettings ?? true)

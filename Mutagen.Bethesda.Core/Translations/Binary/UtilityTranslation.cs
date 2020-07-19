@@ -1,6 +1,7 @@
 using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
@@ -342,6 +343,16 @@ namespace Mutagen.Bethesda
                 Master = m
             }));
             return ret;
+        }
+
+        public static void WriteModHeader(
+            IModHeaderCommon modHeader,
+            MutagenWriter writer,
+            ModKey modKey)
+        {
+            modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Master);
+            modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
+            modHeader.WriteToBinary(writer);
         }
 
         public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
