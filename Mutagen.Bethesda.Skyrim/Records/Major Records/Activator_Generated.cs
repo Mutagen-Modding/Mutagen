@@ -122,9 +122,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IWaterGetter> IActivatorGetter.WaterType => this.WaterType;
         #endregion
         #region ActivateTextOverride
-        public String? ActivateTextOverride { get; set; }
+        public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IActivatorGetter.ActivateTextOverride => this.ActivateTextOverride;
+        TranslatedString? IActivatorGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region Flags
         public Activator.Flag? Flags { get; set; }
@@ -993,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FormLinkNullable<SoundDescriptor> LoopingSound { get; set; }
         new FormLinkNullable<SoundDescriptor> ActivationSound { get; set; }
         new FormLinkNullable<Water> WaterType { get; set; }
-        new String? ActivateTextOverride { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
         new Activator.Flag? Flags { get; set; }
         new FormLinkNullable<Keyword> InteractionKeyword { get; set; }
         #region Mutagen
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<ISoundDescriptorGetter> LoopingSound { get; }
         IFormLinkNullable<ISoundDescriptorGetter> ActivationSound { get; }
         IFormLinkNullable<IWaterGetter> WaterType { get; }
-        String? ActivateTextOverride { get; }
+        TranslatedString? ActivateTextOverride { get; }
         Activator.Flag? Flags { get; }
         IFormLinkNullable<IKeywordGetter> InteractionKeyword { get; }
 
@@ -1489,7 +1489,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Activator_FieldIndex.WaterType:
                     return typeof(FormLinkNullable<Water>);
                 case Activator_FieldIndex.ActivateTextOverride:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Activator_FieldIndex.Flags:
                     return typeof(Activator.Flag);
                 case Activator_FieldIndex.InteractionKeyword:
@@ -2452,7 +2452,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ActivateTextOverride,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Activator.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
@@ -2629,6 +2630,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActivateTextOverride = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Activator_FieldIndex.ActivateTextOverride;
                 }
@@ -2747,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
-        public String? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region Flags
         private int? _FlagsLocation;

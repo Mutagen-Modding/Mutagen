@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? IRaceGetter.Name => this.Name;
         #endregion
         #region Description
-        public String Description { get; set; } = string.Empty;
+        public TranslatedString Description { get; set; } = string.Empty;
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -3880,7 +3880,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceInternal>
     {
         new TranslatedString? Name { get; set; }
-        new String Description { get; set; }
+        new TranslatedString Description { get; set; }
         new IExtendedList<IFormLink<ASpell>>? ActorEffect { get; set; }
         new FormLinkNullable<Armor> Skin { get; set; }
         new BodyTemplate? BodyTemplate { get; set; }
@@ -3986,7 +3986,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         TranslatedString? Name { get; }
-        String Description { get; }
+        TranslatedString Description { get; }
         IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
         IFormLinkNullable<IArmorGetter> Skin { get; }
         IBodyTemplateGetter? BodyTemplate { get; }
@@ -5085,7 +5085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Race_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Race_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Race_FieldIndex.ActorEffect:
                     return typeof(IExtendedList<IFormLink<ASpell>>);
                 case Race_FieldIndex.Skin:
@@ -5292,7 +5292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = default;
-            item.Description = string.Empty;
+            item.Description.Clear();
             item.ActorEffect = null;
             item.Skin = FormLinkNullable<Armor>.Null;
             item.BodyTemplate = null;
@@ -7628,7 +7628,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
@@ -8136,6 +8137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Race_FieldIndex.Description;
                 }
@@ -8634,7 +8636,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
         #endregion
         public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
         #region Skin

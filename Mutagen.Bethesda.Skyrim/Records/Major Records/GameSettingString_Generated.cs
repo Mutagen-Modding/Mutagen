@@ -44,9 +44,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Data
-        public String? Data { get; set; }
+        public TranslatedString? Data { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IGameSettingStringGetter.Data => this.Data;
+        TranslatedString? IGameSettingStringGetter.Data => this.Data;
         #endregion
 
         #region To String
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
         IGameSetting,
         ILoquiObjectSetter<IGameSettingStringInternal>
     {
-        new String? Data { get; set; }
+        new TranslatedString? Data { get; set; }
     }
 
     public partial interface IGameSettingStringInternal :
@@ -455,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => GameSettingString_Registration.Instance;
-        String? Data { get; }
+        TranslatedString? Data { get; }
 
     }
 
@@ -766,7 +766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case GameSettingString_FieldIndex.Data:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 default:
                     return GameSetting_Registration.GetNthType(index);
             }
@@ -1348,7 +1348,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Data,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
         }
 
         public void Write(
@@ -1449,6 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)GameSettingString_FieldIndex.Data;
                 }
@@ -1510,7 +1512,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Data
         private int? _DataLocation;
-        public String? Data => _DataLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? Data => _DataLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

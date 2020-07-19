@@ -4,7 +4,7 @@
     <Interface>ITranslatedNamed</Interface>
     <Fields>
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="Description" recordType="DESC" hasBeenSet="False" />
+      <String name="Description" recordType="DESC" hasBeenSet="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
         <FormLink refName="ASpell" recordType="SPLO" />
       </List>

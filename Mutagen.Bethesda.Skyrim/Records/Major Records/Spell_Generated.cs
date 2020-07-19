@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IEquipTypeGetter> ISpellGetter.EquipmentType => this.EquipmentType;
         #endregion
         #region Description
-        public String Description { get; set; } = string.Empty;
+        public TranslatedString Description { get; set; } = string.Empty;
         #endregion
         #region BaseCost
         public UInt32 BaseCost { get; set; } = default;
@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLinkNullable<Static> MenuDisplayObject { get; set; }
         new FormLinkNullable<EquipType> EquipmentType { get; set; }
-        new String Description { get; set; }
+        new TranslatedString Description { get; set; }
         new UInt32 BaseCost { get; set; }
         new SpellDataFlag Flags { get; set; }
         new SpellType Type { get; set; }
@@ -1180,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
         IFormLinkNullable<IEquipTypeGetter> EquipmentType { get; }
-        String Description { get; }
+        TranslatedString Description { get; }
         UInt32 BaseCost { get; }
         SpellDataFlag Flags { get; }
         SpellType Type { get; }
@@ -1674,7 +1674,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Spell_FieldIndex.EquipmentType:
                     return typeof(FormLinkNullable<EquipType>);
                 case Spell_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Spell_FieldIndex.BaseCost:
                     return typeof(UInt32);
                 case Spell_FieldIndex.Flags:
@@ -1750,7 +1750,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Keywords = null;
             item.MenuDisplayObject = FormLinkNullable<Static>.Null;
             item.EquipmentType = FormLinkNullable<EquipType>.Null;
-            item.Description = string.Empty;
+            item.Description.Clear();
             item.BaseCost = default;
             item.Flags = default;
             item.Type = default;
@@ -2654,7 +2654,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.SPIT)))
             {
                 writer.Write(item.BaseCost);
@@ -2841,6 +2842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Spell_FieldIndex.Description;
                 }
@@ -2957,7 +2959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : string.Empty;
+        public TranslatedString Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : string.Empty;
         #endregion
         private int? _SPITLocation;
         public Spell.SPITDataType SPITDataTypeState { get; private set; }

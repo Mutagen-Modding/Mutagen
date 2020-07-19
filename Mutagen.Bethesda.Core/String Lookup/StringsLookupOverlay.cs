@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -98,25 +99,38 @@ namespace Mutagen.Bethesda
                 return false;
             }
 
+            str = Get(loc);
+            return true;
+        }
+
+        private string Get(int loc)
+        {
             switch (_type)
             {
                 case StringsFileFormat.Normal:
-                    str = BinaryStringUtility.ParseUnknownLengthString(this._stringData.Slice(loc));
-                    break;
+                    return BinaryStringUtility.ParseUnknownLengthString(this._stringData.Slice(loc));
                 case StringsFileFormat.LengthPrepended:
                     try
                     {
-                        str = BinaryStringUtility.ParsePrependedString(this._stringData.Slice(loc), 4);
+                        return BinaryStringUtility.ParsePrependedString(this._stringData.Slice(loc), 4);
                     }
                     catch (ArgumentOutOfRangeException)
                     {
                         throw new ArgumentOutOfRangeException("Strings file malformed.");
                     }
-                    break;
                 default:
                     throw new NotImplementedException();
             }
-            return true;
         }
+
+        public IEnumerator<KeyValuePair<uint, string>> GetEnumerator()
+        {
+            foreach (var loc in _locations)
+            {
+                yield return new KeyValuePair<uint, string>(loc.Key, Get(loc.Value));
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }

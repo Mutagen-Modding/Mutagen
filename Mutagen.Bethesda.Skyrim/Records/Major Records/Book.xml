@@ -30,7 +30,7 @@
         </Fields>
       </Data>
       <FormLink name="InventoryArt" refName="Static" recordType="INAM" />
-      <String name="Description" recordType="CNAM" />
+      <String name="Description" recordType="CNAM" translated="DL" />
     </Fields>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IItem</LinkInterface>

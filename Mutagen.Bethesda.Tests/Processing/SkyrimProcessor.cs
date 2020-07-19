@@ -847,6 +847,23 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
+        public void GameSettingStringHandler(
+            IMutagenReadStream stream,
+            MajorRecordHeader major,
+            BinaryFileProcessor.ConfigConstructor instr,
+            List<KeyValuePair<uint, uint>> processedStrings,
+            IStringsLookup overlay,
+            ref uint newIndex)
+        {
+            stream.Position -= major.HeaderLength;
+            var majorRec = stream.GetMajorRecordFrame();
+            if (!majorRec.TryLocateSubrecordFrame("EDID", out var edidRec)) throw new ArgumentException();
+            if (edidRec.Content[0] != (byte)'s') return;
+            if (!majorRec.TryLocateSubrecordPinFrame("DATA", out var dataRec)) throw new ArgumentException();
+            stream.Position += dataRec.Location;
+            AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
+        }
+
         private async Task ProcessStringsFilesIndices(Func<IMutagenReadStream> streamGetter, DirectoryInfo dataFolder, Language language, StringsSource source, ModKey modKey)
         {
             using var stream = streamGetter();
@@ -857,14 +874,17 @@ namespace Mutagen.Bethesda.Tests
                         modKey,
                         dataFolder,
                         language,
-                        source,
+                        StringsSource.Normal,
+                        strict: true,
                         RenumberStringsFileEntries(
                             modKey,
                             stream,
                             dataFolder,
                             language,
-                            source,
-                            new RecordType[] { "ACTI", "FULL" },
+                            StringsSource.Normal,
+                            new StringsAlignmentCustom("GMST", GameSettingStringHandler),
+                            new RecordType[] { "LSCR", "DESC" },
+                            new RecordType[] { "ACTI", "FULL", "RNAM" },
                             new RecordType[] { "APPA", "FULL" },
                             new RecordType[] { "AMMO", "FULL" },
                             new RecordType[] { "ARMO", "FULL" },
@@ -873,7 +893,7 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "EYES", "FULL" },
                             new RecordType[] { "CONT", "FULL" },
                             new RecordType[] { "DOOR", "FULL" },
-                            new RecordType[] { "FACT", "FULL" },
+                            new RecordType[] { "FACT", "FULL", "MNAM", "FNAM" },
                             new RecordType[] { "FURN", "FULL" },
                             new RecordType[] { "HAZD", "FULL" },
                             new RecordType[] { "HDPT", "FULL" },
@@ -883,7 +903,7 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "MGEF", "FULL", "DNAM" },
                             new RecordType[] { "MISC", "FULL" },
                             new RecordType[] { "MSTT", "FULL" },
-                            new RecordType[] { "NPC_", "FULL" },
+                            new RecordType[] { "NPC_", "FULL", "SHRT" },
                             new RecordType[] { "ENCH", "FULL" },
                             new RecordType[] { "PROJ", "FULL" },
                             new RecordType[] { "RACE", "FULL" },
@@ -893,7 +913,7 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "TACT", "FULL" },
                             new RecordType[] { "TREE", "FULL" },
                             new RecordType[] { "WEAP", "FULL" },
-                            new RecordType[] { "FLOR", "FULL" },
+                            new RecordType[] { "FLOR", "FULL", "RNAM" },
                             new RecordType[] { "KEYM", "FULL" },
                             new RecordType[] { "CELL", "FULL" },
                             new RecordType[] { "REFR", "FULL" },
@@ -911,7 +931,8 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "WOOP", "FULL", "TNAM" },
                             new RecordType[] { "SHOU", "FULL" },
                             new RecordType[] { "SNCT", "FULL" },
-                            new RecordType[] { "CLFM", "FULL" }
+                            new RecordType[] { "CLFM", "FULL" },
+                            new RecordType[] { "REGN", "RDMP" }
                         ));
                     break;
                 case StringsSource.DL:
@@ -920,6 +941,7 @@ namespace Mutagen.Bethesda.Tests
                         dataFolder,
                         language,
                         StringsSource.DL,
+                        strict: true,
                         RenumberStringsFileEntries(
                             modKey,
                             stream,
@@ -932,14 +954,15 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "ARMO", "DESC" },
                             new RecordType[] { "ALCH", "DESC" },
                             new RecordType[] { "WEAP", "DESC" },
-                            new RecordType[] { "BOOK", "DESC" },
+                            new RecordType[] { "BOOK", "DESC", "CNAM" },
                             new RecordType[] { "QUST", "CNAM" },
-                            new RecordType[] { "LSCR", "DESC" },
                             new RecordType[] { "PERK", "DESC" },
                             new RecordType[] { "AVIF", "DESC" },
                             new RecordType[] { "MESG", "DESC" },
                             new RecordType[] { "SHOU", "DESC" },
-                            new RecordType[] { "COLL", "DESC" }
+                            new RecordType[] { "COLL", "DESC" },
+                            new RecordType[] { "RACE", "DESC" },
+                            new RecordType[] { "SPEL", "DESC" }
                         ));
                     break;
                 case StringsSource.IL:
@@ -948,6 +971,7 @@ namespace Mutagen.Bethesda.Tests
                         dataFolder,
                         language,
                         StringsSource.IL,
+                        strict: true,
                         RenumberStringsFileEntries(
                             modKey,
                             stream,
@@ -958,8 +982,6 @@ namespace Mutagen.Bethesda.Tests
                             new RecordType[] { "INFO", "NAM1" }
                         ));
                     break;
-                default:
-                    throw new NotImplementedException();
             }
         }
     }

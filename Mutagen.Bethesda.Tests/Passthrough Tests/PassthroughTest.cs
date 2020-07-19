@@ -111,6 +111,7 @@ namespace Mutagen.Bethesda.Tests
                         {
                             await processor.Process(
                                 tmpFolder: tmp,
+                                logging: o,
                                 sourcePath: this.FilePath.Path,
                                 preprocessedPath: alignedPath,
                                 outputPath: processedPath);

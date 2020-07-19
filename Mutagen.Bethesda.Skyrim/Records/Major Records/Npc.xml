@@ -37,7 +37,7 @@
       </List>
       <FormLink name="Class" refName="Class" recordType="CNAM" hasBeenSet="False" />
       <String name="Name" recordType="FULL" translated="Normal" />
-      <String name="ShortName" recordType="SHRT" />
+      <String name="ShortName" recordType="SHRT" translated="Normal" />
       <CustomLogic name="DataMarker" recordType="DATA" />
       <RefDirect name="PlayerSkills" refName="PlayerSkills" />
       <List name="HeadParts">

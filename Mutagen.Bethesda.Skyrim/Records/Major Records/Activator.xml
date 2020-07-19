@@ -17,7 +17,7 @@
       <FormLink name="LoopingSound" refName="SoundDescriptor" recordType="SNAM" />
       <FormLink name="ActivationSound" refName="SoundDescriptor" recordType="VNAM" />
       <FormLink name="WaterType" refName="Water" recordType="WNAM" />
-      <String name="ActivateTextOverride" recordType="RNAM" />
+      <String name="ActivateTextOverride" recordType="RNAM" translated="Normal" />
       <Enum name="Flags" byteLength="2" enumName="Activator.Flag" recordType="FNAM" />
       <FormLink name="InteractionKeyword" refName="Keyword" recordType="KNAM" />
     </Fields>

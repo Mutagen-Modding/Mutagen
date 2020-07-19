@@ -8,6 +8,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,7 @@ namespace Mutagen.Bethesda.Tests
         protected Dictionary<RecordType, List<DynamicProcessor>> DynamicProcessors = new Dictionary<RecordType, List<DynamicProcessor>>();
         protected Dictionary<RecordType, List<DynamicStreamProcessor>> DynamicStreamProcessors = new Dictionary<RecordType, List<DynamicStreamProcessor>>();
         public readonly ParallelOptions ParallelOptions;
+        protected Subject<string> Logging;
 
         public Processor(bool multithread)
         {
@@ -50,10 +52,12 @@ namespace Mutagen.Bethesda.Tests
 
         public async Task Process(
             TempFolder tmpFolder,
+            Subject<string> logging,
             string sourcePath,
             string preprocessedPath,
             string outputPath)
         {
+            this.Logging = logging;
             this.TempFolder = tmpFolder;
             this.SourcePath = sourcePath;
             this._NumMasters = GetNumMasters();
@@ -526,8 +530,7 @@ namespace Mutagen.Bethesda.Tests
                     throw new ArgumentException();
                 }
                 var curIndex = BinaryPrimitives.ReadUInt32LittleEndian(stream.GetSpan(4));
-                if (!overlay.TryLookup(curIndex, out var str)
-                    || string.IsNullOrEmpty(str))
+                if (!overlay.TryLookup(curIndex, out var str))
                 {
                     instr.SetSubstitution(stream.Position, new byte[4]);
                 }
@@ -632,6 +635,7 @@ namespace Mutagen.Bethesda.Tests
             DirectoryInfo dataFolder,
             Language language,
             StringsSource source,
+            bool strict,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
@@ -644,6 +648,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 if (lang.Key != language) continue;
                 var overlay = lang.Value.Value;
+                var overlayDict = strict ? overlay.ToDictionary() : null;
                 foreach (var item in reindexing)
                 {
                     if (!overlay.TryLookup(item.Key, out var str))
@@ -655,6 +660,19 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new ArgumentException();
                     }
+                    if (strict)
+                    {
+                        overlayDict.Remove(item.Key);
+                    }
+                }
+                if (strict
+                    && overlayDict.Count > 0)
+                {
+                    foreach (var str in overlayDict.First(100))
+                    {
+                        Logging.OnNext($"Unaccounted for string: {str.Key} {str.Value}");
+                    }
+                    throw new ArgumentException($"String unaccounted for: {overlayDict.Keys.First()}");
                 }
             }
         }

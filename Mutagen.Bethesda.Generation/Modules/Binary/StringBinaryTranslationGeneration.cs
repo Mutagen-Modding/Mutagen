@@ -20,6 +20,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var str = typeGen as Mutagen.Bethesda.Generation.StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
+            if (str.Translated.HasValue) return false;
             return !squashedRepeatedList;
         }
 
@@ -27,6 +28,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var str = typeGen as Mutagen.Bethesda.Generation.StringType;
             if (str.BinaryType != StringBinaryType.NullTerminate) return false;
+            if (str.Translated.HasValue) return false;
             return true;
         }
 

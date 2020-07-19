@@ -4784,6 +4784,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
+            if (item.EditorID == "MS06PotemaBarrierShockConcAimed")
+            {
+                int wer = 23;
+                wer++;
+            }
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,

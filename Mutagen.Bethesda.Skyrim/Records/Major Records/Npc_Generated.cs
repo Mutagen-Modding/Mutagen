@@ -245,9 +245,9 @@ namespace Mutagen.Bethesda.Skyrim
         TranslatedString? INpcGetter.Name => this.Name;
         #endregion
         #region ShortName
-        public String? ShortName { get; set; }
+        public TranslatedString? ShortName { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? INpcGetter.ShortName => this.ShortName;
+        TranslatedString? INpcGetter.ShortName => this.ShortName;
         #endregion
         #region PlayerSkills
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2788,7 +2788,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new FormLink<Class> Class { get; set; }
         new TranslatedString? Name { get; set; }
-        new String? ShortName { get; set; }
+        new TranslatedString? ShortName { get; set; }
         new PlayerSkills? PlayerSkills { get; set; }
         new IExtendedList<IFormLink<HeadPart>> HeadParts { get; }
         new FormLinkNullable<ColorRecord> HairColor { get; set; }
@@ -2859,7 +2859,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         IFormLink<IClassGetter> Class { get; }
         TranslatedString? Name { get; }
-        String? ShortName { get; }
+        TranslatedString? ShortName { get; }
         IPlayerSkillsGetter? PlayerSkills { get; }
         IReadOnlyList<IFormLink<IHeadPartGetter>> HeadParts { get; }
         IFormLinkNullable<IColorRecordGetter> HairColor { get; }
@@ -3685,7 +3685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Npc_FieldIndex.Name:
                     return typeof(TranslatedString);
                 case Npc_FieldIndex.ShortName:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Npc_FieldIndex.PlayerSkills:
                     return typeof(PlayerSkills);
                 case Npc_FieldIndex.HeadParts:
@@ -5833,7 +5833,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ShortName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SHRT),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             NpcBinaryWriteTranslation.WriteBinaryDataMarker(
                 writer: writer,
                 item: item);
@@ -6247,6 +6248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ShortName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Npc_FieldIndex.ShortName;
                 }
@@ -6565,7 +6567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ShortName
         private int? _ShortNameLocation;
-        public String? ShortName => _ShortNameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? ShortName => _ShortNameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ShortNameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region DataMarker
         partial void DataMarkerCustomParse(

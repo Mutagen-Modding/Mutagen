@@ -43,9 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
-        public String? Name { get; set; }
+        public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IRegionMapGetter.Name => this.Name;
+        TranslatedString? IRegionMapGetter.Name => this.Name;
         #endregion
 
         #region To String
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionData,
         ILoquiObjectSetter<IRegionMap>
     {
-        new String? Name { get; set; }
+        new TranslatedString? Name { get; set; }
     }
 
     public partial interface IRegionMapGetter :
@@ -418,7 +418,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
-        String? Name { get; }
+        TranslatedString? Name { get; }
 
     }
 
@@ -725,7 +725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case RegionMap_FieldIndex.Name:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 default:
                     return RegionData_Registration.GetNthType(index);
             }
@@ -1124,7 +1124,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RDMP),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
         }
 
         public void Write(
@@ -1189,6 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)RegionMap_FieldIndex.Name;
                 }
@@ -1251,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Name
         private int? _NameLocation;
-        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? Name => _NameLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

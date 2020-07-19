@@ -156,9 +156,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullable<IStaticGetter> IBookGetter.InventoryArt => this.InventoryArt;
         #endregion
         #region Description
-        public String? Description { get; set; }
+        public TranslatedString? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IBookGetter.Description => this.Description;
+        TranslatedString? IBookGetter.Description => this.Description;
         #endregion
         #region DATADataTypeState
         public Book.DATADataType DATADataTypeState { get; set; } = default;
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Value { get; set; }
         new Single Weight { get; set; }
         new FormLinkNullable<Static> InventoryArt { get; set; }
-        new String? Description { get; set; }
+        new TranslatedString? Description { get; set; }
         new Book.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32 Value { get; }
         Single Weight { get; }
         IFormLinkNullable<IStaticGetter> InventoryArt { get; }
-        String? Description { get; }
+        TranslatedString? Description { get; }
         Book.DATADataType DATADataTypeState { get; }
 
     }
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Book_FieldIndex.InventoryArt:
                     return typeof(FormLinkNullable<Static>);
                 case Book_FieldIndex.Description:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Book_FieldIndex.DATADataTypeState:
                     return typeof(Book.DATADataType);
                 default:
@@ -2938,7 +2938,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.DL);
         }
 
         public void Write(
@@ -3132,6 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Book_FieldIndex.Description;
                 }
@@ -3274,7 +3276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Description
         private int? _DescriptionLocation;
-        public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

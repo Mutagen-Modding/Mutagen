@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda
             lock (strs)
             {
                 var arr = str.ToArray();
-                if (!arr.Any(x => !string.IsNullOrEmpty(x.Value)))
+                if (!arr.Any(x => x.Value != null))
                 {
                     // Do not insert into strings writer
                     return 0;

@@ -110,9 +110,9 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IFloraGetter.PNAM => this.PNAM;
         #endregion
         #region ActivateTextOverride
-        public String? ActivateTextOverride { get; set; }
+        public TranslatedString? ActivateTextOverride { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
+        TranslatedString? IFloraGetter.ActivateTextOverride => this.ActivateTextOverride;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -975,7 +975,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Destructible? Destructible { get; set; }
         new IExtendedList<IFormLink<Keyword>>? Keywords { get; set; }
         new MemorySlice<Byte>? PNAM { get; set; }
-        new String? ActivateTextOverride { get; set; }
+        new TranslatedString? ActivateTextOverride { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new FormLinkNullable<IHarvestTarget> Ingredient { get; set; }
         new FormLinkNullable<SoundDescriptor> HarvestSound { get; set; }
@@ -1007,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructibleGetter? Destructible { get; }
         IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
         ReadOnlyMemorySlice<Byte>? PNAM { get; }
-        String? ActivateTextOverride { get; }
+        TranslatedString? ActivateTextOverride { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         IFormLinkNullable<IHarvestTargetGetter> Ingredient { get; }
         IFormLinkNullable<ISoundDescriptorGetter> HarvestSound { get; }
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case Flora_FieldIndex.PNAM:
                     return typeof(MemorySlice<Byte>);
                 case Flora_FieldIndex.ActivateTextOverride:
-                    return typeof(String);
+                    return typeof(TranslatedString);
                 case Flora_FieldIndex.FNAM:
                     return typeof(MemorySlice<Byte>);
                 case Flora_FieldIndex.Ingredient:
@@ -2414,7 +2414,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ActivateTextOverride,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
-                binaryType: StringBinaryType.NullTerminate);
+                binaryType: StringBinaryType.NullTerminate,
+                source: StringsSource.Normal);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
@@ -2577,6 +2578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActivateTextOverride = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
+                        source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Flora_FieldIndex.ActivateTextOverride;
                 }
@@ -2692,7 +2694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ActivateTextOverride
         private int? _ActivateTextOverrideLocation;
-        public String? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants)) : default(string?);
+        public TranslatedString? ActivateTextOverride => _ActivateTextOverrideLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ActivateTextOverrideLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
         #endregion
         #region FNAM
         private int? _FNAMLocation;
