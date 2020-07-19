@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.UnitTests
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-            Assert.True(reimport.ModHeader.Flags.HasFlag(ModHeader.HeaderFlag.Master));
+            Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
             var childMod = new OblivionMod(new ModKey("Test", master: false));
             var childPath = Path.Combine(folder.Dir.Path, "Test.esp");
             childMod.WriteToBinary(childPath,
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.UnitTests
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             reimport = OblivionMod.CreateFromBinaryOverlay(childPath);
-            Assert.False(reimport.ModHeader.Flags.HasFlag(ModHeader.HeaderFlag.Master));
+            Assert.False(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.UnitTests
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-            Assert.False(reimport.ModHeader.Flags.HasFlag(ModHeader.HeaderFlag.Master));
+            Assert.False(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.UnitTests
                     MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
                 });
             var reimport = OblivionMod.CreateFromBinaryOverlay(masterPath);
-            Assert.True(reimport.ModHeader.Flags.HasFlag(ModHeader.HeaderFlag.Master));
+            Assert.True(reimport.ModHeader.Flags.HasFlag(OblivionModHeader.HeaderFlag.Master));
         }
         #endregion
 

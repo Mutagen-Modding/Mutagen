@@ -29,8 +29,8 @@ namespace Mutagen.Bethesda.Skyrim
                 MutagenWriter writer,
                 ModKey modKey)
             {
-                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
-                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                var modHeader = mod.ModHeader.DeepCopy() as SkyrimModHeader;
+                modHeader.Flags = modHeader.Flags.SetFlag(SkyrimModHeader.HeaderFlag.Master, modKey.Master);
                 modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
                 modHeader.WriteToBinary(writer);
             }

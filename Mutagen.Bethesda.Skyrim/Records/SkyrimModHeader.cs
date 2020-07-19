@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ModHeader
+    public partial class SkyrimModHeader
     {
         [Flags]
         public enum HeaderFlag
@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class ModHeaderBinaryCreateTranslation
+        public partial class SkyrimModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IModHeader item)
+            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
             {
                 item.MasterReferences.SetTo(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Skyrim
             }
         }
 
-        public partial class ModHeaderBinaryWriteTranslation
+        public partial class SkyrimModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IModHeaderGetter item)
+            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, ISkyrimModHeaderGetter item)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

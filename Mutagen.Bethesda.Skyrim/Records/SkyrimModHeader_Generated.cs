@@ -28,14 +28,14 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
-    public partial class ModHeader :
-        IModHeader,
-        ILoquiObjectSetter<ModHeader>,
-        IEquatable<ModHeader>,
+    public partial class SkyrimModHeader :
+        ISkyrimModHeader,
+        ILoquiObjectSetter<SkyrimModHeader>,
+        IEquatable<SkyrimModHeader>,
         IEqualsMask
     {
         #region Ctor
-        public ModHeader()
+        public SkyrimModHeader()
         {
             CustomCtor();
         }
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Flags
-        public ModHeader.HeaderFlag Flags { get; set; } = default;
+        public SkyrimModHeader.HeaderFlag Flags { get; set; } = default;
         #endregion
         #region FormID
         public UInt32 FormID { get; set; } = default;
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Stats
         public ModStats Stats { get; set; } = new ModStats();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModStatsGetter IModHeaderGetter.Stats => Stats;
+        IModStatsGetter ISkyrimModHeaderGetter.Stats => Stats;
         #endregion
         #region TypeOffsets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._TypeOffsets = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModHeaderGetter.TypeOffsets => this.TypeOffsets;
+        ReadOnlyMemorySlice<Byte>? ISkyrimModHeaderGetter.TypeOffsets => this.TypeOffsets;
         #endregion
         #region Deleted
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,17 +82,17 @@ namespace Mutagen.Bethesda.Skyrim
             set => this._Deleted = value;
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ReadOnlyMemorySlice<Byte>? IModHeaderGetter.Deleted => this.Deleted;
+        ReadOnlyMemorySlice<Byte>? ISkyrimModHeaderGetter.Deleted => this.Deleted;
         #endregion
         #region Author
         public String? Author { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IModHeaderGetter.Author => this.Author;
+        String? ISkyrimModHeaderGetter.Author => this.Author;
         #endregion
         #region Description
         public String? Description { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        String? IModHeaderGetter.Description => this.Description;
+        String? ISkyrimModHeaderGetter.Description => this.Description;
         #endregion
         #region MasterReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IMasterReferenceGetter> IModHeaderGetter.MasterReferences => _MasterReferences;
+        IReadOnlyList<IMasterReferenceGetter> ISkyrimModHeaderGetter.MasterReferences => _MasterReferences;
         #endregion
 
         #endregion
@@ -118,19 +118,19 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? IModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? ISkyrimModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
         #region INTV
         public Int32? INTV { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IModHeaderGetter.INTV => this.INTV;
+        Int32? ISkyrimModHeaderGetter.INTV => this.INTV;
         #endregion
         #region INCC
         public Int32? INCC { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Int32? IModHeaderGetter.INCC => this.INCC;
+        Int32? ISkyrimModHeaderGetter.INCC => this.INCC;
         #endregion
 
         #region To String
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
             FileGeneration fg,
             string? name = null)
         {
-            ModHeaderMixIn.ToString(
+            SkyrimModHeaderMixIn.ToString(
                 item: this,
                 name: name);
         }
@@ -149,16 +149,16 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IModHeaderGetter rhs)) return false;
-            return ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (!(obj is ISkyrimModHeaderGetter rhs)) return false;
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
         }
 
-        public bool Equals(ModHeader? obj)
+        public bool Equals(SkyrimModHeader? obj)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
         }
 
-        public override int GetHashCode() => ((ModHeaderCommon)((IModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
+        public override int GetHashCode() => ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Translate
             public Mask<R> Translate<R>(Func<TItem, R> eval)
             {
-                var ret = new ModHeader.Mask<R>();
+                var ret = new SkyrimModHeader.Mask<R>();
                 this.Translate_InternalFill(ret, eval);
                 return ret;
             }
@@ -443,16 +443,16 @@ namespace Mutagen.Bethesda.Skyrim
                 return ToString(printMask: null);
             }
 
-            public string ToString(ModHeader.Mask<bool>? printMask = null)
+            public string ToString(SkyrimModHeader.Mask<bool>? printMask = null)
             {
                 var fg = new FileGeneration();
                 ToString(fg, printMask);
                 return fg.ToString();
             }
 
-            public void ToString(FileGeneration fg, ModHeader.Mask<bool>? printMask = null)
+            public void ToString(FileGeneration fg, SkyrimModHeader.Mask<bool>? printMask = null)
             {
-                fg.AppendLine($"{nameof(ModHeader.Mask<TItem>)} =>");
+                fg.AppendLine($"{nameof(SkyrimModHeader.Mask<TItem>)} =>");
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
@@ -594,36 +594,36 @@ namespace Mutagen.Bethesda.Skyrim
             #region IErrorMask
             public object? GetNthMask(int index)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case SkyrimModHeader_FieldIndex.Flags:
                         return Flags;
-                    case ModHeader_FieldIndex.FormID:
+                    case SkyrimModHeader_FieldIndex.FormID:
                         return FormID;
-                    case ModHeader_FieldIndex.Version:
+                    case SkyrimModHeader_FieldIndex.Version:
                         return Version;
-                    case ModHeader_FieldIndex.FormVersion:
+                    case SkyrimModHeader_FieldIndex.FormVersion:
                         return FormVersion;
-                    case ModHeader_FieldIndex.Version2:
+                    case SkyrimModHeader_FieldIndex.Version2:
                         return Version2;
-                    case ModHeader_FieldIndex.Stats:
+                    case SkyrimModHeader_FieldIndex.Stats:
                         return Stats;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case SkyrimModHeader_FieldIndex.TypeOffsets:
                         return TypeOffsets;
-                    case ModHeader_FieldIndex.Deleted:
+                    case SkyrimModHeader_FieldIndex.Deleted:
                         return Deleted;
-                    case ModHeader_FieldIndex.Author:
+                    case SkyrimModHeader_FieldIndex.Author:
                         return Author;
-                    case ModHeader_FieldIndex.Description:
+                    case SkyrimModHeader_FieldIndex.Description:
                         return Description;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case SkyrimModHeader_FieldIndex.MasterReferences:
                         return MasterReferences;
-                    case ModHeader_FieldIndex.OverriddenForms:
+                    case SkyrimModHeader_FieldIndex.OverriddenForms:
                         return OverriddenForms;
-                    case ModHeader_FieldIndex.INTV:
+                    case SkyrimModHeader_FieldIndex.INTV:
                         return INTV;
-                    case ModHeader_FieldIndex.INCC:
+                    case SkyrimModHeader_FieldIndex.INCC:
                         return INCC;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -632,49 +632,49 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthException(int index, Exception ex)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case SkyrimModHeader_FieldIndex.Flags:
                         this.Flags = ex;
                         break;
-                    case ModHeader_FieldIndex.FormID:
+                    case SkyrimModHeader_FieldIndex.FormID:
                         this.FormID = ex;
                         break;
-                    case ModHeader_FieldIndex.Version:
+                    case SkyrimModHeader_FieldIndex.Version:
                         this.Version = ex;
                         break;
-                    case ModHeader_FieldIndex.FormVersion:
+                    case SkyrimModHeader_FieldIndex.FormVersion:
                         this.FormVersion = ex;
                         break;
-                    case ModHeader_FieldIndex.Version2:
+                    case SkyrimModHeader_FieldIndex.Version2:
                         this.Version2 = ex;
                         break;
-                    case ModHeader_FieldIndex.Stats:
+                    case SkyrimModHeader_FieldIndex.Stats:
                         this.Stats = new MaskItem<Exception?, ModStats.ErrorMask?>(ex, null);
                         break;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case SkyrimModHeader_FieldIndex.TypeOffsets:
                         this.TypeOffsets = ex;
                         break;
-                    case ModHeader_FieldIndex.Deleted:
+                    case SkyrimModHeader_FieldIndex.Deleted:
                         this.Deleted = ex;
                         break;
-                    case ModHeader_FieldIndex.Author:
+                    case SkyrimModHeader_FieldIndex.Author:
                         this.Author = ex;
                         break;
-                    case ModHeader_FieldIndex.Description:
+                    case SkyrimModHeader_FieldIndex.Description:
                         this.Description = ex;
                         break;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case SkyrimModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>(ex, null);
                         break;
-                    case ModHeader_FieldIndex.OverriddenForms:
+                    case SkyrimModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = new MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>(ex, null);
                         break;
-                    case ModHeader_FieldIndex.INTV:
+                    case SkyrimModHeader_FieldIndex.INTV:
                         this.INTV = ex;
                         break;
-                    case ModHeader_FieldIndex.INCC:
+                    case SkyrimModHeader_FieldIndex.INCC:
                         this.INCC = ex;
                         break;
                     default:
@@ -684,49 +684,49 @@ namespace Mutagen.Bethesda.Skyrim
 
             public void SetNthMask(int index, object obj)
             {
-                ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+                SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
                 switch (enu)
                 {
-                    case ModHeader_FieldIndex.Flags:
+                    case SkyrimModHeader_FieldIndex.Flags:
                         this.Flags = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.FormID:
+                    case SkyrimModHeader_FieldIndex.FormID:
                         this.FormID = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Version:
+                    case SkyrimModHeader_FieldIndex.Version:
                         this.Version = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.FormVersion:
+                    case SkyrimModHeader_FieldIndex.FormVersion:
                         this.FormVersion = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Version2:
+                    case SkyrimModHeader_FieldIndex.Version2:
                         this.Version2 = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Stats:
+                    case SkyrimModHeader_FieldIndex.Stats:
                         this.Stats = (MaskItem<Exception?, ModStats.ErrorMask?>?)obj;
                         break;
-                    case ModHeader_FieldIndex.TypeOffsets:
+                    case SkyrimModHeader_FieldIndex.TypeOffsets:
                         this.TypeOffsets = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Deleted:
+                    case SkyrimModHeader_FieldIndex.Deleted:
                         this.Deleted = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Author:
+                    case SkyrimModHeader_FieldIndex.Author:
                         this.Author = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.Description:
+                    case SkyrimModHeader_FieldIndex.Description:
                         this.Description = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.MasterReferences:
+                    case SkyrimModHeader_FieldIndex.MasterReferences:
                         this.MasterReferences = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, MasterReference.ErrorMask?>>?>)obj;
                         break;
-                    case ModHeader_FieldIndex.OverriddenForms:
+                    case SkyrimModHeader_FieldIndex.OverriddenForms:
                         this.OverriddenForms = (MaskItem<Exception?, IEnumerable<(int Index, Exception Value)>?>)obj;
                         break;
-                    case ModHeader_FieldIndex.INTV:
+                    case SkyrimModHeader_FieldIndex.INTV:
                         this.INTV = (Exception?)obj;
                         break;
-                    case ModHeader_FieldIndex.INCC:
+                    case SkyrimModHeader_FieldIndex.INCC:
                         this.INCC = (Exception?)obj;
                         break;
                     default:
@@ -951,44 +951,44 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GrupRecordType = ModHeader_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
         #region Binary Create
         [DebuggerStepThrough]
-        public static ModHeader CreateFromBinary(MutagenFrame frame)
+        public static SkyrimModHeader CreateFromBinary(MutagenFrame frame)
         {
             return CreateFromBinary(
                 frame: frame,
                 recordTypeConverter: null);
         }
 
-        public static ModHeader CreateFromBinary(
+        public static SkyrimModHeader CreateFromBinary(
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ModHeader();
-            ((ModHeaderSetterCommon)((IModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+            var ret = new SkyrimModHeader();
+            ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
                 item: ret,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool TryCreateFromBinary(
             MutagenFrame frame,
-            out ModHeader item,
+            out SkyrimModHeader item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
@@ -1010,27 +1010,27 @@ namespace Mutagen.Bethesda.Skyrim
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModHeaderGetter)rhs, include);
 
         void IClearable.Clear()
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)this).CommonSetterInstance()!).Clear(this);
+            ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)this).CommonSetterInstance()!).Clear(this);
         }
 
-        internal static ModHeader GetNew()
+        internal static SkyrimModHeader GetNew()
         {
-            return new ModHeader();
+            return new SkyrimModHeader();
         }
 
     }
     #endregion
 
     #region Interface
-    public partial interface IModHeader :
-        IModHeaderGetter,
-        ILoquiObjectSetter<IModHeader>
+    public partial interface ISkyrimModHeader :
+        ISkyrimModHeaderGetter,
+        ILoquiObjectSetter<ISkyrimModHeader>
     {
-        new ModHeader.HeaderFlag Flags { get; set; }
+        new SkyrimModHeader.HeaderFlag Flags { get; set; }
         new UInt32 FormID { get; set; }
         new Int32 Version { get; set; }
         new UInt16 FormVersion { get; set; }
@@ -1046,9 +1046,9 @@ namespace Mutagen.Bethesda.Skyrim
         new Int32? INCC { get; set; }
     }
 
-    public partial interface IModHeaderGetter :
+    public partial interface ISkyrimModHeaderGetter :
         ILoquiObject,
-        ILoquiObject<IModHeaderGetter>,
+        ILoquiObject<ISkyrimModHeaderGetter>,
         ILinkedFormKeyContainer,
         IBinaryItem
     {
@@ -1058,8 +1058,8 @@ namespace Mutagen.Bethesda.Skyrim
         object? CommonSetterInstance();
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
-        static ILoquiRegistration Registration => ModHeader_Registration.Instance;
-        ModHeader.HeaderFlag Flags { get; }
+        static ILoquiRegistration Registration => SkyrimModHeader_Registration.Instance;
+        SkyrimModHeader.HeaderFlag Flags { get; }
         UInt32 FormID { get; }
         Int32 Version { get; }
         UInt16 FormVersion { get; }
@@ -1079,42 +1079,42 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Common MixIn
-    public static partial class ModHeaderMixIn
+    public static partial class SkyrimModHeaderMixIn
     {
-        public static void Clear(this IModHeader item)
+        public static void Clear(this ISkyrimModHeader item)
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
+            ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)item).CommonSetterInstance()!).Clear(item: item);
         }
 
-        public static ModHeader.Mask<bool> GetEqualsMask(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs,
+        public static SkyrimModHeader.Mask<bool> GetEqualsMask(
+            this ISkyrimModHeaderGetter item,
+            ISkyrimModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetEqualsMask(
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetEqualsMask(
                 item: item,
                 rhs: rhs,
                 include: include);
         }
 
         public static string ToString(
-            this IModHeaderGetter item,
+            this ISkyrimModHeaderGetter item,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            SkyrimModHeader.Mask<bool>? printMask = null)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 name: name,
                 printMask: printMask);
         }
 
         public static void ToString(
-            this IModHeaderGetter item,
+            this ISkyrimModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            SkyrimModHeader.Mask<bool>? printMask = null)
         {
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).ToString(
+            ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).ToString(
                 item: item,
                 fg: fg,
                 name: name,
@@ -1122,37 +1122,37 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static bool HasBeenSet(
-            this IModHeaderGetter item,
-            ModHeader.Mask<bool?> checkMask)
+            this ISkyrimModHeaderGetter item,
+            SkyrimModHeader.Mask<bool?> checkMask)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).HasBeenSet(
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).HasBeenSet(
                 item: item,
                 checkMask: checkMask);
         }
 
-        public static ModHeader.Mask<bool> GetHasBeenSetMask(this IModHeaderGetter item)
+        public static SkyrimModHeader.Mask<bool> GetHasBeenSetMask(this ISkyrimModHeaderGetter item)
         {
-            var ret = new ModHeader.Mask<bool>(false);
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
+            var ret = new SkyrimModHeader.Mask<bool>(false);
+            ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).FillHasBeenSetMask(
                 item: item,
                 mask: ret);
             return ret;
         }
 
         public static bool Equals(
-            this IModHeaderGetter item,
-            IModHeaderGetter rhs)
+            this ISkyrimModHeaderGetter item,
+            ISkyrimModHeaderGetter rhs)
         {
-            return ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).Equals(
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
                 rhs: rhs);
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs)
+            this ISkyrimModHeader lhs,
+            ISkyrimModHeaderGetter rhs)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -1160,11 +1160,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
-            ModHeader.TranslationMask? copyMask = null)
+            this ISkyrimModHeader lhs,
+            ISkyrimModHeaderGetter rhs,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: default,
@@ -1172,59 +1172,59 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+            this ISkyrimModHeader lhs,
+            ISkyrimModHeaderGetter rhs,
+            out SkyrimModHeader.ErrorMask errorMask,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
             var errorMaskBuilder = new ErrorMaskBuilder();
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMaskBuilder,
                 copyMask: copyMask?.GetCrystal());
-            errorMask = ModHeader.ErrorMask.Factory(errorMaskBuilder);
+            errorMask = SkyrimModHeader.ErrorMask.Factory(errorMaskBuilder);
         }
 
         public static void DeepCopyIn(
-            this IModHeader lhs,
-            IModHeaderGetter rhs,
+            this ISkyrimModHeader lhs,
+            ISkyrimModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
+            ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)lhs).CommonSetterTranslationInstance()!).DeepCopyIn(
                 item: lhs,
                 rhs: rhs,
                 errorMask: errorMask,
                 copyMask: copyMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
-            ModHeader.TranslationMask? copyMask = null)
+        public static SkyrimModHeader DeepCopy(
+            this ISkyrimModHeaderGetter item,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+        public static SkyrimModHeader DeepCopy(
+            this ISkyrimModHeaderGetter item,
+            out SkyrimModHeader.ErrorMask errorMask,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: out errorMask);
         }
 
-        public static ModHeader DeepCopy(
-            this IModHeaderGetter item,
+        public static SkyrimModHeader DeepCopy(
+            this ISkyrimModHeaderGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            return ((ModHeaderSetterTranslationCommon)((IModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
+            return ((SkyrimModHeaderSetterTranslationCommon)((ISkyrimModHeaderGetter)item).CommonSetterTranslationInstance()!).DeepCopy(
                 item: item,
                 copyMask: copyMask,
                 errorMask: errorMask);
@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         [DebuggerStepThrough]
         public static void CopyInFromBinary(
-            this IModHeader item,
+            this ISkyrimModHeader item,
             MutagenFrame frame)
         {
             CopyInFromBinary(
@@ -1243,11 +1243,11 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         public static void CopyInFromBinary(
-            this IModHeader item,
+            this ISkyrimModHeader item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderSetterCommon)((IModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
+            ((SkyrimModHeaderSetterCommon)((ISkyrimModHeaderGetter)item).CommonSetterInstance()!).CopyInFromBinary(
                 item: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter);
@@ -1263,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     #region Field Index
-    public enum ModHeader_FieldIndex
+    public enum SkyrimModHeader_FieldIndex
     {
         Flags = 0,
         FormID = 1,
@@ -1283,9 +1283,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Registration
-    public partial class ModHeader_Registration : ILoquiRegistration
+    public partial class SkyrimModHeader_Registration : ILoquiRegistration
     {
-        public static readonly ModHeader_Registration Instance = new ModHeader_Registration();
+        public static readonly SkyrimModHeader_Registration Instance = new SkyrimModHeader_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Skyrim.ProtocolKey;
 
@@ -1300,23 +1300,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const ushort FieldCount = 14;
 
-        public static readonly Type MaskType = typeof(ModHeader.Mask<>);
+        public static readonly Type MaskType = typeof(SkyrimModHeader.Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(ModHeader.ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(SkyrimModHeader.ErrorMask);
 
-        public static readonly Type ClassType = typeof(ModHeader);
+        public static readonly Type ClassType = typeof(SkyrimModHeader);
 
-        public static readonly Type GetterType = typeof(IModHeaderGetter);
+        public static readonly Type GetterType = typeof(ISkyrimModHeaderGetter);
 
         public static readonly Type? InternalGetterType = null;
 
-        public static readonly Type SetterType = typeof(IModHeader);
+        public static readonly Type SetterType = typeof(ISkyrimModHeader);
 
         public static readonly Type? InternalSetterType = null;
 
-        public const string FullName = "Mutagen.Bethesda.Skyrim.ModHeader";
+        public const string FullName = "Mutagen.Bethesda.Skyrim.SkyrimModHeader";
 
-        public const string Name = "ModHeader";
+        public const string Name = "SkyrimModHeader";
 
         public const string Namespace = "Mutagen.Bethesda.Skyrim";
 
@@ -1329,33 +1329,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (str.Upper)
             {
                 case "FLAGS":
-                    return (ushort)ModHeader_FieldIndex.Flags;
+                    return (ushort)SkyrimModHeader_FieldIndex.Flags;
                 case "FORMID":
-                    return (ushort)ModHeader_FieldIndex.FormID;
+                    return (ushort)SkyrimModHeader_FieldIndex.FormID;
                 case "VERSION":
-                    return (ushort)ModHeader_FieldIndex.Version;
+                    return (ushort)SkyrimModHeader_FieldIndex.Version;
                 case "FORMVERSION":
-                    return (ushort)ModHeader_FieldIndex.FormVersion;
+                    return (ushort)SkyrimModHeader_FieldIndex.FormVersion;
                 case "VERSION2":
-                    return (ushort)ModHeader_FieldIndex.Version2;
+                    return (ushort)SkyrimModHeader_FieldIndex.Version2;
                 case "STATS":
-                    return (ushort)ModHeader_FieldIndex.Stats;
+                    return (ushort)SkyrimModHeader_FieldIndex.Stats;
                 case "TYPEOFFSETS":
-                    return (ushort)ModHeader_FieldIndex.TypeOffsets;
+                    return (ushort)SkyrimModHeader_FieldIndex.TypeOffsets;
                 case "DELETED":
-                    return (ushort)ModHeader_FieldIndex.Deleted;
+                    return (ushort)SkyrimModHeader_FieldIndex.Deleted;
                 case "AUTHOR":
-                    return (ushort)ModHeader_FieldIndex.Author;
+                    return (ushort)SkyrimModHeader_FieldIndex.Author;
                 case "DESCRIPTION":
-                    return (ushort)ModHeader_FieldIndex.Description;
+                    return (ushort)SkyrimModHeader_FieldIndex.Description;
                 case "MASTERREFERENCES":
-                    return (ushort)ModHeader_FieldIndex.MasterReferences;
+                    return (ushort)SkyrimModHeader_FieldIndex.MasterReferences;
                 case "OVERRIDDENFORMS":
-                    return (ushort)ModHeader_FieldIndex.OverriddenForms;
+                    return (ushort)SkyrimModHeader_FieldIndex.OverriddenForms;
                 case "INTV":
-                    return (ushort)ModHeader_FieldIndex.INTV;
+                    return (ushort)SkyrimModHeader_FieldIndex.INTV;
                 case "INCC":
-                    return (ushort)ModHeader_FieldIndex.INCC;
+                    return (ushort)SkyrimModHeader_FieldIndex.INCC;
                 default:
                     return null;
             }
@@ -1363,24 +1363,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
                     return true;
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.FormVersion:
-                case ModHeader_FieldIndex.Version2:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.INTV:
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1389,24 +1389,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
                     return true;
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.FormVersion:
-                case ModHeader_FieldIndex.Version2:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.OverriddenForms:
-                case ModHeader_FieldIndex.INTV:
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1415,23 +1415,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.FormVersion:
-                case ModHeader_FieldIndex.Version2:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.OverriddenForms:
-                case ModHeader_FieldIndex.INTV:
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1440,36 +1440,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static string GetNthName(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.Flags:
                     return "Flags";
-                case ModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.FormID:
                     return "FormID";
-                case ModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.Version:
                     return "Version";
-                case ModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.FormVersion:
                     return "FormVersion";
-                case ModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Version2:
                     return "Version2";
-                case ModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.Stats:
                     return "Stats";
-                case ModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
                     return "TypeOffsets";
-                case ModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Deleted:
                     return "Deleted";
-                case ModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Author:
                     return "Author";
-                case ModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.Description:
                     return "Description";
-                case ModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
                     return "MasterReferences";
-                case ModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
                     return "OverriddenForms";
-                case ModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INTV:
                     return "INTV";
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return "INCC";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1478,23 +1478,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.FormVersion:
-                case ModHeader_FieldIndex.Version2:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.OverriddenForms:
-                case ModHeader_FieldIndex.INTV:
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1503,23 +1503,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static bool IsProtected(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                case ModHeader_FieldIndex.FormID:
-                case ModHeader_FieldIndex.Version:
-                case ModHeader_FieldIndex.FormVersion:
-                case ModHeader_FieldIndex.Version2:
-                case ModHeader_FieldIndex.Stats:
-                case ModHeader_FieldIndex.TypeOffsets:
-                case ModHeader_FieldIndex.Deleted:
-                case ModHeader_FieldIndex.Author:
-                case ModHeader_FieldIndex.Description:
-                case ModHeader_FieldIndex.MasterReferences:
-                case ModHeader_FieldIndex.OverriddenForms:
-                case ModHeader_FieldIndex.INTV:
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.Flags:
+                case SkyrimModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1528,36 +1528,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public static Type GetNthType(ushort index)
         {
-            ModHeader_FieldIndex enu = (ModHeader_FieldIndex)index;
+            SkyrimModHeader_FieldIndex enu = (SkyrimModHeader_FieldIndex)index;
             switch (enu)
             {
-                case ModHeader_FieldIndex.Flags:
-                    return typeof(ModHeader.HeaderFlag);
-                case ModHeader_FieldIndex.FormID:
+                case SkyrimModHeader_FieldIndex.Flags:
+                    return typeof(SkyrimModHeader.HeaderFlag);
+                case SkyrimModHeader_FieldIndex.FormID:
                     return typeof(UInt32);
-                case ModHeader_FieldIndex.Version:
+                case SkyrimModHeader_FieldIndex.Version:
                     return typeof(Int32);
-                case ModHeader_FieldIndex.FormVersion:
+                case SkyrimModHeader_FieldIndex.FormVersion:
                     return typeof(UInt16);
-                case ModHeader_FieldIndex.Version2:
+                case SkyrimModHeader_FieldIndex.Version2:
                     return typeof(UInt16);
-                case ModHeader_FieldIndex.Stats:
+                case SkyrimModHeader_FieldIndex.Stats:
                     return typeof(ModStats);
-                case ModHeader_FieldIndex.TypeOffsets:
+                case SkyrimModHeader_FieldIndex.TypeOffsets:
                     return typeof(MemorySlice<Byte>);
-                case ModHeader_FieldIndex.Deleted:
+                case SkyrimModHeader_FieldIndex.Deleted:
                     return typeof(MemorySlice<Byte>);
-                case ModHeader_FieldIndex.Author:
+                case SkyrimModHeader_FieldIndex.Author:
                     return typeof(String);
-                case ModHeader_FieldIndex.Description:
+                case SkyrimModHeader_FieldIndex.Description:
                     return typeof(String);
-                case ModHeader_FieldIndex.MasterReferences:
+                case SkyrimModHeader_FieldIndex.MasterReferences:
                     return typeof(IExtendedList<MasterReference>);
-                case ModHeader_FieldIndex.OverriddenForms:
+                case SkyrimModHeader_FieldIndex.OverriddenForms:
                     return typeof(IExtendedList<IFormLink<SkyrimMajorRecord>>);
-                case ModHeader_FieldIndex.INTV:
+                case SkyrimModHeader_FieldIndex.INTV:
                     return typeof(Int32);
-                case ModHeader_FieldIndex.INCC:
+                case SkyrimModHeader_FieldIndex.INCC:
                     return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.TES4;
-        public static readonly Type BinaryWriteTranslation = typeof(ModHeaderBinaryWriteTranslation);
+        public static readonly Type BinaryWriteTranslation = typeof(SkyrimModHeaderBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1598,13 +1598,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #endregion
 
     #region Common
-    public partial class ModHeaderSetterCommon
+    public partial class SkyrimModHeaderSetterCommon
     {
-        public static readonly ModHeaderSetterCommon Instance = new ModHeaderSetterCommon();
+        public static readonly SkyrimModHeaderSetterCommon Instance = new SkyrimModHeaderSetterCommon();
 
         partial void ClearPartial();
         
-        public void Clear(IModHeader item)
+        public void Clear(ISkyrimModHeader item)
         {
             ClearPartial();
             item.Flags = default;
@@ -1625,7 +1625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Binary Translation
         public virtual void CopyInFromBinary(
-            IModHeader item,
+            ISkyrimModHeader item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1636,24 +1636,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
-                fillStructs: ModHeaderBinaryCreateTranslation.FillBinaryStructs,
-                fillTyped: ModHeaderBinaryCreateTranslation.FillBinaryRecordTypes);
+                fillStructs: SkyrimModHeaderBinaryCreateTranslation.FillBinaryStructs,
+                fillTyped: SkyrimModHeaderBinaryCreateTranslation.FillBinaryRecordTypes);
         }
         
         #endregion
         
     }
-    public partial class ModHeaderCommon
+    public partial class SkyrimModHeaderCommon
     {
-        public static readonly ModHeaderCommon Instance = new ModHeaderCommon();
+        public static readonly SkyrimModHeaderCommon Instance = new SkyrimModHeaderCommon();
 
-        public ModHeader.Mask<bool> GetEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
+        public SkyrimModHeader.Mask<bool> GetEqualsMask(
+            ISkyrimModHeaderGetter item,
+            ISkyrimModHeaderGetter rhs,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
-            var ret = new ModHeader.Mask<bool>(false);
-            ((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).FillEqualsMask(
+            var ret = new SkyrimModHeader.Mask<bool>(false);
+            ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).FillEqualsMask(
                 item: item,
                 rhs: rhs,
                 ret: ret,
@@ -1662,9 +1662,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillEqualsMask(
-            IModHeaderGetter item,
-            IModHeaderGetter rhs,
-            ModHeader.Mask<bool> ret,
+            ISkyrimModHeaderGetter item,
+            ISkyrimModHeaderGetter rhs,
+            SkyrimModHeader.Mask<bool> ret,
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
@@ -1691,9 +1691,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public string ToString(
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            SkyrimModHeader.Mask<bool>? printMask = null)
         {
             var fg = new FileGeneration();
             ToString(
@@ -1705,18 +1705,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void ToString(
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             FileGeneration fg,
             string? name = null,
-            ModHeader.Mask<bool>? printMask = null)
+            SkyrimModHeader.Mask<bool>? printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"ModHeader =>");
+                fg.AppendLine($"SkyrimModHeader =>");
             }
             else
             {
-                fg.AppendLine($"{name} (ModHeader) =>");
+                fg.AppendLine($"{name} (SkyrimModHeader) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1730,9 +1730,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         protected static void ToStringFields(
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             FileGeneration fg,
-            ModHeader.Mask<bool>? printMask = null)
+            SkyrimModHeader.Mask<bool>? printMask = null)
         {
             if (printMask?.Flags ?? true)
             {
@@ -1828,8 +1828,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public bool HasBeenSet(
-            IModHeaderGetter item,
-            ModHeader.Mask<bool?> checkMask)
+            ISkyrimModHeaderGetter item,
+            SkyrimModHeader.Mask<bool?> checkMask)
         {
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != (item.TypeOffsets != null)) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != (item.Deleted != null)) return false;
@@ -1842,8 +1842,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public void FillHasBeenSetMask(
-            IModHeaderGetter item,
-            ModHeader.Mask<bool> mask)
+            ISkyrimModHeaderGetter item,
+            SkyrimModHeader.Mask<bool> mask)
         {
             mask.Flags = true;
             mask.FormID = true;
@@ -1864,8 +1864,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #region Equals and Hash
         public virtual bool Equals(
-            IModHeaderGetter? lhs,
-            IModHeaderGetter? rhs)
+            ISkyrimModHeaderGetter? lhs,
+            ISkyrimModHeaderGetter? rhs)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -1886,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return true;
         }
         
-        public virtual int GetHashCode(IModHeaderGetter item)
+        public virtual int GetHashCode(ISkyrimModHeaderGetter item)
         {
             var hash = new HashCode();
             hash.Add(item.Flags);
@@ -1929,11 +1929,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public object GetNew()
         {
-            return ModHeader.GetNew();
+            return SkyrimModHeader.GetNew();
         }
         
         #region Mutagen
-        public IEnumerable<FormKey> GetLinkFormKeys(IModHeaderGetter obj)
+        public IEnumerable<FormKey> GetLinkFormKeys(ISkyrimModHeaderGetter obj)
         {
             if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
             {
@@ -1945,50 +1945,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             yield break;
         }
         
-        public void RemapLinks(IModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
+        public void RemapLinks(ISkyrimModHeaderGetter obj, IReadOnlyDictionary<FormKey, FormKey> mapping) => throw new NotImplementedException();
         #endregion
         
     }
-    public partial class ModHeaderSetterTranslationCommon
+    public partial class SkyrimModHeaderSetterTranslationCommon
     {
-        public static readonly ModHeaderSetterTranslationCommon Instance = new ModHeaderSetterTranslationCommon();
+        public static readonly SkyrimModHeaderSetterTranslationCommon Instance = new SkyrimModHeaderSetterTranslationCommon();
 
         #region Deep Copy Fields From
         public void DeepCopyIn(
-            IModHeader item,
-            IModHeaderGetter rhs,
+            ISkyrimModHeader item,
+            ISkyrimModHeaderGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask)
         {
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Flags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Flags) ?? true))
             {
                 item.Flags = rhs.Flags;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormID) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.FormID) ?? true))
             {
                 item.FormID = rhs.FormID;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Version) ?? true))
             {
                 item.Version = rhs.Version;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.FormVersion) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.FormVersion) ?? true))
             {
                 item.FormVersion = rhs.FormVersion;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Version2) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Version2) ?? true))
             {
                 item.Version2 = rhs.Version2;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Stats) ?? true))
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.Stats);
+                errorMask?.PushIndex((int)SkyrimModHeader_FieldIndex.Stats);
                 try
                 {
-                    if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Stats) ?? true))
+                    if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Stats) ?? true))
                     {
                         item.Stats = rhs.Stats.DeepCopy(
-                            copyMask: copyMask?.GetSubCrystal((int)ModHeader_FieldIndex.Stats),
+                            copyMask: copyMask?.GetSubCrystal((int)SkyrimModHeader_FieldIndex.Stats),
                             errorMask: errorMask);
                     }
                 }
@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.TypeOffsets) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.TypeOffsets) ?? true))
             {
                 if(rhs.TypeOffsets.TryGet(out var TypeOffsetsrhs))
                 {
@@ -2013,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TypeOffsets = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Deleted) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Deleted) ?? true))
             {
                 if(rhs.Deleted.TryGet(out var Deletedrhs))
                 {
@@ -2024,17 +2024,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Deleted = default;
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Author) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Author) ?? true))
             {
                 item.Author = rhs.Author;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.Description) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Description) ?? true))
             {
                 item.Description = rhs.Description;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.MasterReferences) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.MasterReferences) ?? true))
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.MasterReferences);
+                errorMask?.PushIndex((int)SkyrimModHeader_FieldIndex.MasterReferences);
                 try
                 {
                     item.MasterReferences.SetTo(
@@ -2056,9 +2056,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.OverriddenForms) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.OverriddenForms) ?? true))
             {
-                errorMask?.PushIndex((int)ModHeader_FieldIndex.OverriddenForms);
+                errorMask?.PushIndex((int)SkyrimModHeader_FieldIndex.OverriddenForms);
                 try
                 {
                     if ((rhs.OverriddenForms != null))
@@ -2083,11 +2083,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INTV) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.INTV) ?? true))
             {
                 item.INTV = rhs.INTV;
             }
-            if ((copyMask?.GetShouldTranslate((int)ModHeader_FieldIndex.INCC) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.INCC) ?? true))
             {
                 item.INCC = rhs.INCC;
             }
@@ -2095,23 +2095,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         #endregion
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
-            ModHeader.TranslationMask? copyMask = null)
+        public SkyrimModHeader DeepCopy(
+            ISkyrimModHeaderGetter item,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 copyMask: copyMask);
             return ret;
         }
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
-            out ModHeader.ErrorMask errorMask,
-            ModHeader.TranslationMask? copyMask = null)
+        public SkyrimModHeader DeepCopy(
+            ISkyrimModHeaderGetter item,
+            out SkyrimModHeader.ErrorMask errorMask,
+            SkyrimModHeader.TranslationMask? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: out errorMask,
@@ -2119,12 +2119,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
         
-        public ModHeader DeepCopy(
-            IModHeaderGetter item,
+        public SkyrimModHeader DeepCopy(
+            ISkyrimModHeaderGetter item,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask = null)
         {
-            ModHeader ret = (ModHeader)((ModHeaderCommon)((IModHeaderGetter)item).CommonInstance()!).GetNew();
+            SkyrimModHeader ret = (SkyrimModHeader)((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).GetNew();
             ret.DeepCopyIn(
                 item,
                 errorMask: errorMask,
@@ -2139,27 +2139,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
 namespace Mutagen.Bethesda.Skyrim
 {
-    public partial class ModHeader
+    public partial class SkyrimModHeader
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
+        public static SkyrimModHeader_Registration Registration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModHeaderCommon.Instance;
+        protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]
         protected object CommonSetterInstance()
         {
-            return ModHeaderSetterCommon.Instance;
+            return SkyrimModHeaderSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkyrimModHeaderSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        object ISkyrimModHeaderGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterInstance() => this.CommonSetterInstance();
+        object ISkyrimModHeaderGetter.CommonSetterInstance() => this.CommonSetterInstance();
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkyrimModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
@@ -2170,17 +2170,17 @@ namespace Mutagen.Bethesda.Skyrim
 #region Binary Translation
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
+    public partial class SkyrimModHeaderBinaryWriteTranslation : IBinaryWriteTranslator
     {
-        public readonly static ModHeaderBinaryWriteTranslation Instance = new ModHeaderBinaryWriteTranslation();
+        public readonly static SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
 
         static partial void WriteBinaryMasterReferencesCustom(
             MutagenWriter writer,
-            IModHeaderGetter item);
+            ISkyrimModHeaderGetter item);
 
         public static void WriteBinaryMasterReferences(
             MutagenWriter writer,
-            IModHeaderGetter item)
+            ISkyrimModHeaderGetter item)
         {
             WriteBinaryMasterReferencesCustom(
                 writer: writer,
@@ -2188,10 +2188,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteEmbedded(
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static void WriteRecordTypes(
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
@@ -2229,7 +2229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
+            SkyrimModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public void Write(
             MutagenWriter writer,
-            IModHeaderGetter item,
+            ISkyrimModHeaderGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
             using (HeaderExport.Header(
@@ -2278,22 +2278,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             Write(
-                item: (IModHeaderGetter)item,
+                item: (ISkyrimModHeaderGetter)item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
     }
 
-    public partial class ModHeaderBinaryCreateTranslation
+    public partial class SkyrimModHeaderBinaryCreateTranslation
     {
-        public readonly static ModHeaderBinaryCreateTranslation Instance = new ModHeaderBinaryCreateTranslation();
+        public readonly static SkyrimModHeaderBinaryCreateTranslation Instance = new SkyrimModHeaderBinaryCreateTranslation();
 
         public static void FillBinaryStructs(
-            IModHeader item,
+            ISkyrimModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<ModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
             item.FormVersion = frame.ReadUInt16();
@@ -2301,7 +2301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public static ParseResult FillBinaryRecordTypes(
-            IModHeader item,
+            ISkyrimModHeader item,
             MutagenFrame frame,
             Dictionary<RecordType, int>? recordParseCount,
             RecordType nextRecordType,
@@ -2314,19 +2314,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     item.Stats = Mutagen.Bethesda.Skyrim.ModStats.CreateFromBinary(frame: frame);
-                    return (int)ModHeader_FieldIndex.Stats;
+                    return (int)SkyrimModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return (int)ModHeader_FieldIndex.TypeOffsets;
+                    return (int)SkyrimModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
-                    return (int)ModHeader_FieldIndex.Deleted;
+                    return (int)SkyrimModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
@@ -2334,7 +2334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ModHeader_FieldIndex.Author;
+                    return (int)SkyrimModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
@@ -2342,14 +2342,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
-                    return (int)ModHeader_FieldIndex.Description;
+                    return (int)SkyrimModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
-                    ModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
+                    SkyrimModHeaderBinaryCreateTranslation.FillBinaryMasterReferencesCustom(
                         frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
                         item: item);
-                    return (int)ModHeader_FieldIndex.MasterReferences;
+                    return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -2359,19 +2359,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLink<SkyrimMajorRecord>>();
-                    return (int)ModHeader_FieldIndex.OverriddenForms;
+                    return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INTV = frame.ReadInt32();
-                    return (int)ModHeader_FieldIndex.INTV;
+                    return (int)SkyrimModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.INCC = frame.ReadInt32();
-                    return (int)ModHeader_FieldIndex.INCC;
+                    return (int)SkyrimModHeader_FieldIndex.INCC;
                 }
                 default:
                     frame.Position += contentLength + frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -2381,7 +2381,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
-            IModHeader item);
+            ISkyrimModHeader item);
 
     }
 
@@ -2389,13 +2389,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Binary Write Mixins
-    public static class ModHeaderBinaryTranslationMixIn
+    public static class SkyrimModHeaderBinaryTranslationMixIn
     {
         public static void WriteToBinary(
-            this IModHeaderGetter item,
+            this ISkyrimModHeaderGetter item,
             MutagenWriter writer)
         {
-            ((ModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
+            ((SkyrimModHeaderBinaryWriteTranslation)item.BinaryWriteTranslator).Write(
                 item: item,
                 writer: writer,
                 recordTypeConverter: null);
@@ -2408,52 +2408,52 @@ namespace Mutagen.Bethesda.Skyrim
 }
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
-    public partial class ModHeaderBinaryOverlay :
+    public partial class SkyrimModHeaderBinaryOverlay :
         BinaryOverlay,
-        IModHeaderGetter
+        ISkyrimModHeaderGetter
     {
         #region Common Routing
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => ModHeader_Registration.Instance;
-        public static ModHeader_Registration Registration => ModHeader_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => SkyrimModHeader_Registration.Instance;
+        public static SkyrimModHeader_Registration Registration => SkyrimModHeader_Registration.Instance;
         [DebuggerStepThrough]
-        protected object CommonInstance() => ModHeaderCommon.Instance;
+        protected object CommonInstance() => SkyrimModHeaderCommon.Instance;
         [DebuggerStepThrough]
-        protected object CommonSetterTranslationInstance() => ModHeaderSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => SkyrimModHeaderSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonInstance() => this.CommonInstance();
+        object ISkyrimModHeaderGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
-        object? IModHeaderGetter.CommonSetterInstance() => null;
+        object? ISkyrimModHeaderGetter.CommonSetterInstance() => null;
         [DebuggerStepThrough]
-        object IModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
+        object ISkyrimModHeaderGetter.CommonSetterTranslationInstance() => this.CommonSetterTranslationInstance();
 
         #endregion
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
         IMask<bool> ILoquiObjectGetter.GetHasBeenSetIMask() => this.GetHasBeenSetMask();
-        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((IModHeaderGetter)rhs, include);
+        IMask<bool> IEqualsMask.GetEqualsIMask(object rhs, EqualsMaskHelper.Include include) => this.GetEqualsMask((ISkyrimModHeaderGetter)rhs, include);
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected IEnumerable<FormKey> LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
+        protected IEnumerable<FormKey> LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => ModHeaderCommon.Instance.GetLinkFormKeys(this);
-        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
-        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ModHeaderCommon.Instance.RemapLinks(this, mapping);
+        IEnumerable<FormKey> ILinkedFormKeyContainer.LinkFormKeys => SkyrimModHeaderCommon.Instance.GetLinkFormKeys(this);
+        protected void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
+        void ILinkedFormKeyContainer.RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderCommon.Instance.RemapLinks(this, mapping);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected object BinaryWriteTranslator => ModHeaderBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            ((ModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
+            ((SkyrimModHeaderBinaryWriteTranslation)this.BinaryWriteTranslator).Write(
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public ModHeader.HeaderFlag Flags => (ModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
+        public SkyrimModHeader.HeaderFlag Flags => (SkyrimModHeader.HeaderFlag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
         public UInt32 FormID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public Int32 Version => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x8, 0x4));
         public UInt16 FormVersion => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0xC, 0x2));
@@ -2495,7 +2495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
 
         partial void CustomCtor();
-        protected ModHeaderBinaryOverlay(
+        protected SkyrimModHeaderBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
             : base(
@@ -2505,12 +2505,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             this.CustomCtor();
         }
 
-        public static ModHeaderBinaryOverlay ModHeaderFactory(
+        public static SkyrimModHeaderBinaryOverlay SkyrimModHeaderFactory(
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var ret = new ModHeaderBinaryOverlay(
+            var ret = new SkyrimModHeaderBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
             var finalPos = checked((int)(stream.Position + stream.GetMajorRecord().TotalLength));
@@ -2529,12 +2529,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             return ret;
         }
 
-        public static ModHeaderBinaryOverlay ModHeaderFactory(
+        public static SkyrimModHeaderBinaryOverlay SkyrimModHeaderFactory(
             ReadOnlyMemorySlice<byte> slice,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            return ModHeaderFactory(
+            return SkyrimModHeaderFactory(
                 stream: new OverlayStream(slice, package),
                 package: package,
                 recordTypeConverter: recordTypeConverter);
@@ -2555,27 +2555,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HEDR:
                 {
                     _StatsLocation = new RangeInt32((stream.Position - offset), finalPos);
-                    return (int)ModHeader_FieldIndex.Stats;
+                    return (int)SkyrimModHeader_FieldIndex.Stats;
                 }
                 case RecordTypeInts.OFST:
                 {
                     _TypeOffsetsLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.TypeOffsets;
+                    return (int)SkyrimModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     _DeletedLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Deleted;
+                    return (int)SkyrimModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     _AuthorLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Author;
+                    return (int)SkyrimModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     _DescriptionLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.Description;
+                    return (int)SkyrimModHeader_FieldIndex.Description;
                 }
                 case RecordTypeInts.MAST:
                 {
@@ -2584,7 +2584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter,
                         trigger: RecordTypes.MAST,
                         factory:  MasterReferenceBinaryOverlay.MasterReferenceFactory);
-                    return (int)ModHeader_FieldIndex.MasterReferences;
+                    return (int)SkyrimModHeader_FieldIndex.MasterReferences;
                 }
                 case RecordTypeInts.ONAM:
                 {
@@ -2596,17 +2596,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         itemLength: 4,
                         getter: (s, p) => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     stream.Position += subLen;
-                    return (int)ModHeader_FieldIndex.OverriddenForms;
+                    return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
                 {
                     _INTVLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.INTV;
+                    return (int)SkyrimModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
                 {
                     _INCCLocation = (stream.Position - offset);
-                    return (int)ModHeader_FieldIndex.INCC;
+                    return (int)SkyrimModHeader_FieldIndex.INCC;
                 }
                 default:
                     return default(int?);
@@ -2618,7 +2618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FileGeneration fg,
             string? name = null)
         {
-            ModHeaderMixIn.ToString(
+            SkyrimModHeaderMixIn.ToString(
                 item: this,
                 name: name);
         }

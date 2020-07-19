@@ -299,8 +299,8 @@
     <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ModHeader.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
+    <Compile Include="Records\OblivionModHeader.cs">
+      <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\OblivionMajorRecord.cs">
       <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
@@ -315,11 +315,8 @@
     <Compile Include="Records\ListGroup_Generated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ModHeader_Generated.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
+      <DependentUpon>OblivionModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\OblivionMajorRecord_Generated.cs">
       <DependentUpon>OblivionMajorRecord.xml</DependentUpon>
@@ -918,6 +915,9 @@
     <Compile Include="Interfaces\LinkInterfaceMapping_Generated.cs" />
     <Compile Include="Records\RecordTypes_Generated.cs" />
     <Compile Include="Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Records\OblivionModHeader_Generated.cs">
+      <DependentUpon>OblivionModHeader.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Loqui" Version="1.1.18" />

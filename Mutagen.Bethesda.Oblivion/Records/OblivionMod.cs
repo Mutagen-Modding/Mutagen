@@ -82,8 +82,8 @@ namespace Mutagen.Bethesda.Oblivion
                 MutagenWriter writer,
                 ModKey modKey)
             {
-                var modHeader = mod.ModHeader.DeepCopy() as ModHeader;
-                modHeader.Flags = modHeader.Flags.SetFlag(ModHeader.HeaderFlag.Master, modKey.Master);
+                var modHeader = mod.ModHeader.DeepCopy() as OblivionModHeader;
+                modHeader.Flags = modHeader.Flags.SetFlag(OblivionModHeader.HeaderFlag.Master, modKey.Master);
                 modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
                 modHeader.WriteToBinary(writer);
             }

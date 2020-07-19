@@ -158,10 +158,10 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ModHeader
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ModHeader _ModHeader_Object = new ModHeader();
-        public ModHeader ModHeader => _ModHeader_Object;
+        private readonly SkyrimModHeader _ModHeader_Object = new SkyrimModHeader();
+        public SkyrimModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter ISkyrimModGetter.ModHeader => _ModHeader_Object;
+        ISkyrimModHeaderGetter ISkyrimModGetter.ModHeader => _ModHeader_Object;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(initialValue, new ModHeader.Mask<TItem>(initialValue));
+                this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(initialValue, new SkyrimModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ReverbParameters,
                 TItem VolumetricLightings)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
+                this.ModHeader = new MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>(ModHeader, new SkyrimModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
                 this.Keywords = new MaskItem<TItem, Group.Mask<TItem>?>(Keywords, new Group.Mask<TItem>(Keywords));
                 this.LocationReferenceTypes = new MaskItem<TItem, Group.Mask<TItem>?>(LocationReferenceTypes, new Group.Mask<TItem>(LocationReferenceTypes));
@@ -1349,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim
             #endregion
 
             #region Members
-            public MaskItem<TItem, ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, SkyrimModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Keywords { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? LocationReferenceTypes { get; set; }
@@ -2877,7 +2877,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, SkyrimModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Keywords = this.Keywords == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Keywords.Overall), this.Keywords.Specific?.Translate(eval));
                 obj.LocationReferenceTypes = this.LocationReferenceTypes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.LocationReferenceTypes.Overall), this.LocationReferenceTypes.Specific?.Translate(eval));
@@ -3494,7 +3494,7 @@ namespace Mutagen.Bethesda.Skyrim
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, SkyrimModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, Group.ErrorMask<Keyword.ErrorMask>?>? Keywords;
             public MaskItem<Exception?, Group.ErrorMask<LocationReferenceType.ErrorMask>?>? LocationReferenceTypes;
@@ -3855,7 +3855,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case SkyrimMod_FieldIndex.ModHeader:
-                        this.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ex, null);
+                        this.ModHeader = new MaskItem<Exception?, SkyrimModHeader.ErrorMask?>(ex, null);
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
                         this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
@@ -4207,7 +4207,7 @@ namespace Mutagen.Bethesda.Skyrim
                 switch (enu)
                 {
                     case SkyrimMod_FieldIndex.ModHeader:
-                        this.ModHeader = (MaskItem<Exception?, ModHeader.ErrorMask?>?)obj;
+                        this.ModHeader = (MaskItem<Exception?, SkyrimModHeader.ErrorMask?>?)obj;
                         break;
                     case SkyrimMod_FieldIndex.GameSettings:
                         this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
@@ -4961,7 +4961,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, ModHeader.TranslationMask?> ModHeader;
+            public MaskItem<bool, SkyrimModHeader.TranslationMask?> ModHeader;
             public MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?> GameSettings;
             public MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?> Keywords;
             public MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?> LocationReferenceTypes;
@@ -5080,7 +5080,7 @@ namespace Mutagen.Bethesda.Skyrim
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.ModHeader = new MaskItem<bool, ModHeader.TranslationMask?>(defaultOn, null);
+                this.ModHeader = new MaskItem<bool, SkyrimModHeader.TranslationMask?>(defaultOn, null);
                 this.GameSettings = new MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?>(defaultOn, null);
                 this.Keywords = new MaskItem<bool, Group.TranslationMask<Keyword.TranslationMask>?>(defaultOn, null);
                 this.LocationReferenceTypes = new MaskItem<bool, Group.TranslationMask<LocationReferenceType.TranslationMask>?>(defaultOn, null);
@@ -7100,7 +7100,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ISkyrimMod>,
         IMod
     {
-        new ModHeader ModHeader { get; }
+        new SkyrimModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
         new Group<Keyword> Keywords { get; }
         new Group<LocationReferenceType> LocationReferenceTypes { get; }
@@ -7230,7 +7230,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SkyrimMod_Registration.Instance;
-        IModHeaderGetter ModHeader { get; }
+        ISkyrimModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IKeywordGetter> Keywords { get; }
         IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes { get; }
@@ -8987,7 +8987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             switch (enu)
             {
                 case SkyrimMod_FieldIndex.ModHeader:
-                    return typeof(ModHeader);
+                    return typeof(SkyrimModHeader);
                 case SkyrimMod_FieldIndex.GameSettings:
                     return typeof(Group<GameSetting>);
                 case SkyrimMod_FieldIndex.Keywords:
@@ -10073,7 +10073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             SkyrimMod.Mask<bool> mask)
         {
-            mask.ModHeader = new MaskItem<bool, ModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
+            mask.ModHeader = new MaskItem<bool, SkyrimModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
             mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
             mask.Keywords = new MaskItem<bool, Group.Mask<bool>?>(true, item.Keywords?.GetHasBeenSetMask());
             mask.LocationReferenceTypes = new MaskItem<bool, Group.Mask<bool>?>(true, item.LocationReferenceTypes?.GetHasBeenSetMask());
@@ -19669,8 +19669,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private IModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? ModHeaderBinaryOverlay.ModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
-        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        private ISkyrimModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? SkyrimModHeaderBinaryOverlay.SkyrimModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
+        public ISkyrimModHeaderGetter ModHeader => _ModHeader ?? new SkyrimModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;

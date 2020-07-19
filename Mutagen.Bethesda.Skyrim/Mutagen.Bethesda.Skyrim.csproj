@@ -759,8 +759,8 @@
     <Compile Include="Records\Major Records\WorldspaceSubBlock.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ModHeader.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
+    <Compile Include="Records\SkyrimModHeader.cs">
+      <DependentUpon>SkyrimModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\ProtocolDefinition_Skyrim.cs" />
     <Compile Include="Records\SkyrimMajorRecord.cs">
@@ -775,11 +775,8 @@
     <Compile Include="Records\ListGroup_Generated.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\ModHeader_Generated.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\ModStats_Generated.cs">
-      <DependentUpon>ModHeader.xml</DependentUpon>
+      <DependentUpon>SkyrimModHeader.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\SkyrimMajorRecord_Generated.cs">
       <DependentUpon>SkyrimMajorRecord.xml</DependentUpon>
@@ -2096,6 +2093,9 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptStringListProperty_Generated.cs">
       <DependentUpon>VirtualMachineAdapter.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\SkyrimModHeader_Generated.cs">
+      <DependentUpon>SkyrimModHeader.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

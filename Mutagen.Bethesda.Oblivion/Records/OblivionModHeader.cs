@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class ModHeader
+    public partial class OblivionModHeader
     {
         [Flags]
         public enum HeaderFlag
@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
-        public partial class ModHeaderBinaryCreateTranslation
+        public partial class OblivionModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IModHeader item)
+            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
             {
                 item.MasterReferences.SetTo(
                     Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public partial class ModHeaderBinaryWriteTranslation
+        public partial class OblivionModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IModHeaderGetter item)
+            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IOblivionModHeaderGetter item)
             {
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

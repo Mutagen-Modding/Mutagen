@@ -101,10 +101,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region ModHeader
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly ModHeader _ModHeader_Object = new ModHeader();
-        public ModHeader ModHeader => _ModHeader_Object;
+        private readonly OblivionModHeader _ModHeader_Object = new OblivionModHeader();
+        public OblivionModHeader ModHeader => _ModHeader_Object;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IModHeaderGetter IOblivionModGetter.ModHeader => _ModHeader_Object;
+        IOblivionModHeaderGetter IOblivionModGetter.ModHeader => _ModHeader_Object;
         #endregion
         #region GameSettings
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -536,7 +536,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(initialValue, new ModHeader.Mask<TItem>(initialValue));
+                this.ModHeader = new MaskItem<TItem, OblivionModHeader.Mask<TItem>?>(initialValue, new OblivionModHeader.Mask<TItem>(initialValue));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
                 TItem Waters,
                 TItem EffectShaders)
             {
-                this.ModHeader = new MaskItem<TItem, ModHeader.Mask<TItem>?>(ModHeader, new ModHeader.Mask<TItem>(ModHeader));
+                this.ModHeader = new MaskItem<TItem, OblivionModHeader.Mask<TItem>?>(ModHeader, new OblivionModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
                 this.Globals = new MaskItem<TItem, Group.Mask<TItem>?>(Globals, new Group.Mask<TItem>(Globals));
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
@@ -722,7 +722,7 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
-            public MaskItem<TItem, ModHeader.Mask<TItem>?>? ModHeader { get; set; }
+            public MaskItem<TItem, OblivionModHeader.Mask<TItem>?>? ModHeader { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? GameSettings { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Globals { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
@@ -1509,7 +1509,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, ModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
+                obj.ModHeader = this.ModHeader == null ? null : new MaskItem<R, OblivionModHeader.Mask<R>?>(eval(this.ModHeader.Overall), this.ModHeader.Specific?.Translate(eval));
                 obj.GameSettings = this.GameSettings == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.GameSettings.Overall), this.GameSettings.Specific?.Translate(eval));
                 obj.Globals = this.Globals == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Globals.Overall), this.Globals.Specific?.Translate(eval));
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
@@ -1841,7 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return _warnings;
                 }
             }
-            public MaskItem<Exception?, ModHeader.ErrorMask?>? ModHeader;
+            public MaskItem<Exception?, OblivionModHeader.ErrorMask?>? ModHeader;
             public MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>? GameSettings;
             public MaskItem<Exception?, Group.ErrorMask<Global.ErrorMask>?>? Globals;
             public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
@@ -2031,7 +2031,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case OblivionMod_FieldIndex.ModHeader:
-                        this.ModHeader = new MaskItem<Exception?, ModHeader.ErrorMask?>(ex, null);
+                        this.ModHeader = new MaskItem<Exception?, OblivionModHeader.ErrorMask?>(ex, null);
                         break;
                     case OblivionMod_FieldIndex.GameSettings:
                         this.GameSettings = new MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>(ex, null);
@@ -2212,7 +2212,7 @@ namespace Mutagen.Bethesda.Oblivion
                 switch (enu)
                 {
                     case OblivionMod_FieldIndex.ModHeader:
-                        this.ModHeader = (MaskItem<Exception?, ModHeader.ErrorMask?>?)obj;
+                        this.ModHeader = (MaskItem<Exception?, OblivionModHeader.ErrorMask?>?)obj;
                         break;
                     case OblivionMod_FieldIndex.GameSettings:
                         this.GameSettings = (MaskItem<Exception?, Group.ErrorMask<GameSetting.ErrorMask>?>?)obj;
@@ -2624,7 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             #region Members
             private TranslationCrystal? _crystal;
-            public MaskItem<bool, ModHeader.TranslationMask?> ModHeader;
+            public MaskItem<bool, OblivionModHeader.TranslationMask?> ModHeader;
             public MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?> GameSettings;
             public MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?> Globals;
             public MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?> Classes;
@@ -2686,7 +2686,7 @@ namespace Mutagen.Bethesda.Oblivion
             #region Ctors
             public TranslationMask(bool defaultOn)
             {
-                this.ModHeader = new MaskItem<bool, ModHeader.TranslationMask?>(defaultOn, null);
+                this.ModHeader = new MaskItem<bool, OblivionModHeader.TranslationMask?>(defaultOn, null);
                 this.GameSettings = new MaskItem<bool, Group.TranslationMask<GameSetting.TranslationMask>?>(defaultOn, null);
                 this.Globals = new MaskItem<bool, Group.TranslationMask<Global.TranslationMask>?>(defaultOn, null);
                 this.Classes = new MaskItem<bool, Group.TranslationMask<Class.TranslationMask>?>(defaultOn, null);
@@ -3801,7 +3801,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IOblivionMod>,
         IMod
     {
-        new ModHeader ModHeader { get; }
+        new OblivionModHeader ModHeader { get; }
         new Group<GameSetting> GameSettings { get; }
         new Group<Global> Globals { get; }
         new Group<Class> Classes { get; }
@@ -3874,7 +3874,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => OblivionMod_Registration.Instance;
-        IModHeaderGetter ModHeader { get; }
+        IOblivionModHeaderGetter ModHeader { get; }
         IGroupGetter<IGameSettingGetter> GameSettings { get; }
         IGroupGetter<IGlobalGetter> Globals { get; }
         IGroupGetter<IClassGetter> Classes { get; }
@@ -4975,7 +4975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.ModHeader:
-                    return typeof(ModHeader);
+                    return typeof(OblivionModHeader);
                 case OblivionMod_FieldIndex.GameSettings:
                     return typeof(Group<GameSetting>);
                 case OblivionMod_FieldIndex.Globals:
@@ -5604,7 +5604,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter item,
             OblivionMod.Mask<bool> mask)
         {
-            mask.ModHeader = new MaskItem<bool, ModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
+            mask.ModHeader = new MaskItem<bool, OblivionModHeader.Mask<bool>?>(true, item.ModHeader?.GetHasBeenSetMask());
             mask.GameSettings = new MaskItem<bool, Group.Mask<bool>?>(true, item.GameSettings?.GetHasBeenSetMask());
             mask.Globals = new MaskItem<bool, Group.Mask<bool>?>(true, item.Globals?.GetHasBeenSetMask());
             mask.Classes = new MaskItem<bool, Group.Mask<bool>?>(true, item.Classes?.GetHasBeenSetMask());
@@ -10469,8 +10469,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private IModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? ModHeaderBinaryOverlay.ModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
-        public IModHeaderGetter ModHeader => _ModHeader ?? new ModHeader();
+        private IOblivionModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? OblivionModHeaderBinaryOverlay.OblivionModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
+        public IOblivionModHeaderGetter ModHeader => _ModHeader ?? new OblivionModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;
