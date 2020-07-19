@@ -34,7 +34,6 @@ namespace Mutagen.Bethesda.Generation
             AttachDebugInspector();
 #endif
             GenerateRecords();
-            GenerateTester();
         }
  
         static bool ShouldRun(string key)
@@ -132,33 +131,6 @@ namespace Mutagen.Bethesda.Generation
                 proto.AddProjectToModify(
                     new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
             }
-
-            gen.Generate().Wait();
-        }
-
-        static void GenerateTester()
-        {
-            if (!ShouldRun("Test")) return;
-            LoquiGenerator gen = new LoquiGenerator()
-            {
-                NotifyingDefault = NotifyingType.None,
-                HasBeenSetDefault = false
-            };
-            var xmlModule = new XmlTranslationModule(gen)
-            {
-                ShouldGenerateXSD = true
-            };
-            gen.Add(xmlModule);
-            var testerProto = gen.AddProtocol(
-                new ProtocolGeneration(
-                    gen,
-                    new ProtocolKey("Tests"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Tests/Settings"))
-                {
-                    DefaultNamespace = "Mutagen.Bethesda.Tests",
-                });
-            testerProto.AddProjectToModify(
-                new FileInfo("../../../../Mutagen.Bethesda.Tests/Mutagen.Bethesda.Tests.csproj"));
 
             gen.Generate().Wait();
         }

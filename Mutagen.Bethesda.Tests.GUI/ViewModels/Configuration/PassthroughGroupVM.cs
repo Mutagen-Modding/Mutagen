@@ -30,8 +30,11 @@ namespace Mutagen.Bethesda.Tests.GUI
 
         public ReactiveCommand<Unit, Unit> DeleteCommand { get; }
 
+        public MainVM Parent { get; }
+
         public PassthroughGroupVM(MainVM vm)
         {
+            Parent = vm;
             AddPassthroughCommand = ReactiveCommand.Create(() =>
             {
                 Passthroughs.Add(new PassthroughVM(this));
@@ -49,11 +52,6 @@ namespace Mutagen.Bethesda.Tests.GUI
             GameRelease = group.GameRelease;
             NicknameSuffix = group.NicknameSuffix;
             Passthroughs.AddRange(group.Targets.Select(t => new PassthroughVM(this, t)));
-        }
-
-        public async Task Run()
-        {
-
         }
     }
 }

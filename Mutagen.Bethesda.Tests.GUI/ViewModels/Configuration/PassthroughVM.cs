@@ -48,10 +48,5 @@ namespace Mutagen.Bethesda.Tests.GUI
             Do = target.Do;
             Path.TargetPath = target.Path;
         }
-
-        public async Task Run()
-        {
-
-        }
     }
 }

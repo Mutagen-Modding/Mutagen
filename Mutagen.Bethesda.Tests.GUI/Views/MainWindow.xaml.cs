@@ -21,7 +21,11 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
         {
             InitializeComponent();
             Task.Run(LoquiRegistration.SpinUp).FireAndForget();
-            this.WireMainVM<MainVM>($"Settings.json");
+            var vm = this.WireMainVM<MainVM>($"Settings.json");
+            if (Environment.GetCommandLineArgs().Contains("Start"))
+            {
+                vm.RunAllCommand.Execute();
+            }
         }
     }
 }

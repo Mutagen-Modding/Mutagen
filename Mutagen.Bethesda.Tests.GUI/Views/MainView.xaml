@@ -8,5 +8,8 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <local:ConfigurationView ViewModel="{Binding}" />
+    <Grid>
+        <local:ConfigurationView x:Name="Config" ViewModel="{Binding}" />
+        <local:TestResultsView x:Name="RunningTests" ViewModel="{Binding}" />
+    </Grid>
 </local:MainViewBase>

@@ -69,6 +69,9 @@ namespace Mutagen.Bethesda.Tests.GUI
 
         public ReactiveCommand<Unit, Unit> AddPassthroughGroupCommand { get; }
 
+        [Reactive]
+        public RunningTestsVM? RunningTests { get; private set; }
+
         public MainVM()
         {
             // Set up selected config swapping and loading
@@ -92,7 +95,6 @@ namespace Mutagen.Bethesda.Tests.GUI
                 })
                 .Skip(1)
                 .Pairwise()
-                .ObserveOn(RxApp.MainThreadScheduler)
                 .Select(p =>
                 {
                     if (p.Previous.Settings != null)
@@ -118,10 +120,7 @@ namespace Mutagen.Bethesda.Tests.GUI
                 .Select(err => err.Succeeded)
                 .ToGuiProperty(this, nameof(ValidTarget));
 
-            RunAllCommand = ReactiveCommand.CreateFromTask(async () =>
-            {
-                await Task.WhenAll(Groups.Select(p => Task.Run(p.Run)));
-            });
+            RunAllCommand = ReactiveCommand.CreateFromTask(Run);
 
             AddPassthroughGroupCommand = ReactiveCommand.Create(AddPassthroughGroup);
 
@@ -233,6 +232,39 @@ namespace Mutagen.Bethesda.Tests.GUI
             settings.DataFolderLocations.Oblivion = DataFolders.Get(GameRelease.Oblivion).DataFolder.TargetPath;
             settings.DataFolderLocations.Skyrim = DataFolders.Get(GameRelease.SkyrimLE).DataFolder.TargetPath;
             settings.DataFolderLocations.SkyrimSpecialEdition = DataFolders.Get(GameRelease.SkyrimSE).DataFolder.TargetPath;
+        }
+
+        public PassthroughSettings GetPassthroughSettings()
+        {
+            return new PassthroughSettings()
+            {
+                DeleteCachesAfter = false,
+                Parallel = true,
+                CacheReuse = new CacheReuse()
+                {
+                    ReuseAlignment = CacheAlignment,
+                    ReuseDecompression = CacheDecompression,
+                    ReuseProcessing = CacheProcessing,
+                },
+                TestBinaryOverlay = TestOverlay,
+                TestCopyIn = TestCopyIn,
+                TestFolder = false,
+                TestImport = TestImport,
+                TestNormal = TestNormal
+            };
+        }
+
+        public async Task Run()
+        {
+            RunningTests = new RunningTestsVM();
+            try
+            {
+                await RunningTests.Run(this);
+            }
+            catch (Exception ex)
+            {
+                RunningTests.Error = ex;
+            }
         }
     }
 }

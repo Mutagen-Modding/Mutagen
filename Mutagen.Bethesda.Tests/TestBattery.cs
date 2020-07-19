@@ -66,10 +66,11 @@ namespace Mutagen.Bethesda.Tests
 
         public static Test RunTest(string name, GameRelease release, Target target, Func<Subject<string>, Task> toDo, bool parallel = true)
         {
-            return RunTest($"{release} => {target.Path}\n" +
-                $"{name}",
+            return new Test(name,
                 parallel: parallel,
-                toDo: toDo);
+                toDo: toDo,
+                release: release,
+                filePath: target.Path);
         }
 
         public static async IAsyncEnumerable<Test> GetTests(TestingSettings settings)
