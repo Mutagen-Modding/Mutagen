@@ -524,7 +524,6 @@ namespace Mutagen.Bethesda.Generation
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);");
                 string gameConstantsStr;
                 if (objData.GameReleaseOptions == null)
                 {
@@ -536,13 +535,15 @@ namespace Mutagen.Bethesda.Generation
                     gameConstantsStr = $"gameConstants";
                 }
                 fg.AppendLine($"var bundle = new {nameof(WritingBundle)}({gameConstantsStr});");
-                fg.AppendLine($"bundle.{nameof(WritingBundle.MasterReferences)} = masterRefs;");
+                fg.AppendLine($"var writer = new MutagenWriter(stream, bundle);");
                 using (var args = new ArgsWrapper(fg,
-                    $"{nameof(UtilityTranslation)}.WriteModHeader"))
+                    $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
                 {
-                    args.Add("item.ModHeader.DeepCopy()");
-                    args.Add($"new MutagenWriter(stream, bundle)");
-                    args.Add("modKey");
+                    args.AddPassArg("param");
+                    args.AddPassArg("writer");
+                    args.Add("mod: item");
+                    args.Add("modHeader: item.ModHeader.DeepCopy()");
+                    args.AddPassArg("modKey");
                 }
 
                 int groupCount = obj.IterateFields()
@@ -569,11 +570,11 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.GetGroupTarget().GetObjectData().CustomBinaryEnd == CustomEnd.Off
                         && loqui.TargetObjectGeneration.Name != "ListGroup")
                     {
-                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
+                        fg.AppendLine($"toDo.Add(() => WriteGroupParallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams{(objData.UsesStringFiles ? ", param.StringsWriter" : null)}));");
                     }
                     else
                     {
-                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, masterRefs, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams));");
+                        fg.AppendLine($"toDo.Add(() => Write{field.Name}Parallel(item.{field.Name}, writer.MetaData.MasterReferences!, {i}{(objData.GameReleaseOptions == null ? null : ", gameConstants")}, outputStreams));");
                     }
                     i++;
                 }

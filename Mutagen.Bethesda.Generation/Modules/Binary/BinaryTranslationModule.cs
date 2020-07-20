@@ -1641,8 +1641,15 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
-                    fg.AppendLine("param ??= BinaryWriteParameters.Default;");
-                    fg.AppendLine($"writer.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.MasterReferences)} = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ConstructWriteMasters)}(item, param);");
+                    using (var args = new ArgsWrapper(fg,
+                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
+                    {
+                        args.AddPassArg("param");
+                        args.AddPassArg("writer");
+                        args.Add("mod: item");
+                        args.Add("modHeader: item.ModHeader.DeepCopy()");
+                        args.AddPassArg("modKey");
+                    }
                 }
                 if (HasEmbeddedFields(obj))
                 {
@@ -1680,8 +1687,6 @@ namespace Mutagen.Bethesda.Generation
                         if (obj.GetObjectType() == ObjectType.Mod)
                         {
                             args.AddPassArg($"importMask");
-                            args.AddPassArg($"modKey");
-                            args.AddPassArg($"param");
                         }
                         args.AddPassArg($"recordTypeConverter");
                     }
@@ -1823,8 +1828,6 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.GetObjectType() == ObjectType.Mod)
                     {
                         args.Add($"GroupMask? importMask");
-                        args.Add($"ModKey modKey");
-                        args.Add($"{nameof(BinaryWriteParameters)} param");
                     }
                     args.Add("RecordTypeConverter? recordTypeConverter");
                 }
@@ -1979,17 +1982,10 @@ namespace Mutagen.Bethesda.Generation
 
                                 var loqui = field as LoquiType;
 
-                                // Custom Modheader insert 
+                                // Skip modheader
                                 if (loqui != null
                                     && loqui.Name == "ModHeader")
                                 {
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"{nameof(UtilityTranslation)}.WriteModHeader"))
-                                    {
-                                        args.Add("modHeader: item.ModHeader.DeepCopy()");
-                                        args.AddPassArg("writer");
-                                        args.AddPassArg("modKey");
-                                    }
                                     return;
                                 }
 

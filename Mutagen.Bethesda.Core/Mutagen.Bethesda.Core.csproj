@@ -83,6 +83,7 @@
     <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Headers\HeaderExt.cs" />
     <Compile Include="Translations\Binary\Headers\StreamHeaderMixIn.cs" />
+    <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Translations\Binary\ParseResult.cs" />
     <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />

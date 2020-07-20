@@ -1,0 +1,109 @@
+{
+  "TestGroupMasks": false,
+  "TestFlattenedMod": false,
+  "TestBenchmarks": false,
+  "TestLocators": false,
+  "TestRecordEnumerables": false,
+  "DataFolderLocations": {
+    "Oblivion": "D:\\Games\\steamapps\\common\\Oblivion\\Data",
+    "Skyrim": "D:\\Games\\steamapps\\common\\Skyrim\\Data",
+    "SkyrimSpecialEdition": "D:\\Games\\steamapps\\common\\Skyrim Special Edition\\Data"
+  },
+  "PassthroughSettings": {
+    "CacheReuse": {
+      "ReuseDecompression": true,
+      "ReuseAlignment": true,
+      "ReuseProcessing": false
+    },
+    "DeleteCachesAfter": false,
+    "TestNormal": false,
+    "TestBinaryOverlay": false,
+    "TestImport": false,
+    "TestFolder": false,
+    "TestCopyIn": true,
+    "Parallel": false
+  },
+  "TargetGroups": [
+    {
+      "Do": true,
+      "NicknameSuffix": "",
+      "GameRelease": 0,
+      "Targets": [
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Oblivion\\Data\\Oblivion.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Oblivion\\Data\\Knights.esp",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        }
+      ]
+    },
+    {
+      "Do": false,
+      "NicknameSuffix": "",
+      "GameRelease": 1,
+      "Targets": [
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim\\Data\\Skyrim.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim\\Data\\Dawnguard.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim\\Data\\HearthFires.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim\\Data\\Dragonborn.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        }
+      ]
+    },
+    {
+      "Do": false,
+      "NicknameSuffix": "SE",
+      "GameRelease": 2,
+      "Targets": [
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim Special Edition\\Data\\Skyrim.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim Special Edition\\Data\\Dawnguard.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim Special Edition\\Data\\HearthFires.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        },
+        {
+          "Do": true,
+          "Path": "D:\\Games\\steamapps\\common\\Skyrim Special Edition\\Data\\Dragonborn.esm",
+          "NumMasters": 0,
+          "ExpectedBaseGroupCount": null
+        }
+      ]
+    }
+  ]
+}

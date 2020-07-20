@@ -11023,129 +11023,130 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters param,
             ModKey modKey)
         {
-            var masterRefs = UtilityTranslation.ConstructWriteMasters(item, param);
             var gameConstants = GameConstants.Get(item.SkyrimRelease.ToGameRelease());
             var bundle = new WritingBundle(gameConstants);
-            bundle.MasterReferences = masterRefs;
-            UtilityTranslation.WriteModHeader(
-                item.ModHeader.DeepCopy(),
-                new MutagenWriter(stream, bundle),
-                modKey);
+            var writer = new MutagenWriter(stream, bundle);
+            ModHeaderWriteLogic.WriteHeader(
+                param: param,
+                writer: writer,
+                mod: item,
+                modHeader: item.ModHeader.DeepCopy(),
+                modKey: modKey);
             Stream[] outputStreams = new Stream[113];
             List<Action> toDo = new List<Action>();
-            toDo.Add(() => WriteGroupParallel(item.GameSettings, masterRefs, 0, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keywords, masterRefs, 1, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, masterRefs, 2, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Actions, masterRefs, 3, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TextureSets, masterRefs, 4, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Globals, masterRefs, 5, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Classes, masterRefs, 6, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Factions, masterRefs, 7, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.HeadParts, masterRefs, 8, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hairs, masterRefs, 9, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Eyes, masterRefs, 10, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Races, masterRefs, 11, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, masterRefs, 12, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, masterRefs, 13, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MagicEffects, masterRefs, 14, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, masterRefs, 15, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, masterRefs, 16, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Spells, masterRefs, 17, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scrolls, masterRefs, 18, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Activators, masterRefs, 19, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, masterRefs, 20, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Armors, masterRefs, 21, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Books, masterRefs, 22, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Containers, masterRefs, 23, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Doors, masterRefs, 24, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingredients, masterRefs, 25, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Lights, masterRefs, 26, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MiscItems, masterRefs, 27, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, masterRefs, 28, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Statics, masterRefs, 29, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, masterRefs, 30, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Grasses, masterRefs, 31, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Trees, masterRefs, 32, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Florae, masterRefs, 33, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Furniture, masterRefs, 34, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weapons, masterRefs, 35, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ammunitions, masterRefs, 36, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Npcs, masterRefs, 37, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, masterRefs, 38, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Keys, masterRefs, 39, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Ingestibles, masterRefs, 40, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, masterRefs, 41, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, masterRefs, 42, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Projectiles, masterRefs, 43, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Hazards, masterRefs, 44, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoulGems, masterRefs, 45, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledItems, masterRefs, 46, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Weathers, masterRefs, 47, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Climates, masterRefs, 48, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, masterRefs, 49, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VisualEffects, masterRefs, 50, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Regions, masterRefs, 51, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, masterRefs, 52, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteCellsParallel(item.Cells, masterRefs, 53, gameConstants, outputStreams));
-            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, masterRefs, 54, gameConstants, outputStreams));
-            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, masterRefs, 55, gameConstants, outputStreams));
-            toDo.Add(() => WriteGroupParallel(item.Quests, masterRefs, 56, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, masterRefs, 57, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Packages, masterRefs, 58, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CombatStyles, masterRefs, 59, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LoadScreens, masterRefs, 60, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, masterRefs, 61, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, masterRefs, 62, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Waters, masterRefs, 63, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EffectShaders, masterRefs, 64, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Explosions, masterRefs, 65, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Debris, masterRefs, 66, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, masterRefs, 67, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, masterRefs, 68, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FormLists, masterRefs, 69, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Perks, masterRefs, 70, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.BodyParts, masterRefs, 71, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AddonNodes, masterRefs, 72, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, masterRefs, 73, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraShots, masterRefs, 74, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CameraPaths, masterRefs, 75, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, masterRefs, 76, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, masterRefs, 77, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Impacts, masterRefs, 78, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, masterRefs, 79, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, masterRefs, 80, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EncounterZones, masterRefs, 81, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Locations, masterRefs, 82, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Messages, masterRefs, 83, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, masterRefs, 84, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, masterRefs, 85, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTypes, masterRefs, 86, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Footsteps, masterRefs, 87, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.FootstepSets, masterRefs, 88, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, masterRefs, 89, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, masterRefs, 90, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, masterRefs, 91, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogBranches, masterRefs, 92, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MusicTracks, masterRefs, 93, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DialogViews, masterRefs, 94, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, masterRefs, 95, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Shouts, masterRefs, 96, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.EquipTypes, masterRefs, 97, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Relationships, masterRefs, 98, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Scenes, masterRefs, 99, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, masterRefs, 100, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Outfits, masterRefs, 101, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ArtObjects, masterRefs, 102, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, masterRefs, 103, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.MovementTypes, masterRefs, 104, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, masterRefs, 105, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.DualCastData, masterRefs, 106, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundCategories, masterRefs, 107, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, masterRefs, 108, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, masterRefs, 109, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Colors, masterRefs, 110, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, masterRefs, 111, gameConstants, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, masterRefs, 112, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LocationReferenceTypes, writer.MetaData.MasterReferences!, 2, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Actions, writer.MetaData.MasterReferences!, 3, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TextureSets, writer.MetaData.MasterReferences!, 4, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Globals, writer.MetaData.MasterReferences!, 5, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 6, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 7, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 8, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hairs, writer.MetaData.MasterReferences!, 9, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Eyes, writer.MetaData.MasterReferences!, 10, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Races, writer.MetaData.MasterReferences!, 11, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundMarkers, writer.MetaData.MasterReferences!, 12, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AcousticSpaces, writer.MetaData.MasterReferences!, 13, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MagicEffects, writer.MetaData.MasterReferences!, 14, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LandscapeTextures, writer.MetaData.MasterReferences!, 15, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ObjectEffects, writer.MetaData.MasterReferences!, 16, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Spells, writer.MetaData.MasterReferences!, 17, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scrolls, writer.MetaData.MasterReferences!, 18, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Activators, writer.MetaData.MasterReferences!, 19, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.TalkingActivators, writer.MetaData.MasterReferences!, 20, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Armors, writer.MetaData.MasterReferences!, 21, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Books, writer.MetaData.MasterReferences!, 22, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Containers, writer.MetaData.MasterReferences!, 23, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Doors, writer.MetaData.MasterReferences!, 24, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingredients, writer.MetaData.MasterReferences!, 25, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Lights, writer.MetaData.MasterReferences!, 26, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MiscItems, writer.MetaData.MasterReferences!, 27, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AlchemicalApparatuses, writer.MetaData.MasterReferences!, 28, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Statics, writer.MetaData.MasterReferences!, 29, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MoveableStatics, writer.MetaData.MasterReferences!, 30, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Grasses, writer.MetaData.MasterReferences!, 31, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Trees, writer.MetaData.MasterReferences!, 32, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Florae, writer.MetaData.MasterReferences!, 33, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Furniture, writer.MetaData.MasterReferences!, 34, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weapons, writer.MetaData.MasterReferences!, 35, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ammunitions, writer.MetaData.MasterReferences!, 36, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Npcs, writer.MetaData.MasterReferences!, 37, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledNpcs, writer.MetaData.MasterReferences!, 38, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Keys, writer.MetaData.MasterReferences!, 39, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Ingestibles, writer.MetaData.MasterReferences!, 40, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleMarkers, writer.MetaData.MasterReferences!, 41, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ConstructibleObjects, writer.MetaData.MasterReferences!, 42, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Projectiles, writer.MetaData.MasterReferences!, 43, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Hazards, writer.MetaData.MasterReferences!, 44, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoulGems, writer.MetaData.MasterReferences!, 45, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledItems, writer.MetaData.MasterReferences!, 46, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Weathers, writer.MetaData.MasterReferences!, 47, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Climates, writer.MetaData.MasterReferences!, 48, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ShaderParticleGeometries, writer.MetaData.MasterReferences!, 49, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VisualEffects, writer.MetaData.MasterReferences!, 50, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Regions, writer.MetaData.MasterReferences!, 51, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.NavigationMeshInfoMaps, writer.MetaData.MasterReferences!, 52, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteCellsParallel(item.Cells, writer.MetaData.MasterReferences!, 53, gameConstants, outputStreams));
+            toDo.Add(() => WriteWorldspacesParallel(item.Worldspaces, writer.MetaData.MasterReferences!, 54, gameConstants, outputStreams));
+            toDo.Add(() => WriteDialogTopicsParallel(item.DialogTopics, writer.MetaData.MasterReferences!, 55, gameConstants, outputStreams));
+            toDo.Add(() => WriteGroupParallel(item.Quests, writer.MetaData.MasterReferences!, 56, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.IdleAnimations, writer.MetaData.MasterReferences!, 57, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Packages, writer.MetaData.MasterReferences!, 58, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CombatStyles, writer.MetaData.MasterReferences!, 59, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LoadScreens, writer.MetaData.MasterReferences!, 60, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LeveledSpells, writer.MetaData.MasterReferences!, 61, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AnimatedObjects, writer.MetaData.MasterReferences!, 62, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Waters, writer.MetaData.MasterReferences!, 63, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EffectShaders, writer.MetaData.MasterReferences!, 64, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Explosions, writer.MetaData.MasterReferences!, 65, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Debris, writer.MetaData.MasterReferences!, 66, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaces, writer.MetaData.MasterReferences!, 67, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImageSpaceAdapters, writer.MetaData.MasterReferences!, 68, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FormLists, writer.MetaData.MasterReferences!, 69, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Perks, writer.MetaData.MasterReferences!, 70, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.BodyParts, writer.MetaData.MasterReferences!, 71, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AddonNodes, writer.MetaData.MasterReferences!, 72, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ActorValueInformation, writer.MetaData.MasterReferences!, 73, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraShots, writer.MetaData.MasterReferences!, 74, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CameraPaths, writer.MetaData.MasterReferences!, 75, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VoiceTypes, writer.MetaData.MasterReferences!, 76, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialTypes, writer.MetaData.MasterReferences!, 77, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Impacts, writer.MetaData.MasterReferences!, 78, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ImpactDataSets, writer.MetaData.MasterReferences!, 79, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArmorAddons, writer.MetaData.MasterReferences!, 80, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EncounterZones, writer.MetaData.MasterReferences!, 81, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Locations, writer.MetaData.MasterReferences!, 82, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Messages, writer.MetaData.MasterReferences!, 83, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DefaultObjectManagers, writer.MetaData.MasterReferences!, 84, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.LightingTemplates, writer.MetaData.MasterReferences!, 85, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTypes, writer.MetaData.MasterReferences!, 86, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Footsteps, writer.MetaData.MasterReferences!, 87, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.FootstepSets, writer.MetaData.MasterReferences!, 88, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerBranchNodes, writer.MetaData.MasterReferences!, 89, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerQuestNodes, writer.MetaData.MasterReferences!, 90, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.StoryManagerEventNodes, writer.MetaData.MasterReferences!, 91, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogBranches, writer.MetaData.MasterReferences!, 92, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MusicTracks, writer.MetaData.MasterReferences!, 93, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DialogViews, writer.MetaData.MasterReferences!, 94, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.WordsOfPower, writer.MetaData.MasterReferences!, 95, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Shouts, writer.MetaData.MasterReferences!, 96, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.EquipTypes, writer.MetaData.MasterReferences!, 97, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Relationships, writer.MetaData.MasterReferences!, 98, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Scenes, writer.MetaData.MasterReferences!, 99, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.AssociationTypes, writer.MetaData.MasterReferences!, 100, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Outfits, writer.MetaData.MasterReferences!, 101, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ArtObjects, writer.MetaData.MasterReferences!, 102, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MaterialObjects, writer.MetaData.MasterReferences!, 103, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.MovementTypes, writer.MetaData.MasterReferences!, 104, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundDescriptors, writer.MetaData.MasterReferences!, 105, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.DualCastData, writer.MetaData.MasterReferences!, 106, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundCategories, writer.MetaData.MasterReferences!, 107, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.SoundOutputModels, writer.MetaData.MasterReferences!, 108, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.CollisionLayers, writer.MetaData.MasterReferences!, 109, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.Colors, writer.MetaData.MasterReferences!, 110, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.ReverbParameters, writer.MetaData.MasterReferences!, 111, gameConstants, outputStreams, param.StringsWriter));
+            toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, writer.MetaData.MasterReferences!, 112, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -16614,14 +16615,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModGetter item,
             MutagenWriter writer,
             GroupMask? importMask,
-            ModKey modKey,
-            BinaryWriteParameters param,
             RecordTypeConverter? recordTypeConverter)
         {
-            UtilityTranslation.WriteModHeader(
-                modHeader: item.ModHeader.DeepCopy(),
-                writer: writer,
-                modKey: modKey);
             if (importMask?.GameSettings ?? true)
             {
                 var GameSettingsItem = item.GameSettings;
@@ -17875,14 +17870,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {
-            param ??= BinaryWriteParameters.Default;
-            writer.MetaData.MasterReferences = UtilityTranslation.ConstructWriteMasters(item, param);
+            ModHeaderWriteLogic.WriteHeader(
+                param: param,
+                writer: writer,
+                mod: item,
+                modHeader: item.ModHeader.DeepCopy(),
+                modKey: modKey);
             WriteRecordTypes(
                 item: item,
                 writer: writer,
                 importMask: importMask,
-                modKey: modKey,
-                param: param,
                 recordTypeConverter: recordTypeConverter);
         }
 

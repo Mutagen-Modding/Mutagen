@@ -317,44 +317,6 @@ namespace Mutagen.Bethesda
             return record;
         }
 
-        public static MasterReferenceReader ConstructWriteMasters(IModGetter mod, BinaryWriteParameters param)
-        {
-            MasterReferenceReader ret = new MasterReferenceReader(mod.ModKey);
-            HashSet<ModKey> modKeys = new HashSet<ModKey>();
-            switch (param.MastersListSync)
-            {
-                case BinaryWriteParameters.MastersListSyncOption.NoCheck:
-                    modKeys.Add(mod.MasterReferences.Select(m => m.Master));
-                    break;
-                case BinaryWriteParameters.MastersListSyncOption.Iterate:
-                    modKeys.Add(
-                        // All FormKeys of links
-                        mod.LinkFormKeys.Select(f => f.ModKey)
-                        // All FormKeys of records themselves
-                        .And(mod.EnumerateMajorRecords().Select(m => m.FormKey.ModKey)));
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            modKeys.Remove(mod.ModKey);
-            modKeys.Remove(ModKey.Null);
-            ret.SetTo(modKeys.Select(m => new MasterReference()
-            {
-                Master = m
-            }));
-            return ret;
-        }
-
-        public static void WriteModHeader(
-            IModHeaderCommon modHeader,
-            MutagenWriter writer,
-            ModKey modKey)
-        {
-            modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Master);
-            modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
-            modHeader.WriteToBinary(writer);
-        }
-
         public static ReadOnlyMemorySlice<byte> DecompressSpan(ReadOnlyMemorySlice<byte> slice, GameConstants meta)
         {
             var majorMeta = meta.MajorRecord(slice);
