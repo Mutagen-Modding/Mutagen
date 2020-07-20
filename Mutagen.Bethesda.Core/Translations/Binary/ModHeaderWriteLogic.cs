@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Internals
         private readonly BinaryWriteParameters _params;
 
         private readonly HashSet<ModKey> _modKeys = new HashSet<ModKey>();
+        private uint _numRecords;
 
         private ModHeaderWriteLogic(
             BinaryWriteParameters? param,
@@ -22,6 +23,7 @@ namespace Mutagen.Bethesda.Internals
         {
             _params = param ?? BinaryWriteParameters.Default;
             AddMasterCollectionActions(mod);
+            AddRecordCount();
 
             // Do any major record iteration work
             if (_recordIterationActions.Count > 0
@@ -55,7 +57,7 @@ namespace Mutagen.Bethesda.Internals
                 param: param,
                 mod: mod);
             writer.MetaData.MasterReferences = modHeaderWriter.ConstructWriteMasters(mod);
-            WriteModHeader(
+            modHeaderWriter.WriteModHeader(
                 modHeader: modHeader,
                 writer: writer,
                 modKey: modKey);
@@ -74,7 +76,21 @@ namespace Mutagen.Bethesda.Internals
                     _formLinkIterationActions.Add(formLink => _modKeys.Add(formLink.ModKey));
                     break;
                 default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private void AddRecordCount()
+        {
+            switch (_params.RecordCountSync)
+            {
+                case BinaryWriteParameters.RecordCountSyncOption.NoCheck:
                     break;
+                case BinaryWriteParameters.RecordCountSyncOption.Iterate:
+                    _recordIterationActions.Add(maj => _numRecords++);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -91,13 +107,17 @@ namespace Mutagen.Bethesda.Internals
         }
         #endregion
 
-        private static void WriteModHeader(
+        private void WriteModHeader(
             IModHeaderCommon modHeader,
             MutagenWriter writer,
             ModKey modKey)
         {
             modHeader.RawFlags = EnumExt.SetFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.Master, modKey.Master);
             modHeader.MasterReferences.SetTo(writer.MetaData.MasterReferences!.Masters.Select(m => m.DeepCopy()));
+            if (_params.RecordCountSync != BinaryWriteParameters.RecordCountSyncOption.NoCheck)
+            {
+                modHeader.NumRecords = _numRecords;
+            }
             modHeader.WriteToBinary(writer);
         }
     }

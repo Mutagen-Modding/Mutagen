@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Version { get; set; } = default;
         #endregion
         #region NumRecords
-        public Int32 NumRecords { get; set; } = default;
+        public UInt32 NumRecords { get; set; } = default;
         #endregion
         #region NextObjectID
         public UInt32 NextObjectID { get; set; } = default;
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IModStats>
     {
         new Single Version { get; set; }
-        new Int32 NumRecords { get; set; }
+        new UInt32 NumRecords { get; set; }
         new UInt32 NextObjectID { get; set; }
     }
 
@@ -494,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ModStats_Registration.Instance;
         Single Version { get; }
-        Int32 NumRecords { get; }
+        UInt32 NumRecords { get; }
         UInt32 NextObjectID { get; }
 
     }
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case ModStats_FieldIndex.Version:
                     return typeof(Single);
                 case ModStats_FieldIndex.NumRecords:
-                    return typeof(Int32);
+                    return typeof(UInt32);
                 case ModStats_FieldIndex.NextObjectID:
                     return typeof(UInt32);
                 default:
@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Version = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NumRecords = frame.ReadInt32();
+            item.NumRecords = frame.ReadUInt32();
             item.NextObjectID = frame.ReadUInt32();
         }
 
@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Single Version => _data.Slice(0x0, 0x4).Float();
-        public Int32 NumRecords => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
+        public UInt32 NumRecords => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         public UInt32 NextObjectID => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

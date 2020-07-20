@@ -141,6 +141,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 ModKeySync = BinaryWriteParameters.ModKeySyncOption.NoCheck,
                 MastersListSync = BinaryWriteParameters.MastersListSyncOption.NoCheck,
+                RecordCountSync = BinaryWriteParameters.RecordCountSyncOption.NoCheck,
             };
 
             // Do normal

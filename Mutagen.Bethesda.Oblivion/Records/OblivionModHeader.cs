@@ -23,6 +23,13 @@ namespace Mutagen.Bethesda.Oblivion
             get => (int)this.Flags;
             set => this.Flags = (HeaderFlag)value;
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        uint IModHeaderCommon.NumRecords
+        {
+            get => this.Stats.NumRecords;
+            set => this.Stats.NumRecords = value;
+        }
     }
 
     public partial interface IOblivionModHeader : IModHeaderCommon

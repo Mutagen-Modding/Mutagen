@@ -21,10 +21,12 @@ namespace Mutagen.Bethesda
             /// Do no check
             /// </summary>
             NoCheck,
+
             /// <summary>
             /// If a mod's master flag does not match the path being exported to, throw
             /// </summary>
             ThrowIfMisaligned,
+
             /// <summary>
             /// If a mod's master flag does not match the path being exported to, modify it to match the path
             /// </summary>
@@ -40,8 +42,25 @@ namespace Mutagen.Bethesda
             /// Do no check
             /// </summary>
             NoCheck,
+
             /// <summary>
-            /// Iterate source mod before writing to compile the list of masters to use.
+            /// Iterate source mod
+            /// </summary>
+            Iterate,
+        }
+
+        /// <summary>
+        /// Flag to specify what logic to use to keep a mod's record count in sync
+        /// </summary>
+        public enum RecordCountSyncOption
+        {
+            /// <summary>
+            /// Do no check
+            /// </summary>
+            NoCheck,
+
+            /// <summary>
+            /// Iterate source mod
             /// </summary>
             Iterate,
         }
@@ -55,6 +74,11 @@ namespace Mutagen.Bethesda
         /// Logic to use to keep a mod's master list in sync
         /// </summary>
         public MastersListSyncOption MastersListSync = MastersListSyncOption.Iterate;
+
+        /// <summary>
+        /// Logic to use to keep a mod's record count in sync
+        /// </summary>
+        public RecordCountSyncOption RecordCountSync = RecordCountSyncOption.Iterate;
 
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.

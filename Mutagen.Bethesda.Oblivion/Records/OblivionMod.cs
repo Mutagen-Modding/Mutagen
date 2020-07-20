@@ -21,9 +21,9 @@ namespace Mutagen.Bethesda.Oblivion
         public const uint DefaultInitialNextObjectID = 0xD62;
         private uint GetDefaultInitialNextObjectID() => DefaultInitialNextObjectID;
 
-        partial void GetCustomRecordCount(Action<int> setter)
+        partial void GetCustomRecordCount(Action<uint> setter)
         {
-            int count = 0;
+            uint count = 0;
             // Tally Cell Group counts
             int cellSubGroupCount(Cell cell)
             {
@@ -48,27 +48,27 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 return cellGroupCount;
             }
-            count += this.Cells.Records.Count; // Block Count
-            count += this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
-            count += this.Cells.Records
+            count += (uint)this.Cells.Records.Count; // Block Count
+            count += (uint)this.Cells.Records.Sum(block => block.SubBlocks?.Count ?? 0); // Sub Block Count
+            count += (uint)this.Cells.Records
                 .SelectMany(block => block.SubBlocks)
                 .SelectMany(subBlock => subBlock.Cells)
                 .Select(cellSubGroupCount)
                 .Sum();
 
             // Tally Worldspace Group Counts
-            count += this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
-            count += this.Worldspaces
+            count += (uint)this.Worldspaces.Sum(wrld => wrld.SubCells?.Count ?? 0); // Cell Blocks
+            count += (uint)this.Worldspaces
                 .SelectMany(wrld => wrld.SubCells)
                 .Sum(block => block.Items?.Count ?? 0); // Cell Sub Blocks
-            count += this.Worldspaces
+            count += (uint)this.Worldspaces
                 .SelectMany(wrld => wrld.SubCells)
                 .SelectMany(block => block.Items)
                 .SelectMany(subBlock => subBlock.Items)
                 .Sum(cellSubGroupCount); // Cell sub groups
 
             // Tally Dialog Group Counts
-            count += this.DialogTopics.RecordCache.Count;
+            count += (uint)this.DialogTopics.RecordCache.Count;
             setter(count);
         }
     }

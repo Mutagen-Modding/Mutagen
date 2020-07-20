@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "utagen.Bethesda.Binary.EnumBinaryTranslation<Static.Flag>.Instance.Writ";
+            string testString = "artial void GetCustomRecordCount(Action<int> setter);";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

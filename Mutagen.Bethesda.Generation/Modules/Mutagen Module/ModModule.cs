@@ -182,23 +182,23 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public int GetRecordCount"))
+                "public uint GetRecordCount"))
             {
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("int count = this.EnumerateMajorRecords().Count();");
+                fg.AppendLine("uint count = (uint)this.EnumerateMajorRecords().Count();");
                 foreach (var field in obj.IterateFields())
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration.GetObjectType() != ObjectType.Group) continue;
                     if (loqui.TargetObjectGeneration.Name == "ListGroup")
                     {
-                        fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : 0;");
+                        fg.AppendLine($"count += {field.Name}.Records.Count > 0 ? 1 : default(uint);");
                     }
                     else
                     {
-                        fg.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : 0;");
+                        fg.AppendLine($"count += {field.Name}.RecordCache.Count > 0 ? 1 : default(uint);");
                     }
                 }
                 fg.AppendLine("GetCustomRecordCount((customCount) => count += customCount);");
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Generation
             }
             fg.AppendLine();
 
-            fg.AppendLine("partial void GetCustomRecordCount(Action<int> setter);");
+            fg.AppendLine("partial void GetCustomRecordCount(Action<uint> setter);");
             fg.AppendLine();
 
             await base.GenerateInClass(obj, fg);
