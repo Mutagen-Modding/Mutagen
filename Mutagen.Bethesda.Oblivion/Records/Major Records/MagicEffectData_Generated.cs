@@ -1536,6 +1536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             yield return obj.Light.FormKey;
             yield return obj.EffectShader.FormKey;
+            if (obj.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0)) yield break;
             if (obj.SubData.TryGet(out var SubDataItems))
             {
                 foreach (var item in SubDataItems.LinkFormKeys)

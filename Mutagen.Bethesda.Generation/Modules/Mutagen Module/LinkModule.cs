@@ -130,7 +130,8 @@ namespace Mutagen.Bethesda.Generation
                         break;
                     }
                 }
-                foreach (var field in obj.IterateFields())
+                var startCount = fg.Count;
+                foreach (var field in obj.IterateFields(nonIntegrated: true))
                 {
                     if (field is FormLinkType formLink)
                     {
@@ -274,6 +275,25 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"yield return item;");
                         }
+                    }
+                    else if (field is BreakType breakType)
+                    {
+                        if (fg.Count > startCount)
+                        {
+                            fg.AppendLine($"if (obj.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index})) yield break;");
+                        }
+                    }
+                }
+                // Remove trailing breaks
+                while (fg.Count > startCount)
+                {
+                    if (fg[fg.Count - 1].AsSpan().TrimStart().StartsWith($"if (obj.{VersioningModule.VersioningFieldName}"))
+                    {
+                        fg.RemoveAt(fg.Count - 1);
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
                 fg.AppendLine("yield break;");

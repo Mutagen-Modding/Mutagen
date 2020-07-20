@@ -1074,6 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IEnumerable<FormKey> GetLinkFormKeys(ILinkedReferencesGetter obj)
         {
             yield return obj.KeywordOrReference.FormKey;
+            if (obj.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0)) yield break;
             yield return obj.Reference.FormKey;
             yield break;
         }
